@@ -1,13 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "AAA",
-    "BCB",
-    "AAA"
+    "A A",
+    "ABA",
+    "CCC"
   ],
   "key": {
     "A": {
-      "item": "minecraft:redstone"
+      "item": "minecraft:blaze_rod"
     },
     "B": {
       "item": "minecraft:diamond"
