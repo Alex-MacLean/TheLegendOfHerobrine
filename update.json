@@ -1,0 +1,9 @@
+{
+  "homepage": "https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine",
+  "promos": {
+    "1.15.1-latest"     : "0.1.0",
+  },
+  "1.15.1" : {
+    "0.1.0" : "Initial release",
+  }
+}
