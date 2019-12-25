@@ -6,7 +6,7 @@
         "mcversion": "1.15.1",
         "logoFile": "assets/herobrine/textures/Logo.png",
         "url": "https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine",
-        "updateJSON": "https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine/files",
+        "updateJSON": "https://github.com/Alex-MacLean/TheLegendOfHerobrine/blob/master/update.json",
         "authorList": ["Alex MacLean"],
         "credits": "Alex MacLean"
     }
