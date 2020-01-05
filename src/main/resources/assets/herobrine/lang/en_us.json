@@ -3,5 +3,14 @@
   "item.herobrine.herobrine_spawn_egg": "Herobrine Spawn Egg",
   "block.herobrine.herobrine_alter": "§eAlter of Herobrine",
   "entity.herobrine.herobrine": "Herobrine",
-  "item.herobrine.cursed_diamond": "Cursed Diamond"
+  "item.herobrine.cursed_diamond": "Cursed Diamond",
+  "item.herobrine.cursed_diamond_sword": "Cursed Diamond Sword",
+  "item.herobrine.cursed_diamond_axe": "Cursed Diamond Axe",
+  "item.herobrine.cursed_diamond_pickaxe": "Cursed Diamond Pickaxe",
+  "item.herobrine.cursed_diamond_hoe": "Cursed Diamond Hoe",
+  "item.herobrine.cursed_diamond_shovel": "Cursed Diamond Shovel",
+  "item.herobrine.cursed_diamond_helmet": "Cursed Diamond Helmet",
+  "item.herobrine.cursed_diamond_chestplate": "Cursed Diamond Chestplate",
+  "item.herobrine.cursed_diamond_leggings": "Cursed Diamond Leggings",
+  "item.herobrine.cursed_diamond_boots": "Cursed Diamond Boots"
 }

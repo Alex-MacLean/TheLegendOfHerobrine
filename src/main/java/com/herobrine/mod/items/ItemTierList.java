@@ -7,7 +7,8 @@ import net.minecraft.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 public enum ItemTierList implements IItemTier {
-    bedrock_item_tier(9.0f, -1.0f, -1, -1, -1, Items.BEDROCK);
+    bedrock_item_tier(9.0f, -1.0f, -1, -1, -1, Items.BEDROCK),
+    cursed_diamond_item_tier(4.0f, 9.0f, 1600, 4, 22, ItemList.cursed_diamond);
 
     private float attackDamage, efficiency;
     private int maxUses, harvestLevel, enchantability;

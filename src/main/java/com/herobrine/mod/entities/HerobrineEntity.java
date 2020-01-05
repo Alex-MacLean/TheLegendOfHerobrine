@@ -19,7 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class HerobrineEntity extends MonsterEntity {
+public class HerobrineEntity extends MonsterEntity{
 
     public HerobrineEntity(EntityType<? extends HerobrineEntity> type, World worldIn) {
         super(type, worldIn);
@@ -138,7 +138,6 @@ public class HerobrineEntity extends MonsterEntity {
                 }
             }
         }
-
         super.livingTick();
     }
 
