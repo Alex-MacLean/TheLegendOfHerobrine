@@ -1,7 +1,7 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
     "textures": {
-        "particle": "herobrine:block/herobrine_alter",
+        "particle": "herobrine:block/herobrine_alter_particle",
         "herobrine_alter_spire": "herobrine:block/herobrine_alter_spire",
         "herobrine_alter_side": "herobrine:block/herobrine_alter_side",
         "herobrine_alter": "herobrine:block/herobrine_alter"
@@ -57,11 +57,11 @@
             "from": [ 0, 8, 0 ], 
             "to": [ 1, 16, 1 ], 
             "faces": {
-                "north": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "east": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "south": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "west": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "up": { "texture": "#herobrine_alter_spire", "uv": [ 7, 3, 9, 5 ] }
+                "north": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "east": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "south": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "west": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "up": { "texture": "#herobrine_alter_spire", "uv": [ 8, 4, 9, 5 ] }
             }
         },
         {
@@ -69,11 +69,11 @@
             "from": [ 15, 8, 0 ], 
             "to": [ 16, 16, 1 ], 
             "faces": {
-                "north": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "east": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "south": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "west": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "up": { "texture": "#herobrine_alter_spire", "uv": [ 7, 3, 9, 5 ] }
+                "north": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "east": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "south": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "west": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "up": { "texture": "#herobrine_alter_spire", "uv": [ 8, 4, 9, 5 ] }
             }
         },
         {
@@ -81,11 +81,11 @@
             "from": [ 15, 8, 15 ], 
             "to": [ 16, 16, 16 ], 
             "faces": {
-                "north": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "east": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "south": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "west": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "up": { "texture": "#herobrine_alter_spire", "uv": [ 7, 3, 9, 5 ] }
+                "north": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "east": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "south": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "west": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "up": { "texture": "#herobrine_alter_spire", "uv": [ 8, 4, 9, 5 ] }
             }
         },
         {
@@ -93,11 +93,11 @@
             "from": [ 0, 8, 15 ], 
             "to": [ 1, 16, 16 ], 
             "faces": {
-                "north": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "east": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "south": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "west": { "texture": "#herobrine_alter_spire", "uv": [ 7, 0, 9, 16 ] },
-                "up": { "texture": "#herobrine_alter_spire", "uv": [ 7, 3, 9, 5 ] }
+                "north": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "east": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "south": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "west": { "texture": "#herobrine_alter_spire", "uv": [ 7, 4, 8, 12 ] },
+                "up": { "texture": "#herobrine_alter_spire", "uv": [ 8, 4, 9, 5 ] }
             }
         },
         {

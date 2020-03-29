@@ -1,5 +1,6 @@
 {
-  "variants": {
-    "": { "model": "herobrine:block/herobrine_alter" }
-  }
+    "variants": {
+        "active=false": { "model": "herobrine:block/herobrine_alter" },
+        "active=true": { "model": "herobrine:block/herobrine_alter_active" }
+    }
 }

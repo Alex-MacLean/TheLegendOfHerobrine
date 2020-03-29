@@ -1,5 +1,7 @@
 package com.herobrine.mod.blocks;
 
+import com.herobrine.mod.Variables;
+import com.herobrine.mod.items.ItemList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -7,20 +9,23 @@ import net.minecraft.block.SoundType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.SlabType;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -36,11 +41,19 @@ import static com.herobrine.mod.HerobrineMod.location;
 public class HerobrineAlter extends Block implements IWaterLoggable {
     @ObjectHolder("herobrine:herobrine_alter")
     public static final Block block = null;
+    public static final VoxelShape SHAPE = VoxelShapes.or(Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 8.0D, 0.0D, 1.0D, 16.0D, 1.0D), Block.makeCuboidShape(16.0D, 8.0D, 0.0D, 15.0D, 16.0D, 1.0D), Block.makeCuboidShape(16.0D, 8.0D, 16.0D, 15.0D, 16.0D, 15.0D), Block.makeCuboidShape(0.0D, 8.0D, 16.0D, 1.0D, 16.0D, 15.0D));
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public HerobrineAlter() {
-        super(Properties.create(HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5f).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).func_226896_b_());
-        this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE));
+        super(Properties.create(HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5f).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid());
+        this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE).with(ModBlockStates.ACTIVE, Boolean.FALSE));
         setRegistryName(location("herobrine_alter"));
+    }
+
+    @NotNull
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return SHAPE;
     }
 
     @Override
@@ -51,6 +64,7 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     @Override
     protected void fillStateContainer(@NotNull StateContainer.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.WATERLOGGED);
+        builder.add(ModBlockStates.ACTIVE);
     }
 
     @NotNull
@@ -97,17 +111,25 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
 
     @NotNull
     @Override
-    public ActionResultType func_225533_a_(BlockState state, World world, @NotNull BlockPos pos, PlayerEntity entity, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, @NotNull BlockPos pos, PlayerEntity entity, Hand hand, BlockRayTraceResult hit) {
             int x = pos.getX();
             int y = pos.getY();
             int z = pos.getZ();
-            {
-                java.util.HashMap<String, Object> $_dependencies = new java.util.HashMap<>();
-                $_dependencies.put("entity", entity);
-                $_dependencies.put("x", x);
-                $_dependencies.put("y", y);
-                $_dependencies.put("z", z);
-                $_dependencies.put("world", world);
+        {
+            java.util.HashMap<String, Object> $_dependencies = new java.util.HashMap<>();
+            $_dependencies.put("entity", entity);
+            $_dependencies.put("x", x);
+            $_dependencies.put("y", y);
+            $_dependencies.put("z", z);
+            $_dependencies.put("world", world);
+            if (((entity != null) && entity.inventory.hasItemStack(new ItemStack(ItemList.cursed_diamond, 1))) && (!(Variables.WorldVariables.get(world).Spawn))) {
+                assert false;
+            state = state.getBlockState().with(ModBlockStates.ACTIVE, Boolean.TRUE);
+            world.setBlockState(pos, state, 2);
+            if (state.get(WATERLOGGED)) {
+                world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            }
+        }
                 ActivateAlter.executeProcedure($_dependencies);
             }
             return ActionResultType.SUCCESS;

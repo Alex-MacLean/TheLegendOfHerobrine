@@ -1,7 +1,6 @@
 package com.herobrine.mod;
 
 import com.herobrine.mod.blocks.HerobrineAlter;
-import com.herobrine.mod.blocks.HerobrineAlterActive;
 import com.herobrine.mod.client.renders.RenderRegistry;
 import com.herobrine.mod.entities.EntityRegistry;
 import com.herobrine.mod.items.ArmorMaterialList;
@@ -80,8 +79,7 @@ public class HerobrineMod {
         @SubscribeEvent
         public static void registerBlocks(@NotNull final RegistryEvent.Register<Block> event) {
             event.getRegistry().registerAll(
-                    new HerobrineAlter(),
-                    new HerobrineAlterActive()
+                    new HerobrineAlter()
             );
         }
 

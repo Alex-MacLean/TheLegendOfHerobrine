@@ -7,7 +7,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +25,6 @@ public class ActivateAlter extends ElementsHerobrine.ModElement {
         World world = (World) dependencies.get("world");
         if (((entity instanceof PlayerEntity) && ((PlayerEntity) entity).inventory.hasItemStack(new ItemStack(ItemList.cursed_diamond, 1))) && (!(Variables.WorldVariables.get(world).Spawn))) {
             assert false;
-            world.setBlockState(new BlockPos(x, y, z), HerobrineAlterActive.block.getDefaultState(), 0);
             Variables.WorldVariables.get(world).Spawn = true;
             if (world instanceof ServerWorld)
                 ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, x, y, z, false));
