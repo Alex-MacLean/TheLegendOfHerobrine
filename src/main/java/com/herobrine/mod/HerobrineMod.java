@@ -6,6 +6,7 @@ import com.herobrine.mod.entities.EntityRegistry;
 import com.herobrine.mod.items.ArmorMaterialList;
 import com.herobrine.mod.items.ItemList;
 import com.herobrine.mod.items.ItemTierList;
+import com.herobrine.mod.worldgen.biomes.BiomeInit;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -14,8 +15,10 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -26,6 +29,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @Mod(HerobrineMod.MODID)
+@Mod.EventBusSubscriber(modid = HerobrineMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class HerobrineMod {
     public static HerobrineMod instance;
     public static final String MODID = "herobrine";
@@ -35,11 +39,13 @@ public class HerobrineMod {
     public ElementsHerobrine elements;
 
     public HerobrineMod() {
+        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         instance = this;
         elements = new ElementsHerobrine();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientRegistries);
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
+        BiomeInit.BIOMES.register(modEventBus);
     }
 
     @NotNull
@@ -89,6 +95,11 @@ public class HerobrineMod {
                     EntityRegistry.HEROBRINE_ENTITY
             );
                     EntityRegistry.registerEntityWorldSpawns();
+        }
+
+        @SubscribeEvent
+        public static void registerBiomes(@NotNull final RegistryEvent.Register<Biome> event) {
+            BiomeInit.registerBiomes();
         }
     }
 }
