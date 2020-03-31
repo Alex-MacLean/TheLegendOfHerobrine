@@ -2,11 +2,13 @@ package com.herobrine.mod;
 
 import com.herobrine.mod.blocks.HerobrineAlter;
 import com.herobrine.mod.client.renders.RenderRegistry;
-import com.herobrine.mod.entities.EntityRegistry;
-import com.herobrine.mod.items.ArmorMaterialList;
-import com.herobrine.mod.items.ItemList;
-import com.herobrine.mod.items.ItemTierList;
-import com.herobrine.mod.worldgen.biomes.BiomeInit;
+import com.herobrine.mod.util.entities.EntityRegistry;
+import com.herobrine.mod.items.*;
+import com.herobrine.mod.util.items.ArmorMaterialList;
+import com.herobrine.mod.util.items.ItemList;
+import com.herobrine.mod.util.items.ItemTierList;
+import com.herobrine.mod.util.misc.ElementsHerobrine;
+import com.herobrine.mod.util.worldgen.BiomeInit;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -77,7 +79,10 @@ public class HerobrineMod {
                     ItemList.cursed_diamond_helmet = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_helmet")),
                     ItemList.cursed_diamond_chestplate = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_chestplate")),
                     ItemList.cursed_diamond_leggings = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_leggings")),
-                    ItemList.cursed_diamond_boots = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_boots"))
+                    ItemList.cursed_diamond_boots = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_boots")),
+                    ItemList.cursed_dust = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("cursed_dust")),
+                    ItemList.holy_water = new HolyWaterItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("holy_water")),
+                    ItemList.unholy_water = new UnholyWaterItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("unholy_water"))
             );
             EntityRegistry.registerEntitySpawnEggs(event);
         }

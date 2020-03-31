@@ -1,7 +1,9 @@
 package com.herobrine.mod.entities;
 
-import com.herobrine.mod.Variables;
-import com.herobrine.mod.items.ItemList;
+import com.herobrine.mod.util.entities.EntityRegistry;
+import com.herobrine.mod.util.entities.HerobrineEntityOnUpdateTick;
+import com.herobrine.mod.util.misc.Variables;
+import com.herobrine.mod.util.items.ItemList;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -46,7 +48,7 @@ public class HerobrineEntity extends MonsterEntity{
         this.targetSelector.addGoal(6, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(7, new MoveThroughVillageGoal(this, 0.6D, false, 4, () -> true));
         this.goalSelector.addGoal(8, new FleeSunGoal(this, 0.6D));
-        this.goalSelector.addGoal(9 , new RandomWalkingGoal(this, 0.6D));
+        this.goalSelector.addGoal(9, new RandomWalkingGoal(this, 0.6D));
         this.goalSelector.addGoal(10, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(11, new LookAtGoal(this, AbstractVillagerEntity.class, 8.0F));
         this.goalSelector.addGoal(12, new LookAtGoal(this, GolemEntity.class, 8.0F));
@@ -71,6 +73,8 @@ public class HerobrineEntity extends MonsterEntity{
         if (source.getImmediateSource() instanceof AreaEffectCloudEntity)
             return false;
         if (source.getImmediateSource() instanceof PotionEntity)
+            return false;
+        if (source.getImmediateSource() instanceof UnholyWaterEntity)
             return false;
         if (source == DamageSource.FALL)
             return false;
@@ -158,10 +162,10 @@ public class HerobrineEntity extends MonsterEntity{
         super.baseTick();
         Entity entity = this;
         {
+            Variables.WorldVariables.get(world).syncData(world);
             java.util.HashMap<String, Object> $_dependencies = new java.util.HashMap<>();
             $_dependencies.put("entity", entity);
             $_dependencies.put("world", world);
-            Variables.WorldVariables.get(world).syncData(world);
             HerobrineEntityOnUpdateTick.executeProcedure($_dependencies);
         }
     }

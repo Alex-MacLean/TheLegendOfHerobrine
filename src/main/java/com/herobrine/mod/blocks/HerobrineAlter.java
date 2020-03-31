@@ -1,7 +1,9 @@
 package com.herobrine.mod.blocks;
 
-import com.herobrine.mod.Variables;
-import com.herobrine.mod.items.ItemList;
+import com.herobrine.mod.util.blocks.ActivateAlter;
+import com.herobrine.mod.util.blocks.ModBlockStates;
+import com.herobrine.mod.util.misc.Variables;
+import com.herobrine.mod.util.items.ItemList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -13,6 +15,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
@@ -29,11 +32,16 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.registries.ObjectHolder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+
+import java.util.Random;
 
 import static com.herobrine.mod.HerobrineMod.RegistryEvents.HEROBRINE_ALTER_MATERIAL;
 import static com.herobrine.mod.HerobrineMod.location;
@@ -41,13 +49,23 @@ import static com.herobrine.mod.HerobrineMod.location;
 public class HerobrineAlter extends Block implements IWaterLoggable {
     @ObjectHolder("herobrine:herobrine_alter")
     public static final Block block = null;
-    public static final VoxelShape SHAPE = VoxelShapes.or(Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 8.0D, 0.0D, 1.0D, 16.0D, 1.0D), Block.makeCuboidShape(16.0D, 8.0D, 0.0D, 15.0D, 16.0D, 1.0D), Block.makeCuboidShape(16.0D, 8.0D, 16.0D, 15.0D, 16.0D, 15.0D), Block.makeCuboidShape(0.0D, 8.0D, 16.0D, 1.0D, 16.0D, 15.0D));
+    public static final VoxelShape SHAPE = VoxelShapes.or(Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 9.0D, 0.0D, 1.0D, 15.0D, 1.0D), Block.makeCuboidShape(16.0D, 9.0D, 0.0D, 15.0D, 15.0D, 1.0D), Block.makeCuboidShape(16.0D, 9.0D, 16.0D, 15.0D, 15.0D, 15.0D), Block.makeCuboidShape(0.0D, 9.0D, 16.0D, 1.0D, 15.0D, 15.0D), Block.makeCuboidShape(0.0D, 15.0D, 0.0D, 2.0D, 16.0D, 2.0D), Block.makeCuboidShape(14.0D, 15.0D, 0.0D, 16.0D, 16.0D, 2.0D), Block.makeCuboidShape(14.0D, 15.0D, 14.0D, 16.0D, 16.0D, 16.0D), Block.makeCuboidShape(0.0D, 15.0D, 14.0D, 2.0D, 16.0D, 16.0D), Block.makeCuboidShape(0.0D, 8.0D, 0.0D, 2.0D, 9.0D, 2.0D), Block.makeCuboidShape(14.0D, 8.0D, 0.0D, 16.0D, 9.0D, 2.0D), Block.makeCuboidShape(14.0D, 8.0D, 14.0D, 16.0D, 9.0D, 16.0D), Block.makeCuboidShape(0.0D, 8.0D, 14.0D, 2.0D, 9.0D, 16.0D));
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public HerobrineAlter() {
-        super(Properties.create(HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5f).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid());
+        super(Properties.create(HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid());
         this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE).with(ModBlockStates.ACTIVE, Boolean.FALSE));
         setRegistryName(location("herobrine_alter"));
+    }
+
+    @Override
+    public int getLightValue(@NotNull BlockState state) {
+        boolean i = state.get(ModBlockStates.ACTIVE);
+        if (i == Boolean.TRUE) {
+            return 8;
+        } else {
+            return 0;
+        }
     }
 
     @NotNull
@@ -98,7 +116,6 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
         BlockPos blockpos = context.getPos();
         IFluidState ifluidstate = context.getWorld().getFluidState(blockpos);
         return this.getDefaultState().with(BlockStateProperties.WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
-
     }
 
     @Override
@@ -109,29 +126,54 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
         return false;
     }
 
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void animateTick(@NotNull BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+        boolean i = stateIn.get(ModBlockStates.ACTIVE);
+        if (i == Boolean.TRUE) {
+            double d0 = (double) pos.getX() + 0.5D + ((double) rand.nextFloat() - 0.5D) * 0.2D;
+            double d1 = (float) pos.getY() + 0.05F;
+            double d2 = (double) pos.getZ() + 0.5D + ((double) rand.nextFloat() - 0.5D) * 0.2D;
+            worldIn.addParticle(ParticleTypes.PORTAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+            boolean s = stateIn.get(ModBlockStates.ACTIVE);
+            if (s == Boolean.TRUE && (!(Variables.WorldVariables.get(worldIn).Spawn))) {
+                Variables.WorldVariables.get(worldIn).Spawn = true;
+            }
+        }
+    }
+
     @NotNull
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, @NotNull BlockPos pos, PlayerEntity entity, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(@NotNull BlockState state, World world, @NotNull BlockPos pos, PlayerEntity entity, Hand hand, BlockRayTraceResult hit) {
+        boolean i = state.get(ModBlockStates.ACTIVE);
+        if (i == Boolean.FALSE) {
             int x = pos.getX();
             int y = pos.getY();
             int z = pos.getZ();
-        {
             java.util.HashMap<String, Object> $_dependencies = new java.util.HashMap<>();
+            Variables.WorldVariables.get(world).syncData(world);
             $_dependencies.put("entity", entity);
             $_dependencies.put("x", x);
             $_dependencies.put("y", y);
             $_dependencies.put("z", z);
             $_dependencies.put("world", world);
-            if (((entity != null) && entity.inventory.hasItemStack(new ItemStack(ItemList.cursed_diamond, 1))) && (!(Variables.WorldVariables.get(world).Spawn))) {
+            if (((entity != null) && entity.inventory.hasItemStack(new ItemStack(ItemList.cursed_diamond, 1)))) {
                 assert false;
-            state = state.getBlockState().with(ModBlockStates.ACTIVE, Boolean.TRUE);
-            world.setBlockState(pos, state, 2);
-            if (state.get(WATERLOGGED)) {
-                world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-            }
-        }
-                ActivateAlter.executeProcedure($_dependencies);
+                state = state.getBlockState().with(ModBlockStates.ACTIVE, Boolean.TRUE);
+                world.setBlockState(pos, state, 2);
+                if (state.get(WATERLOGGED)) {
+                    world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+                }
+
+                if (!(Variables.WorldVariables.get(world).Spawn)) {
+                    ActivateAlter.executeProcedure($_dependencies);
+                }
+            } else {
+                return ActionResultType.FAIL;
             }
             return ActionResultType.SUCCESS;
+        } else {
+            return ActionResultType.FAIL;
+        }
     }
 }
