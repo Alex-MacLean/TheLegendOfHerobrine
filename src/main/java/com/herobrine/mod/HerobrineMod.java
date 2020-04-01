@@ -24,6 +24,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -44,6 +45,7 @@ public class HerobrineMod {
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         instance = this;
         elements = new ElementsHerobrine();
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientRegistries);
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
@@ -58,6 +60,10 @@ public class HerobrineMod {
 
     private void clientRegistries(final FMLClientSetupEvent event) {
         RenderRegistry.registerEntityRenders();
+    }
+
+    private void init(FMLCommonSetupEvent event) {
+        elements.getElements().forEach(element -> element.init(event));
     }
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)

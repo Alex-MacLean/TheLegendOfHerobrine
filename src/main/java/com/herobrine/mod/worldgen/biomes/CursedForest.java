@@ -2,6 +2,7 @@ package com.herobrine.mod.worldgen.biomes;
 
 import com.google.common.collect.ImmutableList;
 import com.herobrine.mod.util.entities.EntityRegistry;
+import com.herobrine.mod.worldgen.structures.TrappedHouse;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityClassification;

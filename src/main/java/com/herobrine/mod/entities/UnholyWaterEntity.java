@@ -36,7 +36,8 @@ public class UnholyWaterEntity extends SnowballEntity{
         if (result.getType() == RayTraceResult.Type.ENTITY) {
             Entity entity = ((EntityRayTraceResult)result).getEntity();
             ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.WITHER, 300, 1));
-           entity.setFire(15);
+            ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.HUNGER, 300, 1));
+            entity.setFire(15);
             int i = 4;
             entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this.getThrower()), (float)i);
         }

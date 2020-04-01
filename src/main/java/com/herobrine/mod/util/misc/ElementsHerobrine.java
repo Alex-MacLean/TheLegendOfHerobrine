@@ -4,6 +4,7 @@ import com.herobrine.mod.HerobrineMod;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +51,10 @@ public class ElementsHerobrine {
         messageID++;
     }
 
+    public List<ModElement> getElements() {
+        return elements;
+    }
+
     public static class ModElement implements Comparable<ModElement> {
         @Retention(RetentionPolicy.RUNTIME)
         public @interface Tag {
@@ -64,6 +69,10 @@ public class ElementsHerobrine {
 
         public void initElements() {
         }
+
+        public void init(FMLCommonSetupEvent event) {
+        }
+
 
         @Override
         public int compareTo(@NotNull ModElement other) {

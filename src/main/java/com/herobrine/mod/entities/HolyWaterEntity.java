@@ -37,7 +37,6 @@ public class HolyWaterEntity extends SnowballEntity{
             Entity entity = ((EntityRayTraceResult)result).getEntity();
             ((LivingEntity) entity).clearActivePotions();
             ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.REGENERATION, 300, 1));
-            ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.SATURATION, 30, 0));
             ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.HEALTH_BOOST, 300, 1));
             entity.extinguish();
             int i = entity instanceof HerobrineEntity ? 12 : 0;
