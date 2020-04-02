@@ -65,12 +65,7 @@
         },
         {
           "type": "minecraft:item",
-          "weight": 3,
-          "name": "herobrine:cursed_diamond"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 15,
+          "weight": 5,
           "name": "herobrine:cursed_dust"
         },
         {

@@ -18,5 +18,15 @@
   "item.herobrine.holy_water": "Holy Water",
   "item.herobrine.unholy_water": "Unholy Water",
   "entity.herobrine.holy_water": "Holy Water",
-  "entity.herobrine.unholy_water": "Unholy Water"
+  "entity.herobrine.unholy_water": "Unholy Water",
+  "entity.herobrine.infected_pig": "Infected Pig",
+  "item.herobrine.infected_pig_spawn_egg": "Infected Pig Spawn Egg",
+  "entity.herobrine.infected_chicken": "Infected Chicken",
+  "item.herobrine.infected_chicken_spawn_egg": "Infected Chicken Spawn Egg",
+  "item.herobrine.infected_sheep_spawn_egg": "Infected Sheep Spawn Egg",
+  "entity.herobrine.infected_sheep": "Infected Sheep",
+  "item.herobrine.infected_cow_spawn_egg": "Infected Cow Spawn Egg",
+  "entity.herobrine.infected_cow": "Infected Cow",
+  "entity.herobrine.infected_mooshroom": "Infected Mooshroom",
+  "item.herobrine.infected_mooshroom_spawn_egg": "Infected Mooshroom Spawn Egg"
 }

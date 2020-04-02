@@ -23,7 +23,7 @@
               }
             }
           ],
-          "name": "herobrine:cursed_dust"
+          "name": "minecraft:gunpowder"
         }
       ]
     },
@@ -32,7 +32,15 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "herobrine:cursed_diamond"
+          "name": "minecraft:gold_ingot"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "herobrine:cursed_dust"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "herobrine:unholy_water"
         }
       ],
       "conditions": [
