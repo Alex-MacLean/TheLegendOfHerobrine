@@ -1,13 +1,11 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
+import com.herobrine.mod.util.entities.GenericSummoningRequiredEntityOnUpdateTick;
 import com.herobrine.mod.util.entities.HerobrineEntityOnUpdateTick;
 import com.herobrine.mod.util.misc.Variables;
 import com.herobrine.mod.util.items.ItemList;
-import net.minecraft.entity.AreaEffectCloudEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -16,10 +14,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
 
 public class HerobrineEntity extends MonsterEntity{
 
@@ -38,10 +42,9 @@ public class HerobrineEntity extends MonsterEntity{
 
     @Override
     protected void registerGoals() {
-        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemList.bedrock_sword));
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new BreakDoorGoal(this, e -> true));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.6, true));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.6D, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, GolemEntity.class, true));
@@ -166,7 +169,16 @@ public class HerobrineEntity extends MonsterEntity{
             java.util.HashMap<String, Object> $_dependencies = new java.util.HashMap<>();
             $_dependencies.put("entity", entity);
             $_dependencies.put("world", world);
+            GenericSummoningRequiredEntityOnUpdateTick.executeProcedure($_dependencies);
             HerobrineEntityOnUpdateTick.executeProcedure($_dependencies);
         }
+    }
+
+    @Override
+    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        spawnDataIn = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemList.bedrock_sword));
+        this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.0F;
+        return spawnDataIn;
     }
 }

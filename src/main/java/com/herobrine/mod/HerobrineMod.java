@@ -103,7 +103,11 @@ public class HerobrineMod {
         @SubscribeEvent
         public static void registerEntities(@NotNull final RegistryEvent.Register<EntityType<?>> event) {
             event.getRegistry().registerAll(
-                    EntityRegistry.HEROBRINE_ENTITY
+                    EntityRegistry.HEROBRINE_ENTITY,
+                    EntityRegistry.INFECTED_PIG_ENTITY,
+                    EntityRegistry.INFECTED_CHICKEN_ENTITY,
+                    EntityRegistry.INFECTED_SHEEP_ENTITY,
+                    EntityRegistry.INFECTED_COW_ENTITY
             );
                     EntityRegistry.registerEntityWorldSpawns();
         }

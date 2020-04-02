@@ -18,4 +18,8 @@ public class ItemList {
     public static Item cursed_dust;
     public static Item holy_water;
     public static Item unholy_water;
+    public static Item infected_pig_spawn_egg;
+    public static Item infected_chicken_spawn_egg;
+    public static Item infected_sheep_spawn_egg;
+    public static Item infected_cow_spawn_egg;
 }

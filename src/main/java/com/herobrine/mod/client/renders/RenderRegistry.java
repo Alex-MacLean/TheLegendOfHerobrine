@@ -15,5 +15,9 @@ public class RenderRegistry {
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_ENTITY, new HerobrineEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HOLY_WATER_ENTITY, (IRenderFactory<Entity>) manager -> new SpriteRenderer(manager, Minecraft.getInstance().getItemRenderer()));
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.UNHOLY_WATER_ENTITY, (IRenderFactory<Entity>) manager -> new SpriteRenderer(manager, Minecraft.getInstance().getItemRenderer()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_PIG_ENTITY, new InfectedPigEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_CHICKEN_ENTITY, new InfectedChickenEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_SHEEP_ENTITY, new InfectedSheepEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_COW_ENTITY, new InfectedCowEntityRender.RenderFactory());
     }
 }
