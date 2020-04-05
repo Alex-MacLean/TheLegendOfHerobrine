@@ -107,7 +107,8 @@ public class HerobrineMod {
                     EntityRegistry.INFECTED_PIG_ENTITY,
                     EntityRegistry.INFECTED_CHICKEN_ENTITY,
                     EntityRegistry.INFECTED_SHEEP_ENTITY,
-                    EntityRegistry.INFECTED_COW_ENTITY
+                    EntityRegistry.INFECTED_COW_ENTITY,
+                    EntityRegistry.INFECTED_MOOSHROOM_ENTITY
             );
                     EntityRegistry.registerEntityWorldSpawns();
         }

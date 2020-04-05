@@ -1,7 +1,7 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
-import com.herobrine.mod.util.entities.GenericSummoningRequiredEntityOnUpdateTick;
+import com.herobrine.mod.util.entities.SummoningEntitySpawnSettings;
 import com.herobrine.mod.util.entities.HerobrineEntityOnUpdateTick;
 import com.herobrine.mod.util.misc.Variables;
 import com.herobrine.mod.util.items.ItemList;
@@ -14,7 +14,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
@@ -160,22 +159,27 @@ public class HerobrineEntity extends MonsterEntity{
         return flag;
     }
 
-    @Override
-    public void baseTick() {
+     @Override
+     public void baseTick() {
         super.baseTick();
         Entity entity = this;
         {
-            Variables.WorldVariables.get(world).syncData(world);
             java.util.HashMap<String, Object> $_dependencies = new java.util.HashMap<>();
             $_dependencies.put("entity", entity);
-            $_dependencies.put("world", world);
-            GenericSummoningRequiredEntityOnUpdateTick.executeProcedure($_dependencies);
             HerobrineEntityOnUpdateTick.executeProcedure($_dependencies);
         }
     }
 
     @Override
     public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        Entity entity = this;
+        {
+            Variables.WorldVariables.get(world).syncData(world);
+            java.util.HashMap<String, Object> $_dependencies = new java.util.HashMap<>();
+            $_dependencies.put("entity", entity);
+            $_dependencies.put("world", world);
+            SummoningEntitySpawnSettings.executeProcedure($_dependencies);
+        }
         spawnDataIn = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemList.bedrock_sword));
         this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.0F;

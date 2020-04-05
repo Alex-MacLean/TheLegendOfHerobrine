@@ -2,7 +2,7 @@ package com.herobrine.mod.entities;
 
 import com.google.common.collect.Maps;
 import com.herobrine.mod.util.entities.EntityRegistry;
-import com.herobrine.mod.util.entities.GenericSummoningRequiredEntityOnUpdateTick;
+import com.herobrine.mod.util.entities.SummoningEntitySpawnSettings;
 import com.herobrine.mod.util.misc.Variables;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -10,17 +10,11 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.DyeColor;
-import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -138,19 +132,6 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
         }
 
         super.livingTick();
-    }
-
-    @Override
-    public void baseTick() {
-        super.baseTick();
-        Entity entity = this;
-        {
-            Variables.WorldVariables.get(world).syncData(world);
-            java.util.HashMap<String, Object> $_dependencies = new java.util.HashMap<>();
-            $_dependencies.put("entity", entity);
-            $_dependencies.put("world", world);
-            GenericSummoningRequiredEntityOnUpdateTick.executeProcedure($_dependencies);
-        }
     }
 
     @Override
@@ -346,7 +327,14 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        this.setFleeceColor(getRandomSheepColor(worldIn.getRandom()));
+        Entity entity = this;
+        {
+            Variables.WorldVariables.get(world).syncData(world);
+            java.util.HashMap<String, Object> $_dependencies = new java.util.HashMap<>();
+            $_dependencies.put("entity", entity);
+            $_dependencies.put("world", world);
+            SummoningEntitySpawnSettings.executeProcedure($_dependencies);
+        }
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 

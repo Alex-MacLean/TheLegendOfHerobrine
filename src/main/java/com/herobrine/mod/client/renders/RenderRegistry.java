@@ -19,5 +19,6 @@ public class RenderRegistry {
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_CHICKEN_ENTITY, new InfectedChickenEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_SHEEP_ENTITY, new InfectedSheepEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_COW_ENTITY, new InfectedCowEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_MOOSHROOM_ENTITY, new InfectedMooshroomEntityRender.RenderFactory());
     }
 }
