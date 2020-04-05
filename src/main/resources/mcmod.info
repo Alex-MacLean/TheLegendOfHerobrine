@@ -2,11 +2,11 @@
         "modid": "herobrine",
         "name": "The Legend of Herobrine",
         "description": "Adds Herobrine to Minecraft, and other herobrine related things",
-        "version": "0.3.0",
+        "version": "0.3.1",
         "mcversion": "1.15.2",
         "logoFile": "assets/herobrine/textures/Logo.png",
         "url": "https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine",
-        "updateJSON": "https://github.com/Alex-MacLean/TheLegendOfHerobrine/blob/master/update.json",
+        "updateJSON": "https://raw.githubusercontent.com/Alex-MacLean/TheLegendOfHerobrine/master/update.json",
         "authorList": ["Alex MacLean"],
         "credits": "Alex MacLean"
     }
