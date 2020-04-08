@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class InfectedSheepEntityRender extends MobRenderer<InfectedSheepEntity, InfectedSheepEntityModel<InfectedSheepEntity>> {
-    private static final ResourceLocation SHEARED_SHEEP_TEXTURES = HerobrineMod.location("textures/entity/infected_sheep/infected_sheep.png");
 
     public InfectedSheepEntityRender(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new InfectedSheepEntityModel<>(), 0.7F);
@@ -24,7 +23,7 @@ public class InfectedSheepEntityRender extends MobRenderer<InfectedSheepEntity, 
 
     @NotNull
     public ResourceLocation getEntityTexture(@NotNull InfectedSheepEntity entity) {
-        return SHEARED_SHEEP_TEXTURES;
+        return HerobrineMod.location("textures/entity/infected_sheep/infected_sheep.png");
     }
 
     public static class RenderFactory implements IRenderFactory {

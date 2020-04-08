@@ -10,7 +10,6 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
@@ -24,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTables;
 import net.minecraftforge.api.distmarker.Dist;
@@ -39,7 +39,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class InfectedSheepEntity extends MonsterEntity implements IShearable {
-    private static final DataParameter<Byte> DYE_COLOR = EntityDataManager.createKey(SheepEntity.class, DataSerializers.BYTE);
+    private static final DataParameter<Byte> DYE_COLOR = EntityDataManager.createKey(InfectedSheepEntity.class, DataSerializers.BYTE);
     private static final Map<DyeColor, IItemProvider> WOOL_BY_COLOR = Util.make(Maps.newEnumMap(DyeColor.class), (woolDrop) -> {
         woolDrop.put(DyeColor.WHITE, Blocks.WHITE_WOOL);
         woolDrop.put(DyeColor.ORANGE, Blocks.ORANGE_WOOL);
@@ -70,7 +70,6 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
             return new float[]{0.9019608F, 0.9019608F, 0.9019608F};
         } else {
             float[] afloat = dyeColorIn.getColorComponentValues();
-            float f = 0.75F;
             return new float[]{afloat[0] * 0.75F, afloat[1] * 0.75F, afloat[2] * 0.75F};
         }
     }
@@ -327,6 +326,7 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        this.setFleeceColor(getRandomSheepColor(worldIn.getRandom()));
         Entity entity = this;
         {
             Variables.WorldVariables.get(world).syncData(world);
@@ -345,7 +345,7 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
 
     @Override
     public boolean isShearable(@NotNull ItemStack item, net.minecraft.world.IWorldReader world, BlockPos pos) {
-        return !this.getSheared() && !this.isChild();
+        return !this.getSheared();
     }
 
     @NotNull

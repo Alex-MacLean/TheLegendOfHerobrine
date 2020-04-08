@@ -23,4 +23,5 @@ public class ItemList {
     public static Item infected_sheep_spawn_egg;
     public static Item infected_cow_spawn_egg;
     public static Item infected_mooshroom_spawn_egg;
+    public static Item infected_villager_spawn_egg;
 }

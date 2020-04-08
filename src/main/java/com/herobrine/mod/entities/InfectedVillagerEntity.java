@@ -3,7 +3,6 @@ package com.herobrine.mod.entities;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.entities.SummoningEntitySpawnSettings;
 import com.herobrine.mod.util.misc.Variables;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -22,14 +21,15 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class InfectedPigEntity extends MonsterEntity {
-    public InfectedPigEntity(EntityType<? extends InfectedPigEntity> type, World worldIn) {
+public class InfectedVillagerEntity extends MonsterEntity {
+
+    public InfectedVillagerEntity(EntityType<? extends InfectedVillagerEntity> type, World worldIn) {
         super(type, worldIn);
         experienceValue = 3;
     }
 
-    public InfectedPigEntity(World worldIn) {
-        this((EntityType<? extends InfectedPigEntity>) EntityRegistry.INFECTED_PIG_ENTITY, worldIn);
+    public InfectedVillagerEntity(World worldIn) {
+        this((EntityType<? extends InfectedVillagerEntity>) EntityRegistry.INFECTED_VILLAGER_ENTITY, worldIn);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class InfectedPigEntity extends MonsterEntity {
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(4, new WaterAvoidingRandomWalkingGoal(this, 0.5D));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
     }
@@ -46,11 +46,11 @@ public class InfectedPigEntity extends MonsterEntity {
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10.0D);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(1.0D);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
+        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(48.0D);
     }
 
     @Override
@@ -60,8 +60,22 @@ public class InfectedPigEntity extends MonsterEntity {
         return super.attackEntityFrom(source, amount);
     }
 
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+        return SoundEvents.ENTITY_VILLAGER_HURT;
+    }
+
     @Override
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ENTITY_VILLAGER_DEATH;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ENTITY_VILLAGER_AMBIENT;
+    }
+
+    @Override
+    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         Entity entity = this;
         {
             Variables.WorldVariables.get(world).syncData(world);
@@ -71,25 +85,5 @@ public class InfectedPigEntity extends MonsterEntity {
             SummoningEntitySpawnSettings.executeProcedure($_dependencies);
         }
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-    }
-
-    @Override
-    protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_PIG_AMBIENT;
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_PIG_HURT;
-    }
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_PIG_DEATH;
-    }
-
-    @Override
-    protected void playStepSound(@NotNull BlockPos pos, BlockState blockIn) {
-        this.playSound(SoundEvents.ENTITY_PIG_STEP, 0.15F, 1.0F);
     }
 }
