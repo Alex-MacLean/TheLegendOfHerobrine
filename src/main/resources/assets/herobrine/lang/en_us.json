@@ -28,5 +28,7 @@
   "item.herobrine.infected_cow_spawn_egg": "Infected Cow Spawn Egg",
   "entity.herobrine.infected_cow": "Infected Cow",
   "entity.herobrine.infected_mooshroom": "Infected Mooshroom",
-  "item.herobrine.infected_mooshroom_spawn_egg": "Infected Mooshroom Spawn Egg"
+  "item.herobrine.infected_mooshroom_spawn_egg": "Infected Mooshroom Spawn Egg",
+  "item.herobrine.infected_villager_spawn_egg": "Infected Villager Spawn Egg",
+  "entity.herobrine.infected_villager": "Infected Villager"
 }
