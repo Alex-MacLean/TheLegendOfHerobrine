@@ -1,8 +1,8 @@
 {
   "item.herobrine.bedrock_sword": "§dBedrock Sword",
-  "item.herobrine.herobrine_spawn_egg": "Herobrine Spawn Egg",
+  "item.herobrine.herobrine_warrior_spawn_egg": "Herobrine Warrior Spawn Egg",
   "block.herobrine.herobrine_alter": "§eAlter of Herobrine",
-  "entity.herobrine.herobrine": "Herobrine",
+  "entity.herobrine.herobrine_warrior": "Herobrine",
   "item.herobrine.cursed_diamond": "Cursed Diamond",
   "item.herobrine.cursed_diamond_sword": "Cursed Diamond Sword",
   "item.herobrine.cursed_diamond_axe": "Cursed Diamond Axe",
@@ -30,5 +30,7 @@
   "entity.herobrine.infected_mooshroom": "Infected Mooshroom",
   "item.herobrine.infected_mooshroom_spawn_egg": "Infected Mooshroom Spawn Egg",
   "item.herobrine.infected_villager_spawn_egg": "Infected Villager Spawn Egg",
-  "entity.herobrine.infected_villager": "Infected Villager"
+  "entity.herobrine.infected_villager": "Infected Villager",
+  "entity.herobrine.herobrine_spy": "Herobrine",
+  "item.herobrine.herobrine_spy_spawn_egg": "Herobrine Spy Spawn Egg"
 }
