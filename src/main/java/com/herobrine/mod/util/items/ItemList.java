@@ -4,7 +4,7 @@ import net.minecraft.item.Item;
 
 public class ItemList {
     public static Item bedrock_sword;
-    public static Item herobrine_spawn_egg;
+    public static Item herobrine_warrior_spawn_egg;
     public static Item cursed_diamond;
     public static Item cursed_diamond_sword;
     public static Item cursed_diamond_pickaxe;
@@ -24,4 +24,5 @@ public class ItemList {
     public static Item infected_cow_spawn_egg;
     public static Item infected_mooshroom_spawn_egg;
     public static Item infected_villager_spawn_egg;
+    public static Item herobrine_spy_spawn_egg;
 }

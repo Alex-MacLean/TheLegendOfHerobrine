@@ -39,7 +39,7 @@ public class HolyWaterEntity extends SnowballEntity{
             ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.REGENERATION, 300, 1));
             ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.HEALTH_BOOST, 300, 1));
             entity.extinguish();
-            int i = entity instanceof HerobrineEntity ? 12 : 0;
+            int i = entity instanceof HerobrineWarriorEntity ? 12 : 0;
             entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)i);
         }
         if (!this.world.isRemote) {
