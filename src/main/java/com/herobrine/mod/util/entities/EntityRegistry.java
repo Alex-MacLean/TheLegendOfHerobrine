@@ -15,7 +15,7 @@ import net.minecraftforge.event.RegistryEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityRegistry {
-    public static EntityType<?> HEROBRINE_WARRIOR_ENTITY = EntityType.Builder.create((EntityType<HerobrineWarriorEntity> type, World worldIn) -> new HerobrineWarriorEntity(worldIn), EntityClassification.MONSTER).size(0.6F, 2.0F).build("herobrine_warrior").setRegistryName("herobrine_warrior");
+    public static EntityType<?> HEROBRINE_WARRIOR_ENTITY = EntityType.Builder.create((EntityType<HerobrineWarriorEntity> type, World worldIn) -> new HerobrineWarriorEntity(worldIn), EntityClassification.MONSTER).size(0.6F, 1.95F).build("herobrine_warrior").setRegistryName("herobrine_warrior");
     public static EntityType<?> HOLY_WATER_ENTITY = EntityType.Builder.create((EntityType<HolyWaterEntity> type, World worldIn) -> new HolyWaterEntity(worldIn), EntityClassification.MISC).build("holy_water").setRegistryName("holy_water");
     public static EntityType<?> UNHOLY_WATER_ENTITY = EntityType.Builder.create((EntityType<UnholyWaterEntity> type, World worldIn) -> new UnholyWaterEntity(worldIn), EntityClassification.MISC).build("unholy_water").setRegistryName("unholy_water");
     public static EntityType<?> INFECTED_PIG_ENTITY = EntityType.Builder.create((EntityType<InfectedPigEntity> type, World worldIn) -> new InfectedPigEntity(worldIn), EntityClassification.MONSTER).size(0.9F, 0.9F).build("infected_pig").setRegistryName("infected_pig");
@@ -24,7 +24,7 @@ public class EntityRegistry {
     public static EntityType<?> INFECTED_COW_ENTITY = EntityType.Builder.create((EntityType<InfectedCowEntity> type, World worldIn) -> new InfectedCowEntity(worldIn), EntityClassification.MONSTER).size(0.9F, 1.4F).build("infected_cow").setRegistryName("infected_cow");
     public static EntityType<?> INFECTED_MOOSHROOM_ENTITY = EntityType.Builder.create((EntityType<InfectedMooshroomEntity> type, World worldIn) -> new InfectedMooshroomEntity(worldIn), EntityClassification.MONSTER).size(0.9F, 1.4F).build("infected_mooshroom").setRegistryName("infected_mooshroom");
     public static EntityType<?> INFECTED_VILLAGER_ENTITY = EntityType.Builder.create((EntityType<InfectedVillagerEntity> type, World worldIn) -> new InfectedVillagerEntity(worldIn), EntityClassification.MONSTER).size(0.6F, 1.95F).build("infected_villager").setRegistryName("infected_villager");
-    public static EntityType<?> HEROBRINE_SPY_ENTITY = EntityType.Builder.create((EntityType<HerobrineSpyEntity> type, World worldIn) -> new HerobrineSpyEntity(worldIn), EntityClassification.MONSTER).size(0.6F, 2.0F).build("herobrine_spy").setRegistryName("herobrine_spy");
+    public static EntityType<?> HEROBRINE_SPY_ENTITY = EntityType.Builder.create((EntityType<HerobrineSpyEntity> type, World worldIn) -> new HerobrineSpyEntity(worldIn), EntityClassification.MONSTER).size(0.6F, 1.95F).build("herobrine_spy").setRegistryName("herobrine_spy");
 
     public static void registerEntitySpawnEggs(@NotNull final RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(

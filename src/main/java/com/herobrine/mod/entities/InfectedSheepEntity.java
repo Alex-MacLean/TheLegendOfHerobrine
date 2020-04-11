@@ -2,7 +2,6 @@ package com.herobrine.mod.entities;
 
 import com.google.common.collect.Maps;
 import com.herobrine.mod.util.entities.EntityRegistry;
-import com.herobrine.mod.util.entities.SummoningEntitySpawnSettings;
 import com.herobrine.mod.util.misc.Variables;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -23,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTables;
 import net.minecraftforge.api.distmarker.Dist;
@@ -327,13 +325,9 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
     @Override
     public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         this.setFleeceColor(getRandomSheepColor(worldIn.getRandom()));
-        Entity entity = this;
-        {
-            Variables.WorldVariables.get(world).syncData(world);
-            java.util.HashMap<String, Object> $_dependencies = new java.util.HashMap<>();
-            $_dependencies.put("entity", entity);
-            $_dependencies.put("world", world);
-            SummoningEntitySpawnSettings.executeProcedure($_dependencies);
+        Variables.WorldVariables.get(world).syncData(world);
+        if ((!(Variables.WorldVariables.get(world).Spawn))) {
+            this.remove();
         }
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }

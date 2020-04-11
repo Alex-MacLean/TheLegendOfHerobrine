@@ -75,21 +75,22 @@ public class CursedForest extends Biome {
         this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.SLIME, 105, 4, 4));
         this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.ENDERMAN, 15, 1, 4));
         this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.WITCH, 10, 1, 1));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_WARRIOR_ENTITY, 6, 1, 1));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_PIG_ENTITY, 14, 3, 6));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_CHICKEN_ENTITY, 14, 4, 8));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_SHEEP_ENTITY, 14, 3, 6));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_SPY_ENTITY, 10, 1, 1));
+        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_WARRIOR_ENTITY, 3, 1, 1));
+        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_PIG_ENTITY, 7, 3, 6));
+        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_CHICKEN_ENTITY, 7, 4, 8));
+        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_SHEEP_ENTITY, 7, 3, 6));
+        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_COW_ENTITY, 7, 2, 4));
+        this.addSpawn(EntityClassification.AMBIENT, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_SPY_ENTITY, 5, 1, 1));
     }
 
 
     @OnlyIn(Dist.CLIENT)
     public int getFoliageColor() {
-        return 10398029;
+        return 0x9EA94D;
     }
 
     @OnlyIn(Dist.CLIENT)
     public int getGrassColor(double posX, double posZ) {
-        return 9480525;
+        return 0x90A94D;
     }
 }

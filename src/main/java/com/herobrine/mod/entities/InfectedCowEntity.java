@@ -1,25 +1,19 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
-import com.herobrine.mod.util.entities.SummoningEntitySpawnSettings;
 import com.herobrine.mod.util.misc.Variables;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,13 +59,9 @@ public class InfectedCowEntity extends MonsterEntity {
 
     @Override
     public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        Entity entity = this;
-        {
-            Variables.WorldVariables.get(world).syncData(world);
-            java.util.HashMap<String, Object> $_dependencies = new java.util.HashMap<>();
-            $_dependencies.put("entity", entity);
-            $_dependencies.put("world", world);
-            SummoningEntitySpawnSettings.executeProcedure($_dependencies);
+        Variables.WorldVariables.get(world).syncData(world);
+        if ((!(Variables.WorldVariables.get(world).Spawn))) {
+            this.remove();
         }
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
