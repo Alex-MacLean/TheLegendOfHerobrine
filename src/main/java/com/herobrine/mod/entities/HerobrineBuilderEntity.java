@@ -199,6 +199,16 @@ public class HerobrineBuilderEntity extends MonsterEntity {
                     template.addBlocksToWorldChunk(world, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false));
                     this.swingArm(Hand.MAIN_HAND);
                 }
+                if (blockAt.getBlock() == Blocks.NETHERRACK.getDefaultState().getBlock()) {
+                    Template template = ((ServerWorld) world.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "netherrack_structure"));
+                    template.addBlocksToWorldChunk(world, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false));
+                    this.swingArm(Hand.MAIN_HAND);
+                }
+                if (blockAt.getBlock() == Blocks.END_STONE.getDefaultState().getBlock()) {
+                    Template template = ((ServerWorld) world.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "end_stone_structure"));
+                    template.addBlocksToWorldChunk(world, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false));
+                    this.swingArm(Hand.MAIN_HAND);
+                }
             }
         }
         super.livingTick();
