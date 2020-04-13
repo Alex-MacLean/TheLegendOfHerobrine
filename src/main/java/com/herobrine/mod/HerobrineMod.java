@@ -110,7 +110,8 @@ public class HerobrineMod {
                     EntityRegistry.INFECTED_COW_ENTITY,
                     EntityRegistry.INFECTED_MOOSHROOM_ENTITY,
                     EntityRegistry.INFECTED_VILLAGER_ENTITY,
-                    EntityRegistry.HEROBRINE_SPY_ENTITY
+                    EntityRegistry.HEROBRINE_SPY_ENTITY,
+                    EntityRegistry.HEROBRINE_BUILDER_ENTITY
             );
                     EntityRegistry.registerEntityWorldSpawns();
         }

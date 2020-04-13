@@ -58,6 +58,18 @@ public class InfectedPigEntity extends MonsterEntity {
     }
 
     @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        boolean flag = super.attackEntityAsMob(entityIn);
+        if (flag) {
+            float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
+            if (this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
+                entityIn.setFire(2 * (int)f);
+            }
+        }
+        return flag;
+    }
+
+    @Override
     public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         Variables.WorldVariables.get(world).syncData(world);
         if ((!(Variables.WorldVariables.get(world).Spawn))) {

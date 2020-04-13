@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class HolyWaterEntity extends SnowballEntity{
-    protected static final Random random = new Random();
+    private static final Random random = new Random();
 
     public HolyWaterEntity(EntityType<? extends SnowballEntity> entityType, World world) {
         super(entityType, world);

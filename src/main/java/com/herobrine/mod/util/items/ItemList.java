@@ -25,4 +25,5 @@ public class ItemList {
     public static Item infected_mooshroom_spawn_egg;
     public static Item infected_villager_spawn_egg;
     public static Item herobrine_spy_spawn_egg;
+    public static Item herobrine_builder_spawn_egg;
 }

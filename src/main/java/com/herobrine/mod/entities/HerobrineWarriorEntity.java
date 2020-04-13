@@ -37,10 +37,6 @@ public class HerobrineWarriorEntity extends MonsterEntity{
         this((EntityType<? extends HerobrineWarriorEntity>) EntityRegistry.HEROBRINE_WARRIOR_ENTITY, worldIn);
     }
 
-    private boolean shouldBurnInDay() {
-        return true;
-    }
-
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SwimGoal(this));
@@ -48,8 +44,7 @@ public class HerobrineWarriorEntity extends MonsterEntity{
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, GolemEntity.class, true));
         this.targetSelector.addGoal(4, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(5, new FleeSunGoal(this, 0.6D));
-        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.6D));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 0.4D));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookAtGoal(this, GolemEntity.class, 8.0F));
         this.goalSelector.addGoal(9, new LookRandomlyGoal(this));
@@ -160,27 +155,6 @@ public class HerobrineWarriorEntity extends MonsterEntity{
         }
         if (this.blockBreakCounter > 100) {
             this.blockBreakCounter = 100;
-        }
-        if (this.isAlive()) {
-            boolean flag = this.shouldBurnInDay() && this.isInDaylight();
-            if (flag) {
-                ItemStack itemstack = this.getItemStackFromSlot(EquipmentSlotType.HEAD);
-                if (!itemstack.isEmpty()) {
-                    if (itemstack.isDamageable()) {
-                        itemstack.setDamage(itemstack.getDamage() + this.rand.nextInt(2));
-                        if (itemstack.getDamage() >= itemstack.getMaxDamage()) {
-                            this.sendBreakAnimation(EquipmentSlotType.HEAD);
-                            this.setItemStackToSlot(EquipmentSlotType.HEAD, ItemStack.EMPTY);
-                        }
-                    }
-
-                    flag = false;
-                }
-
-                if (flag) {
-                    this.setFire(8);
-                }
-            }
         }
         super.livingTick();
     }

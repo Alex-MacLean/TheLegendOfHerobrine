@@ -66,6 +66,18 @@ public class InfectedChickenEntity extends MonsterEntity {
     }
 
     @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        boolean flag = super.attackEntityAsMob(entityIn);
+        if (flag) {
+            float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
+            if (this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
+                entityIn.setFire(2 * (int)f);
+            }
+        }
+        return flag;
+    }
+
+    @Override
     public void livingTick() {
         super.livingTick();
         this.oFlap = this.wingRotation;

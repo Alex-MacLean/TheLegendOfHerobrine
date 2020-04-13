@@ -65,7 +65,7 @@ public class TrappedHouse extends ElementsHerobrine.ModElement {
                         Rotation rotation = Rotation.values()[random.nextInt(3)];
                         Mirror mirror = Mirror.values()[random.nextInt(2)];
                         BlockPos spawnTo = new BlockPos(i, j - 2, k);
-                        template.addBlocksToWorldChunk(iworld, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).setChunk(null).setIgnoreEntities(false));
+                        template.addBlocksToWorldChunk(iworld, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).setIgnoreEntities(false));
                     }
                 }
                 return true;

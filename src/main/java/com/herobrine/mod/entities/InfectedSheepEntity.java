@@ -123,6 +123,18 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
     }
 
     @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        boolean flag = super.attackEntityAsMob(entityIn);
+        if (flag) {
+            float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
+            if (this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
+                entityIn.setFire(2 * (int)f);
+            }
+        }
+        return flag;
+    }
+
+    @Override
     public void livingTick() {
         if (this.world.isRemote) {
             this.sheepTimer = Math.max(0, this.sheepTimer - 1);
