@@ -34,5 +34,8 @@
   "entity.herobrine.herobrine_spy": "Herobrine",
   "item.herobrine.herobrine_spy_spawn_egg": "Herobrine Spy Spawn Egg",
   "entity.herobrine.herobrine_builder": "Herobrine",
-  "item.herobrine.herobrine_builder_spawn_egg": "Herobrine Builder Spawn Egg"
+  "item.herobrine.herobrine_builder_spawn_egg": "Herobrine Builder Spawn Egg",
+  "item.herobrine.herobrine_mage_spawn_egg": "Herobrine Mage Spawn egg",
+  "entity.herobrine.herobrine_mage": "Herobrine",
+  "entity.herobrine.fake_herobrine_mage": "Herobrine"
 }
