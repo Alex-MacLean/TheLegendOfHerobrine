@@ -26,7 +26,6 @@ import net.minecraft.world.server.ServerWorld;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class HerobrineBuilderEntity extends MonsterEntity {
     protected HerobrineBuilderEntity(EntityType<? extends HerobrineBuilderEntity> type, World worldIn) {
@@ -40,7 +39,6 @@ public class HerobrineBuilderEntity extends MonsterEntity {
 
     private int placeTimer;
     private int lifeTimer = 5100;
-    private static final Random random = new Random();
 
     @Override
     protected void registerGoals() {
@@ -119,7 +117,7 @@ public class HerobrineBuilderEntity extends MonsterEntity {
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity entityIn) {
+    public boolean attackEntityAsMob(@NotNull Entity entityIn) {
         boolean flag = super.attackEntityAsMob(entityIn);
         if (flag) {
             float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
@@ -137,12 +135,11 @@ public class HerobrineBuilderEntity extends MonsterEntity {
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         Variables.WorldVariables.get(world).syncData(world);
         if ((!(Variables.WorldVariables.get(world).Spawn))) {
             this.remove();
         }
-        this.enablePersistence();
         this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.GOLDEN_PICKAXE));
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
@@ -165,8 +162,8 @@ public class HerobrineBuilderEntity extends MonsterEntity {
             int x = (int) this.getPosX();
             int y = (int) this.getPosY();
             int z = (int) this.getPosZ();
-            Rotation rotation = Rotation.values()[random.nextInt(3)];
-            Mirror mirror = Mirror.values()[random.nextInt(2)];
+            Rotation rotation = Rotation.values()[rand.nextInt(3)];
+            Mirror mirror = Mirror.values()[rand.nextInt(2)];
             BlockState blockAt = world.getBlockState(new BlockPos(x, y - 1, z));
             if (!world.isRemote) {
                 if (blockAt.getBlock() == Blocks.GRASS_BLOCK.getDefaultState().getBlock() && y >= 62 || blockAt.getBlock() == Blocks.DIRT.getDefaultState().getBlock() && y >= 62) {

@@ -82,6 +82,7 @@ public class CursedForest extends Biome {
         this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_COW_ENTITY, 7, 2, 4));
         this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_SPY_ENTITY, 6, 1, 1));
         this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_BUILDER_ENTITY, 2, 1, 1));
+        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_MAGE_ENTITY, 2, 1, 1));
     }
 
 

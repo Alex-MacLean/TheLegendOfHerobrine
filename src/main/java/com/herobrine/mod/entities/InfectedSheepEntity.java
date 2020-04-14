@@ -123,7 +123,7 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity entityIn) {
+    public boolean attackEntityAsMob(@NotNull Entity entityIn) {
         boolean flag = super.attackEntityAsMob(entityIn);
         if (flag) {
             float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
@@ -226,9 +226,9 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
     }
 
     @Override
-    public boolean processInteract(@NotNull PlayerEntity player, Hand hand) {
+    public boolean processInteract(@NotNull PlayerEntity player, @NotNull Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
-        if (false && itemstack.getItem() == Items.SHEARS && !this.getSheared()) {
+        if (itemstack.getItem() == Items.SHEARS && !this.getSheared()) {
             this.func_213612_dV();
             if (!this.world.isRemote) {
                 itemstack.damageItem(1, player, (p_213613_1_) -> p_213613_1_.sendBreakAnimation(hand));
@@ -257,14 +257,14 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
+    public void writeAdditional(@NotNull CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putBoolean("Sheared", this.getSheared());
         compound.putByte("Color", (byte)this.getFleeceColor().getId());
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
+    public void readAdditional(@NotNull CompoundNBT compound) {
         super.readAdditional(compound);
         this.setSheared(compound.getBoolean("Sheared"));
         this.setFleeceColor(DyeColor.byId(compound.getByte("Color")));
@@ -276,7 +276,7 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
         return SoundEvents.ENTITY_SHEEP_HURT;
     }
 
@@ -286,7 +286,7 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
     }
 
     @Override
-    protected void playStepSound(@NotNull BlockPos pos, BlockState blockIn) {
+    protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
         this.playSound(SoundEvents.ENTITY_SHEEP_STEP, 0.15F, 1.0F);
     }
 
@@ -335,7 +335,7 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         this.setFleeceColor(getRandomSheepColor(worldIn.getRandom()));
         Variables.WorldVariables.get(world).syncData(world);
         if ((!(Variables.WorldVariables.get(world).Spawn))) {
@@ -345,7 +345,7 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose poseIn, @NotNull EntitySize sizeIn) {
+    protected float getStandingEyeHeight(@NotNull Pose poseIn, @NotNull EntitySize sizeIn) {
         return 0.95F * sizeIn.height;
     }
 

@@ -3,32 +3,23 @@ package com.herobrine.mod.entities;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.FlowerBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.SuspiciousStewItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -66,13 +57,14 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements net.mi
     }
 
     @Override
-    public boolean processInteract(@NotNull PlayerEntity player, Hand hand) {
+    public boolean processInteract(@NotNull PlayerEntity player, @NotNull Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
-         if (false && itemstack.getItem() == Items.SHEARS) {
+         if (itemstack.getItem() == Items.SHEARS) {
             this.world.addParticle(ParticleTypes.EXPLOSION, this.getPosX(), this.getPosYHeight(0.5D), this.getPosZ(), 0.0D, 0.0D, 0.0D);
             if (!this.world.isRemote) {
                 this.remove();
                 InfectedCowEntity cowentity = (InfectedCowEntity) EntityRegistry.INFECTED_COW_ENTITY.create(this.world);
+                assert cowentity != null;
                 cowentity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
                 cowentity.setHealth(this.getHealth());
                 cowentity.renderYawOffset = this.renderYawOffset;
@@ -103,7 +95,7 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements net.mi
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
+    public void writeAdditional(@NotNull CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putString("Type", this.getMooshroomType().name);
         if (this.hasStewEffect != null) {
@@ -114,7 +106,7 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements net.mi
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
+    public void readAdditional(@NotNull CompoundNBT compound) {
         super.readAdditional(compound);
         this.setMooshroomType(InfectedMooshroomEntity.Type.getTypeByName(compound.getString("Type")));
         if (compound.contains("EffectId", 1)) {

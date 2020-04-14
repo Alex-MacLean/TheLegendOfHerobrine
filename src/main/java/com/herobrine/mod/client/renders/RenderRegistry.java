@@ -23,5 +23,7 @@ public class RenderRegistry {
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_VILLAGER_ENTITY, new InfectedVillagerEntityRenderer.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_SPY_ENTITY, new HerobrineSpyEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_BUILDER_ENTITY, new HerobrineBuilderEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_MAGE_ENTITY, new HerobrineMageEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, new FakeHerobrineMageEntityRender.RenderFactory());
     }
 }
