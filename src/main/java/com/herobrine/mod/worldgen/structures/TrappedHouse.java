@@ -1,7 +1,6 @@
 package com.herobrine.mod.worldgen.structures;
 
 import com.herobrine.mod.HerobrineMod;
-import com.herobrine.mod.util.misc.ElementsHerobrine;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Mirror;
@@ -22,20 +21,14 @@ import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.placement.IPlacementConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-@ElementsHerobrine.ModElement.Tag
-public class TrappedHouse extends ElementsHerobrine.ModElement {
-    public TrappedHouse(ElementsHerobrine instance) {
-        super(instance, 8);
-    }
+public class TrappedHouse {
 
-    @Override
-    public void init(FMLCommonSetupEvent event) {
+    public static void registerStructure() {
         Feature<NoFeatureConfig> feature = new Feature<NoFeatureConfig>(NoFeatureConfig::deserialize) {
             @Override
             public boolean place(@NotNull IWorld iworld, @NotNull ChunkGenerator generator, @NotNull Random random, @NotNull BlockPos pos, @NotNull NoFeatureConfig config) {
@@ -60,8 +53,7 @@ public class TrappedHouse extends ElementsHerobrine.ModElement {
                             blockCriteria = true;
                         if (!blockCriteria)
                             continue;
-                        Template template = ((ServerWorld) iworld.getWorld()).getSaveHandler().getStructureTemplateManager()
-                                .getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "trapped_house"));
+                        Template template = ((ServerWorld) iworld.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "trapped_house"));
                         Rotation rotation = Rotation.values()[random.nextInt(3)];
                         Mirror mirror = Mirror.values()[random.nextInt(2)];
                         BlockPos spawnTo = new BlockPos(i, j - 2, k);

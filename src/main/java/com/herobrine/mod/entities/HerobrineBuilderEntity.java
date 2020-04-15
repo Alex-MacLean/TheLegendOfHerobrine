@@ -2,7 +2,7 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.util.entities.EntityRegistry;
-import com.herobrine.mod.util.misc.Variables;
+import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;

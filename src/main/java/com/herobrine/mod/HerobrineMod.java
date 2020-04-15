@@ -7,8 +7,8 @@ import com.herobrine.mod.items.*;
 import com.herobrine.mod.util.items.ArmorMaterialList;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.items.ItemTierList;
-import com.herobrine.mod.util.misc.ElementsHerobrine;
 import com.herobrine.mod.util.worldgen.BiomeInit;
+import com.herobrine.mod.worldgen.structures.TrappedHouse;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -34,17 +34,12 @@ import org.jetbrains.annotations.NotNull;
 @Mod(HerobrineMod.MODID)
 @Mod.EventBusSubscriber(modid = HerobrineMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class HerobrineMod {
-    public static HerobrineMod instance;
     public static final String MODID = "herobrine";
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
-    public ElementsHerobrine elements;
-
     public HerobrineMod() {
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        instance = this;
-        elements = new ElementsHerobrine();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientRegistries);
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
@@ -63,7 +58,7 @@ public class HerobrineMod {
     }
 
     private void init(FMLCommonSetupEvent event) {
-        elements.getElements().forEach(element -> element.init(event));
+        TrappedHouse.registerStructure();
     }
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
