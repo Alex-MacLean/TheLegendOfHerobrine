@@ -1,10 +1,15 @@
 {
-  "homepage": "https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine/files",
-  "1.15.2": {
-    "0.4.0": "*Updated logo.\n*Changed the existing Herobrine entity to Herobrine Warrior.\n+Added Herobrine Spy.\n+Added Herobrine Builder.\n+Added Herobrine Mage.\n*Tweaked how Herobrine based mobs spawn.\n*Herobrine mobs no longer burn in the sun.\n*Infected mobs have a chance of lighting the player on fire if they are on fire.\n*Optimized infected mobs and Herobrine mobs.",
-    "0.4.1": "*Optimized the Alter of Herobrine.\n*Fixed a bug causing a chat message to appear to the player twice after activating the Alter of Herobrine.\n*Added punctuation to the chat message the player receives after activating the Alter of Herobrine.\n*Optimized savegame data.\n*Optimized code surrounding the Suspicious house.\n*Optimized renders for Herobrine Warrior, Herobrine Spy, and Herobrine Builder."
-  },
-  "promos": {
-    "1.15.2-latest": "0.4.1"
-  }
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine/files",
+    "1.15.2": {
+        "0.4.0": "*Updated logo.\n*Changed the existing Herobrine entity to Herobrine Warrior.\n+Added Herobrine Spy.\n+Added Herobrine Builder.\n+Added Herobrine Mage.\n*Tweaked how Herobrine based mobs spawn.\n*Herobrine mobs no longer burn in the sun.\n*Infected mobs have a chance of lighting the player on fire if they are on fire.\n*Optimized infected mobs and Herobrine mobs.",
+        "0.4.1": "*Optimized the Alter of Herobrine.\n*Fixed a bug causing a chat message to appear to the player twice after activating the Alter of Herobrine.\n*Added punctuation to the chat message the player receives after activating the Alter of Herobrine.\n*Optimized savegame data.\n*Optimized code surrounding the Suspicious house.\n*Optimized renders for Herobrine Warrior, Herobrine Spy, and Herobrine Builder."
+        "0.4.2": "*Fixed a bug that caused the Cursed Diamond to not be consumed when activating an Alter of Herobrine multiple times in a world.\n*Fixed an issue where various timers that Herobrine mobs use would reset after a relog.\n*The Fake Herobrine Mage now has 25 health points, and despawns when hit by Holy Water."
+    },
+    "1.14.4": {
+        "0.4.2": "*Fixed a bug that caused the Cursed Diamond to not be consumed when activating an Alter of Herobrine multiple times in a world.\n*Fixed an issue where various timers that Herobrine mobs use would reset after a relog.\n*The fake Herobrine Mage now has 25 health points and despawns when hit by Holy Water."
+    },
+    "promos": {
+        "1.15.2-latest": "0.4.2"
+        "1.14.4-latest": "0.4.2"
+    }
 }
