@@ -4,6 +4,7 @@ import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.util.blocks.ModBlockStates;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.savedata.Variables;
+import com.sun.org.apache.xpath.internal.objects.XNull;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -22,7 +23,6 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -54,7 +54,7 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public HerobrineAlter() {
-        super(Properties.create(HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid());
+        super(Properties.create(HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).variableOpacity());
         this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE).with(ModBlockStates.ACTIVE, Boolean.FALSE));
         setRegistryName(location("herobrine_alter"));
     }
@@ -143,9 +143,8 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
         }
     }
 
-    @NotNull
     @Override
-    public ActionResultType onBlockActivated(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity entity, @NotNull Hand hand, @NotNull BlockRayTraceResult hit) {
+    public boolean onBlockActivated(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity entity, @NotNull Hand hand, @NotNull BlockRayTraceResult hit) {
         boolean i = state.get(ModBlockStates.ACTIVE);
         if (i == Boolean.FALSE) {
             int x = pos.getX();
@@ -156,6 +155,7 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
                 state = state.getBlockState().with(ModBlockStates.ACTIVE, Boolean.TRUE);
                 if (entity instanceof PlayerEntity && !entity.abilities.isCreativeMode)
                     entity.inventory.clearMatchingItems(p -> new ItemStack(ItemList.cursed_diamond, 1).getItem() == p.getItem(), 1);
+                entity.swingArm(hand);
                 world.setBlockState(pos, state, 2);
                 if (state.get(WATERLOGGED)) {
                     world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
@@ -170,14 +170,11 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
                         Variables.WorldVariables.get(world).Spawn = true;
                         if (world instanceof ServerWorld)
                             ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, x, y, z, false));
+                        return true;
                     }
                 }
-            } else {
-                return ActionResultType.FAIL;
             }
-            return ActionResultType.SUCCESS;
-        } else {
-            return ActionResultType.FAIL;
         }
+        return super.onBlockActivated(state, world, pos, entity, hand, hit);
     }
 }

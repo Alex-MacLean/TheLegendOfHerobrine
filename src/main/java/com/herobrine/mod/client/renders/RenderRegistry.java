@@ -1,5 +1,6 @@
 package com.herobrine.mod.client.renders;
 
+import com.herobrine.mod.entities.*;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
@@ -12,18 +13,18 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 @OnlyIn(Dist.CLIENT)
 public class RenderRegistry {
     public static void registerEntityRenders() {
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_WARRIOR_ENTITY, new HerobrineWarriorEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HOLY_WATER_ENTITY, (IRenderFactory<Entity>) manager -> new SpriteRenderer(manager, Minecraft.getInstance().getItemRenderer()));
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.UNHOLY_WATER_ENTITY, (IRenderFactory<Entity>) manager -> new SpriteRenderer(manager, Minecraft.getInstance().getItemRenderer()));
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_PIG_ENTITY, new InfectedPigEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_CHICKEN_ENTITY, new InfectedChickenEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_SHEEP_ENTITY, new InfectedSheepEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_COW_ENTITY, new InfectedCowEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_MOOSHROOM_ENTITY, new InfectedMooshroomEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_VILLAGER_ENTITY, new InfectedVillagerEntityRenderer.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_SPY_ENTITY, new HerobrineSpyEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_BUILDER_ENTITY, new HerobrineBuilderEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_MAGE_ENTITY, new HerobrineMageEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, new FakeHerobrineMageEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(HerobrineWarriorEntity.class, new HerobrineWarriorEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(HolyWaterEntity.class, (IRenderFactory<Entity>) manager -> new SpriteRenderer(manager, Minecraft.getInstance().getItemRenderer()));
+        RenderingRegistry.registerEntityRenderingHandler(UnholyWaterEntity.class, (IRenderFactory<Entity>) manager -> new SpriteRenderer(manager, Minecraft.getInstance().getItemRenderer()));
+        RenderingRegistry.registerEntityRenderingHandler(InfectedPigEntity.class, new InfectedPigEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(InfectedChickenEntity.class, new InfectedChickenEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(InfectedSheepEntity.class, new InfectedSheepEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(InfectedCowEntity.class, new InfectedCowEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(InfectedMooshroomEntity.class, new InfectedMooshroomEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(InfectedVillagerEntity.class, new InfectedVillagerEntityRenderer.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(HerobrineSpyEntity.class, new HerobrineSpyEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(HerobrineBuilderEntity.class, new HerobrineBuilderEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(HerobrineMageEntity.class, new HerobrineMageEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(FakeHerobrineMageEntity.class, new FakeHerobrineMageEntityRender.RenderFactory());
     }
 }

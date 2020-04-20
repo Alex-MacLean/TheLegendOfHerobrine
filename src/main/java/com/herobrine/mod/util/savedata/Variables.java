@@ -106,7 +106,6 @@ public class Variables {
             if (side.isServer()) {
                 if (message.type == 0) {
                     HerobrineMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), message);
-                    Objects.requireNonNull(world.getServer()).getWorld(DimensionType.OVERWORLD).getSavedData().set(message.data);
                 } else {
                     HerobrineMod.PACKET_HANDLER.send(PacketDistributor.DIMENSION.with(world.dimension::getType), message);
                     ((ServerWorld) world).getSavedData().set(message.data);

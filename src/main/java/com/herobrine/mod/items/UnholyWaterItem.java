@@ -20,7 +20,7 @@ public class UnholyWaterItem extends Item {
     @Override
     public ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, @NotNull PlayerEntity playerIn, @NotNull Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
-        worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+        worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
         playerIn.getCooldownTracker().setCooldown(this, 10);
         if (!worldIn.isRemote) {
             UnholyWaterEntity entity = new UnholyWaterEntity(worldIn, playerIn);
@@ -33,6 +33,7 @@ public class UnholyWaterItem extends Item {
             itemstack.shrink(1);
         }
 
-        return ActionResult.resultSuccess(itemstack);
+        playerIn.sendBreakAnimation(handIn);
+        return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 }

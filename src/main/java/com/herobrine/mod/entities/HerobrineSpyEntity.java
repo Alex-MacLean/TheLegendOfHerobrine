@@ -11,15 +11,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class HerobrineSpyEntity extends MonsterEntity {
     protected HerobrineSpyEntity(EntityType<? extends HerobrineSpyEntity> type, World worldIn) {
@@ -32,8 +29,8 @@ public class HerobrineSpyEntity extends MonsterEntity {
     }
 
     @Override
-    protected boolean isDespawnPeaceful() {
-        return false;
+    public void tick() {
+        super.tick();
     }
 
     @Override

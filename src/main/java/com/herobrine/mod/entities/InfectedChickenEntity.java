@@ -8,6 +8,7 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -31,6 +32,7 @@ public class InfectedChickenEntity extends MonsterEntity {
     public InfectedChickenEntity(EntityType<? extends InfectedChickenEntity> type, World worldIn) {
         super(type, worldIn);
         experienceValue = 3;
+        this.setPathPriority(PathNodeType.WATER, 0.0F);
     }
 
     public InfectedChickenEntity(World worldIn) {
@@ -127,7 +129,6 @@ public class InfectedChickenEntity extends MonsterEntity {
     }
 
     @Override
-    public boolean onLivingFall(float distance, float damageMultiplier) {
-        return false;
+    public void fall(float distance, float damageMultiplier) {
     }
 }

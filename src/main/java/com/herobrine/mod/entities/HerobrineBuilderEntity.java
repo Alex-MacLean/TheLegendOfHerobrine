@@ -173,9 +173,9 @@ public class HerobrineBuilderEntity extends MonsterEntity {
         }
         --this.placeTimer;
         if (this.placeTimer == 0 && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
-            int x = (int) this.getPosX();
-            int y = (int) this.getPosY();
-            int z = (int) this.getPosZ();
+            int x = (int) this.posX;
+            int y = (int) this.posY;
+            int z = (int) this.posZ;
             Rotation rotation = Rotation.values()[rand.nextInt(3)];
             Mirror mirror = Mirror.values()[rand.nextInt(2)];
             BlockState blockAt = world.getBlockState(new BlockPos(x, y - 1, z));

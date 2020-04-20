@@ -4,10 +4,10 @@ import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedSheepEntityModel;
 import com.herobrine.mod.client.models.InfectedSheepWoolModel;
 import com.herobrine.mod.entities.InfectedSheepEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,30 +23,30 @@ public class InfectedSheepWoolLayer extends LayerRenderer<InfectedSheepEntity, I
         super(rendererIn);
     }
 
-    public void render(@NotNull MatrixStack matrixStackIn, @NotNull IRenderTypeBuffer bufferIn, int packedLightIn, @NotNull InfectedSheepEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (!entitylivingbaseIn.getSheared() && !entitylivingbaseIn.isInvisible()) {
-            float f;
-            float f1;
-            float f2;
-            if (entitylivingbaseIn.hasCustomName() && "jeb_".equals(entitylivingbaseIn.getName().getUnformattedComponentText())) {
-                int i = entitylivingbaseIn.ticksExisted / 25 + entitylivingbaseIn.getEntityId();
+    public void render(@NotNull InfectedSheepEntity entityIn, float p_212842_2_, float p_212842_3_, float p_212842_4_, float p_212842_5_, float p_212842_6_, float p_212842_7_, float p_212842_8_) {
+        if (!entityIn.getSheared() && !entityIn.isInvisible()) {
+            this.bindTexture(TEXTURE);
+            if (entityIn.hasCustomName() && "jeb_".equals(entityIn.getName().getUnformattedComponentText())) {
+                int i = entityIn.ticksExisted / 25 + entityIn.getEntityId();
                 int j = DyeColor.values().length;
                 int k = i % j;
                 int l = (i + 1) % j;
-                float f3 = ((float)(entitylivingbaseIn.ticksExisted % 25) + partialTicks) / 25.0F;
-                float[] afloat1 = InfectedSheepEntity.getDyeRgb(DyeColor.byId(k));
-                float[] afloat2 = InfectedSheepEntity.getDyeRgb(DyeColor.byId(l));
-                f = afloat1[0] * (1.0F - f3) + afloat2[0] * f3;
-                f1 = afloat1[1] * (1.0F - f3) + afloat2[1] * f3;
-                f2 = afloat1[2] * (1.0F - f3) + afloat2[2] * f3;
+                float f = ((float)(entityIn.ticksExisted % 25) + p_212842_4_) / 25.0F;
+                float[] afloat1 = SheepEntity.getDyeRgb(DyeColor.byId(k));
+                float[] afloat2 = SheepEntity.getDyeRgb(DyeColor.byId(l));
+                GlStateManager.color3f(afloat1[0] * (1.0F - f) + afloat2[0] * f, afloat1[1] * (1.0F - f) + afloat2[1] * f, afloat1[2] * (1.0F - f) + afloat2[2] * f);
             } else {
-                float[] afloat = InfectedSheepEntity.getDyeRgb(entitylivingbaseIn.getFleeceColor());
-                f = afloat[0];
-                f1 = afloat[1];
-                f2 = afloat[2];
+                float[] afloat = SheepEntity.getDyeRgb(entityIn.getFleeceColor());
+                GlStateManager.color3f(afloat[0], afloat[1], afloat[2]);
             }
 
-            renderCopyCutoutModel(this.getEntityModel(), this.infectedSheepModel, TEXTURE, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, f, f1, f2);
+            this.getEntityModel().setModelAttributes(this.infectedSheepModel);
+            this.infectedSheepModel.setLivingAnimations(entityIn, p_212842_2_, p_212842_3_, p_212842_4_);
+            this.infectedSheepModel.render(entityIn, p_212842_2_, p_212842_3_, p_212842_5_, p_212842_6_, p_212842_7_, p_212842_8_);
         }
+    }
+
+    public boolean shouldCombineTextures() {
+        return true;
     }
 }

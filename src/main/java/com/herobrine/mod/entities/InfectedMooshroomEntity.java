@@ -60,12 +60,12 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements net.mi
     public boolean processInteract(@NotNull PlayerEntity player, @NotNull Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
          if (itemstack.getItem() == Items.SHEARS) {
-            this.world.addParticle(ParticleTypes.EXPLOSION, this.getPosX(), this.getPosYHeight(0.5D), this.getPosZ(), 0.0D, 0.0D, 0.0D);
+            this.world.addParticle(ParticleTypes.EXPLOSION, this.posX, this.posY + (double)(this.getHeight() / 2.0F), this.posZ, 0.0D, 0.0D, 0.0D);
             if (!this.world.isRemote) {
                 this.remove();
                 InfectedCowEntity cowentity = (InfectedCowEntity) EntityRegistry.INFECTED_COW_ENTITY.create(this.world);
                 assert cowentity != null;
-                cowentity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
+                cowentity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
                 cowentity.setHealth(this.getHealth());
                 cowentity.renderYawOffset = this.renderYawOffset;
                 if (this.hasCustomName()) {
@@ -81,7 +81,7 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements net.mi
                 this.world.addEntity(cowentity);
 
                 for(int k = 0; k < 5; ++k) {
-                    this.world.addEntity(new ItemEntity(this.world, this.getPosX(), this.getPosYHeight(1.0D), this.getPosZ(), new ItemStack(this.getMooshroomType().renderState.getBlock())));
+                    this.world.addEntity(new ItemEntity(this.world, this.posX, this.posY + (double)this.getHeight(), this.posZ, new ItemStack(this.getMooshroomType().renderState.getBlock())));
                 }
 
                 itemstack.damageItem(1, player, (p_213442_1_) -> p_213442_1_.sendBreakAnimation(hand));
@@ -136,12 +136,12 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements net.mi
     @Override
     public java.util.List<ItemStack> onSheared(@NotNull ItemStack item, net.minecraft.world.IWorld world, net.minecraft.util.math.BlockPos pos, int fortune) {
         java.util.List<ItemStack> ret = new java.util.ArrayList<>();
-        this.world.addParticle(ParticleTypes.EXPLOSION, this.getPosX(), this.getPosYHeight(0.5D), this.getPosZ(), 0.0D, 0.0D, 0.0D);
+        this.world.addParticle(ParticleTypes.EXPLOSION, this.posX, this.posY + (double)(this.getHeight() / 2.0F), this.posZ, 0.0D, 0.0D, 0.0D);
         if (!this.world.isRemote) {
             this.remove();
             InfectedCowEntity cowentity = (InfectedCowEntity) EntityRegistry.INFECTED_COW_ENTITY.create(this.world);
             assert cowentity != null;
-            cowentity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
+            cowentity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
             cowentity.setHealth(this.getHealth());
             cowentity.renderYawOffset = this.renderYawOffset;
             if (this.hasCustomName()) {
