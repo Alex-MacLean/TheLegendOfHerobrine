@@ -114,6 +114,18 @@ public class HerobrineWarriorEntity extends MonsterEntity{
         return super.attackEntityFrom(source, amount);
     }
 
+    @Override
+    public void writeAdditional(@NotNull CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putInt("DestroyCooldown", this.blockBreakCounter);
+    }
+
+    @Override
+    public void readAdditional(@NotNull CompoundNBT compound) {
+        super.readAdditional(compound);
+        this.blockBreakCounter = compound.getInt("DestroyCooldown");
+    }
+
     private boolean canReachTarget() {
         return !this.getNavigator().noPath();
     }

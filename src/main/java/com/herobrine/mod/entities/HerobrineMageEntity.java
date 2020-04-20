@@ -113,6 +113,22 @@ public class HerobrineMageEntity extends MonsterEntity {
     }
 
     @Override
+    public void writeAdditional(@NotNull CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putInt("IllusionCastingInterval", this.illusionCastingTime);
+        compound.putInt("WeakenCastingInterval", this.effectsCastingTime);
+        compound.putInt("WarpCastingInterval", this.teleportCastingTime);
+    }
+
+    @Override
+    public void readAdditional(@NotNull CompoundNBT compound) {
+        super.readAdditional(compound);
+        this.illusionCastingTime = compound.getInt("IllusionCastingInterval");
+        this.effectsCastingTime = compound.getInt("WeakenCastingInterval");
+        this.teleportCastingTime = compound.getInt("WarpCastingInterval");
+    }
+
+    @Override
     public void baseTick() {
         super.baseTick();
         this.clearActivePotions();

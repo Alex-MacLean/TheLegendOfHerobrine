@@ -154,6 +154,8 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
             if (entity.inventory.hasItemStack(new ItemStack(ItemList.cursed_diamond, 1))) {
                 assert false;
                 state = state.getBlockState().with(ModBlockStates.ACTIVE, Boolean.TRUE);
+                if (entity instanceof PlayerEntity && !entity.abilities.isCreativeMode)
+                    entity.inventory.clearMatchingItems(p -> new ItemStack(ItemList.cursed_diamond, 1).getItem() == p.getItem(), 1);
                 world.setBlockState(pos, state, 2);
                 if (state.get(WATERLOGGED)) {
                     world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
@@ -168,8 +170,6 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
                         Variables.WorldVariables.get(world).Spawn = true;
                         if (world instanceof ServerWorld)
                             ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, x, y, z, false));
-                        if (entity instanceof PlayerEntity && !entity.abilities.isCreativeMode)
-                            entity.inventory.clearMatchingItems(p -> new ItemStack(ItemList.cursed_diamond, 1).getItem() == p.getItem(), 1);
                     }
                 }
             } else {

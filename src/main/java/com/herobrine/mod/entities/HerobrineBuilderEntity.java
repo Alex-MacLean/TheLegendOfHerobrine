@@ -117,6 +117,20 @@ public class HerobrineBuilderEntity extends MonsterEntity {
     }
 
     @Override
+    public void writeAdditional(@NotNull CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putInt("LifeTime", this.lifeTimer);
+        compound.putInt("BuildingInterval", this.placeTimer);
+    }
+
+    @Override
+    public void readAdditional(@NotNull CompoundNBT compound) {
+        super.readAdditional(compound);
+        this.lifeTimer = compound.getInt("LifeTime");
+        this.placeTimer = compound.getInt("BuildingInterval");
+    }
+
+    @Override
     public boolean attackEntityAsMob(@NotNull Entity entityIn) {
         boolean flag = super.attackEntityAsMob(entityIn);
         if (flag) {

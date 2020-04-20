@@ -47,7 +47,7 @@ public class FakeHerobrineMageEntity extends MonsterEntity {
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1.0D);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(25.0D);
         this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(64.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
@@ -56,6 +56,8 @@ public class FakeHerobrineMageEntity extends MonsterEntity {
 
     @Override
     public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
+        if(source.getImmediateSource() instanceof HolyWaterEntity)
+            this.remove();
         if (source.getImmediateSource() instanceof AreaEffectCloudEntity)
             return false;
         if (source.getImmediateSource() instanceof PotionEntity)
@@ -103,6 +105,18 @@ public class FakeHerobrineMageEntity extends MonsterEntity {
         if (source == DamageSource.WITHER)
             return false;
         return super.attackEntityFrom(source, amount);
+    }
+
+    @Override
+    public void writeAdditional(@NotNull CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putInt("LifeTime", this.lifeTimer);
+    }
+
+    @Override
+    public void readAdditional(@NotNull CompoundNBT compound) {
+        super.readAdditional(compound);
+        this.lifeTimer = compound.getInt("LifeTime");
     }
 
     @Override

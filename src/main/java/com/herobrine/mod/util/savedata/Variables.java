@@ -1,6 +1,5 @@
 package com.herobrine.mod.util.savedata;
 
-
 import com.herobrine.mod.HerobrineMod;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.NetworkEvent;
