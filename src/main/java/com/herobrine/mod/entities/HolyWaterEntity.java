@@ -39,8 +39,14 @@ public class HolyWaterEntity extends SnowballEntity{
             ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.REGENERATION, 300, 1));
             ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.HEALTH_BOOST, 300, 1));
             entity.extinguish();
-            int i = entity instanceof HerobrineWarriorEntity ? 12 : 0;
-            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)i);
+            int a = entity instanceof HerobrineWarriorEntity ? 12 : 0;
+            int b = entity instanceof HerobrineMageEntity ? 12 : 0;
+            int c = entity instanceof HerobrineSpyEntity ? 12 : 0;
+            int d = entity instanceof HerobrineBuilderEntity ? 12 : 0;
+            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)a);
+            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)b);
+            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)c);
+            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)d);
         }
         if (!this.world.isRemote) {
             this.playSound(SoundEvents.BLOCK_GLASS_BREAK, 0.8F,  0.9F / (random.nextFloat() * 0.4F + 0.8F));
