@@ -1,6 +1,5 @@
 package com.herobrine.mod.worldgen.biomes;
 
-import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockPos;
@@ -65,14 +64,6 @@ public class CursedForest extends Biome {
         this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.SLIME, 105, 4, 4));
         this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.ENDERMAN, 15, 1, 4));
         this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.WITCH, 10, 1, 1));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_WARRIOR_ENTITY, 2, 1, 1));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_PIG_ENTITY, 7, 3, 6));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_CHICKEN_ENTITY, 7, 4, 8));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_SHEEP_ENTITY, 7, 3, 6));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_COW_ENTITY, 7, 2, 4));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_SPY_ENTITY, 6, 1, 1));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_BUILDER_ENTITY, 2, 1, 1));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_MAGE_ENTITY, 2, 1, 1));
     }
 
     @OnlyIn(Dist.CLIENT)
