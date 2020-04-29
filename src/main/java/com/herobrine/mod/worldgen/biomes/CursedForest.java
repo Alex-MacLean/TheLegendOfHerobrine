@@ -51,7 +51,7 @@ public class CursedForest extends Biome {
         DefaultBiomeFeatures.addExtraEmeraldOre(this);
         DefaultBiomeFeatures.addExtraGoldOre(this);
         DefaultBiomeFeatures.addScatteredOakTrees(this);
-        this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(Feature.FANCY_TREE.withConfiguration(FANCY_TREE_CONFIG).func_227227_a_(0.1F)), Feature.NORMAL_TREE.withConfiguration(OAK_TREE_CONFIG))).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(0, 0.2F, 1))));
+        this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(Feature.FANCY_TREE.withConfiguration(FANCY_TREE_CONFIG).withChance(0.1F)), Feature.NORMAL_TREE.withConfiguration(OAK_TREE_CONFIG))).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(0, 0.2F, 1))));
         this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.NORMAL_TREE.withConfiguration(DefaultBiomeFeatures.field_230129_h_).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(0, 0.1F, 1))));
         final BlockState OAK_LOG = Blocks.OAK_LOG.getDefaultState();
         final BlockState BIRCH_LOG = Blocks.BIRCH_LOG.getDefaultState();
@@ -75,14 +75,6 @@ public class CursedForest extends Biome {
         this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.SLIME, 105, 4, 4));
         this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.ENDERMAN, 15, 1, 4));
         this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.WITCH, 10, 1, 1));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_WARRIOR_ENTITY, 2, 1, 1));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_PIG_ENTITY, 7, 3, 6));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_CHICKEN_ENTITY, 7, 4, 8));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_SHEEP_ENTITY, 7, 3, 6));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.INFECTED_COW_ENTITY, 7, 2, 4));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_SPY_ENTITY, 6, 1, 1));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_BUILDER_ENTITY, 2, 1, 1));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityRegistry.HEROBRINE_MAGE_ENTITY, 2, 1, 1));
     }
 
 

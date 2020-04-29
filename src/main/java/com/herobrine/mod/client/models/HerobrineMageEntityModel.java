@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.model.ZombieModel;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class HerobrineMageEntityModel<T extends HerobrineMageEntity> extends AbstractZombieModel<T> {
@@ -19,7 +20,7 @@ public class HerobrineMageEntityModel<T extends HerobrineMageEntity> extends Abs
         super(p_i48914_1_, p_i48914_2_, p_i48914_3_, p_i48914_4_);
     }
 
-    public boolean func_212850_a_(T p_212850_1_) {
+    public boolean isAggressive(@NotNull T p_212850_1_) {
         return p_212850_1_.isAggressive();
     }
 }

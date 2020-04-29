@@ -16,7 +16,7 @@ public class FakeHerobrineMageEntityModel<T extends FakeHerobrineMageEntity> ext
         super(p_i48914_1_, p_i48914_2_, p_i48914_3_, p_i48914_4_);
     }
 
-    public boolean func_212850_a_(@NotNull T p_212850_1_) {
+    public boolean isAggressive(@NotNull T p_212850_1_) {
         return p_212850_1_.isAggressive();
     }
 }

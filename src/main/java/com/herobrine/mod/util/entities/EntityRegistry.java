@@ -10,9 +10,11 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.RegistryEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 public class EntityRegistry {
     public static EntityType<?> HEROBRINE_WARRIOR_ENTITY = EntityType.Builder.create((EntityType<HerobrineWarriorEntity> type, World worldIn) -> new HerobrineWarriorEntity(worldIn), EntityClassification.MONSTER).size(0.6F, 1.95F).build("herobrine_warrior").setRegistryName("herobrine_warrior");
@@ -45,17 +47,113 @@ public class EntityRegistry {
     }
 
     public static void registerEntityWorldSpawns() {
-        registerEntityWorldSpawn(HEROBRINE_WARRIOR_ENTITY, 1, 1, 1, Biomes.BEACH, Biomes.BAMBOO_JUNGLE_HILLS, Biomes.BAMBOO_JUNGLE, Biomes.BADLANDS_PLATEAU, Biomes.BADLANDS, Biomes.BIRCH_FOREST, Biomes.BIRCH_FOREST_HILLS, Biomes.DARK_FOREST, Biomes.DARK_FOREST_HILLS, Biomes.DESERT, Biomes.DESERT_HILLS, Biomes.DESERT_LAKES, Biomes.END_BARRENS, Biomes.END_HIGHLANDS, Biomes.END_MIDLANDS, Biomes.ERODED_BADLANDS, Biomes.FLOWER_FOREST, Biomes.FOREST, Biomes.FROZEN_RIVER, Biomes.GIANT_SPRUCE_TAIGA, Biomes.GIANT_SPRUCE_TAIGA_HILLS, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.GRAVELLY_MOUNTAINS, Biomes.ICE_SPIKES, Biomes.JUNGLE, Biomes.JUNGLE_EDGE, Biomes.JUNGLE_HILLS, Biomes.MODIFIED_BADLANDS_PLATEAU, Biomes.MODIFIED_GRAVELLY_MOUNTAINS, Biomes.MODIFIED_JUNGLE, Biomes.MODIFIED_JUNGLE_EDGE, Biomes.MODIFIED_WOODED_BADLANDS_PLATEAU, Biomes.MOUNTAINS, Biomes.MOUNTAIN_EDGE, Biomes.NETHER, Biomes.PLAINS, Biomes.RIVER, Biomes.SAVANNA, Biomes.SAVANNA_PLATEAU, Biomes.SHATTERED_SAVANNA, Biomes.SHATTERED_SAVANNA_PLATEAU, Biomes.SMALL_END_ISLANDS, Biomes.SNOWY_BEACH, Biomes.SNOWY_MOUNTAINS, Biomes.SNOWY_TAIGA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_TAIGA_MOUNTAINS, Biomes.SNOWY_TUNDRA, Biomes.STONE_SHORE, Biomes.SUNFLOWER_PLAINS, Biomes.SWAMP, Biomes.SWAMP_HILLS, Biomes.TAIGA, Biomes.TAIGA_HILLS, Biomes.TAIGA_MOUNTAINS, Biomes.TALL_BIRCH_FOREST, Biomes.TALL_BIRCH_HILLS, Biomes.WOODED_BADLANDS_PLATEAU, Biomes.WOODED_HILLS, Biomes.WOODED_MOUNTAINS);
-        registerEntityWorldSpawn(INFECTED_PIG_ENTITY, 7, 3, 6, Biomes.BAMBOO_JUNGLE_HILLS, Biomes.BAMBOO_JUNGLE, Biomes.BADLANDS_PLATEAU, Biomes.BIRCH_FOREST, Biomes.BIRCH_FOREST_HILLS, Biomes.DARK_FOREST, Biomes.DARK_FOREST_HILLS, Biomes.FLOWER_FOREST, Biomes.FOREST, Biomes.GIANT_SPRUCE_TAIGA, Biomes.GIANT_SPRUCE_TAIGA_HILLS, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.GRAVELLY_MOUNTAINS, Biomes.JUNGLE, Biomes.JUNGLE_EDGE, Biomes.JUNGLE_HILLS, Biomes.MODIFIED_GRAVELLY_MOUNTAINS, Biomes.MODIFIED_JUNGLE, Biomes.MODIFIED_JUNGLE_EDGE, Biomes.MOUNTAINS, Biomes.MOUNTAIN_EDGE, Biomes.PLAINS, Biomes.SAVANNA, Biomes.SAVANNA_PLATEAU, Biomes.SHATTERED_SAVANNA, Biomes.SHATTERED_SAVANNA_PLATEAU, Biomes.SNOWY_MOUNTAINS, Biomes.SNOWY_TAIGA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_TAIGA_MOUNTAINS, Biomes.SNOWY_TUNDRA, Biomes.SUNFLOWER_PLAINS, Biomes.SWAMP, Biomes.SWAMP_HILLS, Biomes.TAIGA, Biomes.TAIGA_HILLS, Biomes.TAIGA_MOUNTAINS, Biomes.TALL_BIRCH_FOREST, Biomes.TALL_BIRCH_HILLS, Biomes.WOODED_HILLS, Biomes.WOODED_MOUNTAINS);
-        registerEntityWorldSpawn(INFECTED_CHICKEN_ENTITY, 7, 4, 8, Biomes.BAMBOO_JUNGLE_HILLS, Biomes.BAMBOO_JUNGLE, Biomes.BADLANDS_PLATEAU, Biomes.BIRCH_FOREST, Biomes.BIRCH_FOREST_HILLS, Biomes.DARK_FOREST, Biomes.DARK_FOREST_HILLS, Biomes.FLOWER_FOREST, Biomes.FOREST, Biomes.GIANT_SPRUCE_TAIGA, Biomes.GIANT_SPRUCE_TAIGA_HILLS, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.GRAVELLY_MOUNTAINS, Biomes.JUNGLE, Biomes.JUNGLE_EDGE, Biomes.JUNGLE_HILLS, Biomes.MODIFIED_GRAVELLY_MOUNTAINS, Biomes.MODIFIED_JUNGLE, Biomes.MODIFIED_JUNGLE_EDGE, Biomes.MOUNTAINS, Biomes.MOUNTAIN_EDGE, Biomes.PLAINS, Biomes.SAVANNA, Biomes.SAVANNA_PLATEAU, Biomes.SHATTERED_SAVANNA, Biomes.SHATTERED_SAVANNA_PLATEAU, Biomes.SNOWY_MOUNTAINS, Biomes.SNOWY_TAIGA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_TAIGA_MOUNTAINS, Biomes.SNOWY_TUNDRA, Biomes.SUNFLOWER_PLAINS, Biomes.SWAMP, Biomes.SWAMP_HILLS, Biomes.TAIGA, Biomes.TAIGA_HILLS, Biomes.TAIGA_MOUNTAINS, Biomes.TALL_BIRCH_FOREST, Biomes.TALL_BIRCH_HILLS, Biomes.WOODED_HILLS, Biomes.WOODED_MOUNTAINS);
-        registerEntityWorldSpawn(INFECTED_SHEEP_ENTITY, 7, 3, 6, Biomes.BAMBOO_JUNGLE_HILLS, Biomes.BAMBOO_JUNGLE, Biomes.BADLANDS_PLATEAU, Biomes.BIRCH_FOREST, Biomes.BIRCH_FOREST_HILLS, Biomes.DARK_FOREST, Biomes.DARK_FOREST_HILLS, Biomes.FLOWER_FOREST, Biomes.FOREST, Biomes.GIANT_SPRUCE_TAIGA, Biomes.GIANT_SPRUCE_TAIGA_HILLS, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.GRAVELLY_MOUNTAINS, Biomes.JUNGLE, Biomes.JUNGLE_EDGE, Biomes.JUNGLE_HILLS, Biomes.MODIFIED_GRAVELLY_MOUNTAINS, Biomes.MODIFIED_JUNGLE, Biomes.MODIFIED_JUNGLE_EDGE, Biomes.MOUNTAINS, Biomes.MOUNTAIN_EDGE, Biomes.PLAINS, Biomes.SAVANNA, Biomes.SAVANNA_PLATEAU, Biomes.SHATTERED_SAVANNA, Biomes.SHATTERED_SAVANNA_PLATEAU, Biomes.SNOWY_MOUNTAINS, Biomes.SNOWY_TAIGA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_TAIGA_MOUNTAINS, Biomes.SNOWY_TUNDRA, Biomes.SUNFLOWER_PLAINS, Biomes.SWAMP, Biomes.SWAMP_HILLS, Biomes.TAIGA, Biomes.TAIGA_HILLS, Biomes.TAIGA_MOUNTAINS, Biomes.TALL_BIRCH_FOREST, Biomes.TALL_BIRCH_HILLS, Biomes.WOODED_HILLS, Biomes.WOODED_MOUNTAINS);
-        registerEntityWorldSpawn(INFECTED_COW_ENTITY, 7, 2, 4, Biomes.BAMBOO_JUNGLE_HILLS, Biomes.BAMBOO_JUNGLE, Biomes.BADLANDS_PLATEAU, Biomes.BIRCH_FOREST, Biomes.BIRCH_FOREST_HILLS, Biomes.DARK_FOREST, Biomes.DARK_FOREST_HILLS, Biomes.FLOWER_FOREST, Biomes.FOREST, Biomes.GIANT_SPRUCE_TAIGA, Biomes.GIANT_SPRUCE_TAIGA_HILLS, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.GRAVELLY_MOUNTAINS, Biomes.JUNGLE, Biomes.JUNGLE_EDGE, Biomes.JUNGLE_HILLS, Biomes.MODIFIED_GRAVELLY_MOUNTAINS, Biomes.MODIFIED_JUNGLE, Biomes.MODIFIED_JUNGLE_EDGE, Biomes.MOUNTAINS, Biomes.MOUNTAIN_EDGE, Biomes.PLAINS, Biomes.SAVANNA, Biomes.SAVANNA_PLATEAU, Biomes.SHATTERED_SAVANNA, Biomes.SHATTERED_SAVANNA_PLATEAU, Biomes.SNOWY_MOUNTAINS, Biomes.SNOWY_TAIGA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_TAIGA_MOUNTAINS, Biomes.SNOWY_TUNDRA, Biomes.SUNFLOWER_PLAINS, Biomes.SWAMP, Biomes.SWAMP_HILLS, Biomes.TAIGA, Biomes.TAIGA_HILLS, Biomes.TAIGA_MOUNTAINS, Biomes.TALL_BIRCH_FOREST, Biomes.TALL_BIRCH_HILLS, Biomes.WOODED_HILLS, Biomes.WOODED_MOUNTAINS);
-        registerEntityWorldSpawn(INFECTED_MOOSHROOM_ENTITY, 1,1,1, Biomes.MUSHROOM_FIELDS, Biomes.MUSHROOM_FIELD_SHORE);
-        registerEntityWorldSpawn(INFECTED_VILLAGER_ENTITY, 5, 1, 4, Biomes.FOREST, Biomes.TAIGA, Biomes.SAVANNA, Biomes.DESERT, Biomes.SNOWY_TUNDRA);
-        registerEntityWorldSpawn(HEROBRINE_SPY_ENTITY, 5, 1, 1, Biomes.BEACH, Biomes.BAMBOO_JUNGLE_HILLS, Biomes.BAMBOO_JUNGLE, Biomes.BADLANDS_PLATEAU, Biomes.BADLANDS, Biomes.BIRCH_FOREST, Biomes.BIRCH_FOREST_HILLS, Biomes.DARK_FOREST, Biomes.DARK_FOREST_HILLS, Biomes.DESERT, Biomes.DESERT_HILLS, Biomes.DESERT_LAKES, Biomes.END_BARRENS, Biomes.END_HIGHLANDS, Biomes.END_MIDLANDS, Biomes.ERODED_BADLANDS, Biomes.FLOWER_FOREST, Biomes.FOREST, Biomes.FROZEN_RIVER, Biomes.GIANT_SPRUCE_TAIGA, Biomes.GIANT_SPRUCE_TAIGA_HILLS, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.GRAVELLY_MOUNTAINS, Biomes.ICE_SPIKES, Biomes.JUNGLE, Biomes.JUNGLE_EDGE, Biomes.JUNGLE_HILLS, Biomes.MODIFIED_BADLANDS_PLATEAU, Biomes.MODIFIED_GRAVELLY_MOUNTAINS, Biomes.MODIFIED_JUNGLE, Biomes.MODIFIED_JUNGLE_EDGE, Biomes.MODIFIED_WOODED_BADLANDS_PLATEAU, Biomes.MOUNTAINS, Biomes.MOUNTAIN_EDGE, Biomes.NETHER, Biomes.PLAINS, Biomes.RIVER, Biomes.SAVANNA, Biomes.SAVANNA_PLATEAU, Biomes.SHATTERED_SAVANNA, Biomes.SHATTERED_SAVANNA_PLATEAU, Biomes.SMALL_END_ISLANDS, Biomes.SNOWY_BEACH, Biomes.SNOWY_MOUNTAINS, Biomes.SNOWY_TAIGA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_TAIGA_MOUNTAINS, Biomes.SNOWY_TUNDRA, Biomes.STONE_SHORE, Biomes.SUNFLOWER_PLAINS, Biomes.SWAMP, Biomes.SWAMP_HILLS, Biomes.TAIGA, Biomes.TAIGA_HILLS, Biomes.TAIGA_MOUNTAINS, Biomes.TALL_BIRCH_FOREST, Biomes.TALL_BIRCH_HILLS, Biomes.WOODED_BADLANDS_PLATEAU, Biomes.WOODED_HILLS, Biomes.WOODED_MOUNTAINS);
-        registerEntityWorldSpawn(HEROBRINE_SPY_ENTITY, 1,1, 1, Biomes.MUSHROOM_FIELD_SHORE, Biomes.MUSHROOM_FIELDS);
-        registerEntityWorldSpawn(HEROBRINE_BUILDER_ENTITY, 1, 1, 1, Biomes.BEACH, Biomes.BAMBOO_JUNGLE_HILLS, Biomes.BAMBOO_JUNGLE, Biomes.BADLANDS_PLATEAU, Biomes.BADLANDS, Biomes.BIRCH_FOREST, Biomes.BIRCH_FOREST_HILLS, Biomes.DARK_FOREST, Biomes.DARK_FOREST_HILLS, Biomes.DESERT, Biomes.DESERT_HILLS, Biomes.DESERT_LAKES, Biomes.END_BARRENS, Biomes.END_HIGHLANDS, Biomes.END_MIDLANDS, Biomes.ERODED_BADLANDS, Biomes.FLOWER_FOREST, Biomes.FOREST, Biomes.FROZEN_RIVER, Biomes.GIANT_SPRUCE_TAIGA, Biomes.GIANT_SPRUCE_TAIGA_HILLS, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.GRAVELLY_MOUNTAINS, Biomes.ICE_SPIKES, Biomes.JUNGLE, Biomes.JUNGLE_EDGE, Biomes.JUNGLE_HILLS, Biomes.MODIFIED_BADLANDS_PLATEAU, Biomes.MODIFIED_GRAVELLY_MOUNTAINS, Biomes.MODIFIED_JUNGLE, Biomes.MODIFIED_JUNGLE_EDGE, Biomes.MODIFIED_WOODED_BADLANDS_PLATEAU, Biomes.MOUNTAINS, Biomes.MOUNTAIN_EDGE, Biomes.NETHER, Biomes.PLAINS, Biomes.RIVER, Biomes.SAVANNA, Biomes.SAVANNA_PLATEAU, Biomes.SHATTERED_SAVANNA, Biomes.SHATTERED_SAVANNA_PLATEAU, Biomes.SMALL_END_ISLANDS, Biomes.SNOWY_BEACH, Biomes.SNOWY_MOUNTAINS, Biomes.SNOWY_TAIGA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_TAIGA_MOUNTAINS, Biomes.SNOWY_TUNDRA, Biomes.STONE_SHORE, Biomes.SUNFLOWER_PLAINS, Biomes.SWAMP, Biomes.SWAMP_HILLS, Biomes.TAIGA, Biomes.TAIGA_HILLS, Biomes.TAIGA_MOUNTAINS, Biomes.TALL_BIRCH_FOREST, Biomes.TALL_BIRCH_HILLS, Biomes.WOODED_BADLANDS_PLATEAU, Biomes.WOODED_HILLS, Biomes.WOODED_MOUNTAINS);
-        registerEntityWorldSpawn(HEROBRINE_MAGE_ENTITY, 1, 1, 1, Biomes.BEACH, Biomes.BAMBOO_JUNGLE_HILLS, Biomes.BAMBOO_JUNGLE, Biomes.BADLANDS_PLATEAU, Biomes.BADLANDS, Biomes.BIRCH_FOREST, Biomes.BIRCH_FOREST_HILLS, Biomes.DARK_FOREST, Biomes.DARK_FOREST_HILLS, Biomes.DESERT, Biomes.DESERT_HILLS, Biomes.DESERT_LAKES, Biomes.END_BARRENS, Biomes.END_HIGHLANDS, Biomes.END_MIDLANDS, Biomes.ERODED_BADLANDS, Biomes.FLOWER_FOREST, Biomes.FOREST, Biomes.FROZEN_RIVER, Biomes.GIANT_SPRUCE_TAIGA, Biomes.GIANT_SPRUCE_TAIGA_HILLS, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.GRAVELLY_MOUNTAINS, Biomes.ICE_SPIKES, Biomes.JUNGLE, Biomes.JUNGLE_EDGE, Biomes.JUNGLE_HILLS, Biomes.MODIFIED_BADLANDS_PLATEAU, Biomes.MODIFIED_GRAVELLY_MOUNTAINS, Biomes.MODIFIED_JUNGLE, Biomes.MODIFIED_JUNGLE_EDGE, Biomes.MODIFIED_WOODED_BADLANDS_PLATEAU, Biomes.MOUNTAINS, Biomes.MOUNTAIN_EDGE, Biomes.NETHER, Biomes.PLAINS, Biomes.RIVER, Biomes.SAVANNA, Biomes.SAVANNA_PLATEAU, Biomes.SHATTERED_SAVANNA, Biomes.SHATTERED_SAVANNA_PLATEAU, Biomes.SMALL_END_ISLANDS, Biomes.SNOWY_BEACH, Biomes.SNOWY_MOUNTAINS, Biomes.SNOWY_TAIGA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_TAIGA_MOUNTAINS, Biomes.SNOWY_TUNDRA, Biomes.STONE_SHORE, Biomes.SUNFLOWER_PLAINS, Biomes.SWAMP, Biomes.SWAMP_HILLS, Biomes.TAIGA, Biomes.TAIGA_HILLS, Biomes.TAIGA_MOUNTAINS, Biomes.TALL_BIRCH_FOREST, Biomes.TALL_BIRCH_HILLS, Biomes.WOODED_BADLANDS_PLATEAU, Biomes.WOODED_HILLS, Biomes.WOODED_MOUNTAINS);
+        BiomeDictionary.Type[] InfectedVillagerTypes = {
+                BiomeDictionary.Type.COLD,
+                BiomeDictionary.Type.CONIFEROUS,
+                BiomeDictionary.Type.DRY,
+                BiomeDictionary.Type.HOT,
+                BiomeDictionary.Type.PLAINS,
+                BiomeDictionary.Type.SANDY,
+                BiomeDictionary.Type.SAVANNA,
+                BiomeDictionary.Type.SNOWY,
+                BiomeDictionary.Type.SPARSE
+        };
+
+        BiomeDictionary.Type[] InfectedAnimalTypes = {
+                BiomeDictionary.Type.BEACH,
+                BiomeDictionary.Type.COLD,
+                BiomeDictionary.Type.CONIFEROUS,
+                BiomeDictionary.Type.DENSE,
+                BiomeDictionary.Type.FOREST,
+                BiomeDictionary.Type.HILLS,
+                BiomeDictionary.Type.JUNGLE,
+                BiomeDictionary.Type.LUSH,
+                BiomeDictionary.Type.MAGICAL,
+                BiomeDictionary.Type.MOUNTAIN,
+                BiomeDictionary.Type.PLAINS,
+                BiomeDictionary.Type.SAVANNA,
+                BiomeDictionary.Type.SNOWY,
+                BiomeDictionary.Type.SPARSE,
+                BiomeDictionary.Type.SPOOKY,
+                BiomeDictionary.Type.SWAMP
+        };
+
+        BiomeDictionary.Type[] HerobrineTypes = {
+                BiomeDictionary.Type.BEACH,
+                BiomeDictionary.Type.COLD,
+                BiomeDictionary.Type.CONIFEROUS,
+                BiomeDictionary.Type.DEAD,
+                BiomeDictionary.Type.DENSE,
+                BiomeDictionary.Type.DRY,
+                BiomeDictionary.Type.FOREST,
+                BiomeDictionary.Type.HILLS,
+                BiomeDictionary.Type.HOT,
+                BiomeDictionary.Type.JUNGLE,
+                BiomeDictionary.Type.LUSH,
+                BiomeDictionary.Type.MAGICAL,
+                BiomeDictionary.Type.MESA,
+                BiomeDictionary.Type.MOUNTAIN,
+                BiomeDictionary.Type.OCEAN,
+                BiomeDictionary.Type.PLAINS,
+                BiomeDictionary.Type.RARE,
+                BiomeDictionary.Type.RIVER,
+                BiomeDictionary.Type.SANDY,
+                BiomeDictionary.Type.SAVANNA,
+                BiomeDictionary.Type.SNOWY,
+                BiomeDictionary.Type.SPARSE,
+                BiomeDictionary.Type.SPOOKY,
+                BiomeDictionary.Type.SWAMP,
+                BiomeDictionary.Type.VOID,
+                BiomeDictionary.Type.WASTELAND,
+                BiomeDictionary.Type.WATER,
+                BiomeDictionary.Type.WET,
+                BiomeDictionary.Type.END,
+                BiomeDictionary.Type.MODIFIED,
+                BiomeDictionary.Type.NETHER,
+                BiomeDictionary.Type.PLATEAU
+        };
+
+        BiomeDictionary.Type[] MushroomBiomeTypes = {
+                BiomeDictionary.Type.MUSHROOM
+        };
+
+        for (BiomeDictionary.Type t : InfectedVillagerTypes) {
+            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
+            for (Biome currentBiome : biomes) {
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_VILLAGER_ENTITY, 5, 1, 4));
+            }
+        }
+
+        for (BiomeDictionary.Type t : InfectedAnimalTypes) {
+            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
+            for (Biome currentBiome : biomes) {
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_PIG_ENTITY, 7, 3, 6));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_COW_ENTITY, 7, 2, 4));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_CHICKEN_ENTITY, 7, 4, 8));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_SHEEP_ENTITY, 7, 3, 6));
+            }
+        }
+
+        for (BiomeDictionary.Type t : MushroomBiomeTypes) {
+            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
+            for (Biome currentBiome : biomes) {
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_BUILDER_ENTITY, 1, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_MAGE_ENTITY, 1, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_SPY_ENTITY, 3, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_WARRIOR_ENTITY, 1, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_MOOSHROOM_ENTITY, 1, 1, 1));
+            }
+        }
+
+        for (BiomeDictionary.Type t : HerobrineTypes) {
+            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
+            for (Biome currentBiome : biomes) {
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_BUILDER_ENTITY, 1, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_MAGE_ENTITY, 1, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_SPY_ENTITY, 1, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_WARRIOR_ENTITY, 1, 1, 1));
+            }
+        }
     }
 
     @NotNull
@@ -63,11 +161,5 @@ public class EntityRegistry {
         SpawnEggItem item = new SpawnEggItem(type, primaryColor, secondaryColor, new Item.Properties().group(ItemGroup.MISC));
         item.setRegistryName(HerobrineMod.location(name));
         return item;
-    }
-
-    private static void registerEntityWorldSpawn(EntityType<?> entity, int weight, int minGroupCount, int maxGroupCount, @NotNull Biome... biomes){
-            for (Biome biome : biomes) {
-                biome.getSpawns(entity.getClassification()).add(new Biome.SpawnListEntry(entity, weight, minGroupCount, maxGroupCount));
-            }
     }
 }
