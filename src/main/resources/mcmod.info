@@ -4,10 +4,10 @@
         "description": "Adds Herobrine to Minecraft, and other herobrine related things",
         "version": "0.4.3",
         "mcversion": "1.15.2",
-        "logoFile": "assets/herobrine/textures/Logo.png",
+        "logoFile": "Logo.png",
         "url": "https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine",
         "updateJSON": "https://raw.githubusercontent.com/Alex-MacLean/TheLegendOfHerobrine/master/update.json",
         "authorList": ["Alex MacLean"],
-        "credits": "Alex MacLean"
+        "credits": "Russian Translation - KickDemonAss"
     }
 ]
