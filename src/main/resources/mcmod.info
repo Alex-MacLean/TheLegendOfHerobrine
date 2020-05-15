@@ -1,4 +1,5 @@
-[{
+[
+	{
         "modid": "herobrine",
         "name": "The Legend of Herobrine",
         "description": "Adds Herobrine to Minecraft, and other herobrine related things",
@@ -8,6 +9,7 @@
         "url": "https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine",
         "updateJSON": "https://raw.githubusercontent.com/Alex-MacLean/TheLegendOfHerobrine/master/update.json",
         "authorList": ["Alex MacLean"],
-        "credits": "Russian Translation - KickDemonAss"
+        "credits": "Russian Translation - KickDemonAss,
+		Polish Translation - kubix1006"
     }
 ]

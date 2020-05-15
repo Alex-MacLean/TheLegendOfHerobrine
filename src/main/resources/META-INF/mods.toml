@@ -8,7 +8,8 @@ displayName="The Legend of Herobrine" #mandatory
 updateJSONURL="https://raw.githubusercontent.com/Alex-MacLean/TheLegendOfHerobrine/master/update.json" #optional
 displayURL="https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine" #optional
 logoFile="Logo.png" #optional
-credits="Russian Translation - KickDemonAss" #optional
+credits="Russian Translation - KickDemonAss,
+Polish Translation - kubix1006" #optional
 authors="Alex MacLean" #optional
 description='''
 Adds Herobrine to Minecraft, and other herobrine related things
