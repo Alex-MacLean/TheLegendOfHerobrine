@@ -50,7 +50,7 @@ public class Variables {
             return nbt;
         }
 
-        public void syncData(@NotNull World world) {
+        public void syncData(World world) {
             this.markDirty();
             if (world.isRemote) {
                 HerobrineMod.PACKET_HANDLER.sendToServer(new WorldSavedDataSyncMessage(1, this));
@@ -104,8 +104,10 @@ public class Variables {
 
         private static void syncData(WorldSavedDataSyncMessage message, @NotNull LogicalSide side, World world) {
             if (side.isServer()) {
+                message.data.markDirty();
                 if (message.type == 0) {
                     HerobrineMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), message);
+                    Objects.requireNonNull(world.getServer()).func_71218_a(DimensionType.OVERWORLD).getSavedData().set(message.data);
                 } else {
                     HerobrineMod.PACKET_HANDLER.send(PacketDistributor.DIMENSION.with(world.dimension::getType), message);
                     ((ServerWorld) world).getSavedData().set(message.data);

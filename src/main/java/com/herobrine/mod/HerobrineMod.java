@@ -7,6 +7,7 @@ import com.herobrine.mod.items.*;
 import com.herobrine.mod.util.items.ArmorMaterialList;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.items.ItemTierList;
+import com.herobrine.mod.util.savedata.Variables;
 import com.herobrine.mod.util.worldgen.BiomeInit;
 import com.herobrine.mod.worldgen.structures.TrappedHouse;
 import net.minecraft.block.Block;
@@ -14,12 +15,15 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,6 +31,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -76,7 +81,7 @@ public class HerobrineMod {
                     ItemList.cursed_diamond_axe = new AxeItem(ItemTierList.cursed_diamond_item_tier, 5, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_axe")),
                     ItemList.cursed_diamond_pickaxe = new PickaxeItem(ItemTierList.cursed_diamond_item_tier, 1, -2.8f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_pickaxe")),
                     ItemList.cursed_diamond_shovel = new ShovelItem(ItemTierList.cursed_diamond_item_tier, 1.5f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_shovel")),
-                    ItemList.cursed_diamond_hoe = new HoeItem(ItemTierList.cursed_diamond_item_tier, 0.0F, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_hoe")),
+                    ItemList.cursed_diamond_hoe = new HoeItem(ItemTierList.cursed_diamond_item_tier, 1.0F, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_hoe")),
                     ItemList.cursed_diamond_helmet = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_helmet")),
                     ItemList.cursed_diamond_chestplate = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_chestplate")),
                     ItemList.cursed_diamond_leggings = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_leggings")),
@@ -108,7 +113,9 @@ public class HerobrineMod {
                     EntityRegistry.HEROBRINE_SPY_ENTITY,
                     EntityRegistry.HEROBRINE_BUILDER_ENTITY,
                     EntityRegistry.HEROBRINE_MAGE_ENTITY,
-                    EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY
+                    EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY,
+                    EntityRegistry.HOLY_WATER_ENTITY,
+                    EntityRegistry.UNHOLY_WATER_ENTITY
             );
                     EntityRegistry.registerEntityWorldSpawns();
         }
@@ -116,6 +123,24 @@ public class HerobrineMod {
         @SubscribeEvent
         public static void registerBiomes(@NotNull final RegistryEvent.Register<Biome> event) {
             BiomeInit.registerBiomes();
+        }
+
+        @SubscribeEvent
+        public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
+            if (!event.getPlayer().world.isRemote) {
+                WorldSavedData worlddata = Variables.WorldVariables.get(event.getPlayer().world);
+                if (worlddata != null)
+                    HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(1, worlddata));
+            }
+        }
+
+        @SubscribeEvent
+        public void onPlayerChangedDimension(PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
+            if (!event.getPlayer().world.isRemote) {
+                WorldSavedData worlddata = Variables.WorldVariables.get(event.getPlayer().world);
+                if (worlddata != null)
+                    HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(1, worlddata));
+            }
         }
     }
 }

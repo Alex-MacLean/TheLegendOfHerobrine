@@ -1,25 +1,26 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
-import net.minecraft.entity.Entity;
+import com.herobrine.mod.util.items.ItemList;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.SnowballEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Random;
+import java.util.List;
 
 public class HolyWaterEntity extends SnowballEntity{
-    private static final Random random = new Random();
-
-    public HolyWaterEntity(EntityType<? extends SnowballEntity> entityType, World world) {
+    public HolyWaterEntity(EntityType<? extends HolyWaterEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -32,24 +33,40 @@ public class HolyWaterEntity extends SnowballEntity{
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
+    public @NotNull ItemStack getItem() {
+        return new ItemStack(ItemList.holy_water, 1);
+    }
+
+    @Override
     protected void onImpact(@NotNull RayTraceResult result) {
-        if (result.getType() == RayTraceResult.Type.ENTITY) {
-            Entity entity = ((EntityRayTraceResult)result).getEntity();
-            ((LivingEntity) entity).clearActivePotions();
-            ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.REGENERATION, 300, 1));
-            ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.HEALTH_BOOST, 300, 1));
-            entity.extinguish();
-            int a = entity instanceof HerobrineWarriorEntity ? 12 : 0;
-            int b = entity instanceof HerobrineMageEntity ? 12 : 0;
-            int c = entity instanceof HerobrineSpyEntity ? 12 : 0;
-            int d = entity instanceof HerobrineBuilderEntity ? 12 : 0;
-            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)a);
-            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)b);
-            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)c);
-            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)d);
-        }
         if (!this.world.isRemote) {
-            this.playSound(SoundEvents.BLOCK_GLASS_BREAK, 0.8F,  0.9F / (random.nextFloat() * 0.4F + 0.8F));
+            AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(1.0D, 1.0D, 1.0D);
+            List<LivingEntity> list = this.world.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
+            if (!list.isEmpty()) {
+                for (LivingEntity entity : list) {
+                    entity.clearActivePotions();
+                    entity.addPotionEffect(new EffectInstance(Effects.REGENERATION, 300, 1));
+                    entity.addPotionEffect(new EffectInstance(Effects.HEALTH_BOOST, 300, 1));
+                    entity.extinguish();
+                    if (entity instanceof HerobrineWarriorEntity) {
+                        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()),12.0F);
+                    }
+                    if (entity instanceof HerobrineMageEntity) {
+                        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()),12.0F);
+                    }
+                    if (entity instanceof HerobrineSpyEntity) {
+                        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()),12.0F);
+                    }
+                    if (entity instanceof HerobrineBuilderEntity) {
+                        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()),12.0F);
+                    }
+                    if (entity instanceof FakeHerobrineMageEntity) {
+                        entity.remove();
+                    }
+                }
+            }
+            this.playSound(SoundEvents.BLOCK_GLASS_BREAK, 0.8F,  0.9F / (rand.nextFloat() * 0.4F + 0.8F));
             this.world.setEntityState(this, (byte)3);
             this.remove();
         }

@@ -34,7 +34,7 @@ public class HolyWaterItem extends Item {
             itemstack.shrink(1);
         }
 
-        playerIn.sendBreakAnimation(handIn);
+        playerIn.swingArm(handIn);
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 }

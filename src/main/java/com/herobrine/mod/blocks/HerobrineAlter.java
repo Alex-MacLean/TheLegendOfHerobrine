@@ -144,32 +144,46 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     }
 
     @Override
+    public boolean hasComparatorInputOverride(@NotNull BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(@NotNull BlockState blockState, @NotNull World worldIn, @NotNull BlockPos pos) {
+        return blockState.get(ModBlockStates.ACTIVE) ? 15 : 0;
+    }
+
+    @Override
     public boolean onBlockActivated(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity entity, @NotNull Hand hand, @NotNull BlockRayTraceResult hit) {
+        Variables.WorldVariables.get(world).syncData(world);
         boolean i = state.get(ModBlockStates.ACTIVE);
         if (i == Boolean.FALSE) {
             int x = pos.getX();
             int y = pos.getY();
             int z = pos.getZ();
-            if (entity.inventory.hasItemStack(new ItemStack(ItemList.cursed_diamond, 1))) {
+            ItemStack itemstack = entity.getHeldItem(hand);
+            if (itemstack.getItem() == ItemList.cursed_diamond) {
                 assert false;
                 state = state.getBlockState().with(ModBlockStates.ACTIVE, Boolean.TRUE);
-                if (entity instanceof PlayerEntity && !entity.abilities.isCreativeMode)
-                    entity.inventory.clearMatchingItems(p -> new ItemStack(ItemList.cursed_diamond, 1).getItem() == p.getItem(), 1);
+                if (entity instanceof PlayerEntity && !entity.abilities.isCreativeMode) {
+                    itemstack.shrink(1);
+                }
                 entity.swingArm(hand);
                 world.setBlockState(pos, state, 2);
                 if (state.get(WATERLOGGED)) {
                     world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
                 }
-
+                if (world instanceof ServerWorld) {
+                    ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, x, y, z, false));
+                }
                 if (!(Variables.WorldVariables.get(world).Spawn)) {
-                    if (((entity instanceof PlayerEntity) && entity.inventory.hasItemStack(new ItemStack(ItemList.cursed_diamond, 1))) && (!(Variables.WorldVariables.get(world).Spawn))) {
+                    if (((entity instanceof PlayerEntity) && (!(Variables.WorldVariables.get(world).Spawn)))) {
                         assert false;
                         if(world.isRemote) {
                             entity.sendMessage(new StringTextComponent("<Herobrine> You have no idea what you have done!"));
                         }
                         Variables.WorldVariables.get(world).Spawn = true;
-                        if (world instanceof ServerWorld)
-                            ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, x, y, z, false));
+                        Variables.WorldVariables.get(world).syncData(world);
                         return true;
                     }
                 }

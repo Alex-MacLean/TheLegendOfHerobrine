@@ -4,6 +4,7 @@ import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -25,6 +26,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class HerobrineWarriorEntity extends MonsterEntity{
     private int blockBreakCounter;
@@ -43,7 +45,7 @@ public class HerobrineWarriorEntity extends MonsterEntity{
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.6D, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, GolemEntity.class, true));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, GolemEntity.class, false));
         this.targetSelector.addGoal(4, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.4D));
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
@@ -127,20 +129,23 @@ public class HerobrineWarriorEntity extends MonsterEntity{
         this.blockBreakCounter = compound.getInt("DestroyCooldown");
     }
 
-    private boolean canReachTarget() {
-        return !this.getNavigator().noPath();
+    private boolean unableToAttackTarget() {
+        if(this.getAttackTarget() != null) {
+            return this.getNavigator().noPath() && this.navigator.func_75494_a(this.getAttackTarget(), 0) == null && !this.canAttack(this.getAttackTarget(), EntityPredicate.DEFAULT.setCustomPredicate(LivingEntity::attackable));
+        } else {
+            return false;
+        }
     }
 
     @Override
     protected void updateAITasks() {
         if (this.blockBreakCounter > 0) {
             --this.blockBreakCounter;
-            if (this.blockBreakCounter == 0 && this.isAggressive() && this.canReachTarget() && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
+            if (this.blockBreakCounter == 0 && this.isAggressive() && this.unableToAttackTarget() && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
                 int i1 = MathHelper.floor(this.posY);
                 int l1 = MathHelper.floor(this.posX);
                 int i2 = MathHelper.floor(this.posZ);
                 boolean flag1 = false;
-
                 for(int k2 = -1; k2 <= 1; ++k2) {
                     for(int l2 = -1; l2 <= 1; ++l2) {
                         for(int j = 0; j <= 2; ++j) {
@@ -149,7 +154,7 @@ public class HerobrineWarriorEntity extends MonsterEntity{
                             int l = i2 + l2;
                             BlockPos blockpos = new BlockPos(i3, k, l);
                             BlockState blockstate = this.world.getBlockState(blockpos);
-                            if (!blockstate.isFoliage(world, blockpos) && blockstate.getMaterial() != Material.FIRE && !blockstate.isAir() && !BlockTags.WITHER_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.DRAGON_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.BEDS.contains(blockstate.getBlock()) && !BlockTags.CARPETS.contains(blockstate.getBlock()) && !BlockTags.BUTTONS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_BUTTONS.contains(blockstate.getBlock()) && !BlockTags.CORAL_PLANTS.contains(blockstate.getBlock()) && !BlockTags.CORALS.contains(blockstate.getBlock()) && !BlockTags.FLOWER_POTS.contains(blockstate.getBlock()) && !BlockTags.RAILS.contains(blockstate.getBlock()) && !BlockTags.SAPLINGS.contains(blockstate.getBlock()) && !BlockTags.SMALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.SIGNS.contains(blockstate.getBlock()) && !BlockTags.STANDING_SIGNS.contains(blockstate.getBlock()) && !BlockTags.UNDERWATER_BONEMEALS.contains(blockstate.getBlock()) && !BlockTags.WALL_CORALS.contains(blockstate.getBlock()) && !BlockTags.WALL_SIGNS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_PRESSURE_PLATES.contains(blockstate.getBlock())
+                            if (blockstate.getMaterial() != Material.LAVA && blockstate.getMaterial() != Material.WATER && !blockstate.isFoliage(world, blockpos) && blockstate.getMaterial() != Material.FIRE && !blockstate.isAir() && !BlockTags.WITHER_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.DRAGON_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.BEDS.contains(blockstate.getBlock()) && !BlockTags.CARPETS.contains(blockstate.getBlock()) && !BlockTags.BUTTONS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_BUTTONS.contains(blockstate.getBlock()) && !BlockTags.CORAL_PLANTS.contains(blockstate.getBlock()) && !BlockTags.CORALS.contains(blockstate.getBlock()) && !BlockTags.FLOWER_POTS.contains(blockstate.getBlock()) && !BlockTags.RAILS.contains(blockstate.getBlock()) && !BlockTags.SAPLINGS.contains(blockstate.getBlock()) && !BlockTags.SMALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.SIGNS.contains(blockstate.getBlock()) && !BlockTags.STANDING_SIGNS.contains(blockstate.getBlock()) && !BlockTags.UNDERWATER_BONEMEALS.contains(blockstate.getBlock()) && !BlockTags.WALL_CORALS.contains(blockstate.getBlock()) && !BlockTags.WALL_SIGNS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_PRESSURE_PLATES.contains(blockstate.getBlock())
                                     && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, blockstate)) {
                                 flag1 = this.world.destroyBlock(blockpos, true) || flag1;
                                 this.swingArm(Hand.MAIN_HAND);

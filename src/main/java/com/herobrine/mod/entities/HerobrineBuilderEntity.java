@@ -37,7 +37,7 @@ public class HerobrineBuilderEntity extends MonsterEntity {
         this((EntityType<? extends HerobrineBuilderEntity>) EntityRegistry.HEROBRINE_BUILDER_ENTITY, worldIn);
     }
 
-    private int placeTimer;
+    private int placeTimer = 1000;
     private int lifeTimer = 5100;
 
     @Override

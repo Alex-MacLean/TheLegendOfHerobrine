@@ -14,8 +14,8 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 public class RenderRegistry {
     public static void registerEntityRenders() {
         RenderingRegistry.registerEntityRenderingHandler(HerobrineWarriorEntity.class, new HerobrineWarriorEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(HolyWaterEntity.class, (IRenderFactory<Entity>) manager -> new SpriteRenderer(manager, Minecraft.getInstance().getItemRenderer()));
-        RenderingRegistry.registerEntityRenderingHandler(UnholyWaterEntity.class, (IRenderFactory<Entity>) manager -> new SpriteRenderer(manager, Minecraft.getInstance().getItemRenderer()));
+        RenderingRegistry.registerEntityRenderingHandler(HolyWaterEntity.class, renderManager -> new SpriteRenderer(renderManager, Minecraft.getInstance().getItemRenderer()));
+        RenderingRegistry.registerEntityRenderingHandler(UnholyWaterEntity.class, renderManager -> new SpriteRenderer(renderManager, Minecraft.getInstance().getItemRenderer()));
         RenderingRegistry.registerEntityRenderingHandler(InfectedPigEntity.class, new InfectedPigEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(InfectedChickenEntity.class, new InfectedChickenEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(InfectedSheepEntity.class, new InfectedSheepEntityRender.RenderFactory());
