@@ -8,8 +8,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
@@ -34,13 +34,7 @@ public class TrappedHouse {
             public boolean place(@NotNull IWorld iworld, @NotNull ChunkGenerator generator, @NotNull Random random, @NotNull BlockPos pos, @NotNull NoFeatureConfig config) {
                 int ci = pos.getX();
                 int ck = pos.getZ();
-                DimensionType dimensionType = iworld.getDimension().getType();
-                boolean dimensionCriteria = false;
-                if (dimensionType == DimensionType.OVERWORLD)
-                    dimensionCriteria = true;
-                if (!dimensionCriteria)
-                    return false;
-                if ((random.nextInt(1000000) + 1) <= 500) {
+                if ((random.nextInt(1000000) + 1) <= 750) {
                     int count = random.nextInt(1) + 1;
                     for (int a = 0; a < count; a++) {
                         int i = ci + random.nextInt(16) + 8;

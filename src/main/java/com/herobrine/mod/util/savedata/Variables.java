@@ -26,14 +26,12 @@ public class Variables {
 
         public WorldVariables() {
             super(DATA_NAME);
-            this.addNetworkMessage(Variables.WorldSavedDataSyncMessage.class, Variables.WorldSavedDataSyncMessage::buffer,
-                    Variables.WorldSavedDataSyncMessage::new, Variables.WorldSavedDataSyncMessage::handler);
+            this.addNetworkMessage(Variables.WorldSavedDataSyncMessage.class, Variables.WorldSavedDataSyncMessage::buffer, Variables.WorldSavedDataSyncMessage::new, Variables.WorldSavedDataSyncMessage::handler);
         }
 
         private int messageID = 0;
 
-        public <T> void addNetworkMessage(Class<T> messageType, BiConsumer<T, PacketBuffer> encoder, Function<PacketBuffer, T> decoder,
-                                          BiConsumer<T, Supplier<NetworkEvent.Context>> messageConsumer) {
+        public <T> void addNetworkMessage(Class<T> messageType, BiConsumer<T, PacketBuffer> encoder, Function<PacketBuffer, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> messageConsumer) {
             HerobrineMod.PACKET_HANDLER.registerMessage(messageID, messageType, encoder, decoder, messageConsumer);
             messageID++;
         }

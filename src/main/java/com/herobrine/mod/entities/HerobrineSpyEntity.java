@@ -27,6 +27,8 @@ public class HerobrineSpyEntity extends MonsterEntity {
         experienceValue = 5;
     }
 
+    private int lifeTimer = 6000;
+
     public HerobrineSpyEntity(World worldIn) {
         this((EntityType<? extends HerobrineSpyEntity>) EntityRegistry.HEROBRINE_SPY_ENTITY, worldIn);
     }
@@ -106,9 +108,28 @@ public class HerobrineSpyEntity extends MonsterEntity {
     }
 
     @Override
+    public void writeAdditional(@NotNull CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putInt("LifeTime", this.lifeTimer);
+    }
+
+    @Override
+    public void readAdditional(@NotNull CompoundNBT compound) {
+        super.readAdditional(compound);
+        this.lifeTimer = compound.getInt("LifeTime");
+    }
+
+    @Override
     public void baseTick() {
         super.baseTick();
         this.clearActivePotions();
+        --this.lifeTimer;
+        if(this.lifeTimer > 6000) {
+            this.lifeTimer = 6000;
+        }
+        if(this.lifeTimer <= 0) {
+            this.remove();
+        }
     }
 
     @Override
@@ -117,6 +138,7 @@ public class HerobrineSpyEntity extends MonsterEntity {
         if ((!(Variables.WorldVariables.get(world).Spawn))) {
             this.remove();
         }
+        this.enablePersistence();
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 }

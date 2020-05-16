@@ -2,6 +2,8 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.savedata.Variables;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -32,15 +34,15 @@ public class HerobrineMageEntity extends MonsterEntity {
         this((EntityType<? extends HerobrineMageEntity>) EntityRegistry.HEROBRINE_MAGE_ENTITY, worldIn);
     }
 
-    private int illusionCastingTime;
-    private int effectsCastingTime;
-    private int teleportCastingTime;
+    private int illusionCastingTime = 400;
+    private int effectsCastingTime = 250;
+    private int teleportCastingTime = 500;
 
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.6D, true));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, false));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, GolemEntity.class, true));
         this.targetSelector.addGoal(4, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.4D));
@@ -242,18 +244,21 @@ public class HerobrineMageEntity extends MonsterEntity {
                     int x = (int) entity.getPosX();
                     int y = (int) entity.getPosY();
                     int z = (int) entity.getPosZ();
-                    entity.setPositionAndUpdate(x, y + 4, z);
-                }
-                if (this.world.isRemote) {
-                    if (!this.isSilent()) {
-                        this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
-                    }
-
-                    for (int i = 0; i < 20; ++i) {
-                        double d0 = this.rand.nextGaussian() * 0.02D;
-                        double d1 = this.rand.nextGaussian() * 0.02D;
-                        double d2 = this.rand.nextGaussian() * 0.02D;
-                        this.world.addParticle(ParticleTypes.EFFECT, this.getPosXWidth(1.0D) - d0 * 10.0D, this.getPosYRandom() - d1 * 10.0D, this.getPosZRandom(1.0D) - d2 * 10.0D, d0, d1, d2);
+                    BlockState block = world.getBlockState(new BlockPos(x, y + 3, z));
+                    BlockState blockAt = world.getBlockState(new BlockPos(x, y + 4, z));
+                    if (blockAt.getBlock() == Blocks.AIR.getDefaultState().getBlock() && block.getBlock() == Blocks.AIR.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.CAVE_AIR.getDefaultState().getBlock() && block.getBlock() == Blocks.CAVE_AIR.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.CAVE_AIR.getDefaultState().getBlock() && block.getBlock() == Blocks.AIR.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.AIR.getDefaultState().getBlock() && block.getBlock() == Blocks.CAVE_AIR.getDefaultState().getBlock()) {
+                        entity.setPositionAndUpdate(x, y + 4, z);
+                        if (this.world.isRemote) {
+                            if (!this.isSilent()) {
+                                this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+                            }
+                            for (int i = 0; i < 20; ++i) {
+                                double d0 = this.rand.nextGaussian() * 0.02D;
+                                double d1 = this.rand.nextGaussian() * 0.02D;
+                                double d2 = this.rand.nextGaussian() * 0.02D;
+                                this.world.addParticle(ParticleTypes.EFFECT, this.getPosXWidth(1.0D) - d0 * 10.0D, this.getPosYRandom() - d1 * 10.0D, this.getPosZRandom(1.0D) - d2 * 10.0D, d0, d1, d2);
+                            }
+                        }
                     }
                 }
             }
