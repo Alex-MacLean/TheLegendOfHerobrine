@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "A A",
+        "A A"
+    ],
+    "key": {
+        "A": {
+            "item": "herobrine:cursed_diamond"
+        }
+    },
+    "result": {
+        "item": "herobrine:cursed_diamond_leggings"
+    }
+}
