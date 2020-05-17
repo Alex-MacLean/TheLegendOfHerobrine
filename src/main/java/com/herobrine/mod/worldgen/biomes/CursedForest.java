@@ -1,90 +1,97 @@
 package com.herobrine.mod.worldgen.biomes;
 
-import com.google.common.collect.ImmutableList;
-import com.herobrine.mod.util.entities.EntityRegistry;
-import com.herobrine.mod.worldgen.structures.TrappedHouse;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
+import com.herobrine.mod.util.worldgen.CursedBirchTreeFeature;
+import com.herobrine.mod.util.worldgen.CursedTreeFeature;
+import net.minecraft.block.BlockDoublePlant;
+import net.minecraft.block.BlockFlower;
+import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.DefaultBiomeFeatures;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.MultipleRandomFeatureConfig;
-import net.minecraft.world.gen.feature.TreeFeatureConfig;
-import net.minecraft.world.gen.feature.structure.MineshaftConfig;
-import net.minecraft.world.gen.feature.structure.MineshaftStructure;
-import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
-import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
-import net.minecraft.world.gen.placement.ChanceConfig;
-import net.minecraft.world.gen.placement.Placement;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.gen.feature.WorldGenAbstractTree;
+import net.minecraft.world.gen.feature.WorldGenBirchTree;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
-import static net.minecraft.world.biome.DefaultBiomeFeatures.FANCY_TREE_CONFIG;
-import static net.minecraft.world.biome.DefaultBiomeFeatures.OAK_TREE_CONFIG;
+import java.util.Random;
 
 public class CursedForest extends Biome {
+    protected static final CursedTreeFeature CURSED_OAK_TREES = new CursedTreeFeature(false, false);
+    protected static final CursedBirchTreeFeature CURSED_BIRCH_TREES = new CursedBirchTreeFeature(false, false);
+    protected static final WorldGenBirchTree BIRCH_TREE = new WorldGenBirchTree(false, false);
 
-    public CursedForest(Builder biomeBuilder) {
-        super(biomeBuilder);
-        this.addStructure(Feature.MINESHAFT.withConfiguration(new MineshaftConfig(0.004D, MineshaftStructure.Type.NORMAL)));
-        this.addStructure(Feature.STRONGHOLD.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
-        this.addStructure(Feature.STRONGHOLD.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
-        DefaultBiomeFeatures.addCarvers(this);
-        DefaultBiomeFeatures.addStructures(this);
-        DefaultBiomeFeatures.addLakes(this);
-        DefaultBiomeFeatures.addMonsterRooms(this);
-        DefaultBiomeFeatures.addDoubleFlowers(this);
-        DefaultBiomeFeatures.addStoneVariants(this);
-        DefaultBiomeFeatures.addOres(this);
-        DefaultBiomeFeatures.addSedimentDisks(this);
-        DefaultBiomeFeatures.addDefaultFlowers(this);
-        DefaultBiomeFeatures.addGrass(this);
-        DefaultBiomeFeatures.addMushrooms(this);
-        DefaultBiomeFeatures.addReedsAndPumpkins(this);
-        DefaultBiomeFeatures.addSprings(this);
-        DefaultBiomeFeatures.addFreezeTopLayer(this);
-        DefaultBiomeFeatures.addExtraEmeraldOre(this);
-        DefaultBiomeFeatures.addExtraGoldOre(this);
-        DefaultBiomeFeatures.addScatteredOakTrees(this);
-        this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(Feature.FANCY_TREE.withConfiguration(FANCY_TREE_CONFIG).withChance(0.1F)), Feature.NORMAL_TREE.withConfiguration(OAK_TREE_CONFIG))).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(0, 0.2F, 1))));
-        this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.NORMAL_TREE.withConfiguration(DefaultBiomeFeatures.field_230129_h_).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(0, 0.1F, 1))));
-        final BlockState OAK_LOG = Blocks.OAK_LOG.getDefaultState();
-        final BlockState BIRCH_LOG = Blocks.BIRCH_LOG.getDefaultState();
-        final BlockState AIR = Blocks.AIR.getDefaultState();
-        TreeFeatureConfig cursed_tree = (new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(OAK_LOG), new SimpleBlockStateProvider(AIR), new BlobFoliagePlacer(2, 0))).baseHeight(5).heightRandA(2).foliageHeight(3).ignoreVines().build();
-        this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.NORMAL_TREE.withConfiguration(cursed_tree).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(2, 0.1F, 1))));
-        TreeFeatureConfig cursed_tree_birch = (new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(BIRCH_LOG), new SimpleBlockStateProvider(AIR), new BlobFoliagePlacer(2, 0))).baseHeight(5).heightRandA(2).foliageHeight(3).ignoreVines().build();
-        this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.NORMAL_TREE.withConfiguration(cursed_tree_birch).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(1, 0.1F, 1))));
-        this.addFeature(GenerationStage.Decoration.UNDERGROUND_DECORATION, Feature.FOSSIL.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.CHANCE_PASSTHROUGH.configure(new ChanceConfig(1024))));
-        this.addSpawn(EntityClassification.CREATURE, new Biome.SpawnListEntry(EntityType.SHEEP, 12, 4, 4));
-        this.addSpawn(EntityClassification.CREATURE, new Biome.SpawnListEntry(EntityType.PIG, 10, 4, 4));
-        this.addSpawn(EntityClassification.CREATURE, new Biome.SpawnListEntry(EntityType.CHICKEN, 10, 4, 4));
-        this.addSpawn(EntityClassification.CREATURE, new Biome.SpawnListEntry(EntityType.COW, 8, 4, 4));
-        this.addSpawn(EntityClassification.CREATURE, new Biome.SpawnListEntry(EntityType.WOLF, 5, 4, 4));
-        this.addSpawn(EntityClassification.AMBIENT, new Biome.SpawnListEntry(EntityType.BAT, 20, 8, 8));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.SPIDER, 105, 4, 4));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.ZOMBIE, 100, 4, 4));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.ZOMBIE_VILLAGER, 10, 1, 1));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.SKELETON, 105, 4, 4));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.CREEPER, 105, 4, 4));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.SLIME, 105, 4, 4));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.ENDERMAN, 15, 1, 4));
-        this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.WITCH, 10, 1, 1));
+    public CursedForest() {
+        super(new BiomeProperties("cursed_forest").setTemperature(0.7F).setRainfall(0.8F));
+        this.decorator.treesPerChunk = 10;
+        this.decorator.grassPerChunk = 2;
+        this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityWolf.class, 5, 4, 4));
+    }
+
+    @Override
+    public @NotNull WorldGenAbstractTree getRandomTreeFeature(@NotNull Random rand)
+    {
+        if(rand.nextInt(7) > 0) {
+            return CURSED_OAK_TREES;
+        } else if(rand.nextInt(10) != 0) {
+            return CURSED_BIRCH_TREES;
+        } else if (rand.nextInt(5) == 0) {
+            return BIRCH_TREE;
+        } else {
+            return rand.nextInt(10) == 0 ? BIG_TREE_FEATURE : TREE_FEATURE;
+        }
+    }
+
+    @Override
+    public BlockFlower.@NotNull EnumFlowerType pickRandomFlower(@NotNull Random rand, @NotNull BlockPos pos) {
+        return super.pickRandomFlower(rand, pos);
+    }
+
+    public void decorate(@NotNull World worldIn, @NotNull Random rand, @NotNull BlockPos pos) {
+        if(net.minecraftforge.event.terraingen.TerrainGen.decorate(worldIn, rand, new net.minecraft.util.math.ChunkPos(pos), net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.FLOWERS)) {
+            int i = rand.nextInt(5) - 3;
+            this.addDoublePlants(worldIn, rand, pos, i);
+        }
+        super.decorate(worldIn, rand, pos);
+    }
+
+    public void addDoublePlants(World p_185378_1_, Random p_185378_2_, BlockPos p_185378_3_, int p_185378_4_) {
+        for (int i = 0; i < p_185378_4_; ++i) {
+            int j = p_185378_2_.nextInt(3);
+
+            if (j == 0) {
+                DOUBLE_PLANT_GENERATOR.setPlantType(BlockDoublePlant.EnumPlantType.SYRINGA);
+            }
+            else if (j == 1) {
+                DOUBLE_PLANT_GENERATOR.setPlantType(BlockDoublePlant.EnumPlantType.ROSE);
+            }
+            else if (j == 2) {
+                DOUBLE_PLANT_GENERATOR.setPlantType(BlockDoublePlant.EnumPlantType.PAEONIA);
+            }
+
+            for (int k = 0; k < 5; ++k) {
+                int l = p_185378_2_.nextInt(16) + 8;
+                int i1 = p_185378_2_.nextInt(16) + 8;
+                int j1 = p_185378_2_.nextInt(p_185378_1_.getHeight(p_185378_3_.add(l, 0, i1)).getY() + 32);
+
+                if (DOUBLE_PLANT_GENERATOR.generate(p_185378_1_, p_185378_2_, new BlockPos(p_185378_3_.getX() + l, j1, p_185378_3_.getZ() + i1))) {
+                    break;
+                }
+            }
+        }
     }
 
 
-    @OnlyIn(Dist.CLIENT)
-    public int getFoliageColor() {
-        return 0x9EA94D;
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getFoliageColorAtPos(@NotNull BlockPos pos) {
+        return getModdedBiomeFoliageColor(0x9EA94D);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public int getGrassColor(double posX, double posZ) {
-        return 0x90A94D;
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getGrassColorAtPos(@NotNull BlockPos pos) {
+        return getModdedBiomeGrassColor(0x9EA94D);
     }
 }

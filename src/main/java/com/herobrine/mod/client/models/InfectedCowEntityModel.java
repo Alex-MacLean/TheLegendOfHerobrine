@@ -1,10 +1,9 @@
 package com.herobrine.mod.client.models;
 
-import com.herobrine.mod.entities.InfectedCowEntity;
-import net.minecraft.client.renderer.entity.model.CowModel;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.client.model.ModelCow;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-@OnlyIn(Dist.CLIENT)
-public class InfectedCowEntityModel extends CowModel<InfectedCowEntity> {
+@SideOnly(Side.CLIENT)
+public class InfectedCowEntityModel extends ModelCow {
 }

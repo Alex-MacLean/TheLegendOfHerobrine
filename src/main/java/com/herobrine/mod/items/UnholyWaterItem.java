@@ -1,38 +1,37 @@
 package com.herobrine.mod.items;
 
 import com.herobrine.mod.entities.UnholyWaterEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class UnholyWaterItem extends Item {
-    public UnholyWaterItem(Properties properties) {
-        super(properties);
+    public UnholyWaterItem() {
     }
 
-    @NotNull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, @NotNull PlayerEntity playerIn, @NotNull Hand handIn) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, @NotNull EntityPlayer playerIn, @NotNull EnumHand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
-        worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+        playerIn.swingArm(handIn);
         playerIn.getCooldownTracker().setCooldown(this, 10);
-        if (!worldIn.isRemote) {
-            UnholyWaterEntity entity = new UnholyWaterEntity(worldIn, playerIn);
-            entity.setItem(itemstack);
-            entity.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
-            worldIn.addEntity(entity);
-        }
-
-        if (!playerIn.abilities.isCreativeMode) {
+        if (!playerIn.capabilities.isCreativeMode) {
             itemstack.shrink(1);
         }
 
-        return ActionResult.resultSuccess(itemstack);
+        worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+
+        if (!worldIn.isRemote) {
+            UnholyWaterEntity entity = new UnholyWaterEntity(worldIn, playerIn);
+            entity.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
+            worldIn.spawnEntity(entity);
+        }
+        return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
     }
 }

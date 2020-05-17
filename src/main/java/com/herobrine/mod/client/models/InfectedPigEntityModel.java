@@ -1,10 +1,9 @@
 package com.herobrine.mod.client.models;
 
-import com.herobrine.mod.entities.InfectedPigEntity;
-import net.minecraft.client.renderer.entity.model.PigModel;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.client.model.ModelPig;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-@OnlyIn(Dist.CLIENT)
-public class InfectedPigEntityModel extends PigModel<InfectedPigEntity> {
+@SideOnly(Side.CLIENT)
+public class InfectedPigEntityModel extends ModelPig {
 }

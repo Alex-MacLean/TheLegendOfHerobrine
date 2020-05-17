@@ -1,64 +1,53 @@
 package com.herobrine.mod.worldgen.structures;
 
 import com.herobrine.mod.HerobrineMod;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
-import net.minecraft.world.gen.placement.IPlacementConfig;
-import net.minecraft.world.gen.placement.Placement;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.gen.structure.template.PlacementSettings;
+import net.minecraft.world.gen.structure.template.Template;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
 public class TrappedHouse {
-
-    public static void registerStructure() {
-        Feature<NoFeatureConfig> feature = new Feature<NoFeatureConfig>(NoFeatureConfig::deserialize) {
-            @Override
-            public boolean place(@NotNull IWorld iworld, @NotNull ChunkGenerator generator, @NotNull Random random, @NotNull BlockPos pos, @NotNull NoFeatureConfig config) {
-                int ci = pos.getX();
-                int ck = pos.getZ();
-                if ((random.nextInt(1000000) + 1) <= 750) {
-                    int count = random.nextInt(1) + 1;
-                    for (int a = 0; a < count; a++) {
-                        int i = ci + random.nextInt(16) + 8;
-                        int k = ck + random.nextInt(16) + 8;
-                        int j = iworld.getHeight(Heightmap.Type.OCEAN_FLOOR_WG, i, k);
-                        j -= 1;
-                        BlockState blockAt = iworld.getBlockState(new BlockPos(i, j, k));
-                        boolean blockCriteria = false;
-                        if (blockAt.getBlock() == Blocks.GRASS_BLOCK.getDefaultState().getBlock())
-                            blockCriteria = true;
-                        if (!blockCriteria)
-                            continue;
-                        Template template = ((ServerWorld) iworld.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "trapped_house"));
-                        Rotation rotation = Rotation.values()[random.nextInt(3)];
-                        Mirror mirror = Mirror.values()[random.nextInt(2)];
-                        BlockPos spawnTo = new BlockPos(i, j - 2, k);
-                        template.addBlocksToWorldChunk(iworld, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).setIgnoreEntities(false));
-                    }
+    public static void generateWorld(@NotNull Random random, int i2, int k2, @NotNull World world) {
+        if ((random.nextInt(1000000) + 1) <= 750) {
+            int count = random.nextInt(1) + 1;
+            for (int a = 0; a < count; a++) {
+                int i = i2 + random.nextInt(16) + 8;
+                int k = k2 + random.nextInt(16) + 8;
+                int height = 255;
+                while (height > 0) {
+                    if (!world.isAirBlock(new BlockPos(i, height, k)) && world.getBlockState(new BlockPos(i, height, k)).getBlock().getMaterial(world.getBlockState(new BlockPos(i, height, k))).blocksMovement())
+                        break;
+                    height--;
                 }
-                return true;
+                int j = height;
+                IBlockState blockAt = world.getBlockState(new BlockPos(i, j, k));
+                boolean blockCriteria = false;
+                IBlockState require;
+                require = Blocks.GRASS.getDefaultState();
+                if (blockAt.getBlock() == require.getBlock())
+                    blockCriteria = true;
+                if (!blockCriteria)
+                    continue;
+                if (world.isRemote)
+                    return;
+                Template template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "trapped_house"));
+                Rotation rotation = Rotation.values()[random.nextInt(3)];
+                Mirror mirror = Mirror.values()[random.nextInt(2)];
+                BlockPos spawnTo = new BlockPos(i, j - 2, k);
+                IBlockState iblockstate = world.getBlockState(spawnTo);
+                world.notifyBlockUpdate(spawnTo, iblockstate, iblockstate, 3);
+                template.addBlocksToWorldChunk(world, spawnTo, new PlacementSettings().setRotation(rotation).setMirror(mirror).setChunk(null).setReplacedBlock(null).setIgnoreStructureBlock(false).setIgnoreEntities(false));
             }
-        };
-        for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
-            biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, feature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
         }
     }
 }

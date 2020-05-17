@@ -5,64 +5,96 @@ import com.herobrine.mod.util.blocks.ModBlockStates;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
-import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.Random;
 
-import static com.herobrine.mod.HerobrineMod.RegistryEvents.HEROBRINE_ALTER_MATERIAL;
-import static com.herobrine.mod.HerobrineMod.location;
+import static com.herobrine.mod.HerobrineMod.registryEvents.HEROBRINE_ALTER_MATERIAL;
 
-public class HerobrineAlter extends Block implements IWaterLoggable {
-    @ObjectHolder(HerobrineMod.MODID + ":herobrine_alter")
-    public static final Block block = null;
-    public static final VoxelShape SHAPE = VoxelShapes.or(Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 9.0D, 0.0D, 1.0D, 15.0D, 1.0D), Block.makeCuboidShape(16.0D, 9.0D, 0.0D, 15.0D, 15.0D, 1.0D), Block.makeCuboidShape(16.0D, 9.0D, 16.0D, 15.0D, 15.0D, 15.0D), Block.makeCuboidShape(0.0D, 9.0D, 16.0D, 1.0D, 15.0D, 15.0D), Block.makeCuboidShape(0.0D, 15.0D, 0.0D, 2.0D, 16.0D, 2.0D), Block.makeCuboidShape(14.0D, 15.0D, 0.0D, 16.0D, 16.0D, 2.0D), Block.makeCuboidShape(14.0D, 15.0D, 14.0D, 16.0D, 16.0D, 16.0D), Block.makeCuboidShape(0.0D, 15.0D, 14.0D, 2.0D, 16.0D, 16.0D), Block.makeCuboidShape(0.0D, 8.0D, 0.0D, 2.0D, 9.0D, 2.0D), Block.makeCuboidShape(14.0D, 8.0D, 0.0D, 16.0D, 9.0D, 2.0D), Block.makeCuboidShape(14.0D, 8.0D, 14.0D, 16.0D, 9.0D, 16.0D), Block.makeCuboidShape(0.0D, 8.0D, 14.0D, 2.0D, 9.0D, 16.0D));
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+public class HerobrineAlter extends Block {
+    @GameRegistry.ObjectHolder(HerobrineMod.MODID + ":herobrine_alter")
+    public static final Block block = new Block(HEROBRINE_ALTER_MATERIAL);
 
     public HerobrineAlter() {
-        super(Properties.create(HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid());
-        this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE).with(ModBlockStates.ACTIVE, Boolean.FALSE));
-        setRegistryName(location("herobrine_alter"));
+        super(HEROBRINE_ALTER_MATERIAL, MapColor.RED);
+        this.setCreativeTab(CreativeTabs.DECORATIONS);
+        this.setRegistryName(HerobrineMod.location("herobrine_alter"));
+        this.setTranslationKey(HerobrineMod.MODID + "." + "herobrine_alter");
+        this.setHardness(1.5f);
+        this.setResistance(1.5f);
+        this.setTickRandomly(true);
+        this.setDefaultState(this.blockState.getBaseState().withProperty(ModBlockStates.ACTIVE, Boolean.FALSE));
     }
 
     @Override
-    public int getLightValue(@NotNull BlockState state) {
-        boolean i = state.get(ModBlockStates.ACTIVE);
+    public boolean isOpaqueCube(@NotNull IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public @NotNull IBlockState getStateForPlacement(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ, int meta, @NotNull EntityLivingBase placer) {
+        return this.getDefaultState().withProperty(ModBlockStates.ACTIVE, Boolean.FALSE);
+    }
+
+    @Override
+    public boolean hasComparatorInputOverride(@NotNull IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(@NotNull IBlockState blockState, @NotNull World worldIn, @NotNull BlockPos pos) {
+        return blockState.getValue(ModBlockStates.ACTIVE) ? 15 : 0;
+    }
+
+    @Override
+    public @NotNull IBlockState getStateFromMeta(int meta) {
+        return this.getDefaultState().withProperty(ModBlockStates.ACTIVE, (meta & 4) != 0);
+    }
+
+    @Override
+    public int getMetaFromState(@NotNull IBlockState state) {
+        int i = 0;
+
+        if (state.getValue(ModBlockStates.ACTIVE)) {
+            i |= 4;
+        }
+
+        return i;
+    }
+
+    @Override
+    protected @NotNull BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, ModBlockStates.ACTIVE);
+    }
+
+    @Override
+    public boolean isFullCube(@NotNull IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public int getLightValue(@NotNull IBlockState state) {
+        boolean i = state.getValue(ModBlockStates.ACTIVE);
         if (i == Boolean.TRUE) {
             return 8;
         } else {
@@ -70,95 +102,26 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
         }
     }
 
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull ISelectionContext context) {
-        return SHAPE;
-    }
-
-    @Override
-    public boolean canEntitySpawn(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull EntityType<?> type) {
+    public boolean canSpawnInBlock() {
         return false;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
-    protected void fillStateContainer(@NotNull StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.WATERLOGGED);
-        builder.add(ModBlockStates.ACTIVE);
-    }
-
-    @NotNull
-    @Override
-    public IFluidState getFluidState(@NotNull BlockState state) {
-        return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
-    }
-
-    @Override
-    public boolean receiveFluid(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IFluidState fluidStateIn) {
-        return IWaterLoggable.super.receiveFluid(worldIn, pos, state, fluidStateIn);
-    }
-
-    @Override
-    public boolean canContainFluid(@NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Fluid fluidIn) {
-        return IWaterLoggable.super.canContainFluid(worldIn, pos, state, fluidIn);
-    }
-
-    @NotNull
-    @Override
-    public BlockState updatePostPlacement(@NotNull BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull IWorld worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
-        if (stateIn.get(BlockStateProperties.WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
-        }
-        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(@NotNull BlockItemUseContext context) {
-        BlockPos blockpos = context.getPos();
-        IFluidState ifluidstate = context.getWorld().getFluidState(blockpos);
-        return this.getDefaultState().with(BlockStateProperties.WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
-    }
-
-    @Override
-    public boolean allowsMovement(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull PathType type) {
-        if (type == PathType.WATER) {
-            return worldIn.getFluidState(pos).isTagged(FluidTags.WATER);
-        }
-        return false;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void animateTick(@NotNull BlockState stateIn, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull Random rand) {
-        boolean i = stateIn.get(ModBlockStates.ACTIVE);
+    public void randomDisplayTick(@NotNull IBlockState stateIn, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull Random rand) {
+        boolean i = stateIn.getValue(ModBlockStates.ACTIVE);
         if (i == Boolean.TRUE) {
             double d0 = (double) pos.getX() + 0.5D + ((double) rand.nextFloat() - 0.5D) * 0.2D;
             double d1 = (double) pos.getY() + 0.05F;
             double d2 = (double) pos.getZ() + 0.5D + ((double) rand.nextFloat() - 0.5D) * 0.2D;
-            worldIn.addParticle(ParticleTypes.PORTAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-            boolean s = stateIn.get(ModBlockStates.ACTIVE);
-            if (s == Boolean.TRUE && (!(Variables.WorldVariables.get(worldIn).Spawn))) {
-                Variables.WorldVariables.get(worldIn).Spawn = true;
-            }
+            worldIn.spawnParticle(EnumParticleTypes.PORTAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
     }
 
     @Override
-    public boolean hasComparatorInputOverride(@NotNull BlockState state) {
-        return true;
-    }
-
-    @Override
-    public int getComparatorInputOverride(@NotNull BlockState blockState, @NotNull World worldIn, @NotNull BlockPos pos) {
-        return blockState.get(ModBlockStates.ACTIVE) ? 15 : 0;
-    }
-
-    @NotNull
-    @Override
-    public ActionResultType onBlockActivated(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity entity, @NotNull Hand hand, @NotNull BlockRayTraceResult hit) {
-        Variables.WorldVariables.get(world).syncData(world);
-        boolean i = state.get(ModBlockStates.ACTIVE);
+    public boolean onBlockActivated(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer entity, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
+        boolean i = state.getValue(ModBlockStates.ACTIVE);
         if (i == Boolean.FALSE) {
             int x = pos.getX();
             int y = pos.getY();
@@ -166,33 +129,22 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
             ItemStack itemstack = entity.getHeldItem(hand);
             if (itemstack.getItem() == ItemList.cursed_diamond) {
                 assert false;
-                state = state.getBlockState().with(ModBlockStates.ACTIVE, Boolean.TRUE);
-                if (entity instanceof PlayerEntity && !entity.abilities.isCreativeMode) {
+                world.setBlockState(new BlockPos(x, y, z), this.getDefaultState().withProperty(ModBlockStates.ACTIVE, true), 4);
+                if (entity instanceof EntityPlayer && !entity.isCreative()) {
                     itemstack.shrink(1);
                 }
-                world.setBlockState(pos, state, 2);
-                if (state.get(WATERLOGGED)) {
-                    world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-                }
-                if (world instanceof ServerWorld) {
-                    ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, x, y, z, false));
-                }
-                if (!(Variables.WorldVariables.get(world).Spawn)) {
-                    if (((entity instanceof PlayerEntity) && entity.inventory.hasItemStack(new ItemStack(ItemList.cursed_diamond, 1))) && (!(Variables.WorldVariables.get(world).Spawn))) {
-                        assert false;
-                        if(world.isRemote) {
-                            entity.sendMessage(new StringTextComponent("<Herobrine> You have no idea what you have done!"));
-                        }
-                        Variables.WorldVariables.get(world).Spawn = true;
-                        Variables.WorldVariables.get(world).syncData(world);
+                entity.swingArm(EnumHand.MAIN_HAND);
+                world.addWeatherEffect(new EntityLightningBolt(world, x, y, z, false));
+                if ((!(Variables.WorldVariables.get(world).Spawn))) {
+                    Variables.WorldVariables.get(world).Spawn = true;
+                    Variables.WorldVariables.get(world).syncData(world);
+                    if(world.isRemote) {
+                        entity.sendMessage(new TextComponentString("<Herobrine> You have no idea what you have done!"));
                     }
                 }
-            } else {
-                return ActionResultType.FAIL;
+
             }
-            return ActionResultType.SUCCESS;
-        } else {
-            return ActionResultType.FAIL;
         }
+        return super.onBlockActivated(world, pos, state, entity, hand, facing, hitX, hitY, hitZ);
     }
 }

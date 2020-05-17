@@ -1,64 +1,62 @@
 package com.herobrine.mod.entities;
 
-import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.items.ItemList;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRendersAsItem;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.SnowballEntity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.projectile.EntitySnowball;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Random;
 
-public class UnholyWaterEntity extends SnowballEntity implements IRendersAsItem {
-    public UnholyWaterEntity(EntityType<? extends UnholyWaterEntity> entityType, World world) {
-        super(entityType, world);
+public class UnholyWaterEntity extends EntitySnowball {
+    public UnholyWaterEntity(World worldIn) {
+        super(worldIn);
     }
 
-    public UnholyWaterEntity(World worldIn, LivingEntity throwerIn) {
+    public UnholyWaterEntity(World worldIn, EntityLivingBase throwerIn) {
         super(worldIn, throwerIn);
     }
 
-    public UnholyWaterEntity(World worldIn) {
-        this((EntityType<? extends UnholyWaterEntity>) EntityRegistry.UNHOLY_WATER_ENTITY, worldIn);
-    }
-
+    @SideOnly(Side.CLIENT)
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public @NotNull ItemStack getItem() {
-        return new ItemStack(ItemList.unholy_water, 1);
+    public void handleStatusUpdate(byte id) {
+        ItemStack stack = new ItemStack(ItemList.unholy_water, 1);
+        if (id == 3) {
+            for (int i = 0; i < 8; ++i) {
+                this.world.spawnAlwaysVisibleParticle(EnumParticleTypes.ITEM_CRACK.getParticleID(), this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, Item.getIdFromItem(stack.getItem()), stack.getMetadata());
+            }
+        }
     }
-
 
     @Override
     protected void onImpact(@NotNull RayTraceResult result) {
         if (!this.world.isRemote) {
-            AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(1.0D, 1.0D, 1.0D);
-            List<LivingEntity> list = this.world.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
+            AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().grow(1.0D, 1.0D, 1.0D);
+            List<EntityLivingBase> list = this.world.getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
             if (!list.isEmpty()) {
-                for (LivingEntity entity : list) {
-                    entity.addPotionEffect(new EffectInstance(Effects.WITHER, 300, 1));
-                    entity.addPotionEffect(new EffectInstance(Effects.HUNGER, 300, 1));
+                for (EntityLivingBase entity : list) {
+                    entity.addPotionEffect(new PotionEffect(MobEffects.WITHER, 300, 1));
+                    entity.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 300, 1));
                     entity.setFire(15);
                     entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()),4.0F);
                 }
             }
-            this.playSound(SoundEvents.BLOCK_GLASS_BREAK, 0.8F,  0.9F / (rand.nextFloat() * 0.4F + 0.8F));
-            this.world.setEntityState(this, (byte)3);
-            this.remove();
+
+            this.playSound(SoundEvents.ENTITY_SPLASH_POTION_BREAK, 0.8F, 0.9F / (rand.nextFloat() * 0.4F + 0.8F));
+            this.world.setEntityState(this, (byte) 3);
+            this.setDead();
         }
     }
 }

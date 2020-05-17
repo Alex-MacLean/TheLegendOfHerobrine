@@ -1,12 +1,11 @@
 package com.herobrine.mod.client.models;
 
-import com.herobrine.mod.entities.InfectedVillagerEntity;
-import net.minecraft.client.renderer.entity.model.VillagerModel;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.client.model.ModelVillager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-@OnlyIn(Dist.CLIENT)
-public class InfectedVillagerEntityModel extends VillagerModel<InfectedVillagerEntity> {
+@SideOnly(Side.CLIENT)
+public class InfectedVillagerEntityModel extends ModelVillager {
     public InfectedVillagerEntityModel(float scale) {
         super(scale);
     }

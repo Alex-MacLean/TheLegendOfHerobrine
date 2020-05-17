@@ -1,30 +1,29 @@
 package com.herobrine.mod.client.renders;
 
-import com.herobrine.mod.entities.HolyWaterEntity;
-import com.herobrine.mod.util.entities.EntityRegistry;
+import com.herobrine.mod.entities.*;
+import com.herobrine.mod.util.items.ItemList;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.SpriteRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraft.client.renderer.entity.RenderSnowball;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-@OnlyIn(Dist.CLIENT)
+@SideOnly(Side.CLIENT)
 public class RenderRegistry {
     public static void registerEntityRenders() {
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_WARRIOR_ENTITY, new HerobrineWarriorEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HOLY_WATER_ENTITY, renderManager -> new SpriteRenderer(renderManager, Minecraft.getInstance().getItemRenderer()));
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.UNHOLY_WATER_ENTITY, renderManager -> new SpriteRenderer(renderManager, Minecraft.getInstance().getItemRenderer()));
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_PIG_ENTITY, new InfectedPigEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_CHICKEN_ENTITY, new InfectedChickenEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_SHEEP_ENTITY, new InfectedSheepEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_COW_ENTITY, new InfectedCowEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_MOOSHROOM_ENTITY, new InfectedMooshroomEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_VILLAGER_ENTITY, new InfectedVillagerEntityRenderer.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_SPY_ENTITY, new HerobrineSpyEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_BUILDER_ENTITY, new HerobrineBuilderEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_MAGE_ENTITY, new HerobrineMageEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, new FakeHerobrineMageEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(InfectedPigEntity.class, InfectedPigEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InfectedSheepEntity.class, InfectedSheepEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InfectedVillagerEntity.class, InfectedVillagerEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InfectedMooshroomEntity.class, InfectedMooshroomEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InfectedCowEntity.class, InfectedCowEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InfectedChickenEntity.class, InfectedChickenEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(HerobrineMageEntity.class, HerobrineMageEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(FakeHerobrineMageEntity.class, FakeHerobrineMageEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(HerobrineSpyEntity.class, HerobrineSpyEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(HerobrineBuilderEntity.class, HerobrineBuilderEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(HerobrineWarriorEntity.class, HerobrineWarriorEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(HolyWaterEntity.class, renderManager -> new RenderSnowball<>(renderManager, new ItemStack(ItemList.holy_water, 1).getItem(), Minecraft.getMinecraft().getRenderItem()));
+        RenderingRegistry.registerEntityRenderingHandler(UnholyWaterEntity.class, renderManager -> new RenderSnowball<>(renderManager, new ItemStack(ItemList.unholy_water, 1).getItem(), Minecraft.getMinecraft().getRenderItem()));
     }
 }
