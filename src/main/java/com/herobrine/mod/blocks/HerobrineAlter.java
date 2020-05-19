@@ -16,7 +16,6 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
@@ -137,10 +136,6 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
             double d1 = (double) pos.getY() + 0.05F;
             double d2 = (double) pos.getZ() + 0.5D + ((double) rand.nextFloat() - 0.5D) * 0.2D;
             worldIn.addParticle(ParticleTypes.PORTAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-            boolean s = stateIn.get(ModBlockStates.ACTIVE);
-            if (s == Boolean.TRUE && (!(Variables.WorldVariables.get(worldIn).Spawn))) {
-                Variables.WorldVariables.get(worldIn).Spawn = true;
-            }
         }
     }
 

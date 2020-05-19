@@ -32,6 +32,7 @@ public class InfectedChickenEntityRender extends MobRenderer<InfectedChickenEnti
         return (MathHelper.sin(f) + 1.0F) * f1;
     }
 
+    @SuppressWarnings("rawtypes")
     public static class RenderFactory implements IRenderFactory {
         @Override
         public EntityRenderer<? super InfectedChickenEntity> createRenderFor(EntityRendererManager manager) {

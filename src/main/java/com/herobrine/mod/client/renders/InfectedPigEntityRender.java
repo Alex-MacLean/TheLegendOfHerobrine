@@ -24,6 +24,7 @@ public class InfectedPigEntityRender extends MobRenderer<InfectedPigEntity, Infe
         return HerobrineMod.location("textures/entity/infected_pig.png");
     }
 
+    @SuppressWarnings("rawtypes")
     public static class RenderFactory implements IRenderFactory {
         @Override
         public EntityRenderer<? super InfectedPigEntity> createRenderFor(EntityRendererManager manager) {

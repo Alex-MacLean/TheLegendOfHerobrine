@@ -82,6 +82,7 @@ public class InfectedSheepEntity extends MonsterEntity implements IShearable {
         experienceValue = 3;
     }
 
+    @SuppressWarnings("unchecked")
     public InfectedSheepEntity(World worldIn) {
         this((EntityType<? extends InfectedSheepEntity>) EntityRegistry.INFECTED_SHEEP_ENTITY, worldIn);
     }

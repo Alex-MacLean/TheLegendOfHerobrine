@@ -30,6 +30,7 @@ public class HerobrineMageEntity extends MonsterEntity {
         experienceValue = 5;
     }
 
+    @SuppressWarnings("unchecked")
     public HerobrineMageEntity(World worldIn) {
         this((EntityType<? extends HerobrineMageEntity>) EntityRegistry.HEROBRINE_MAGE_ENTITY, worldIn);
     }
@@ -158,6 +159,7 @@ public class HerobrineMageEntity extends MonsterEntity {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void livingTick() {
         if(this.isAlive()) {
             if (this.illusionCastingTime <= 0) {

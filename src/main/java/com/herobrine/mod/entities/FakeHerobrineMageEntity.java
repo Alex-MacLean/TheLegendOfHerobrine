@@ -25,6 +25,7 @@ public class FakeHerobrineMageEntity extends MonsterEntity {
         experienceValue = 0;
     }
 
+    @SuppressWarnings("unchecked")
     public FakeHerobrineMageEntity(World worldIn) {
         this((EntityType<? extends FakeHerobrineMageEntity>) EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, worldIn);
     }

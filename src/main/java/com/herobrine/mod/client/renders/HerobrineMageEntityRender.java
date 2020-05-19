@@ -24,6 +24,7 @@ public class HerobrineMageEntityRender extends MobRenderer<HerobrineMageEntity, 
         return HerobrineMod.location("textures/entity/herobrine.png");
     }
 
+    @SuppressWarnings("rawtypes")
     public static class RenderFactory implements IRenderFactory {
         @Override
         public EntityRenderer<? super HerobrineMageEntity> createRenderFor(EntityRendererManager manager) {

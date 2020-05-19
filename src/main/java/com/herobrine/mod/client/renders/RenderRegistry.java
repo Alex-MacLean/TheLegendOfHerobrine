@@ -1,17 +1,15 @@
 package com.herobrine.mod.client.renders;
 
-import com.herobrine.mod.entities.HolyWaterEntity;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 @OnlyIn(Dist.CLIENT)
 public class RenderRegistry {
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static void registerEntityRenders() {
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_WARRIOR_ENTITY, new HerobrineWarriorEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HOLY_WATER_ENTITY, renderManager -> new SpriteRenderer(renderManager, Minecraft.getInstance().getItemRenderer()));

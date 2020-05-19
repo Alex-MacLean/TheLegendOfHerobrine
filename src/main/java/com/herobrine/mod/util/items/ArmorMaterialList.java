@@ -1,7 +1,6 @@
 package com.herobrine.mod.util.items;
 
 import com.herobrine.mod.HerobrineMod;
-import com.herobrine.mod.util.items.ItemList;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Item;
@@ -15,12 +14,13 @@ public enum ArmorMaterialList implements IArmorMaterial {
     cursed_diamond_armor_material("cursed_diamond",35, new int[]{4, 7, 9, 4}, 25, ItemList.cursed_diamond, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.0f);
 
         public static final int[] max_damage_array = new int[]{13, 15, 16, 11};
-        private String name;
-        private SoundEvent equipSound;
-        private int durability, enchantability;
-        private Item repairItem;
-        private int[] damageReductionAmounts;
-        private float toughness;
+        private final String name;
+        private final SoundEvent equipSound;
+        private final int durability;
+        private final int enchantability;
+        private final Item repairItem;
+        private final int[] damageReductionAmounts;
+        private final float toughness;
 
     ArmorMaterialList(String name, int durability, int[] damageReductionAmounts, int enchantability, Item repairItem, SoundEvent equipSound, float toughness) {
         this.name = name;

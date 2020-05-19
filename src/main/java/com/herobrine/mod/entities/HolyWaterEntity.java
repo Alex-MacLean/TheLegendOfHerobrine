@@ -2,21 +2,16 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.items.ItemList;
-import net.minecraft.block.HoneyBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.entity.projectile.SnowballEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,6 +29,7 @@ public class HolyWaterEntity extends SnowballEntity implements IRendersAsItem {
         super(worldIn, throwerIn);
     }
 
+    @SuppressWarnings("unchecked")
     public HolyWaterEntity(World worldIn) {
         this((EntityType<? extends HolyWaterEntity>) EntityRegistry.HOLY_WATER_ENTITY, worldIn);
     }
