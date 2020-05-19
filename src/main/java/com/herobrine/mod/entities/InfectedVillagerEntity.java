@@ -2,7 +2,6 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.loot_tables.LootTableInit;
 import com.herobrine.mod.util.savedata.Variables;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;

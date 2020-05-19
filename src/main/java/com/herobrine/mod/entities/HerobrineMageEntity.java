@@ -136,8 +136,6 @@ public class HerobrineMageEntity extends EntityMob{
         this.teleportCastingTime = compound.getInteger("WarpCastingInterval");
     }
 
-
-
     @Override
     public void onUpdate() {
         this.clearActivePotions();

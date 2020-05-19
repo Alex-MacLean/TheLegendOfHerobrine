@@ -25,7 +25,7 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements IShear
     @Override
     public boolean processInteract(@NotNull EntityPlayer player, @NotNull EnumHand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
-        if (false && itemstack.getItem() == Items.SHEARS) {
+        if (itemstack.getItem() == Items.SHEARS) {
             this.setDead();
             this.world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY + (double)(this.height / 2.0F), this.posZ, 0.0D, 0.0D, 0.0D);
 

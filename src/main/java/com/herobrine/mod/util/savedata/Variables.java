@@ -79,6 +79,8 @@ public class Variables {
     public static class WorldSavedDataSyncMessage implements IMessage {
         public int type;
         public WorldSavedData data;
+        //Required or Minecraft will crash
+        @SuppressWarnings("unused")
         public WorldSavedDataSyncMessage() {
         }
 

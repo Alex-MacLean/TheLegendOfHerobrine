@@ -205,13 +205,14 @@ public class InfectedSheepEntity extends EntityMob implements IShearable {
     public boolean processInteract(@NotNull EntityPlayer player, @NotNull EnumHand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
 
-        if (false && itemstack.getItem() == Items.SHEARS && !this.getSheared()) {
+        if (itemstack.getItem() == Items.SHEARS && !this.getSheared()) {
             if (!this.world.isRemote) {
                 this.setSheared(true);
                 int i = 1 + this.rand.nextInt(3);
 
                 for (int j = 0; j < i; ++j) {
                     EntityItem entityitem = this.entityDropItem(new ItemStack(Item.getItemFromBlock(Blocks.WOOL), 1, this.getFleeceColor().getMetadata()), 1.0F);
+                    assert entityitem != null;
                     entityitem.motionY += this.rand.nextFloat() * 0.05F;
                     entityitem.motionX += (this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F;
                     entityitem.motionZ += (this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F;

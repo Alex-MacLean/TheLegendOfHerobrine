@@ -1,7 +1,6 @@
 package com.herobrine.mod.worldgen.structures;
 
 import com.herobrine.mod.HerobrineMod;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.Mirror;
@@ -17,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class TrappedHouse {
+    @SuppressWarnings("ConstantConditions")
     public static void generateWorld(@NotNull Random random, int i2, int k2, @NotNull World world) {
         if ((random.nextInt(1000000) + 1) <= 750) {
             int count = random.nextInt(1) + 1;

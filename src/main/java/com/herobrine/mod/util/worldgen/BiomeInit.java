@@ -16,6 +16,7 @@ public class BiomeInit {
     }
 
     @Contract("_, _, _, _, _ -> param1")
+    @SuppressWarnings("UnusedReturnValue")
     public static @NotNull Biome registerBiome(@NotNull Biome biome, String name, BiomeManager.BiomeType biomeType, int weight, BiomeDictionary.Type... types) {
         biome.setRegistryName(name);
         ForgeRegistries.BIOMES.register(biome);

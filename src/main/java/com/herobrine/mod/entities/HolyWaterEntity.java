@@ -1,7 +1,6 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.items.ItemList;
-import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.MobEffects;
@@ -12,7 +11,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,7 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class HolyWaterEntity extends EntitySnowball {
-
+    //Required or Minecraft will crash
+    @SuppressWarnings("unused")
     public HolyWaterEntity(World worldIn) {
         super(worldIn);
     }

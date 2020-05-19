@@ -139,7 +139,7 @@ public class HerobrineWarriorEntity extends EntityMob {
 
     private boolean unableToAttackTarget() {
         if(this.getAttackTarget() != null) {
-            return this.navigator.getPathToEntityLiving(this.getAttackTarget()) == null && this.getNavigator().noPath();
+            return this.navigator.getPathToEntityLiving(this.getAttackTarget()) == null && this.getNavigator().noPath() && !this.isSwingInProgress;
         } else {
             return false;
         }

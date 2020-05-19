@@ -5,7 +5,6 @@ import net.minecraft.block.material.Material;
 import org.jetbrains.annotations.NotNull;
 
 public class ModMaterial extends Material {
-    private boolean requiresNoTool = true;
 
     public ModMaterial(MapColor color) {
         super(color);
@@ -14,7 +13,6 @@ public class ModMaterial extends Material {
     @Override
     public @NotNull ModMaterial setRequiresTool()
     {
-        this.requiresNoTool = false;
         return this;
     }
 }
