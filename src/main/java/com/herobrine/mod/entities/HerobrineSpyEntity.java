@@ -26,6 +26,7 @@ public class HerobrineSpyEntity extends MonsterEntity {
 
     private int lifeTimer = 6000;
 
+    @SuppressWarnings("unchecked")
     public HerobrineSpyEntity(World worldIn) {
         this((EntityType<? extends HerobrineSpyEntity>) EntityRegistry.HEROBRINE_SPY_ENTITY, worldIn);
     }

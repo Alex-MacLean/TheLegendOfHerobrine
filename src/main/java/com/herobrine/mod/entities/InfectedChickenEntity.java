@@ -35,6 +35,7 @@ public class InfectedChickenEntity extends MonsterEntity {
         this.setPathPriority(PathNodeType.WATER, 0.0F);
     }
 
+    @SuppressWarnings("unchecked")
     public InfectedChickenEntity(World worldIn) {
         this((EntityType<? extends InfectedChickenEntity>) EntityRegistry.INFECTED_CHICKEN_ENTITY, worldIn);
     }

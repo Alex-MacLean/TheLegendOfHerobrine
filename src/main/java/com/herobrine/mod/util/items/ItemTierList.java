@@ -10,9 +10,12 @@ public enum ItemTierList implements IItemTier {
     bedrock_item_tier(9.0f, -1.0f, -1, -1, -1, Items.BEDROCK),
     cursed_diamond_item_tier(4.0f, 9.0f, 1600, 4, 22, ItemList.cursed_diamond);
 
-    private float attackDamage, efficiency;
-    private int maxUses, harvestLevel, enchantability;
-    private Item repairMaterial;
+    private final float attackDamage;
+    private final float efficiency;
+    private final int maxUses;
+    private final int harvestLevel;
+    private final int enchantability;
+    private final Item repairMaterial;
 
     ItemTierList(float attackDamage, float efficiency, int maxUses, int harvestLevel, int enchantability, Item repairMaterial) {
         this.attackDamage = attackDamage;

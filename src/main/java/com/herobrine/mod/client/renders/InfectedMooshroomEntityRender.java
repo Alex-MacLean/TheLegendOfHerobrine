@@ -3,7 +3,6 @@ package com.herobrine.mod.client.renders;
 import com.google.common.collect.Maps;
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.renders.layers.InfectedMooshroomMushroomLayer;
-import com.herobrine.mod.entities.InfectedCowEntity;
 import com.herobrine.mod.entities.InfectedMooshroomEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -35,6 +34,7 @@ public class InfectedMooshroomEntityRender extends MobRenderer<InfectedMooshroom
         return field_217774_a.get(entity.getMooshroomType());
     }
 
+    @SuppressWarnings("rawtypes")
     public static class RenderFactory implements IRenderFactory {
         @Override
         public EntityRenderer<? super InfectedMooshroomEntity> createRenderFor(EntityRendererManager manager) {

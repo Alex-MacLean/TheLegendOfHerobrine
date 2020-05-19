@@ -25,6 +25,7 @@ public class InfectedPigEntity extends MonsterEntity {
         experienceValue = 3;
     }
 
+    @SuppressWarnings("unchecked")
     public InfectedPigEntity(World worldIn) {
         this((EntityType<? extends InfectedPigEntity>) EntityRegistry.INFECTED_PIG_ENTITY, worldIn);
     }

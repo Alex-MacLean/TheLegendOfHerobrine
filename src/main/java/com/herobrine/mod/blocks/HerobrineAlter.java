@@ -136,10 +136,6 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
             double d1 = (double) pos.getY() + 0.05F;
             double d2 = (double) pos.getZ() + 0.5D + ((double) rand.nextFloat() - 0.5D) * 0.2D;
             worldIn.addParticle(ParticleTypes.PORTAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-            boolean s = stateIn.get(ModBlockStates.ACTIVE);
-            if (s == Boolean.TRUE && (!(Variables.WorldVariables.get(worldIn).Spawn))) {
-                Variables.WorldVariables.get(worldIn).Spawn = true;
-            }
         }
     }
 

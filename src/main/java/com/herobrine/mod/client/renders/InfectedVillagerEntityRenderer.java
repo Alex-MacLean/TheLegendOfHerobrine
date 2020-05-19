@@ -19,13 +19,13 @@ public class InfectedVillagerEntityRenderer extends MobRenderer<InfectedVillager
         super(renderManagerIn, new InfectedVillagerEntityModel(0.0f), 0.5f);
     }
 
-
     @NotNull
     @Override
     public ResourceLocation getEntityTexture(@NotNull InfectedVillagerEntity entity) {
         return HerobrineMod.location("textures/entity/infected_villager.png");
     }
 
+    @SuppressWarnings("rawtypes")
     public static class RenderFactory implements IRenderFactory {
         @Override
         public EntityRenderer<? super InfectedVillagerEntity> createRenderFor(EntityRendererManager manager) {

@@ -35,6 +35,7 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements net.mi
         experienceValue = 3;
     }
 
+    @SuppressWarnings("unchecked")
     public InfectedMooshroomEntity(World worldIn) {
         this((EntityType<? extends InfectedMooshroomEntity>) EntityRegistry.INFECTED_MOOSHROOM_ENTITY, worldIn);
     }

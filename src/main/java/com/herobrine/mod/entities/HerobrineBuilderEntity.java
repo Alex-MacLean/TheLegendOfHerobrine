@@ -33,6 +33,7 @@ public class HerobrineBuilderEntity extends MonsterEntity {
         experienceValue = 5;
     }
 
+    @SuppressWarnings("unchecked")
     public HerobrineBuilderEntity(World worldIn) {
         this((EntityType<? extends HerobrineBuilderEntity>) EntityRegistry.HEROBRINE_BUILDER_ENTITY, worldIn);
     }

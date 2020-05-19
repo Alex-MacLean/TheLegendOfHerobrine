@@ -2,7 +2,6 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.items.ItemList;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.SnowballEntity;
@@ -12,7 +11,6 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,7 +18,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Random;
 
 public class UnholyWaterEntity extends SnowballEntity{
     public UnholyWaterEntity(EntityType<? extends UnholyWaterEntity> entityType, World world) {
@@ -31,6 +28,7 @@ public class UnholyWaterEntity extends SnowballEntity{
         super(worldIn, throwerIn);
     }
 
+    @SuppressWarnings("unchecked")
     public UnholyWaterEntity(World worldIn) {
         this((EntityType<? extends UnholyWaterEntity>) EntityRegistry.UNHOLY_WATER_ENTITY, worldIn);
     }

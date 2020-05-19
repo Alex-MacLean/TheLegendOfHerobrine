@@ -28,6 +28,7 @@ public class HolyWaterEntity extends SnowballEntity{
         super(worldIn, throwerIn);
     }
 
+    @SuppressWarnings("unchecked")
     public HolyWaterEntity(World worldIn) {
         this((EntityType<? extends HolyWaterEntity>) EntityRegistry.HOLY_WATER_ENTITY, worldIn);
     }
