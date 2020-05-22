@@ -3,7 +3,6 @@ package com.herobrine.mod.entities;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.items.ItemList;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.SnowballEntity;
 import net.minecraft.item.ItemStack;
@@ -20,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class HolyWaterEntity extends SnowballEntity implements IRendersAsItem {
+public class HolyWaterEntity extends SnowballEntity {
     public HolyWaterEntity(EntityType<? extends HolyWaterEntity> entityType, World world) {
         super(entityType, world);
     }

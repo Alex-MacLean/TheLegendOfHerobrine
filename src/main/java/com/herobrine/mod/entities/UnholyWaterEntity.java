@@ -3,7 +3,6 @@ package com.herobrine.mod.entities;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.items.ItemList;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.SnowballEntity;
 import net.minecraft.item.ItemStack;
@@ -20,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class UnholyWaterEntity extends SnowballEntity implements IRendersAsItem {
+public class UnholyWaterEntity extends SnowballEntity {
     public UnholyWaterEntity(EntityType<? extends UnholyWaterEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -39,7 +38,6 @@ public class UnholyWaterEntity extends SnowballEntity implements IRendersAsItem 
     public @NotNull ItemStack getItem() {
         return new ItemStack(ItemList.unholy_water, 1);
     }
-
 
     @Override
     protected void onImpact(@NotNull RayTraceResult result) {
