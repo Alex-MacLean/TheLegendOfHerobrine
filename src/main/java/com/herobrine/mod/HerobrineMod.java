@@ -45,9 +45,9 @@ public class HerobrineMod {
     public static final String NAME = "The Legend of Herobrine";
     public static final String UPDATEJSON = "https://raw.githubusercontent.com/Alex-MacLean/TheLegendOfHerobrine/master/update.json";
     public static final String MCVERSION = "[1.12.2]";
-    public static final String VERSION = "0.4.6";
+    public static final String VERSION = "0.4.6-b2";
     public static final String MODID = "herobrine";
-    public static final SimpleNetworkWrapper PACKET_HANDLER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID + ":" + "packet_handler");
+    public static final SimpleNetworkWrapper PACKET_HANDLER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID + "_" + "packet");
     private int messageID = 0;
     public <T extends IMessage, V extends IMessage> void addNetworkMessage(Class<? extends IMessageHandler<T, V>> handler, Class<T> messageClass, Side @NotNull ... sides) {
         for (Side side : sides)
