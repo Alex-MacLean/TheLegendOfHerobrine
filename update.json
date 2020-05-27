@@ -13,11 +13,12 @@
     },
     "1.12.2": {
         "0.4.5": "*Fixed Typo in Altar of Herobrine.\n+Added Simplified Chinese translation, Credits to rtxyd.\n*Fixed an oversight where some players don't have recipes in 1.12.2\n*Fixed an oversight where some players have the outdated structures in 1.14.4",
-        "0.4.6": "*Fixed grammatical issues in the polish translation.\n*Fixed a bug in 1.14.4 and 1.15.2 where the Herobrine Warrior won't break blocks.\n*Fixed a bug in 1.12.2 where the Herobrine Warrior breaks blocks when the player is not moving and it can reach the player.\n*Cleaned up and optimized the code of many features to prepare for development of 0.5.0."
+        "0.4.6": "*Fixed grammatical issues in the polish translation.\n*Fixed a bug in 1.14.4 and 1.15.2 where the Herobrine Warrior won't break blocks.\n*Fixed a bug in 1.12.2 where the Herobrine Warrior breaks blocks when the player is not moving and it can reach the player.\n*Cleaned up and optimized the code of many features to prepare for development of 0.5.0.",
+        "0.4.6-b2": "*Fixed a bug that kicked players on a server when activating an Altar of Herobrine."
     },
     "promos": {
         "1.15.2-latest": "0.4.6-b2",
         "1.14.4-latest": "0.4.6",
-        "1.12.2-latest": "0.4.6"
+        "1.12.2-latest": "0.4.6-b2"
     }
 }
