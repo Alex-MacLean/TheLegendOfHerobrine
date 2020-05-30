@@ -51,16 +51,16 @@ public class HolyWaterEntity extends SnowballEntity {
                     entity.addPotionEffect(new EffectInstance(Effects.HEALTH_BOOST, 300, 1));
                     entity.extinguish();
                     if (entity instanceof HerobrineWarriorEntity) {
-                        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()),12.0F);
+                        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 12.0F);
                     }
                     if (entity instanceof HerobrineMageEntity) {
-                        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()),12.0F);
+                        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 12.0F);
                     }
                     if (entity instanceof HerobrineSpyEntity) {
-                        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()),12.0F);
+                        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 12.0F);
                     }
                     if (entity instanceof HerobrineBuilderEntity) {
-                        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()),12.0F);
+                        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 12.0F);
                     }
                     if (entity instanceof FakeHerobrineMageEntity) {
                         entity.remove();

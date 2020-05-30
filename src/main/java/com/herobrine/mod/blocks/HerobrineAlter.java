@@ -1,13 +1,11 @@
 package com.herobrine.mod.blocks;
 
 import com.herobrine.mod.HerobrineMod;
+import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.blocks.ModBlockStates;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.savedata.Variables;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -149,38 +147,93 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
         return blockState.get(ModBlockStates.ACTIVE) ? 15 : 0;
     }
 
+    private boolean shrineAccepted(@NotNull BlockPos pos, @NotNull World world) {
+        Variables.WorldVariables.get(world).syncData(world);
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        BlockState netherrack = world.getBlockState(new BlockPos(x, y - 1, z));
+        BlockState gold1 = world.getBlockState(new BlockPos(x, y - 1, z + 1));
+        BlockState gold2 = world.getBlockState(new BlockPos(x, y - 1, z - 1));
+        BlockState gold3 = world.getBlockState(new BlockPos(x + 1, y - 1, z));
+        BlockState gold4 = world.getBlockState(new BlockPos(x - 1, y - 1, z));
+        BlockState torch1 = world.getBlockState(new BlockPos(x + 1, y, z));
+        BlockState torch2 = world.getBlockState(new BlockPos(x - 1, y, z));
+        BlockState torch3 = world.getBlockState(new BlockPos(x, y, z + 1));
+        BlockState torch4 = world.getBlockState(new BlockPos(x, y, z - 1));
+        BlockState lava1 = world.getBlockState(new BlockPos(x - 1, y - 1, z - 1));
+        BlockState lava2 = world.getBlockState(new BlockPos(x + 1, y - 1, z + 1));
+        BlockState lava3 = world.getBlockState(new BlockPos(x + 1, y - 1, z - 1));
+        BlockState lava4 = world.getBlockState(new BlockPos(x - 1, y - 1, z + 1));
+        if(netherrack == Blocks.NETHERRACK.getDefaultState()) {
+            if(gold1 == Blocks.GOLD_BLOCK.getDefaultState()) {
+                if(gold2 == Blocks.GOLD_BLOCK.getDefaultState()) {
+                    if(gold3 == Blocks.GOLD_BLOCK.getDefaultState()) {
+                        if(gold4 == Blocks.GOLD_BLOCK.getDefaultState()) {
+                            if(torch1 == Blocks.REDSTONE_TORCH.getDefaultState()) {
+                                if(torch2 == Blocks.REDSTONE_TORCH.getDefaultState()) {
+                                    if(torch3 == Blocks.REDSTONE_TORCH.getDefaultState()) {
+                                        if(torch4 == Blocks.REDSTONE_TORCH.getDefaultState()) {
+                                            if(lava1 == Blocks.LAVA.getDefaultState()) {
+                                                if(lava2 == Blocks.LAVA.getDefaultState()) {
+                                                    if(lava3 == Blocks.LAVA.getDefaultState()) {
+                                                        return lava4 == Blocks.LAVA.getDefaultState();
+                                                    } else return false;
+                                                } else return false;
+                                            } else return false;
+                                        } else return false;
+                                    } else return false;
+                                } else return false;
+                            } else return false;
+                        } else return false;
+                    } else return false;
+                } else return false;
+            } else return false;
+        } else return false;
+    }
+
+    private boolean shrineIsPresent(BlockPos pos, World world) {
+        if(!Config.COMMON.AltarRequiresShrine.get()) {
+            Variables.WorldVariables.get(world).syncData(world);
+            return true;
+        } else {
+            Variables.WorldVariables.get(world).syncData(world);
+            return shrineAccepted(pos, world);
+        }
+    }
+
     @NotNull
     @Override
-    public ActionResultType onBlockActivated(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity entity, @NotNull Hand hand, @NotNull BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand hand, @NotNull BlockRayTraceResult hit) {
         Variables.WorldVariables.get(world).syncData(world);
         boolean i = state.get(ModBlockStates.ACTIVE);
         if (i == Boolean.FALSE) {
             int x = pos.getX();
             int y = pos.getY();
             int z = pos.getZ();
-            ItemStack itemstack = entity.getHeldItem(hand);
+            ItemStack itemstack = player.getHeldItem(hand);
             if (itemstack.getItem() == ItemList.cursed_diamond) {
-                assert false;
-                state = state.getBlockState().with(ModBlockStates.ACTIVE, Boolean.TRUE);
-                if (entity instanceof PlayerEntity && !entity.abilities.isCreativeMode) {
-                    itemstack.shrink(1);
-                }
-                world.setBlockState(pos, state, 2);
-                if (state.get(WATERLOGGED)) {
-                    world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-                }
-                if (world instanceof ServerWorld) {
-                    ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, x, y, z, false));
-                }
-                if (!(Variables.WorldVariables.get(world).Spawn)) {
-                    if (((entity instanceof PlayerEntity) && entity.inventory.hasItemStack(new ItemStack(ItemList.cursed_diamond, 1))) && (!(Variables.WorldVariables.get(world).Spawn))) {
-                        assert false;
-                        if(world.isRemote) {
-                            entity.sendMessage(new StringTextComponent("<Herobrine> You have no idea what you have done!"));
+                if(this.shrineIsPresent(pos, world)) {
+                    state = state.getBlockState().with(ModBlockStates.ACTIVE, Boolean.TRUE);
+                    if (!player.abilities.isCreativeMode) {
+                        itemstack.shrink(1);
+                    }
+                    world.setBlockState(pos, state, 2);
+                    if (state.get(WATERLOGGED)) {
+                        world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+                    }
+                    if (world instanceof ServerWorld) {
+                        ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, x, y, z, false));
+                    }
+                    if (!(Variables.WorldVariables.get(world).Spawn)) {
+                        if (world.isRemote) {
+                            player.sendMessage(new StringTextComponent("<Herobrine> You have no idea what you have done!"));
                         }
                         Variables.WorldVariables.get(world).Spawn = true;
                         Variables.WorldVariables.get(world).syncData(world);
                     }
+                } else {
+                    return ActionResultType.FAIL;
                 }
             } else {
                 return ActionResultType.FAIL;

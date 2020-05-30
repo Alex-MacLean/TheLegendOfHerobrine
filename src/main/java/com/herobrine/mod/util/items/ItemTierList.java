@@ -2,12 +2,11 @@ package com.herobrine.mod.util.items;
 
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 public enum ItemTierList implements IItemTier {
-    bedrock_item_tier(9.0f, -1.0f, -1, -1, -1, Items.BEDROCK),
+    bedrock_item_tier(9.0f, -1.0f, -1, -1, -1, null),
     cursed_diamond_item_tier(4.0f, 9.0f, 1600, 4, 22, ItemList.cursed_diamond);
 
     private final float attackDamage;

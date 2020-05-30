@@ -1,5 +1,6 @@
 package com.herobrine.mod.entities;
 
+import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.entity.*;
@@ -129,7 +130,7 @@ public class FakeHerobrineMageEntity extends MonsterEntity {
     @Override
     public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         Variables.WorldVariables.get(world).syncData(world);
-        if ((!(Variables.WorldVariables.get(world).Spawn))) {
+        if (!Variables.WorldVariables.get(world).Spawn && !Config.COMMON.IgnoreWorldData.get()) {
             this.remove();
         }
         this.enablePersistence();

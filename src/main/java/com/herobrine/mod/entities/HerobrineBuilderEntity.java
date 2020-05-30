@@ -1,6 +1,7 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.HerobrineMod;
+import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.BlockState;
@@ -152,7 +153,7 @@ public class HerobrineBuilderEntity extends MonsterEntity {
     @Override
     public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         Variables.WorldVariables.get(world).syncData(world);
-        if ((!(Variables.WorldVariables.get(world).Spawn))) {
+        if (!Variables.WorldVariables.get(world).Spawn && !Config.COMMON.IgnoreWorldData.get()) {
             this.remove();
         }
         this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.GOLDEN_PICKAXE));
@@ -180,7 +181,7 @@ public class HerobrineBuilderEntity extends MonsterEntity {
             Rotation rotation = Rotation.values()[rand.nextInt(3)];
             Mirror mirror = Mirror.values()[rand.nextInt(2)];
             BlockState blockAt = world.getBlockState(new BlockPos(x, y - 1, z));
-            if (!world.isRemote) {
+            if (!world.isRemote && Config.COMMON.BuilderBuilds.get()) {
                 if (blockAt.getBlock() == Blocks.GRASS_BLOCK.getDefaultState().getBlock() && y >= 62 || blockAt.getBlock() == Blocks.DIRT.getDefaultState().getBlock() && y >= 62) {
                     Template template = ((ServerWorld) world.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "dirt_structure"));
                     template.addBlocksToWorldChunk(world, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false));

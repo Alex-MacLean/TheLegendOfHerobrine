@@ -1,6 +1,7 @@
 package com.herobrine.mod.worldgen.structures;
 
 import com.herobrine.mod.HerobrineMod;
+import com.herobrine.mod.config.Config;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Mirror;
@@ -33,7 +34,7 @@ public class TrappedHouse {
             public boolean place(@NotNull IWorld iworld, @NotNull ChunkGenerator generator, @NotNull Random random, @NotNull BlockPos pos, @NotNull NoFeatureConfig config) {
                 int ci = pos.getX();
                 int ck = pos.getZ();
-                if ((random.nextInt(1000000) + 1) <= 750) {
+                if ((random.nextInt(1000000) + 1) <= Config.COMMON.TrappedHouseSpawnWeight.get()) {
                     int count = random.nextInt(1) + 1;
                     for (int a = 0; a < count; a++) {
                         int i = ci + random.nextInt(16) + 8;

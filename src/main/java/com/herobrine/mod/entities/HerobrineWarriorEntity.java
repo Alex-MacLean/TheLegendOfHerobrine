@@ -1,5 +1,6 @@
 package com.herobrine.mod.entities;
 
+import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.savedata.Variables;
@@ -139,7 +140,7 @@ public class HerobrineWarriorEntity extends MonsterEntity{
     protected void updateAITasks() {
         if (this.blockBreakCounter > 0) {
             --this.blockBreakCounter;
-            if (this.blockBreakCounter == 0 && this.isAggressive() && this.unableToAttackTarget() && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
+            if (this.blockBreakCounter == 0 && Config.COMMON.WarriorBreaksBlocks.get() && this.isAggressive() && this.unableToAttackTarget() && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
                 int i1 = MathHelper.floor(this.getPosY());
                 int l1 = MathHelper.floor(this.getPosX());
                 int i2 = MathHelper.floor(this.getPosZ());
@@ -198,11 +199,13 @@ public class HerobrineWarriorEntity extends MonsterEntity{
     @Override
     public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         Variables.WorldVariables.get(world).syncData(world);
-        if ((!(Variables.WorldVariables.get(world).Spawn))) {
+        if (!Variables.WorldVariables.get(world).Spawn && !Config.COMMON.IgnoreWorldData.get()) {
             this.remove();
         }
         this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemList.bedrock_sword));
-        this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.0F;
+        if(!Config.COMMON.BedrockSwordDrops.get()) {
+            this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.0F;
+        }
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 }

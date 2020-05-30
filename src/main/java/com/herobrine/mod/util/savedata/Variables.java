@@ -1,22 +1,19 @@
 package com.herobrine.mod.util.savedata;
 
 import com.herobrine.mod.HerobrineMod;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.LogicalSide;
-
-import net.minecraft.world.storage.WorldSavedData;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.World;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.WorldSavedData;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Variables {
@@ -26,14 +23,6 @@ public class Variables {
 
         public WorldVariables() {
             super(DATA_NAME);
-            this.addNetworkMessage(Variables.WorldSavedDataSyncMessage.class, Variables.WorldSavedDataSyncMessage::buffer, Variables.WorldSavedDataSyncMessage::new, Variables.WorldSavedDataSyncMessage::handler);
-        }
-
-        private int messageID = 0;
-
-        public <T> void addNetworkMessage(Class<T> messageType, BiConsumer<T, PacketBuffer> encoder, Function<PacketBuffer, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> messageConsumer) {
-            HerobrineMod.PACKET_HANDLER.registerMessage(messageID, messageType, encoder, decoder, messageConsumer);
-            messageID++;
         }
 
         @Override

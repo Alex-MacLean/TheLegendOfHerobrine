@@ -1,14 +1,18 @@
 package com.herobrine.mod;
 
+import com.herobrine.mod.blocks.CursedDiamondBlock;
 import com.herobrine.mod.blocks.HerobrineAlter;
 import com.herobrine.mod.client.renders.RenderRegistry;
+import com.herobrine.mod.config.Config;
+import com.herobrine.mod.items.HolyWaterItem;
+import com.herobrine.mod.items.UnholyWaterItem;
 import com.herobrine.mod.util.entities.EntityRegistry;
-import com.herobrine.mod.items.*;
 import com.herobrine.mod.util.items.ArmorMaterialList;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.items.ItemTierList;
 import com.herobrine.mod.util.savedata.Variables;
 import com.herobrine.mod.util.worldgen.BiomeInit;
+import com.herobrine.mod.worldgen.structures.ShrineRemnants;
 import com.herobrine.mod.worldgen.structures.TrappedHouse;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -18,6 +22,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.storage.WorldSavedData;
@@ -26,15 +31,22 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Mod(HerobrineMod.MODID)
 @Mod.EventBusSubscriber(modid = HerobrineMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -50,8 +62,14 @@ public class HerobrineMod {
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
         BiomeInit.BIOMES.register(modEventBus);
+        this.addNetworkMessage(Variables.WorldSavedDataSyncMessage.class, Variables.WorldSavedDataSyncMessage::buffer, Variables.WorldSavedDataSyncMessage::new, Variables.WorldSavedDataSyncMessage::handler);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC, MODID + "-" + "common.toml");
     }
-
+    private int messageID = 0;
+    public <T> void addNetworkMessage(Class<T> messageType, BiConsumer<T, PacketBuffer> encoder, Function<PacketBuffer, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> messageConsumer) {
+        PACKET_HANDLER.registerMessage(messageID, messageType, encoder, decoder, messageConsumer);
+        messageID++;
+    }
     @NotNull
     @Contract("_ -> new")
     public static ResourceLocation location(String name) {
@@ -64,17 +82,20 @@ public class HerobrineMod {
 
     private void init(FMLCommonSetupEvent event) {
         TrappedHouse.registerStructure();
+        ShrineRemnants.registerStructure();
     }
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
          public static final Material HEROBRINE_ALTER_MATERIAL = new Material(MaterialColor.RED, false, false, false, false, false, false, false, PushReaction.NORMAL);
+         public static final Material CURSED_DIAMOND_BLOCK_MATERIAL = new Material(MaterialColor.PURPLE, false, true, true, true, false, false, false, PushReaction.NORMAL);
 
         @SubscribeEvent
         public static void registerItems(@NotNull final RegistryEvent.Register<Item> event) {
             assert false;
             event.getRegistry().registerAll(
                     new BlockItem(HerobrineAlter.block, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("herobrine_alter")),
+                    new BlockItem(CursedDiamondBlock.block, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("cursed_diamond_block")),
                     ItemList.bedrock_sword = new SwordItem(ItemTierList.bedrock_item_tier, 0, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("bedrock_sword")),
                     ItemList.cursed_diamond = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("cursed_diamond")),
                     ItemList.cursed_diamond_sword = new SwordItem(ItemTierList.cursed_diamond_item_tier, 3, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_sword")),
@@ -96,7 +117,8 @@ public class HerobrineMod {
         @SubscribeEvent
         public static void registerBlocks(@NotNull final RegistryEvent.Register<Block> event) {
             event.getRegistry().registerAll(
-                    new HerobrineAlter()
+                    new HerobrineAlter(),
+                    new CursedDiamondBlock()
             );
         }
 
@@ -127,6 +149,7 @@ public class HerobrineMod {
 
         @SubscribeEvent
         public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
+            Variables.WorldVariables.get(event.getPlayer().world).syncData(event.getPlayer().world);
             if (!event.getPlayer().world.isRemote) {
                 WorldSavedData worlddata = Variables.WorldVariables.get(event.getPlayer().world);
                 if (worlddata != null)
@@ -136,6 +159,7 @@ public class HerobrineMod {
 
         @SubscribeEvent
         public void onPlayerChangedDimension(PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
+            Variables.WorldVariables.get(event.getPlayer().world).syncData(event.getPlayer().world);
             if (!event.getPlayer().world.isRemote) {
                 WorldSavedData worlddata = Variables.WorldVariables.get(event.getPlayer().world);
                 if (worlddata != null)
