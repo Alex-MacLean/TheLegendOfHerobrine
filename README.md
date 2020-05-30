@@ -7,6 +7,15 @@ This mod aims to add many features related to Herobrine to Minecraft, without st
 
 View the curseforge page for an in depth desctiption of the mod.
 
+How to get development builds of the mod:
+(Warning: advanced users only!)
+Step 1: download the source code of the master branch as a zip file.
+Step 2: extract the zip file.
+Setp 3: open the base directory of the source code(Should contain the gradlew files)
+Step 4: run Build.cmd if you are on on Windows, Build.COMMAND on MacOSX, Build.sh on Linux. Wait until the process is completed. This may take a while.
+Step 5: locate the mod jar file. It should be located in build/libs/LegendOfHerobrine-VERSION.jar
+Step 6: simply install the jar file like any normal minecraft mod.
+
 Permissions:
 
 You are allowed to use this mod in your modpack. This is the only way you can redistribute the bianaries of this mod on your own.
