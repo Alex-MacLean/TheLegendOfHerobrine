@@ -2,8 +2,11 @@ package com.herobrine.mod;
 
 import com.herobrine.mod.blocks.CursedDiamondBlock;
 import com.herobrine.mod.blocks.HerobrineAlter;
+import com.herobrine.mod.blocks.HerobrineStatue;
+import com.herobrine.mod.blocks.HerobrineStatueTop;
 import com.herobrine.mod.client.renders.RenderRegistry;
 import com.herobrine.mod.config.Config;
+import com.herobrine.mod.items.HerobrineStatueItem;
 import com.herobrine.mod.items.HolyWaterItem;
 import com.herobrine.mod.items.UnholyWaterItem;
 import com.herobrine.mod.util.entities.EntityRegistry;
@@ -13,6 +16,7 @@ import com.herobrine.mod.util.items.ItemTierList;
 import com.herobrine.mod.util.savedata.Variables;
 import com.herobrine.mod.util.worldgen.BiomeInit;
 import com.herobrine.mod.worldgen.structures.ShrineRemnants;
+import com.herobrine.mod.worldgen.structures.Statue;
 import com.herobrine.mod.worldgen.structures.TrappedHouse;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -83,12 +87,14 @@ public class HerobrineMod {
     private void init(FMLCommonSetupEvent event) {
         TrappedHouse.registerStructure();
         ShrineRemnants.registerStructure();
+        Statue.registerStructure();
     }
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
          public static final Material HEROBRINE_ALTER_MATERIAL = new Material(MaterialColor.RED, false, false, false, false, false, false, false, PushReaction.NORMAL);
          public static final Material CURSED_DIAMOND_BLOCK_MATERIAL = new Material(MaterialColor.PURPLE, false, true, true, true, false, false, false, PushReaction.NORMAL);
+         public static final Material HEROBRINE_STATUE_MATERIAL = new Material(MaterialColor.STONE, false, true, true, false, false, false, false, PushReaction.BLOCK);
 
         @SubscribeEvent
         public static void registerItems(@NotNull final RegistryEvent.Register<Item> event) {
@@ -96,6 +102,7 @@ public class HerobrineMod {
             event.getRegistry().registerAll(
                     new BlockItem(HerobrineAlter.block, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("herobrine_alter")),
                     new BlockItem(CursedDiamondBlock.block, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("cursed_diamond_block")),
+                    new HerobrineStatueItem(HerobrineStatue.block, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("herobrine_statue")),
                     ItemList.bedrock_sword = new SwordItem(ItemTierList.bedrock_item_tier, 0, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("bedrock_sword")),
                     ItemList.cursed_diamond = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("cursed_diamond")),
                     ItemList.cursed_diamond_sword = new SwordItem(ItemTierList.cursed_diamond_item_tier, 3, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_sword")),
@@ -118,7 +125,9 @@ public class HerobrineMod {
         public static void registerBlocks(@NotNull final RegistryEvent.Register<Block> event) {
             event.getRegistry().registerAll(
                     new HerobrineAlter(),
-                    new CursedDiamondBlock()
+                    new CursedDiamondBlock(),
+                    new HerobrineStatue(),
+                    new HerobrineStatueTop()
             );
         }
 
