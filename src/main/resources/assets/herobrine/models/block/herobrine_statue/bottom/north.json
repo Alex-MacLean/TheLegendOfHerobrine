@@ -1,0 +1,83 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "herobrine:block/herobrine_statue/bottom/left_arm",
+		"1": "herobrine:block/herobrine_statue/bottom/right_arm",
+		"2": "herobrine:block/herobrine_statue/bottom/body",
+		"3": "herobrine:block/herobrine_statue/bottom/right_leg",
+		"4": "herobrine:block/herobrine_statue/bottom/left_leg",
+		"particle": "herobrine:block/herobrine_statue/bottom/particle"
+	},
+	"elements": [
+		{
+			"name": "body",
+			"from": [4, 12, 6],
+			"to": [12, 16, 10],
+			"faces": {
+				"north": {"uv": [0, 0, 8, 4], "texture": "#2"},
+				"south": {"uv": [0, 4, 8, 8], "texture": "#2"},
+				"up": {"uv": [8, 12, 0, 8], "texture": "#2", "cullface": "up"}
+			}
+		},
+		{
+			"name": "right_arm",
+			"from": [12, 12, 6],
+			"to": [16, 16, 10],
+			"faces": {
+				"north": {"uv": [0, 0, 4, 4], "texture": "#1"},
+				"east": {"uv": [0, 4, 4, 8], "texture": "#1", "cullface": "east"},
+				"south": {"uv": [4, 4, 8, 8], "texture": "#1"},
+				"up": {"uv": [8, 4, 4, 0], "texture": "#1", "cullface": "up"},
+				"down": {"uv": [4, 8, 0, 12], "texture": "#1"}
+			}
+		},
+		{
+			"name": "left_arm",
+			"from": [0, 12, 6],
+			"to": [4, 16, 10],
+			"faces": {
+				"north": {"uv": [0, 0, 4, 4], "texture": "#0"},
+				"south": {"uv": [0, 4, 4, 8], "texture": "#0"},
+				"west": {"uv": [4, 4, 8, 8], "texture": "#0", "cullface": "west"},
+				"up": {"uv": [8, 4, 4, 0], "texture": "#0", "cullface": "up"},
+				"down": {"uv": [4, 8, 0, 12], "texture": "#0"}
+			}
+		},
+		{
+			"name": "right_leg",
+			"from": [8, 0, 6],
+			"to": [12, 12, 10],
+			"faces": {
+				"north": {"uv": [0, 0, 2, 6], "texture": "#3"},
+				"east": {"uv": [2, 2, 4, 8], "texture": "#3"},
+				"south": {"uv": [4, 4, 6, 10], "texture": "#3"},
+				"down": {"uv": [4, 0, 2, 2], "texture": "#3", "cullface": "down"}
+			}
+		},
+		{
+			"name": "left_leg",
+			"from": [4, 0, 6],
+			"to": [8, 12, 10],
+			"faces": {
+				"north": {"uv": [0, 0, 2, 6], "texture": "#4"},
+				"south": {"uv": [2, 2, 4, 8], "texture": "#4"},
+				"west": {"uv": [4, 4, 6, 10], "texture": "#4"},
+				"down": {"uv": [4, 0, 2, 2], "texture": "#4", "cullface": "down"}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"translation": [0, -29, 0],
+			"scale": [1.6, 1.6, 1.6]
+		}
+	},
+	"groups": [
+		{
+			"name": "steve",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2, 3, 4]
+		}
+	]
+}
