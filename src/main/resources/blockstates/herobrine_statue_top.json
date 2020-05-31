@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "facing=north": { "model": "herobrine:block/herobrine_statue/top/north" },
-    "facing=east": { "model": "herobrine:block/herobrine_statue/top/east" },
-    "facing=south": { "model": "herobrine:block/herobrine_statue/top/south" },
-    "facing=west": { "model": "herobrine:block/herobrine_statue/top/west" }
-  }
-}
