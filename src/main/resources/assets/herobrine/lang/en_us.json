@@ -38,5 +38,7 @@
   "item.herobrine.herobrine_mage_spawn_egg": "Herobrine Mage Spawn egg",
   "entity.herobrine.herobrine_mage": "Herobrine",
   "entity.herobrine.fake_herobrine_mage": "Herobrine",
-  "block.herobrine.cursed_diamond_block": "Cursed Block of Diamond"
+  "block.herobrine.cursed_diamond_block": "Cursed Block of Diamond",
+  "block.herobrine.herobrine_statue": "Statue of Herobrine",
+  "block.herobrine.herobrine_statue_top": "Statue of Herobrine"
 }
