@@ -1,31 +1,26 @@
 package com.herobrine.mod.entities;
 
-import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.entities.EntityRegistry;
-import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
-
-public class HerobrineMageEntity extends MonsterEntity {
+public class HerobrineMageEntity extends AbstractHerobrineEntity {
     protected HerobrineMageEntity(EntityType<? extends HerobrineMageEntity> type, World worldIn) {
         super(type, worldIn);
         experienceValue = 5;
@@ -44,76 +39,29 @@ public class HerobrineMageEntity extends MonsterEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.6D, true));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, GolemEntity.class, true));
-        this.targetSelector.addGoal(4, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.4D));
-        this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(7, new LookAtGoal(this, GolemEntity.class, 8.0F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractIllagerEntity.class, true));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractSurvivorEntity.class, true));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, GolemEntity.class, true));
+        this.targetSelector.addGoal(6, new HurtByTargetGoal(this));
+        this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 0.4D));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, AbstractIllagerEntity.class, 8.0F));
+        this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(10, new LookAtGoal(this, AbstractSurvivorEntity.class, 8.0F));
+        this.goalSelector.addGoal(11, new LookAtGoal(this, GolemEntity.class, 8.0F));
+        this.goalSelector.addGoal(12, new LookRandomlyGoal(this));
     }
 
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100.0D);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(50.0D);
         this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(2.0D);
+        this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(1.0D);
+        this.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(1.0D);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(64.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.6D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
-    }
-
-    @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        if (source.getImmediateSource() instanceof AreaEffectCloudEntity)
-            return false;
-        if (source.getImmediateSource() instanceof PotionEntity)
-            return false;
-        if (source.getImmediateSource() instanceof UnholyWaterEntity)
-            return false;
-        if (source == DamageSource.FALL)
-            return false;
-        if (source == DamageSource.CACTUS)
-            return false;
-        if (source == DamageSource.DROWN)
-            return false;
-        if (source == DamageSource.LIGHTNING_BOLT)
-            return false;
-        if (source == DamageSource.IN_FIRE)
-            return false;
-        if (source == DamageSource.ON_FIRE)
-            return false;
-        if (source == DamageSource.ANVIL)
-            return false;
-        if (source == DamageSource.CRAMMING)
-            return false;
-        if (source == DamageSource.DRAGON_BREATH)
-            return false;
-        if (source == DamageSource.DRYOUT)
-            return false;
-        if (source == DamageSource.FALLING_BLOCK)
-            return false;
-        if (source == DamageSource.FIREWORKS)
-            return false;
-        if (source == DamageSource.FLY_INTO_WALL)
-            return false;
-        if (source == DamageSource.HOT_FLOOR)
-            return false;
-        if (source == DamageSource.LAVA)
-            return false;
-        if (source == DamageSource.IN_WALL)
-            return false;
-        if (source == DamageSource.MAGIC)
-            return false;
-        if (source == DamageSource.STARVE)
-            return false;
-        if (source == DamageSource.SWEET_BERRY_BUSH)
-            return false;
-        if (source == DamageSource.WITHER)
-            return false;
-        return super.attackEntityFrom(source, amount);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
     }
 
     @Override
@@ -130,33 +78,6 @@ public class HerobrineMageEntity extends MonsterEntity {
         this.illusionCastingTime = compound.getInt("IllusionCastingInterval");
         this.effectsCastingTime = compound.getInt("WeakenCastingInterval");
         this.teleportCastingTime = compound.getInt("WarpCastingInterval");
-    }
-
-    @Override
-    public void baseTick() {
-        super.baseTick();
-        this.clearActivePotions();
-    }
-
-    @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        Variables.WorldVariables.get(world).syncData(world);
-        if (!Variables.WorldVariables.get(world).Spawn && !Config.COMMON.IgnoreWorldData.get()) {
-            this.remove();
-        }
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-    }
-
-    @Override
-    public boolean attackEntityAsMob(@NotNull Entity entityIn) {
-        boolean flag = super.attackEntityAsMob(entityIn);
-        if (flag) {
-            float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
-            if (this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
-                entityIn.setFire(2 * (int)f);
-            }
-        }
-        return flag;
     }
 
     @Override

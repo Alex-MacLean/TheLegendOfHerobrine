@@ -21,10 +21,12 @@ import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.placement.IPlacementConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
+import java.util.Set;
 
 public class Statue {
     public static void registerStructure() {
@@ -56,13 +58,14 @@ public class Statue {
                 return true;
             }
         };
-        for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
-            boolean biomeCriteria = false;
-            if (biome instanceof MountainEdgeBiome || biome instanceof MountainsBiome || biome instanceof GravellyMountainsBiome || biome instanceof ModifiedGravellyMountainsBiome || biome instanceof SnowyMountainsBiome) {
-                biomeCriteria = true;
-            }
-            if(biomeCriteria) {
-                biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, feature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
+        BiomeDictionary.Type[] Biome = {
+                BiomeDictionary.Type.MOUNTAIN,
+                BiomeDictionary.Type.HILLS
+        };
+        for (BiomeDictionary.Type biomeType : Biome) {
+            Set<Biome> biome = BiomeDictionary.getBiomes(biomeType);
+            for (Biome currentBiome : biome) {
+                currentBiome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, feature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
             }
         }
     }

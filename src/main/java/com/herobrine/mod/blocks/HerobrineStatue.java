@@ -1,6 +1,7 @@
 package com.herobrine.mod.blocks;
 
 import com.herobrine.mod.HerobrineMod;
+import com.herobrine.mod.util.blocks.BlockMaterialList;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.EntityType;
@@ -29,8 +30,6 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.registries.ObjectHolder;
 import org.jetbrains.annotations.NotNull;
 
-import static com.herobrine.mod.HerobrineMod.RegistryEvents.HEROBRINE_STATUE_MATERIAL;
-
 public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
     @ObjectHolder(HerobrineMod.MODID + ":herobrine_statue")
     public static final Block block = null;
@@ -38,7 +37,7 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
     public static final VoxelShape North_South = VoxelShapes.or(Block.makeCuboidShape(4, 0, 6, 12, 12, 10), Block.makeCuboidShape(0, 12, 6, 16, 16, 10));
     public static final VoxelShape East_West = VoxelShapes.or(Block.makeCuboidShape(6, 0, 4, 10, 12, 12), Block.makeCuboidShape(6, 12, 0, 10, 16, 16));
     public HerobrineStatue() {
-        super(Properties.create(HEROBRINE_STATUE_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity());
+        super(Properties.create(BlockMaterialList.HEROBRINE_STATUE_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity());
         setRegistryName(HerobrineMod.location("herobrine_statue"));
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(BlockStateProperties.WATERLOGGED, Boolean.FALSE));
     }
@@ -58,7 +57,7 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        if (world.getBlockState(new BlockPos(x, y + 1, z)).getMaterial() == HEROBRINE_STATUE_MATERIAL) {
+        if (world.getBlockState(new BlockPos(x, y + 1, z)).getMaterial() == BlockMaterialList.HEROBRINE_STATUE_MATERIAL) {
             if(world.getBlockState(new BlockPos(x, y + 1, z)).get(BlockStateProperties.WATERLOGGED)) {
                 world.setBlockState(new BlockPos(x, y + 1, z), Blocks.WATER.getDefaultState(), 3);
             } else world.setBlockState(new BlockPos(x, y + 1, z), Blocks.AIR.getDefaultState(), 3);
@@ -70,7 +69,7 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        if (world.getBlockState(new BlockPos(x, y + 1, z)).getMaterial() == HEROBRINE_STATUE_MATERIAL) {
+        if (world.getBlockState(new BlockPos(x, y + 1, z)).getMaterial() == BlockMaterialList.HEROBRINE_STATUE_MATERIAL) {
             if(world.getBlockState(new BlockPos(x, y + 1, z)).get(BlockStateProperties.WATERLOGGED)) {
                 world.setBlockState(new BlockPos(x, y + 1, z), Blocks.WATER.getDefaultState(), 3);
             } else world.setBlockState(new BlockPos(x, y + 1, z), Blocks.AIR.getDefaultState(), 3);

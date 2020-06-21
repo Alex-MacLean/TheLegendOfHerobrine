@@ -1,6 +1,7 @@
 package com.herobrine.mod.blocks;
 
 import com.herobrine.mod.HerobrineMod;
+import com.herobrine.mod.util.blocks.BlockMaterialList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -16,14 +17,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-import static com.herobrine.mod.HerobrineMod.RegistryEvents.CURSED_DIAMOND_BLOCK_MATERIAL;
-
 public class CursedDiamondBlock extends Block {
     @ObjectHolder(HerobrineMod.MODID + ":cursed_diamond_block")
     public static final Block block = null;
 
     public CursedDiamondBlock() {
-        super(Properties.create(CURSED_DIAMOND_BLOCK_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0));
+        super(Properties.create(BlockMaterialList.CURSED_DIAMOND_BLOCK_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0));
         setRegistryName("cursed_diamond_block");
     }
 

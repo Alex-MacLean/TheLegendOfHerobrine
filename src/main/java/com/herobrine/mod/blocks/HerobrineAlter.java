@@ -2,6 +2,7 @@ package com.herobrine.mod.blocks;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.config.Config;
+import com.herobrine.mod.util.blocks.BlockMaterialList;
 import com.herobrine.mod.util.blocks.ModBlockStates;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.savedata.Variables;
@@ -42,7 +43,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-import static com.herobrine.mod.HerobrineMod.RegistryEvents.HEROBRINE_ALTER_MATERIAL;
 import static com.herobrine.mod.HerobrineMod.location;
 
 public class HerobrineAlter extends Block implements IWaterLoggable {
@@ -52,15 +52,15 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public HerobrineAlter() {
-        super(Properties.create(HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid());
-        this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE).with(ModBlockStates.ACTIVE, Boolean.FALSE));
+        super(Properties.create(BlockMaterialList.HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid());
+        this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE).with(ModBlockStates.TYPE, 0));
         setRegistryName(location("herobrine_alter"));
     }
 
     @Override
     public int getLightValue(@NotNull BlockState state) {
-        boolean i = state.get(ModBlockStates.ACTIVE);
-        if (i == Boolean.TRUE) {
+        int i = state.get(ModBlockStates.TYPE);
+        if (i != 0) {
             return 8;
         } else {
             return 0;
@@ -81,7 +81,7 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     @Override
     protected void fillStateContainer(@NotNull StateContainer.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.WATERLOGGED);
-        builder.add(ModBlockStates.ACTIVE);
+        builder.add(ModBlockStates.TYPE);
     }
 
     @NotNull
@@ -128,8 +128,8 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void animateTick(@NotNull BlockState stateIn, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull Random rand) {
-        boolean i = stateIn.get(ModBlockStates.ACTIVE);
-        if (i == Boolean.TRUE) {
+        int i = stateIn.get(ModBlockStates.TYPE);
+        if (i == 1) {
             double d0 = (double) pos.getX() + 0.5D + ((double) rand.nextFloat() - 0.5D) * 0.2D;
             double d1 = (double) pos.getY() + 0.05F;
             double d2 = (double) pos.getZ() + 0.5D + ((double) rand.nextFloat() - 0.5D) * 0.2D;
@@ -144,11 +144,15 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
 
     @Override
     public int getComparatorInputOverride(@NotNull BlockState blockState, @NotNull World worldIn, @NotNull BlockPos pos) {
-        return blockState.get(ModBlockStates.ACTIVE) ? 15 : 0;
+        int i = blockState.get(ModBlockStates.TYPE);
+        if(i == 2) {
+            return 8;
+        } else if(i == 1) {
+            return 15;
+        } else return 0;
     }
 
     private boolean shrineAccepted(@NotNull BlockPos pos, @NotNull World world) {
-        Variables.WorldVariables.get(world).syncData(world);
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
@@ -194,10 +198,10 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
 
     private boolean shrineIsPresent(BlockPos pos, World world) {
         if(!Config.COMMON.AltarRequiresShrine.get()) {
-            Variables.WorldVariables.get(world).syncData(world);
+            Variables.SaveData.get(world).syncData(world);
             return true;
         } else {
-            Variables.WorldVariables.get(world).syncData(world);
+            Variables.SaveData.get(world).syncData(world);
             return shrineAccepted(pos, world);
         }
     }
@@ -205,42 +209,53 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     @NotNull
     @Override
     public ActionResultType onBlockActivated(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand hand, @NotNull BlockRayTraceResult hit) {
-        Variables.WorldVariables.get(world).syncData(world);
-        boolean i = state.get(ModBlockStates.ACTIVE);
-        if (i == Boolean.FALSE) {
-            int x = pos.getX();
-            int y = pos.getY();
-            int z = pos.getZ();
-            ItemStack itemstack = player.getHeldItem(hand);
-            if (itemstack.getItem() == ItemList.cursed_diamond) {
-                if(this.shrineIsPresent(pos, world)) {
-                    state = state.getBlockState().with(ModBlockStates.ACTIVE, Boolean.TRUE);
-                    if (!player.abilities.isCreativeMode) {
-                        itemstack.shrink(1);
+        Variables.SaveData.get(world).syncData(world);
+        ItemStack itemStack = player.getHeldItem(hand);
+        if(this.shrineIsPresent(pos, world)) {
+            int i = state.get(ModBlockStates.TYPE);
+            if(i == 0 && itemStack.getItem() == ItemList.cursed_diamond || i == 0 && itemStack.getItem() == ItemList.purified_diamond) {
+                if(itemStack.getItem() == ItemList.cursed_diamond) {
+                    if(!player.abilities.isCreativeMode) {
+                        itemStack.shrink(1);
                     }
-                    world.setBlockState(pos, state, 2);
+                    state = state.getBlockState().with(ModBlockStates.TYPE, 1);
+                    world.setBlockState(pos, state);
                     if (state.get(WATERLOGGED)) {
                         world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
                     }
                     if (world instanceof ServerWorld) {
-                        ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, x, y, z, false));
+                        ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, pos.getX(), pos.getY(), pos.getZ(), false));
                     }
-                    if (!(Variables.WorldVariables.get(world).Spawn)) {
+                    if(!Variables.SaveData.get(world).Spawn) {
                         if (world.isRemote) {
                             player.sendMessage(new StringTextComponent("<Herobrine> You have no idea what you have done!"));
                         }
-                        Variables.WorldVariables.get(world).Spawn = true;
-                        Variables.WorldVariables.get(world).syncData(world);
+                        Variables.SaveData.get(world).Spawn = true;
+                        Variables.SaveData.get(world).syncData(world);
                     }
-                } else {
-                    return ActionResultType.FAIL;
                 }
-            } else {
-                return ActionResultType.FAIL;
-            }
-            return ActionResultType.SUCCESS;
-        } else {
-            return ActionResultType.FAIL;
-        }
+                if(itemStack.getItem() == ItemList.purified_diamond) {
+                    if(!player.abilities.isCreativeMode) {
+                        itemStack.shrink(1);
+                    }
+                    state = state.getBlockState().with(ModBlockStates.TYPE, 2);
+                    world.setBlockState(pos, state);
+                    if (state.get(WATERLOGGED)) {
+                        world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+                    }
+                    if (world instanceof ServerWorld) {
+                        ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, pos.getX(), pos.getY(), pos.getZ(), false));
+                    }
+                    if(Variables.SaveData.get(world).Spawn) {
+                        if (world.isRemote) {
+                            player.sendMessage(new StringTextComponent("<Herobrine> I shall return!"));
+                        }
+                        Variables.SaveData.get(world).Spawn = false;
+                        Variables.SaveData.get(world).syncData(world);
+                    }
+                }
+            } else return ActionResultType.FAIL;
+        } else return ActionResultType.FAIL;
+        return ActionResultType.SUCCESS;
     }
 }
