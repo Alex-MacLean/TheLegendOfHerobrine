@@ -4,10 +4,7 @@ import com.herobrine.mod.entities.HolyWaterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,8 +30,7 @@ public class HolyWaterItem extends Item {
         if (!playerIn.abilities.isCreativeMode) {
             itemstack.shrink(1);
         }
-
         playerIn.swingArm(handIn);
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
     }
 }

@@ -11,7 +11,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 public class RenderRegistry {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static void registerEntityRenders() {
-        RenderingRegistry.registerEntityRenderingHandler(HerobrineWarriorEntity.class, new HerobrineWarriorEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(HerobrineWarriorEntity.class, new AbstractHerobrineEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(HolyWaterEntity.class, renderManager -> new SpriteRenderer(renderManager, Minecraft.getInstance().getItemRenderer()));
         RenderingRegistry.registerEntityRenderingHandler(UnholyWaterEntity.class, renderManager -> new SpriteRenderer(renderManager, Minecraft.getInstance().getItemRenderer()));
         RenderingRegistry.registerEntityRenderingHandler(InfectedPigEntity.class, new InfectedPigEntityRender.RenderFactory());
@@ -20,9 +20,17 @@ public class RenderRegistry {
         RenderingRegistry.registerEntityRenderingHandler(InfectedCowEntity.class, new InfectedCowEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(InfectedMooshroomEntity.class, new InfectedMooshroomEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(InfectedVillagerEntity.class, new InfectedVillagerEntityRenderer.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(HerobrineSpyEntity.class, new HerobrineSpyEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(HerobrineBuilderEntity.class, new HerobrineBuilderEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(HerobrineMageEntity.class, new HerobrineMageEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(FakeHerobrineMageEntity.class, new FakeHerobrineMageEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(HerobrineSpyEntity.class, new AbstractHerobrineEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(HerobrineBuilderEntity.class, new AbstractHerobrineEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(HerobrineMageEntity.class, new AbstractHerobrineMageEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(FakeHerobrineMageEntity.class, new AbstractHerobrineEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(SteveSurvivorEntity.class, new SteveSurvivorEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(AlexSurvivorEntity.class, new AlexSurvivorEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(InfectedWolfEntity.class, new InfectedWolfEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(InfectedLlamaEntity.class, new InfectedLlamaEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(InfectedHorseEntity.class, new InfectedHorseEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(InfectedDonkeyEntity.class, new InfectedDonkeyEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(InfectedRabbitEntity.class, new InfectedRabbitEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(InfectedBatEntity.class, new InfectedBatEntityRender.RenderFactory());
     }
 }

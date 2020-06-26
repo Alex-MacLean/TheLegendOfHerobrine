@@ -15,10 +15,11 @@ import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class InfectedMooshroomMushroomLayer<T extends InfectedMooshroomEntity> extends LayerRenderer<T, CowModel<T>> {
-    public InfectedMooshroomMushroomLayer(IEntityRenderer<T, CowModel<T>> rendererIn) {
-        super(rendererIn);
+    public InfectedMooshroomMushroomLayer(IEntityRenderer<T, CowModel<T>> p_i50931_1_) {
+        super(p_i50931_1_);
     }
 
+    @Override
     public void render(@NotNull T entityIn, float p_212842_2_, float p_212842_3_, float p_212842_4_, float p_212842_5_, float p_212842_6_, float p_212842_7_, float p_212842_8_) {
         if (!entityIn.isChild() && !entityIn.isInvisible()) {
             BlockState blockstate = entityIn.getMooshroomType().getRenderState();
@@ -54,6 +55,7 @@ public class InfectedMooshroomMushroomLayer<T extends InfectedMooshroomEntity> e
         }
     }
 
+    @Override
     public boolean shouldCombineTextures() {
         return true;
     }

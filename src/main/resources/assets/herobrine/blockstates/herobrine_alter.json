@@ -1,6 +1,7 @@
 {
     "variants": {
-        "active=false": { "model": "herobrine:block/herobrine_alter" },
-        "active=true": { "model": "herobrine:block/herobrine_alter_active" }
+        "type=0": { "model": "herobrine:block/herobrine_alter" },
+        "type=1": { "model": "herobrine:block/herobrine_alter_active" },
+		"type=2": { "model": "herobrine:block/herobrine_alter_purified" }
     }
 }

@@ -1,0 +1,77 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "herobrine:block/herobrine_statue/top/left_arm",
+		"1": "herobrine:block/herobrine_statue/top/right_arm",
+		"2": "herobrine:block/herobrine_statue/top/body",
+		"3": "herobrine:block/herobrine_statue/top/head",
+		"particle": "herobrine:block/herobrine_statue/top/particle"
+	},
+	"elements": [
+		{
+			"name": "head",
+			"from": [4, 8, 4],
+			"to": [12, 16, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, -8, 8]},
+			"faces": {
+				"north": {"uv": [4, 0, 8, 4], "texture": "#3"},
+				"east": {"uv": [0, 0, 4, 4], "texture": "#3"},
+				"south": {"uv": [0, 4, 4, 8], "texture": "#3"},
+				"west": {"uv": [4, 4, 8, 8], "texture": "#3"},
+				"up": {"uv": [4, 12, 0, 8], "rotation": 90, "texture": "#3", "cullface": "up"},
+				"down": {"uv": [8, 8, 4, 12], "rotation": 270, "texture": "#3"}
+			}
+		},
+		{
+			"name": "body",
+			"from": [6, 0, 4],
+			"to": [10, 8, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 12, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 8, 8], "texture": "#2"},
+				"west": {"uv": [0, 8, 8, 16], "texture": "#2"},
+				"down": {"uv": [16, 8, 8, 12], "rotation": 270, "texture": "#2", "cullface": "down"}
+			}
+		},
+		{
+			"name": "right_arm",
+			"from": [6, 0, 12],
+			"to": [10, 8, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, -4, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 4, 8], "texture": "#1"},
+				"south": {"uv": [4, 4, 8, 12], "texture": "#1", "cullface": "south"},
+				"west": {"uv": [0, 8, 4, 16], "texture": "#1"},
+				"up": {"uv": [8, 4, 4, 0], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [12, 8, 8, 12], "rotation": 270, "texture": "#1", "cullface": "down"}
+			}
+		},
+		{
+			"name": "left_arm",
+			"from": [6, 0, 0],
+			"to": [10, 8, 4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, -4, 8]},
+			"faces": {
+				"north": {"uv": [0, 8, 4, 16], "texture": "#0", "cullface": "north"},
+				"east": {"uv": [0, 0, 4, 8], "texture": "#0"},
+				"west": {"uv": [4, 4, 8, 12], "texture": "#0"},
+				"up": {"uv": [8, 4, 4, 0], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [12, 8, 8, 12], "rotation": 270, "texture": "#0", "cullface": "down"}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"translation": [0, -29, 0],
+			"scale": [1.6, 1.6, 1.6]
+		}
+	},
+	"groups": [
+		{
+			"name": "steve",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2, 3]
+		}
+	]
+}
