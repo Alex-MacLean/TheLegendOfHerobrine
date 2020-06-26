@@ -42,9 +42,8 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         experienceValue = 3;
     }
 
-    @SuppressWarnings("unchecked")
     public InfectedRabbitEntity(World worldIn) {
-        this((EntityType<? extends InfectedRabbitEntity>) EntityRegistry.INFECTED_RABBIT_ENTITY, worldIn);
+        this(EntityRegistry.INFECTED_RABBIT_ENTITY, worldIn);
     }
 
     @Override
@@ -86,7 +85,6 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(3.0D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(2.0D);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
     }
@@ -400,7 +398,6 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
 
         public RabbitData(int type) {
             this.typeData = type;
-            this.setBabySpawnProbability(1.0F);
         }
     }
 }

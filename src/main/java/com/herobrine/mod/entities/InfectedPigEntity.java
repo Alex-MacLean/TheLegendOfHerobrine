@@ -21,9 +21,8 @@ public class InfectedPigEntity extends AbstractInfectedEntity {
         experienceValue = 3;
     }
 
-    @SuppressWarnings("unchecked")
     public InfectedPigEntity(World worldIn) {
-        this((EntityType<? extends InfectedPigEntity>) EntityRegistry.INFECTED_PIG_ENTITY, worldIn);
+        this(EntityRegistry.INFECTED_PIG_ENTITY, worldIn);
     }
 
     @Override
@@ -64,7 +63,6 @@ public class InfectedPigEntity extends AbstractInfectedEntity {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10.0D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(2.0D);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
     }

@@ -16,24 +16,25 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public class InfectedBatEntity extends AbstractInfectedEntity {
     private static final DataParameter<Byte> HANGING = EntityDataManager.createKey(InfectedBatEntity.class, DataSerializers.BYTE);
     private static final EntityPredicate field_213813_c = (new EntityPredicate()).setDistance(4.0D).allowFriendlyFire();
     private BlockPos spawnPosition;
-    public InfectedBatEntity(EntityType<? extends InfectedBatEntity> type, World worldIn) {
+    public InfectedBatEntity(EntityType<InfectedBatEntity> type, World worldIn) {
         super(type, worldIn);
         experienceValue = 3;
         this.setIsBatHanging(true);
     }
 
-    @SuppressWarnings("unchecked")
     public InfectedBatEntity(World worldIn) {
-        this((EntityType<? extends InfectedBatEntity>) EntityRegistry.INFECTED_BAT_ENTITY, worldIn);
+        this(EntityRegistry.INFECTED_BAT_ENTITY, worldIn);
     }
 
     @Override
@@ -81,7 +82,6 @@ public class InfectedBatEntity extends AbstractInfectedEntity {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(2.0D);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
     }
 
@@ -241,5 +241,19 @@ public class InfectedBatEntity extends AbstractInfectedEntity {
     @Override
     protected float getStandingEyeHeight(@NotNull Pose poseIn, @NotNull EntitySize sizeIn) {
         return sizeIn.height / 2.0F;
+    }
+
+    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> batIn, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+        if (pos.getY() >= worldIn.getSeaLevel()) {
+            return false;
+        } else {
+            int i = worldIn.getLight(pos);
+            int j = 4;
+            if (randomIn.nextBoolean()) {
+                return false;
+            }
+
+            return i <= randomIn.nextInt(j) && canSpawnOn(batIn, worldIn, reason, pos, randomIn);
+        }
     }
 }

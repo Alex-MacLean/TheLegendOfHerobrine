@@ -1,27 +1,26 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
+import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.savedata.Variables;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.*;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
-public class AbstractInfectedEntity extends MonsterEntity {
+public class AbstractInfectedEntity extends MonsterEntity{
     protected AbstractInfectedEntity(EntityType<? extends AbstractInfectedEntity> type, World worldIn) {
         super(type, worldIn);
     }
@@ -72,5 +71,26 @@ public class AbstractInfectedEntity extends MonsterEntity {
             this.remove();
         }
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    }
+
+    public static boolean isValidLightLevel(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
+        if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
+            return false;
+        } else {
+            int i = worldIn.getWorld().isThundering() ? worldIn.getNeighborAwareLightSubtracted(pos, 10) : worldIn.getLight(pos);
+            return i <= randomIn.nextInt(8);
+        }
+    }
+
+    public static boolean hasViewOfSky(@NotNull IWorld worldIn, @NotNull BlockPos pos) {
+        return worldIn.canSeeSky(pos);
+    }
+
+    public static boolean isValidBlock(@NotNull IWorld worldIn, @NotNull BlockPos pos) {
+        return worldIn.getBlockState(pos.down()).getBlock() == Blocks.GRASS_BLOCK;
+    }
+
+    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> type, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidBlock(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn);
     }
 }

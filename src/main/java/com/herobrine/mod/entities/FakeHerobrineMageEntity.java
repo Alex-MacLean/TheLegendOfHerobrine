@@ -24,10 +24,8 @@ public class FakeHerobrineMageEntity extends AbstractHerobrineEntity {
         super(type, worldIn);
         experienceValue = 0;
     }
-
-    @SuppressWarnings("unchecked")
     public FakeHerobrineMageEntity(World worldIn) {
-        this((EntityType<? extends FakeHerobrineMageEntity>) EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, worldIn);
+        this(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, worldIn);
     }
 
     private int lifeTimer = 200;
@@ -57,6 +55,7 @@ public class FakeHerobrineMageEntity extends AbstractHerobrineEntity {
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(64.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(0.0D);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(0.0D);
     }
 
     @Override

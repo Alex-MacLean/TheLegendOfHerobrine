@@ -34,7 +34,7 @@ public class InfectedSheepWoolModel<T extends InfectedSheepEntity> extends Quadr
     }
 
     @Override
-    public void setLivingAnimations(T entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+    public void setLivingAnimations(@NotNull T entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
         super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
         this.headModel.rotationPointY = 6.0F + entityIn.getHeadRotationPointY(partialTick) * 9.0F;
         this.headRotationAngleX = entityIn.getHeadRotationAngleX(partialTick);

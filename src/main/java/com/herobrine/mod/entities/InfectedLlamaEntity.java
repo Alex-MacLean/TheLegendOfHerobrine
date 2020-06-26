@@ -4,6 +4,7 @@ import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -18,14 +19,13 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public class InfectedLlamaEntity extends LlamaEntity {
     private static final DataParameter<Integer> DATA_VARIANT_ID = EntityDataManager.createKey(InfectedLlamaEntity.class, DataSerializers.VARINT);
@@ -34,14 +34,18 @@ public class InfectedLlamaEntity extends LlamaEntity {
         experienceValue = 3;
     }
 
-    @SuppressWarnings("unchecked")
     public InfectedLlamaEntity(World worldIn) {
-        this((EntityType<? extends InfectedLlamaEntity>) EntityRegistry.INFECTED_LLAMA_ENTITY, worldIn);
+        this(EntityRegistry.INFECTED_LLAMA_ENTITY, worldIn);
     }
 
     @Override
     public boolean isDespawnPeaceful() {
         return true;
+    }
+
+    @Override
+    public @NotNull SoundCategory getSoundCategory() {
+        return SoundCategory.HOSTILE;
     }
 
     @Override
@@ -58,6 +62,7 @@ public class InfectedLlamaEntity extends LlamaEntity {
             }
             llamaEntity.enablePersistence();
             llamaEntity.setVariant(this.getVariant());
+            llamaEntity.setGrowingAge(0);
             this.world.setEntityState(this, (byte)16);
             this.world.addEntity(llamaEntity);
             this.remove();
@@ -179,6 +184,11 @@ public class InfectedLlamaEntity extends LlamaEntity {
         this.setVariant(compound.getInt("Variant"));
     }
 
+    @Override
+    public boolean isChild() {
+        return false;
+    }
+
     public int getVariant() {
         return MathHelper.clamp(this.dataManager.get(DATA_VARIANT_ID), 0, 3);
     }
@@ -291,5 +301,26 @@ public class InfectedLlamaEntity extends LlamaEntity {
     @Override
     public boolean isTame() {
         return false;
+    }
+
+    public static boolean isValidLightLevel(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
+        if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
+            return false;
+        } else {
+            int i = worldIn.getWorld().isThundering() ? worldIn.getNeighborAwareLightSubtracted(pos, 10) : worldIn.getLight(pos);
+            return i <= randomIn.nextInt(8);
+        }
+    }
+
+    public static boolean isValidBlock(@NotNull IWorld worldIn, @NotNull BlockPos pos) {
+        return worldIn.getBlockState(pos.down()).getBlock() == Blocks.GRASS_BLOCK || worldIn.getBlockState(pos.down()).getBlock() == Blocks.GRAVEL || worldIn.getBlockState(pos.down()).getBlock() == Blocks.STONE;
+    }
+
+    public static boolean hasViewOfSky(@NotNull IWorld worldIn, @NotNull BlockPos pos) {
+        return worldIn.canSeeSky(pos);
+    }
+
+    public static boolean canSpawn(EntityType<? extends InfectedLlamaEntity> type, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && isValidBlock(worldIn, pos) && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn);
     }
 }

@@ -35,9 +35,8 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
         experienceValue = 5;
     }
 
-    @SuppressWarnings("unchecked")
     public HerobrineWarriorEntity(World worldIn) {
-        this((EntityType<? extends HerobrineWarriorEntity>) EntityRegistry.HEROBRINE_WARRIOR_ENTITY, worldIn);
+        this(EntityRegistry.HEROBRINE_WARRIOR_ENTITY, worldIn);
     }
 
     @Override
@@ -65,7 +64,6 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
         this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
         this.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(3.0D);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(64.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.6D);
     }

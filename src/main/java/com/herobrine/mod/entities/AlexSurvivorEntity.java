@@ -9,8 +9,7 @@ public class AlexSurvivorEntity extends AbstractSurvivorEntity {
         super(type, world);
     }
 
-    @SuppressWarnings("unchecked")
     public AlexSurvivorEntity(World worldIn) {
-        this((EntityType<? extends AlexSurvivorEntity>) EntityRegistry.ALEX_SURVIVOR_ENTITY, worldIn);
+        this(EntityRegistry.ALEX_SURVIVOR_ENTITY, worldIn);
     }
 }

@@ -38,9 +38,8 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
         experienceValue = 5;
     }
 
-    @SuppressWarnings("unchecked")
     public HerobrineBuilderEntity(World worldIn) {
-        this((EntityType<? extends HerobrineBuilderEntity>) EntityRegistry.HEROBRINE_BUILDER_ENTITY, worldIn);
+        this(EntityRegistry.HEROBRINE_BUILDER_ENTITY, worldIn);
     }
 
     private int placeTimer = 1000;

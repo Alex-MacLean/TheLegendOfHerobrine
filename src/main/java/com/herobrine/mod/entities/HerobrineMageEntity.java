@@ -26,9 +26,8 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
         experienceValue = 5;
     }
 
-    @SuppressWarnings("unchecked")
     public HerobrineMageEntity(World worldIn) {
-        this((EntityType<? extends HerobrineMageEntity>) EntityRegistry.HEROBRINE_MAGE_ENTITY, worldIn);
+        this(EntityRegistry.HEROBRINE_MAGE_ENTITY, worldIn);
     }
 
     private int illusionCastingTime = 400;
@@ -81,7 +80,6 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void livingTick() {
         if(this.isAlive()) {
             if (this.illusionCastingTime <= 0) {
@@ -113,10 +111,10 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
                 int y = (int) this.getPosY();
                 int z = (int) this.getPosZ();
                 if (!world.isRemote) {
-                    Entity entity1 = new FakeHerobrineMageEntity((EntityType<? extends FakeHerobrineMageEntity>) EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
-                    Entity entity2 = new FakeHerobrineMageEntity((EntityType<? extends FakeHerobrineMageEntity>) EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
-                    Entity entity3 = new FakeHerobrineMageEntity((EntityType<? extends FakeHerobrineMageEntity>) EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
-                    Entity entity4 = new FakeHerobrineMageEntity((EntityType<? extends FakeHerobrineMageEntity>) EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
+                    Entity entity1 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
+                    Entity entity2 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
+                    Entity entity3 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
+                    Entity entity4 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
                     entity1.setLocationAndAngles(x, y, z, world.rand.nextFloat() * 360F, 0);
                     entity2.setLocationAndAngles(x, y, z, world.rand.nextFloat() * 360F, 0);
                     entity3.setLocationAndAngles(x, y, z, world.rand.nextFloat() * 360F, 0);

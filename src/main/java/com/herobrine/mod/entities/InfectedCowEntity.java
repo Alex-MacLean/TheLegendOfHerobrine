@@ -41,9 +41,8 @@ public class InfectedCowEntity extends AbstractInfectedEntity {
         return super.attackEntityFrom(source, amount);
     }
 
-    @SuppressWarnings("unchecked")
     public InfectedCowEntity(World worldIn) {
-        this((EntityType<? extends InfectedCowEntity>) EntityRegistry.INFECTED_COW_ENTITY, worldIn);
+        this(EntityRegistry.INFECTED_COW_ENTITY, worldIn);
     }
 
     @Override
@@ -66,7 +65,6 @@ public class InfectedCowEntity extends AbstractInfectedEntity {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10.0D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(2.0D);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2D);
     }

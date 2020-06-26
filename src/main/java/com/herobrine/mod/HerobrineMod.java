@@ -89,6 +89,7 @@ public class HerobrineMod {
         ShrineRemnants.registerStructure();
         Statue.registerStructure();
         SurvivorBase.registerStructure();
+        EntityRegistry.registerSpawnPlacement();
     }
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)

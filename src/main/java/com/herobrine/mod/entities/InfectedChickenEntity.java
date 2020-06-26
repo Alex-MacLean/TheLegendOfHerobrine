@@ -49,9 +49,8 @@ public class InfectedChickenEntity extends AbstractInfectedEntity {
         return super.attackEntityFrom(source, amount);
     }
 
-    @SuppressWarnings("unchecked")
     public InfectedChickenEntity(World worldIn) {
-        this((EntityType<? extends InfectedChickenEntity>) EntityRegistry.INFECTED_CHICKEN_ENTITY, worldIn);
+        this(EntityRegistry.INFECTED_CHICKEN_ENTITY, worldIn);
     }
 
     @Override
@@ -72,7 +71,6 @@ public class InfectedChickenEntity extends AbstractInfectedEntity {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(4.0D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(0.5D);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
     }

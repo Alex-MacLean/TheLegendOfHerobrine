@@ -9,8 +9,7 @@ public class SteveSurvivorEntity extends AbstractSurvivorEntity {
         super(type, world);
     }
 
-    @SuppressWarnings("unchecked")
     public SteveSurvivorEntity(World worldIn) {
-        this((EntityType<? extends SteveSurvivorEntity>) EntityRegistry.STEVE_SURVIVOR_ENTITY, worldIn);
+        this(EntityRegistry.STEVE_SURVIVOR_ENTITY, worldIn);
     }
 }

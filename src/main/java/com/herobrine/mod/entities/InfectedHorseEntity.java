@@ -45,9 +45,8 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
         experienceValue = 3;
     }
 
-    @SuppressWarnings("unchecked")
     public InfectedHorseEntity(World worldIn) {
-        this((EntityType<? extends InfectedHorseEntity>) EntityRegistry.INFECTED_HORSE_ENTITY, worldIn);
+        this(EntityRegistry.INFECTED_HORSE_ENTITY, worldIn);
     }
 
     @Override
@@ -89,7 +88,6 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(25.0D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(2.0D);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
     }

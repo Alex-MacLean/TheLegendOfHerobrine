@@ -24,11 +24,15 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Random;
 import java.util.UUID;
 
 public class InfectedMooshroomEntity extends AbstractInfectedEntity implements net.minecraftforge.common.IShearable {
@@ -65,9 +69,8 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
         return super.attackEntityFrom(source, amount);
     }
 
-    @SuppressWarnings("unchecked")
     public InfectedMooshroomEntity(World worldIn) {
-        this((EntityType<? extends InfectedMooshroomEntity>) EntityRegistry.INFECTED_MOOSHROOM_ENTITY, worldIn);
+        this(EntityRegistry.INFECTED_MOOSHROOM_ENTITY, worldIn);
     }
 
     @Override
@@ -90,7 +93,6 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10.0D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(2.0D);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2D);
     }
@@ -144,7 +146,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
             this.world.addParticle(ParticleTypes.EXPLOSION, this.getPosX(), this.getPosYHeight(0.5D), this.getPosZ(), 0.0D, 0.0D, 0.0D);
             if (!this.world.isRemote) {
                 this.remove();
-                InfectedCowEntity cowentity = (InfectedCowEntity) EntityRegistry.INFECTED_COW_ENTITY.create(this.world);
+                InfectedCowEntity cowentity = EntityRegistry.INFECTED_COW_ENTITY.create(this.world);
                 assert cowentity != null;
                 cowentity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
                 cowentity.setHealth(this.getHealth());
@@ -218,7 +220,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
         this.world.addParticle(ParticleTypes.EXPLOSION, this.getPosX(), this.getPosYHeight(0.5D), this.getPosZ(), 0.0D, 0.0D, 0.0D);
         if (!this.world.isRemote) {
             this.remove();
-            InfectedCowEntity cowentity = (InfectedCowEntity) EntityRegistry.INFECTED_COW_ENTITY.create(this.world);
+            InfectedCowEntity cowentity = EntityRegistry.INFECTED_COW_ENTITY.create(this.world);
             assert cowentity != null;
             cowentity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
             cowentity.setHealth(this.getHealth());
@@ -261,5 +263,26 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
             }
             return RED;
         }
+    }
+
+    public static boolean isValidLightLevel(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
+        if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
+            return false;
+        } else {
+            int i = worldIn.getWorld().isThundering() ? worldIn.getNeighborAwareLightSubtracted(pos, 10) : worldIn.getLight(pos);
+            return i <= randomIn.nextInt(8);
+        }
+    }
+
+    public static boolean hasViewOfSky(@NotNull IWorld worldIn, @NotNull BlockPos pos) {
+        return worldIn.canSeeSky(pos);
+    }
+
+    public static boolean isValidBlock(@NotNull IWorld worldIn, @NotNull BlockPos pos) {
+        return worldIn.getBlockState(pos.down()).getBlock() == Blocks.MYCELIUM;
+    }
+
+    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> type, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidBlock(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn);
     }
 }

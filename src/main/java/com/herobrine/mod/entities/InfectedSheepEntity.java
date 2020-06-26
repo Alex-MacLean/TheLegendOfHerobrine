@@ -102,9 +102,8 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
         return super.attackEntityFrom(source, amount);
     }
 
-    @SuppressWarnings("unchecked")
     public InfectedSheepEntity(World worldIn) {
-        this((EntityType<? extends InfectedSheepEntity>) EntityRegistry.INFECTED_SHEEP_ENTITY, worldIn);
+        this(EntityRegistry.INFECTED_SHEEP_ENTITY, worldIn);
     }
 
     @Override
@@ -133,7 +132,6 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(8.0D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(2.0D);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23D);
     }

@@ -1,6 +1,7 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
@@ -11,8 +12,13 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
 
 public class InfectedVillagerEntity extends AbstractInfectedEntity {
 
@@ -21,9 +27,8 @@ public class InfectedVillagerEntity extends AbstractInfectedEntity {
         experienceValue = 3;
     }
 
-    @SuppressWarnings("unchecked")
     public InfectedVillagerEntity(World world) {
-        this((EntityType<InfectedVillagerEntity>) EntityRegistry.INFECTED_VILLAGER_ENTITY, world);
+        this(EntityRegistry.INFECTED_VILLAGER_ENTITY, world);
     }
 
 
@@ -65,7 +70,6 @@ public class InfectedVillagerEntity extends AbstractInfectedEntity {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(1.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(48.0D);
     }
@@ -82,5 +86,26 @@ public class InfectedVillagerEntity extends AbstractInfectedEntity {
     @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.ENTITY_VILLAGER_AMBIENT;
+    }
+
+    public static boolean isValidLightLevel(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
+        if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
+            return false;
+        } else {
+            int i = worldIn.getWorld().isThundering() ? worldIn.getNeighborAwareLightSubtracted(pos, 10) : worldIn.getLight(pos);
+            return i <= randomIn.nextInt(8);
+        }
+    }
+
+    public static boolean isValidBlock(@NotNull IWorld worldIn, @NotNull BlockPos pos) {
+        return worldIn.getBlockState(pos.down()).getBlock() == Blocks.GRASS_BLOCK || worldIn.getBlockState(pos.down()).getBlock() == Blocks.SAND;
+    }
+
+    public static boolean hasViewOfSky(@NotNull IWorld worldIn, @NotNull BlockPos pos) {
+        return worldIn.canSeeSky(pos);
+    }
+
+    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> type, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && isValidBlock(worldIn, pos) && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn);
     }
 }
