@@ -111,6 +111,7 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
 
     @Override
     protected void registerGoals() {
+        this.eatGrassGoal = new EatGrassGoal(this);
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
