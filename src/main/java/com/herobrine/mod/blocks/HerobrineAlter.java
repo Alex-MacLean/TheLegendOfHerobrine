@@ -52,7 +52,7 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public HerobrineAlter() {
-        super(Properties.create(BlockMaterialList.HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid());
+        super(Properties.create(BlockMaterialList.HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity());
         this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE).with(ModBlockStates.TYPE, 0));
         setRegistryName(location("herobrine_alter"));
     }
@@ -198,10 +198,8 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
 
     private boolean shrineIsPresent(BlockPos pos, World world) {
         if(!Config.COMMON.AltarRequiresShrine.get()) {
-            Variables.SaveData.get(world).syncData(world);
             return true;
         } else {
-            Variables.SaveData.get(world).syncData(world);
             return shrineAccepted(pos, world);
         }
     }

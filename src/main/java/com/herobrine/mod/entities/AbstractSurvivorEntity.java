@@ -45,7 +45,6 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
     protected MerchantOffers offers;
     private final Inventory survivorInventory = new Inventory(27);
     private int healTimer = 80;
-    private int restockTimer = 6000;
     WaterAvoidingRandomWalkingGoal wanderGoal = new WaterAvoidingRandomWalkingGoal(this, 0.8D);
 
     protected static class LookAtCustomerGoal extends LookAtGoal {
@@ -81,6 +80,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 64.0F));
         this.goalSelector.addGoal(9, new LookAtGoal(this, AbstractSurvivorEntity.class, 64.0F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, MonsterEntity.class, 64.0F));
+        this.goalSelector.addGoal(10, new LookAtGoal(this, InfectedLlamaEntity.class, 64.0F));
         this.goalSelector.addGoal(11, new LookAtGoal(this, AbstractHerobrineEntity.class, 64.0F));
         this.goalSelector.addGoal(12, new LookAtGoal(this, GolemEntity.class, 64.0F));
         this.goalSelector.addGoal(13, new LookAtGoal(this, AbstractVillagerEntity.class, 64.0F));
@@ -151,7 +151,6 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
     @Override
     public void writeAdditional(@NotNull CompoundNBT compound) {
         super.writeAdditional(compound);
-        compound.putInt("RestockInterval", this.restockTimer);
         compound.putInt("RegenSpeed", this.healTimer);
         MerchantOffers merchantoffers = this.getOffers();
         if (!merchantoffers.isEmpty()) {
@@ -173,7 +172,6 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
     @Override
     public void readAdditional(@NotNull CompoundNBT compound) {
         super.readAdditional(compound);
-        this.restockTimer = compound.getInt("RestockInterval");
         this.healTimer = compound.getInt("RegenSpeed");
         if (compound.contains("Offers", 10)) {
             this.offers = new MerchantOffers(compound.getCompound("Offers"));
@@ -211,18 +209,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
                 this.healTimer = 80;
             }
             --this.healTimer;
-            if (this.restockTimer <= 0) {
-                if(this.hasNoCustomer()) {
-                    this.restockTimer = 6000;
-                    this.restockTrades();
-                }
-            }
-            if (this.restockTimer > 6000) {
-                this.restockTimer = 6000;
-            }
-            if(this.hasNoCustomer()) {
-                --this.restockTimer;
-            }
+            //this.restockTrades();
             this.updateAITasks();
         }
     }
@@ -250,7 +237,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
             } else {
                 if (!this.world.isRemote) {
                     this.setCustomer(player);
-                    this.openMerchantContainer(player, this.getDisplayName(), 1);
+                    this.openMerchantContainer(player, this.getDisplayName(), -1);
                 }
 
                 return true;
@@ -270,12 +257,6 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
         }
     }
 
-    protected void restockTrades() {
-        for(MerchantOffer merchantoffer : this.getOffers()) {
-            merchantoffer.resetUses();
-        }
-    }
-
     @Override
     public @NotNull MerchantOffers getOffers() {
         if (this.offers == null) {
@@ -287,7 +268,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
 
     @Override
     public void onTrade(@NotNull MerchantOffer offer) {
-        offer.increaseUses();
+        offer.resetUses();
         this.livingSoundTime = -this.getTalkInterval();
         this.onSurvivorTrade(offer);
     }
@@ -297,13 +278,12 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
             int i = 3 + this.rand.nextInt(4);
             this.world.addEntity(new ExperienceOrbEntity(this.world, this.getPosX(), this.getPosY() + 0.5D, this.getPosZ(), i));
         }
-
     }
 
     protected void addTrades(MerchantOffers givenMerchantOffers, SurvivorTrades.ITrade @NotNull [] newTrades) {
         Set<Integer> set = Sets.newHashSet();
-        if (newTrades.length > 6) {
-            while(set.size() < 6) {
+        if (newTrades.length > 64) {
+            while(set.size() < 64) {
                 set.add(this.rand.nextInt(newTrades.length));
             }
         } else {

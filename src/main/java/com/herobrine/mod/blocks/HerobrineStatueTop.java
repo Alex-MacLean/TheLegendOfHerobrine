@@ -3,6 +3,7 @@ package com.herobrine.mod.blocks;
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.util.blocks.BlockMaterialList;
 import net.minecraft.block.*;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -62,6 +63,11 @@ public class HerobrineStatueTop extends HorizontalBlock implements IWaterLoggabl
                 world.setBlockState(new BlockPos(x, y - 1, z), Blocks.WATER.getDefaultState(), 3);
             } else world.setBlockState(new BlockPos(x, y - 1, z), Blocks.AIR.getDefaultState(), 3);
         }
+    }
+
+    @Override
+    public @NotNull PushReaction getPushReaction(@NotNull BlockState state) {
+        return PushReaction.BLOCK;
     }
 
     @Override

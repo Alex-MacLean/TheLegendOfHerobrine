@@ -22,7 +22,7 @@ public class CursedDiamondBlock extends Block {
     public static final Block block = null;
 
     public CursedDiamondBlock() {
-        super(Properties.create(BlockMaterialList.CURSED_DIAMOND_BLOCK_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0));
+        super(Properties.create(BlockMaterialList.CURSED_DIAMOND_BLOCK_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(1));
         setRegistryName("cursed_diamond_block");
     }
 

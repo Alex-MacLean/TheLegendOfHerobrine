@@ -8,15 +8,15 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.jetbrains.annotations.NotNull;
 
+@OnlyIn(Dist.CLIENT)
 public class InfectedDonkeyEntityRender extends MobRenderer<InfectedDonkeyEntity, InfectedDonkeyEntityModel> {
-    private final float scale;
-
     public InfectedDonkeyEntityRender(EntityRendererManager manager) {
         super(manager, new InfectedDonkeyEntityModel(0.0F), 0.75F);
-        this.scale = 0.87F;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class InfectedDonkeyEntityRender extends MobRenderer<InfectedDonkeyEntity
 
     @Override
     protected void preRenderCallback(@NotNull InfectedDonkeyEntity entitylivingbaseIn, @NotNull MatrixStack matrixStackIn, float partialTickTime) {
-        matrixStackIn.scale(this.scale, this.scale, this.scale);
+        matrixStackIn.scale(0.87F, 0.87F, 0.87F);
         super.preRenderCallback(entitylivingbaseIn, matrixStackIn, partialTickTime);
     }
 

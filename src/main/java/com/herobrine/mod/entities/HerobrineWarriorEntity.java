@@ -59,7 +59,7 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100.0D);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(50.0D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
         this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
@@ -88,12 +88,11 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
     protected void updateAITasks() {
         if (this.blockBreakCounter > 0) {
             --this.blockBreakCounter;
-            if (this.blockBreakCounter == 0 && Config.COMMON.WarriorBreaksBlocks.get() && this.isAggressive() && this.unableToAttackTarget() && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
+            if (Config.COMMON.WarriorBreaksBlocks.get() && this.blockBreakCounter == 0 && this.isAggressive() && this.unableToAttackTarget() && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
                 int i1 = MathHelper.floor(this.getPosY());
                 int l1 = MathHelper.floor(this.getPosX());
                 int i2 = MathHelper.floor(this.getPosZ());
                 boolean flag1 = false;
-
                 for(int k2 = -1; k2 <= 1; ++k2) {
                     for(int l2 = -1; l2 <= 1; ++l2) {
                         for(int j = 0; j <= 2; ++j) {
@@ -103,8 +102,7 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
                             BlockPos blockpos = new BlockPos(i3, k, l);
                             BlockState blockstate = this.world.getBlockState(blockpos);
                             IForgeBlockState state = this.world.getBlockState(blockpos);
-                            if (!blockstate.isFoliage(world, blockpos) && blockstate.getMaterial() != Material.FIRE && !state.isAir(world, blockpos) && !blockstate.isReplaceable(Fluids.EMPTY) && !blockstate.isReplaceable(Fluids.WATER) && !blockstate.isReplaceable(Fluids.LAVA) && !blockstate.isReplaceable(Fluids.FLOWING_LAVA) && !blockstate.isReplaceable(Fluids.FLOWING_WATER) && !BlockTags.WITHER_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.DRAGON_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.BEDS.contains(blockstate.getBlock()) && !BlockTags.CROPS.contains(blockstate.getBlock()) && !BlockTags.CARPETS.contains(blockstate.getBlock()) && !BlockTags.BUTTONS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_BUTTONS.contains(blockstate.getBlock()) && !BlockTags.CORAL_PLANTS.contains(blockstate.getBlock()) && !BlockTags.CORALS.contains(blockstate.getBlock()) && !BlockTags.FLOWER_POTS.contains(blockstate.getBlock()) && !BlockTags.PORTALS.contains(blockstate.getBlock()) && !BlockTags.RAILS.contains(blockstate.getBlock()) && !BlockTags.SAPLINGS.contains(blockstate.getBlock()) && !BlockTags.SMALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.SIGNS.contains(blockstate.getBlock()) && !BlockTags.STANDING_SIGNS.contains(blockstate.getBlock()) && !BlockTags.UNDERWATER_BONEMEALS.contains(blockstate.getBlock()) && !BlockTags.WALL_CORALS.contains(blockstate.getBlock()) && !BlockTags.WALL_SIGNS.contains(blockstate.getBlock()) && !BlockTags.TALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_PRESSURE_PLATES.contains(blockstate.getBlock())
-                                    && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, blockstate)) {
+                            if (!blockstate.isFoliage(world, blockpos) && blockstate.getMaterial() != Material.FIRE && !state.isAir(world, blockpos) && !blockstate.isReplaceable(Fluids.EMPTY) && !blockstate.isReplaceable(Fluids.WATER) && !blockstate.isReplaceable(Fluids.LAVA) && !blockstate.isReplaceable(Fluids.FLOWING_LAVA) && !blockstate.isReplaceable(Fluids.FLOWING_WATER) && !BlockTags.WITHER_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.DRAGON_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.BEDS.contains(blockstate.getBlock()) && !BlockTags.CROPS.contains(blockstate.getBlock()) && !BlockTags.CARPETS.contains(blockstate.getBlock()) && !BlockTags.BUTTONS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_BUTTONS.contains(blockstate.getBlock()) && !BlockTags.CORAL_PLANTS.contains(blockstate.getBlock()) && !BlockTags.CORALS.contains(blockstate.getBlock()) && !BlockTags.FLOWER_POTS.contains(blockstate.getBlock()) && !BlockTags.PORTALS.contains(blockstate.getBlock()) && !BlockTags.RAILS.contains(blockstate.getBlock()) && !BlockTags.SAPLINGS.contains(blockstate.getBlock()) && !BlockTags.SMALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.SIGNS.contains(blockstate.getBlock()) && !BlockTags.STANDING_SIGNS.contains(blockstate.getBlock()) && !BlockTags.UNDERWATER_BONEMEALS.contains(blockstate.getBlock()) && !BlockTags.WALL_CORALS.contains(blockstate.getBlock()) && !BlockTags.WALL_SIGNS.contains(blockstate.getBlock()) && !BlockTags.TALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_PRESSURE_PLATES.contains(blockstate.getBlock()) && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, blockstate)) {
                                 flag1 = this.world.destroyBlock(blockpos, true, this) || flag1;
                                 this.swingArm(Hand.MAIN_HAND);
                             }

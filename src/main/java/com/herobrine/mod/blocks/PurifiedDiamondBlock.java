@@ -12,7 +12,7 @@ public class PurifiedDiamondBlock extends Block {
     public static final Block block = null;
 
     public PurifiedDiamondBlock() {
-        super(Properties.create(BlockMaterialList.PURIFIED_DIAMOND_BLOCK_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0));
+        super(Properties.create(BlockMaterialList.PURIFIED_DIAMOND_BLOCK_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(1));
         setRegistryName("purified_diamond_block");
     }
 }

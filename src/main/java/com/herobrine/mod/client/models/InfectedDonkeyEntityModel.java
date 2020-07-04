@@ -5,8 +5,11 @@ import com.herobrine.mod.entities.InfectedDonkeyEntity;
 import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
+@OnlyIn(Dist.CLIENT)
 public class InfectedDonkeyEntityModel extends AgeableModel<InfectedDonkeyEntity> {
     protected final ModelRenderer body;
     protected final ModelRenderer head;

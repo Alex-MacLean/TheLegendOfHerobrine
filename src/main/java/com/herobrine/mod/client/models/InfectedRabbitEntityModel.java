@@ -7,8 +7,11 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
+@OnlyIn(Dist.CLIENT)
 public class InfectedRabbitEntityModel extends EntityModel<InfectedRabbitEntity> {
     private final ModelRenderer rabbitLeftFoot = new ModelRenderer(this, 26, 24);
     private final ModelRenderer rabbitRightFoot;
