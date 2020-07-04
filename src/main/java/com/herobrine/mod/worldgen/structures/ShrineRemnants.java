@@ -4,7 +4,6 @@ import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.config.Config;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
@@ -45,21 +44,25 @@ public class ShrineRemnants {
                         j -= 1;
                         BlockState blockAt = iworld.getBlockState(new BlockPos(i, j, k));
                         boolean blockCriteria = false;
-                        if (blockAt.getMaterial() != Material.LAVA && blockAt.getMaterial() != Material.WATER && !BlockTags.ANVIL.contains(blockAt.getBlock()) && !BlockTags.BANNERS.contains(blockAt.getBlock()) && !BlockTags.BEDS.contains(blockAt.getBlock()) && !BlockTags.BIRCH_LOGS.contains(blockAt.getBlock()) && !BlockTags.BUTTONS.contains(blockAt.getBlock()) && !BlockTags.CARPETS.contains(blockAt.getBlock()) && !BlockTags.CORAL_BLOCKS.contains(blockAt.getBlock()) && !BlockTags.CORAL_PLANTS.contains(blockAt.getBlock()) && !BlockTags.CORALS.contains(blockAt.getBlock()) && !BlockTags.ACACIA_LOGS.contains(blockAt.getBlock()) && !BlockTags.DARK_OAK_LOGS.contains(blockAt.getBlock()) && !BlockTags.DOORS.contains(blockAt.getBlock()) && !BlockTags.FENCES.contains(blockAt.getBlock()) && !BlockTags.FLOWER_POTS.contains(blockAt.getBlock()) && !BlockTags.JUNGLE_LOGS.contains(blockAt.getBlock()) && !BlockTags.LEAVES.contains(blockAt.getBlock()) && !BlockTags.LOGS.contains(blockAt.getBlock()) && !BlockTags.OAK_LOGS.contains(blockAt.getBlock()) && !BlockTags.PLANKS.contains(blockAt.getBlock()) && !BlockTags.RAILS.contains(blockAt.getBlock()) && !BlockTags.SAPLINGS.contains(blockAt.getBlock()) && !BlockTags.SIGNS.contains(blockAt.getBlock()) && !BlockTags.SLABS.contains(blockAt.getBlock()) && !BlockTags.SMALL_FLOWERS.contains(blockAt.getBlock()) && !BlockTags.SPRUCE_LOGS.contains(blockAt.getBlock()) && !BlockTags.STAIRS.contains(blockAt.getBlock()) && !BlockTags.STANDING_SIGNS.contains(blockAt.getBlock()) && !BlockTags.TRAPDOORS.contains(blockAt.getBlock()) && !BlockTags.UNDERWATER_BONEMEALS.contains(blockAt.getBlock()) && !BlockTags.WALL_CORALS.contains(blockAt.getBlock()) && !BlockTags.WALL_SIGNS.contains(blockAt.getBlock()) && !BlockTags.WALLS.contains(blockAt.getBlock()) && !BlockTags.WOODEN_BUTTONS.contains(blockAt.getBlock()) && !BlockTags.WOODEN_DOORS.contains(blockAt.getBlock()) && !BlockTags.WOODEN_FENCES.contains(blockAt.getBlock()) && !BlockTags.WOODEN_PRESSURE_PLATES.contains(blockAt.getBlock()) && !BlockTags.WOODEN_SLABS.contains(blockAt.getBlock()) && !BlockTags.WOODEN_STAIRS.contains(blockAt.getBlock()) && !BlockTags.WOODEN_TRAPDOORS.contains(blockAt.getBlock()) && !BlockTags.WOOL.contains(blockAt.getBlock()))
+                        if (blockAt.getMaterial() == Material.EARTH || blockAt.getMaterial() == Material.ORGANIC || blockAt.getMaterial() == Material.ROCK)
                             blockCriteria = true;
                         if (!blockCriteria)
                             continue;
                         int type = random.nextInt(4);
-                        Template template = new Template();
+                        Template template = ((ServerWorld) iworld.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine"));
                         if(type == 0) {
                             template = ((ServerWorld) iworld.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine"));
-                        } else if(type == 1) {
+                        }
+                        if(type == 1) {
                             template = ((ServerWorld) iworld.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt"));
-                        } else if(type == 2) {
+                        }
+                        if(type == 2) {
                             template = ((ServerWorld) iworld.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_1"));
-                        } else if(type == 3) {
+                        }
+                        if(type == 3) {
                             template = ((ServerWorld) iworld.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_2"));
-                        } else if(type == 4) {
+                        }
+                        if(type == 4) {
                             template = ((ServerWorld) iworld.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_3"));
                         }
                         Rotation rotation = Rotation.values()[random.nextInt(3)];
@@ -71,13 +74,13 @@ public class ShrineRemnants {
                 return true;
             }
         };
-        BiomeDictionary.Type[] Biomes = {
+        BiomeDictionary.Type[] Biome = {
                 BiomeDictionary.Type.SPOOKY,
         };
-        for (BiomeDictionary.Type biomeType : Biomes) {
+        for (BiomeDictionary.Type biomeType : Biome) {
             Set<Biome> biome = BiomeDictionary.getBiomes(biomeType);
             for (Biome currentBiome : biome) {
-                currentBiome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, Biome.createDecoratedFeature(feature, IFeatureConfig.NO_FEATURE_CONFIG, Placement.NOPE, IPlacementConfig.NO_PLACEMENT_CONFIG));
+                currentBiome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, net.minecraft.world.biome.Biome.createDecoratedFeature(feature, IFeatureConfig.NO_FEATURE_CONFIG, Placement.NOPE, IPlacementConfig.NO_PLACEMENT_CONFIG));
             }
         }
     }

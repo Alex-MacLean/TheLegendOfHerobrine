@@ -45,7 +45,6 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
     protected MerchantOffers offers;
     private final Inventory survivorInventory = new Inventory(27);
     private int healTimer = 80;
-    private int restockTimer = 6000;
     WaterAvoidingRandomWalkingGoal wanderGoal = new WaterAvoidingRandomWalkingGoal(this, 0.8D);
 
     protected static class LookAtCustomerGoal extends LookAtGoal {
@@ -147,7 +146,6 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
     @Override
     public void writeAdditional(@NotNull CompoundNBT compound) {
         super.writeAdditional(compound);
-        compound.putInt("RestockInterval", this.restockTimer);
         compound.putInt("RegenSpeed", this.healTimer);
         MerchantOffers merchantoffers = this.getOffers();
         if (!merchantoffers.isEmpty()) {
@@ -169,7 +167,6 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
     @Override
     public void readAdditional(@NotNull CompoundNBT compound) {
         super.readAdditional(compound);
-        this.restockTimer = compound.getInt("RestockInterval");
         this.healTimer = compound.getInt("RegenSpeed");
         if (compound.contains("Offers", 10)) {
             this.offers = new MerchantOffers(compound.getCompound("Offers"));
@@ -207,18 +204,6 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
                 this.healTimer = 80;
             }
             --this.healTimer;
-            if (this.restockTimer <= 0) {
-                if(this.hasNoCustomer()) {
-                    this.restockTimer = 6000;
-                    this.restockTrades();
-                }
-            }
-            if (this.restockTimer > 6000) {
-                this.restockTimer = 6000;
-            }
-            if(this.hasNoCustomer()) {
-                --this.restockTimer;
-            }
             this.updateAITasks();
         }
     }
@@ -266,12 +251,6 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
         }
     }
 
-    protected void restockTrades() {
-        for(MerchantOffer merchantoffer : this.getOffers()) {
-            merchantoffer.resetUses();
-        }
-    }
-
     @Override
     public @NotNull MerchantOffers getOffers() {
         if (this.offers == null) {
@@ -283,7 +262,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
 
     @Override
     public void onTrade(@NotNull MerchantOffer offer) {
-        offer.increaseUses();
+        offer.resetUses();
         this.livingSoundTime = -this.getTalkInterval();
         this.onSurvivorTrade(offer);
     }
@@ -298,8 +277,8 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
 
     protected void addTrades(MerchantOffers givenMerchantOffers, SurvivorTrades.ITrade @NotNull [] newTrades) {
         Set<Integer> set = Sets.newHashSet();
-        if (newTrades.length > 6) {
-            while(set.size() < 6) {
+        if (newTrades.length > 64) {
+            while(set.size() < 64) {
                 set.add(this.rand.nextInt(newTrades.length));
             }
         } else {

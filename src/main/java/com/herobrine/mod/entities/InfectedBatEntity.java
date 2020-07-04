@@ -1,10 +1,14 @@
 package com.herobrine.mod.entities;
 
+import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.entities.EntityRegistry;
+import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.BatEntity;
+import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -23,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class InfectedBatEntity extends AbstractInfectedEntity {
+public class InfectedBatEntity extends AbstractInfectedEntity implements IFlyingAnimal {
     private static final DataParameter<Byte> HANGING = EntityDataManager.createKey(InfectedBatEntity.class, DataSerializers.BYTE);
     private static final EntityPredicate field_213813_c = (new EntityPredicate()).setDistance(4.0D).allowFriendlyFire();
     private BlockPos spawnPosition;
@@ -70,11 +74,13 @@ public class InfectedBatEntity extends AbstractInfectedEntity {
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractSurvivorEntity.class, true));
-        this.targetSelector.addGoal(4, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(7, new LookAtGoal(this, AbstractSurvivorEntity.class, 8.0F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, GolemEntity.class, true));
+        this.targetSelector.addGoal(5, new HurtByTargetGoal(this));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, AbstractSurvivorEntity.class, 8.0F));
+        this.goalSelector.addGoal(9, new LookAtGoal(this, GolemEntity.class, 8.0F));
+        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
     @Override
@@ -242,17 +248,7 @@ public class InfectedBatEntity extends AbstractInfectedEntity {
         return sizeIn.height / 2.0F;
     }
 
-    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> batIn, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
-        if (pos.getY() >= worldIn.getSeaLevel()) {
-            return false;
-        } else {
-            int i = worldIn.getLight(pos);
-            int j = 4;
-            if (randomIn.nextBoolean()) {
-                return false;
-            }
-
-            return i <= randomIn.nextInt(j) && canSpawnOn(batIn, worldIn, reason, pos, randomIn);
-        }
+    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> batIn, @NotNull IWorld worldIn, SpawnReason reason, @NotNull BlockPos pos, Random randomIn) {
+        return canSpawnOn(batIn, worldIn, reason, pos, randomIn) && pos.getY() <= worldIn.getSeaLevel() && Variables.SaveData.get(worldIn.getWorld()).Spawn || canSpawnOn(batIn, worldIn, reason, pos, randomIn) && pos.getY() <= worldIn.getSeaLevel() && Config.COMMON.HerobrineAlwaysSpawns.get();
     }
 }

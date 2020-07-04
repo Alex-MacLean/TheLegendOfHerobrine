@@ -1,6 +1,8 @@
 package com.herobrine.mod.entities;
 
+import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.entities.EntityRegistry;
+import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
@@ -9,6 +11,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.MooshroomEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -62,6 +65,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
                 mooshroomEntity.setCustomNameVisible(this.isCustomNameVisible());
             }
             mooshroomEntity.enablePersistence();
+            mooshroomEntity.setGrowingAge(0);
             this.world.setEntityState(this, (byte)16);
             this.world.addEntity(mooshroomEntity);
             this.remove();
@@ -78,14 +82,14 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, SteveSurvivorEntity.class, true));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AlexSurvivorEntity.class, true));
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(5, new LookAtGoal(this, SteveSurvivorEntity.class, 8.0F));
-        this.goalSelector.addGoal(5, new LookAtGoal(this, AlexSurvivorEntity.class, 8.0F));
-        this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractSurvivorEntity.class, true));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, GolemEntity.class, true));
+        this.targetSelector.addGoal(5, new HurtByTargetGoal(this));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, AbstractSurvivorEntity.class, 8.0F));
+        this.goalSelector.addGoal(9, new LookAtGoal(this, GolemEntity.class, 8.0F));
+        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
     @Override
@@ -278,11 +282,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
         return worldIn.canBlockSeeSky(pos);
     }
 
-    public static boolean isValidBlock(@NotNull IWorld worldIn, @NotNull BlockPos pos) {
-        return worldIn.getBlockState(pos.down()).getBlock() == Blocks.MYCELIUM;
-    }
-
     public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> type, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
-        return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidBlock(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn);
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Variables.SaveData.get(worldIn.getWorld()).Spawn || worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Config.COMMON.HerobrineAlwaysSpawns.get();
     }
 }

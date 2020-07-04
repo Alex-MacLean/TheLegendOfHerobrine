@@ -7,6 +7,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.CowEntity;
+import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
@@ -34,6 +35,7 @@ public class InfectedCowEntity extends AbstractInfectedEntity {
                 cowEntity.setCustomNameVisible(this.isCustomNameVisible());
             }
             cowEntity.enablePersistence();
+            cowEntity.setGrowingAge(0);
             this.world.setEntityState(this, (byte)16);
             this.world.addEntity(cowEntity);
             this.remove();
@@ -50,14 +52,14 @@ public class InfectedCowEntity extends AbstractInfectedEntity {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, SteveSurvivorEntity.class, true));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AlexSurvivorEntity.class, true));
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(5, new LookAtGoal(this, SteveSurvivorEntity.class, 8.0F));
-        this.goalSelector.addGoal(5, new LookAtGoal(this, AlexSurvivorEntity.class, 8.0F));
-        this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractSurvivorEntity.class, true));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, GolemEntity.class, true));
+        this.targetSelector.addGoal(5, new HurtByTargetGoal(this));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, AbstractSurvivorEntity.class, 8.0F));
+        this.goalSelector.addGoal(9, new LookAtGoal(this, GolemEntity.class, 8.0F));
+        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
     @Override

@@ -4,8 +4,11 @@ import com.herobrine.mod.entities.InfectedBatEntity;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
+@OnlyIn(Dist.CLIENT)
 public class InfectedBatEntityModel extends EntityModel<InfectedBatEntity> {
     private final RendererModel batHead;
     private final RendererModel batBody;

@@ -2,7 +2,6 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.savedata.Variables;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
@@ -87,11 +86,7 @@ public class AbstractInfectedEntity extends MonsterEntity{
         return worldIn.canBlockSeeSky(pos);
     }
 
-    public static boolean isValidBlock(@NotNull IWorld worldIn, @NotNull BlockPos pos) {
-        return worldIn.getBlockState(pos.down()).getBlock() == Blocks.GRASS_BLOCK;
-    }
-
     public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> type, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
-        return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidBlock(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn);
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Variables.SaveData.get(worldIn.getWorld()).Spawn || worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Config.COMMON.HerobrineAlwaysSpawns.get();
     }
 }

@@ -1,9 +1,6 @@
 package com.herobrine.mod.util.worldgen;
 
 import com.mojang.datafixers.Dynamic;
-import java.util.Random;
-import java.util.Set;
-import java.util.function.Function;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -12,6 +9,10 @@ import net.minecraft.world.gen.IWorldGenerationReader;
 import net.minecraft.world.gen.feature.AbstractTreeFeature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
+import java.util.Set;
+import java.util.function.Function;
 
 public class CursedTreeFeature extends AbstractTreeFeature<NoFeatureConfig> {
     private static final BlockState LOG = Blocks.OAK_LOG.getDefaultState();

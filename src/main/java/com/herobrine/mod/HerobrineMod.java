@@ -25,8 +25,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.storage.WorldSavedData;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -79,7 +77,6 @@ public class HerobrineMod {
         return new ResourceLocation(MODID, name);
     }
 
-    @OnlyIn(Dist.CLIENT)
     private void clientRegistries(final FMLClientSetupEvent event) {
         RenderRegistry.registerEntityRenders();
     }
@@ -167,16 +164,6 @@ public class HerobrineMod {
 
         @SubscribeEvent
         public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
-            if (!event.getPlayer().world.isRemote) {
-                WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
-                if (saveData != null) {
-                    HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
-                }
-            }
-        }
-
-        @SubscribeEvent
-        public void onPlayerChangedDimension(PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
             if (!event.getPlayer().world.isRemote) {
                 WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
                 if (saveData != null) {

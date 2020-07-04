@@ -16,10 +16,10 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class SurvivorTrades {
-    public static final Int2ObjectMap<SurvivorTrades.ITrade[]> SURVIVOR_TRADES = gatAsIntMap(ImmutableMap.of(1, new SurvivorTrades.ITrade[]{new GoldForItemsTrade(ItemList.cursed_dust, 8, 1 , 5, 1), new GoldForItemsTrade(Items.REDSTONE_TORCH, 2, 1, 5, 1), new GoldForItemsTrade(ItemList.unholy_water, 7,2, 5, 1), new GoldForItemsTrade(Items.BLAZE_ROD, 8, 1, 5, 1), new GoldForItemsTrade(Items.DIAMOND, 48, 1, 5, 1), new IronForItemsTrade(ItemList.holy_water, 16, 2, 3, 1), new IronForItemsTrade(Items.LAVA_BUCKET, 3, 1, 3, 1), new IronForItemsTrade(Items.GOLD_BLOCK, 16, 1, 3, 1), new IronForItemsTrade(Items.NETHERRACK, 1, 4, 3, 1), new IronForItemsTrade(Items.GHAST_TEAR, 8, 1, 3, 1), new IronForItemsTrade(Items.BLAZE_POWDER, 8, 1, 3,1), new IronForItemsTrade(Items.WATER_BUCKET, 3, 1, 3, 1), new IronForItemsTrade(Items.GLASS_BOTTLE, 1, 3, 3, 1)}, 2, new SurvivorTrades.ITrade[]{new CursedDiamondPurificationTrade(ItemList.purified_diamond, 1, 1, 7, 1)}));
+    public static final Int2ObjectMap<SurvivorTrades.ITrade[]> SURVIVOR_TRADES = getAsIntMap(ImmutableMap.of(1, new SurvivorTrades.ITrade[]{new GoldForItemsTrade(ItemList.cursed_dust, 8, 1), new GoldForItemsTrade(Items.REDSTONE_TORCH, 2, 1), new GoldForItemsTrade(ItemList.unholy_water, 7,2), new GoldForItemsTrade(Items.BLAZE_ROD, 8, 1), new GoldForItemsTrade(Items.DIAMOND, 48, 1), new IronForItemsTrade(ItemList.holy_water, 16, 2), new IronForItemsTrade(Items.LAVA_BUCKET, 3, 1), new IronForItemsTrade(Items.GOLD_BLOCK, 16, 1), new IronForItemsTrade(Items.NETHERRACK, 1, 4), new IronForItemsTrade(Items.GHAST_TEAR, 8, 1), new IronForItemsTrade(Items.BLAZE_POWDER, 8, 1), new IronForItemsTrade(Items.WATER_BUCKET, 3, 1), new IronForItemsTrade(Items.GLASS_BOTTLE, 1, 3)}, 2, new SurvivorTrades.ITrade[]{new CursedDiamondPurificationTrade(ItemList.purified_diamond, 1, 1)}));
 
     @Contract("_ -> new")
-    private static @NotNull Int2ObjectMap<SurvivorTrades.ITrade[]> gatAsIntMap(ImmutableMap<Integer, SurvivorTrades.ITrade[]> trade) {
+    private static @NotNull Int2ObjectMap<SurvivorTrades.ITrade[]> getAsIntMap(ImmutableMap<Integer, SurvivorTrades.ITrade[]> trade) {
         return new Int2ObjectOpenHashMap<>(trade);
     }
 
@@ -36,8 +36,8 @@ public class SurvivorTrades {
         private final int field_221212_e;
         private final float field_221213_f;
 
-        public GoldForItemsTrade(Item item, int cost, int amount, int xp, int priceMultiplier) {
-            this(new ItemStack(item), cost, amount, xp, priceMultiplier);
+        public GoldForItemsTrade(Item item, int cost, int amount) {
+            this(new ItemStack(item), cost, amount, 2147483647, 1);
         }
 
         public GoldForItemsTrade(ItemStack p_i50531_1_, int p_i50531_2_, int p_i50531_3_, int p_i50531_4_, int p_i50531_5_) {
@@ -67,8 +67,8 @@ public class SurvivorTrades {
         private final int field_221212_e;
         private final float field_221213_f;
 
-        public IronForItemsTrade(Item item, int cost, int amount, int xp, int priceMultiplier) {
-            this(new ItemStack(item), cost, amount, xp, priceMultiplier);
+        public IronForItemsTrade(Item item, int cost, int amount) {
+            this(new ItemStack(item), cost, amount, 2147483647, 1);
         }
 
         public IronForItemsTrade(ItemStack p_i50531_1_, int p_i50531_2_, int p_i50531_3_, int p_i50531_4_, int p_i50531_5_) {
@@ -98,8 +98,8 @@ public class SurvivorTrades {
         private final int field_221212_e;
         private final float field_221213_f;
 
-        public CursedDiamondPurificationTrade(Item item, int cost, int amount, int xp, int priceMultiplier) {
-            this(new ItemStack(item), cost, amount, xp, priceMultiplier);
+        public CursedDiamondPurificationTrade(Item item, int cost, int amount) {
+            this(new ItemStack(item), cost, amount, 2147483647, 1);
         }
 
         public CursedDiamondPurificationTrade(ItemStack p_i50531_1_, int p_i50531_2_, int p_i50531_3_, int p_i50531_4_, int p_i50531_5_) {

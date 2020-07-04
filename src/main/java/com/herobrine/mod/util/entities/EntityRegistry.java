@@ -6,7 +6,6 @@ import com.herobrine.mod.util.items.ItemList;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
@@ -69,10 +68,10 @@ public class EntityRegistry {
 
     public static void registerSpawnPlacement() {
         EntitySpawnPlacementRegistry.register(EntityRegistry.INFECTED_BAT_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedBatEntity::canSpawn);
-        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_SPY_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::func_223325_c);
-        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_WARRIOR_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::func_223325_c);
-        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_BUILDER_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::func_223325_c);
-        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_MAGE_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::func_223325_c);
+        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_SPY_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractHerobrineEntity::canSpawn);
+        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_WARRIOR_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractHerobrineEntity::canSpawn);
+        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_BUILDER_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractHerobrineEntity::canSpawn);
+        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_MAGE_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractHerobrineEntity::canSpawn);
         EntitySpawnPlacementRegistry.register(EntityRegistry.INFECTED_RABBIT_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractInfectedEntity::canSpawn);
         EntitySpawnPlacementRegistry.register(EntityRegistry.INFECTED_DONKEY_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractInfectedEntity::canSpawn);
         EntitySpawnPlacementRegistry.register(EntityRegistry.INFECTED_HORSE_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractInfectedEntity::canSpawn);
@@ -257,6 +256,7 @@ public class EntityRegistry {
                 currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_MAGE_ENTITY, 30, 1, 1));
                 currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_SPY_ENTITY, 50, 1, 1));
                 currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_WARRIOR_ENTITY, 15, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_BAT_ENTITY, 80, 1, 1));
             }
         }
 

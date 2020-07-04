@@ -9,9 +9,12 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.*;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.jetbrains.annotations.NotNull;
 
+@OnlyIn(Dist.CLIENT)
 public class SteveSurvivorEntityRender extends MobRenderer<AbstractSurvivorEntity, AbstractSurvivorEntityModel> {
     private SteveSurvivorEntityRender(EntityRendererManager manager) {
         super(manager, new AbstractSurvivorEntityModel(0.0F, false), 0.5F);

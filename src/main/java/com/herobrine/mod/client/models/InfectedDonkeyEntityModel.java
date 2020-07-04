@@ -5,8 +5,11 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
+@OnlyIn(Dist.CLIENT)
 public class InfectedDonkeyEntityModel extends EntityModel<InfectedDonkeyEntity> {
     protected final RendererModel field_217127_a;
     protected final RendererModel field_217128_b;

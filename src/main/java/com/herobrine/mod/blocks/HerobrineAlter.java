@@ -197,15 +197,12 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
 
     private boolean shrineIsPresent(BlockPos pos, World world) {
         if(!Config.COMMON.AltarRequiresShrine.get()) {
-            Variables.SaveData.get(world).syncData(world);
             return true;
         } else {
-            Variables.SaveData.get(world).syncData(world);
             return shrineAccepted(pos, world);
         }
     }
 
-    @NotNull
     @Override
     public boolean onBlockActivated(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand hand, @NotNull BlockRayTraceResult hit) {
         Variables.SaveData.get(world).syncData(world);
