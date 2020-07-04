@@ -3,7 +3,6 @@ package com.herobrine.mod.client.models;
 import com.herobrine.mod.entities.InfectedSheepEntity;
 import net.minecraft.client.model.ModelQuadruped;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.model.ModelSheep2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;

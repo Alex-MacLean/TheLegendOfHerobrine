@@ -1,26 +1,20 @@
 package com.herobrine.mod.entities;
 
+import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.items.ItemList;
-import com.herobrine.mod.util.loot_tables.LootTableInit;
-import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.monster.AbstractIllager;
 import net.minecraft.entity.monster.EntityGolem;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
@@ -29,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class HerobrineWarriorEntity extends EntityMob {
+public class HerobrineWarriorEntity extends AbstractHerobrineEntity {
     private int blockBreakCounter = 100;
 
     public HerobrineWarriorEntity(World worldIn) {
@@ -39,75 +33,32 @@ public class HerobrineWarriorEntity extends EntityMob {
     }
 
     @Override
-    protected void initEntityAI() {
+    public void initEntityAI() {
         super.initEntityAI();
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityGolem.class, false));
-        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false));
-        this.tasks.addTask(4, new EntityAIAttackMelee(this, 0.6D, true));
-        this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 0.4D));
-        this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityGolem.class, 8.0F));
-        this.tasks.addTask(8, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, AbstractIllager.class, true));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, AbstractSurvivorEntity.class, true));
+        this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(this, EntityGolem.class, true));
+        this.targetTasks.addTask(5, new EntityAIHurtByTarget(this, false));
+        this.tasks.addTask(6, new EntityAIAttackMelee(this, 1.0d, true));
+        this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 1.0d));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, AbstractIllager.class, 8.0f));
+        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
+        this.tasks.addTask(10, new EntityAIWatchClosest(this, AbstractSurvivorEntity.class, 8.0f));
+        this.tasks.addTask(11, new EntityAIWatchClosest(this, EntityGolem.class, 8.0f));
+        this.tasks.addTask(12, new EntityAILookIdle(this));
     }
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40.0D);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
         this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
         this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
         this.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(2.0D);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(64.0D);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.6D);
-    }
-
-    @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        if (source.getImmediateSource() instanceof UnholyWaterEntity)
-            return false;
-        if (source.getImmediateSource() instanceof EntityAreaEffectCloud)
-            return false;
-        if (source.getImmediateSource() instanceof EntityPotion)
-            return false;
-        if (source == DamageSource.FALL)
-            return false;
-        if (source == DamageSource.CACTUS)
-            return false;
-        if (source == DamageSource.DROWN)
-            return false;
-        if (source == DamageSource.LIGHTNING_BOLT)
-            return false;
-        if (source == DamageSource.IN_FIRE)
-            return false;
-        if (source == DamageSource.ON_FIRE)
-            return false;
-        if (source == DamageSource.ANVIL)
-            return false;
-        if (source == DamageSource.CRAMMING)
-            return false;
-        if (source == DamageSource.DRAGON_BREATH)
-            return false;
-        if (source == DamageSource.FALLING_BLOCK)
-            return false;
-        if (source == DamageSource.FIREWORKS)
-            return false;
-        if (source == DamageSource.FLY_INTO_WALL)
-            return false;
-        if (source == DamageSource.HOT_FLOOR)
-            return false;
-        if (source == DamageSource.LAVA)
-            return false;
-        if (source == DamageSource.IN_WALL)
-            return false;
-        if (source == DamageSource.MAGIC)
-            return false;
-        if (source == DamageSource.STARVE)
-            return false;
-        if (source == DamageSource.WITHER)
-            return false;
-        return super.attackEntityFrom(source, amount);
     }
 
     @Override
@@ -122,21 +73,6 @@ public class HerobrineWarriorEntity extends EntityMob {
         this.blockBreakCounter = compound.getInteger("DestroyCooldown");
     }
 
-    @Override
-    public boolean attackEntityAsMob(@NotNull Entity entityIn) {
-        boolean flag = super.attackEntityAsMob(entityIn);
-        if (flag)
-        {
-            float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
-
-            if (this.isBurning() && this.rand.nextFloat() < f * 0.3F)
-            {
-                entityIn.setFire(2 * (int)f);
-            }
-        }
-        return flag;
-    }
-
     private boolean unableToAttackTarget() {
         if(this.getAttackTarget() != null) {
             return this.navigator.getPathToEntityLiving(this.getAttackTarget()) == null && this.getNavigator().noPath() && !this.isSwingInProgress;
@@ -149,7 +85,7 @@ public class HerobrineWarriorEntity extends EntityMob {
     protected void updateAITasks() {
         if (this.blockBreakCounter > 0) {
             --this.blockBreakCounter;
-            if (this.blockBreakCounter == 0 && this.unableToAttackTarget() && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
+            if (Config.WarriorBreaksBlocks && this.blockBreakCounter == 0 && this.unableToAttackTarget() && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
                 int i1 = MathHelper.floor(this.posY);
                 int l1 = MathHelper.floor(this.posX);
                 int i2 = MathHelper.floor(this.posZ);
@@ -175,7 +111,6 @@ public class HerobrineWarriorEntity extends EntityMob {
 
     @Override
     public void onUpdate() {
-        this.clearActivePotions();
         if (this.blockBreakCounter <= 0) {
             this.blockBreakCounter = 100;
         }
@@ -187,17 +122,10 @@ public class HerobrineWarriorEntity extends EntityMob {
 
     @Override
     public IEntityLivingData onInitialSpawn(@NotNull DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
-        if ((!(Variables.WorldVariables.get(world).Spawn))) {
-            this.world.removeEntity(this);
-        }
         this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ItemList.bedrock_sword));
-        this.inventoryHandsDropChances[EntityEquipmentSlot.MAINHAND.getIndex()] = 0.0F;
+        if(!Config.BedrockSwordDrops) {
+            this.inventoryHandsDropChances[EntityEquipmentSlot.MAINHAND.getIndex()] = 0.0F;
+        }
         return super.onInitialSpawn(difficulty, livingdata);
-    }
-
-    @Nullable
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LootTableInit.HEROBRINE;
     }
 }

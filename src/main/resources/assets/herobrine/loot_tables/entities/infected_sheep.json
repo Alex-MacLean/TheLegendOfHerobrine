@@ -66,6 +66,11 @@
           "conditions": [
             {
               "condition": "killed_by_player"
+            },
+            {
+              "condition": "random_chance_with_looting",
+              "chance": 0.025,
+              "looting_multiplier": 0.01
             }
           ]
         }

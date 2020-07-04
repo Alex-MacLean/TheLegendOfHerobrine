@@ -1,10 +1,13 @@
 {
     "variants": {
-        "active=false": [
+        "type=0": [
             { "model": "herobrine:herobrine_alter" }
         ],
-        "active=true": [
+        "type=1": [
             { "model": "herobrine:herobrine_alter_active" }
+        ],
+		"type=2": [
+            { "model": "herobrine:herobrine_alter_purified" }
         ]
     }
 }

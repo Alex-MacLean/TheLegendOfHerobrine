@@ -1,10 +1,10 @@
 package com.herobrine.mod;
 
-import com.herobrine.mod.blocks.HerobrineAlter;
+import com.herobrine.mod.blocks.*;
 import com.herobrine.mod.client.renders.RenderRegistry;
+import com.herobrine.mod.items.HerobrineStatueItem;
 import com.herobrine.mod.items.HolyWaterItem;
 import com.herobrine.mod.items.UnholyWaterItem;
-import com.herobrine.mod.util.blocks.ModMaterial;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.items.*;
 import com.herobrine.mod.util.loot_tables.LootTableInit;
@@ -12,7 +12,6 @@ import com.herobrine.mod.util.savedata.Variables;
 import com.herobrine.mod.util.worldgen.BiomeInit;
 import com.herobrine.mod.util.worldgen.StructureInit;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.MapColor;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,13 +44,14 @@ public class HerobrineMod {
     public static final String NAME = "The Legend of Herobrine";
     public static final String UPDATEJSON = "https://raw.githubusercontent.com/Alex-MacLean/TheLegendOfHerobrine/master/update.json";
     public static final String MCVERSION = "[1.12.2]";
-    public static final String VERSION = "0.4.6-b2";
+    public static final String VERSION = "0.5.0";
     public static final String MODID = "herobrine";
     public static final SimpleNetworkWrapper PACKET_HANDLER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID + "_" + "packet");
     private int messageID = 0;
     public <T extends IMessage, V extends IMessage> void addNetworkMessage(Class<? extends IMessageHandler<T, V>> handler, Class<T> messageClass, Side @NotNull ... sides) {
-        for (Side side : sides)
+        for (Side side : sides) {
             HerobrineMod.PACKET_HANDLER.registerMessage(handler, messageClass, messageID, side);
+        }
         messageID++;
     }
 
@@ -66,6 +66,7 @@ public class HerobrineMod {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         EntityRegistry.registerEntities();
+        EntityRegistry.registerSpawnPlacement();
         EntityRegistry.registerEntityWorldSpawns();
         GameRegistry.registerWorldGenerator(new StructureInit(), 0);
         this.addNetworkMessage(Variables.WorldSavedDataSyncMessageHandler.class, Variables.WorldSavedDataSyncMessage.class, Side.SERVER, Side.CLIENT);
@@ -79,13 +80,8 @@ public class HerobrineMod {
 
     @Mod.EventBusSubscriber
     public static class registryEvents {
-        public static final ModMaterial HEROBRINE_ALTER_MATERIAL = new ModMaterial(MapColor.RED).setRequiresTool();
-
         @SubscribeEvent
         public static void registerItems(final RegistryEvent.@NotNull Register<Item> event) {
-            assert ItemTierList.bedrock_item_tier != null;
-            assert ItemTierList.cursed_diamond_item_tier != null;
-            assert ArmorMaterialList.cursed_diamond_armor_material != null;
             assert false;
             event.getRegistry().registerAll(
                     ItemList.unholy_water = new UnholyWaterItem().setRegistryName(location("unholy_water")).setTranslationKey(MODID + "." + "unholy_water").setCreativeTab(CreativeTabs.MISC),
@@ -102,7 +98,12 @@ public class HerobrineMod {
                     ItemList.cursed_diamond_axe = new ModdedAxeItem(ItemTierList.cursed_diamond_item_tier, 13.0f, -3.0f).setRegistryName(location("cursed_diamond_axe")).setTranslationKey(MODID + "." + "cursed_diamond_axe").setCreativeTab(CreativeTabs.TOOLS),
                     ItemList.bedrock_sword = new ItemSword(ItemTierList.bedrock_item_tier).setRegistryName(location("bedrock_sword")).setTranslationKey(MODID + "." + "bedrock_sword").setCreativeTab(CreativeTabs.COMBAT),
                     ItemList.cursed_diamond = new Item().setRegistryName(location("cursed_diamond")).setTranslationKey(MODID + "." + "cursed_diamond").setCreativeTab(CreativeTabs.MISC),
-                    ItemList.cursed_dust = new Item().setRegistryName(location("cursed_dust")).setTranslationKey(MODID + "." + "cursed_dust").setCreativeTab(CreativeTabs.MISC)
+                    ItemList.cursed_dust = new Item().setRegistryName(location("cursed_dust")).setTranslationKey(MODID + "." + "cursed_dust").setCreativeTab(CreativeTabs.MISC),
+                    ItemList.purified_diamond = new Item().setRegistryName(location("purified_diamond")).setTranslationKey(MODID + "." + "purified_diamond").setCreativeTab(CreativeTabs.MISC),
+                    ItemList.cursed_diamond_block = new ItemBlock(CursedDiamondBlock.block).setRegistryName(location("cursed_diamond_block")).setTranslationKey(MODID + "." + "cursed_diamond_block").setCreativeTab(CreativeTabs.DECORATIONS),
+                    ItemList.purified_diamond_block = new ItemBlock(PurifiedDiamondBlock.block).setRegistryName(location("purified_diamond_block")).setTranslationKey(MODID + "." + "purified_diamond_block").setCreativeTab(CreativeTabs.DECORATIONS),
+                    ItemList.herobrine_statue = new HerobrineStatueItem(HerobrineStatue.block).setRegistryName(location("herobrine_statue")).setTranslationKey(MODID + "." + "herobrine_statue").setCreativeTab(CreativeTabs.DECORATIONS)
+
             );
         }
 
@@ -115,6 +116,15 @@ public class HerobrineMod {
             event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_SHEEP);
             event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_VILLAGER);
             event.getLootTableManager().getLootTableFromLocation(LootTableInit.HEROBRINE);
+            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_BAT);
+            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_DONKEY);
+            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_RABBIT);
+            event.getLootTableManager().getLootTableFromLocation(LootTableInit.SURVIVOR_BASE_BEDSIDE);
+            event.getLootTableManager().getLootTableFromLocation(LootTableInit.SURVIVOR_BASE_BREWING);
+            event.getLootTableManager().getLootTableFromLocation(LootTableInit.SURVIVOR_BASE_DISCS);
+            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_WOLF);
+            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_HORSE);
+            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_LLAMA);
         }
 
         @SubscribeEvent
@@ -125,12 +135,18 @@ public class HerobrineMod {
         @SubscribeEvent
         public static void registerBlocks(final RegistryEvent.@NotNull Register<Block> event) {
             event.getRegistry().registerAll(
-                    new HerobrineAlter()
+                    new HerobrineAlter(),
+                    new CursedDiamondBlock(),
+                    new PurifiedDiamondBlock(),
+                    new HerobrineStatueTop(),
+                    new HerobrineStatue()
             );
         }
 
         @SubscribeEvent
         public static void registerRenders(ModelRegistryEvent event) {
+            registerRender(ItemList.cursed_diamond_block);
+            registerRender(ItemList.purified_diamond);
             registerRender(ItemList.unholy_water);
             registerRender(ItemList.herobrine_alter);
             registerRender(ItemList.holy_water);
@@ -146,6 +162,8 @@ public class HerobrineMod {
             registerRender(ItemList.bedrock_sword);
             registerRender(ItemList.cursed_diamond);
             registerRender(ItemList.cursed_dust);
+            registerRender(ItemList.purified_diamond_block);
+            registerRender(ItemList.herobrine_statue);
         }
 
         private static void registerRender(Item item) {
@@ -155,16 +173,8 @@ public class HerobrineMod {
         @SubscribeEvent
         public void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.@NotNull PlayerLoggedInEvent event) {
             if (!event.player.world.isRemote) {
-                WorldSavedData worlddata = Variables.WorldVariables.get(event.player.world);
-                HerobrineMod.PACKET_HANDLER.sendTo(new Variables.WorldSavedDataSyncMessage(1, worlddata), (EntityPlayerMP) event.player);
-            }
-        }
-
-        @SubscribeEvent
-        public void onPlayerChangedDimension(net.minecraftforge.fml.common.gameevent.PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
-            if (!event.player.world.isRemote) {
-                WorldSavedData worlddata = Variables.WorldVariables.get(event.player.world);
-                HerobrineMod.PACKET_HANDLER.sendTo(new Variables.WorldSavedDataSyncMessage(1, worlddata), (EntityPlayerMP) event.player);
+                WorldSavedData saveData = Variables.SaveData.get(event.player.world);
+                HerobrineMod.PACKET_HANDLER.sendTo(new Variables.WorldSavedDataSyncMessage(saveData), (EntityPlayerMP) event.player);
             }
         }
     }

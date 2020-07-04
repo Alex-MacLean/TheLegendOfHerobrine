@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class ModdedPickaxeItem extends ItemTool
@@ -22,76 +23,17 @@ public class ModdedPickaxeItem extends ItemTool
     }
 
     @Override
-    public boolean canHarvestBlock(@NotNull IBlockState blockIn)
-    {
-        Block block = blockIn.getBlock();
-
-        if (block == Blocks.OBSIDIAN)
-        {
-            return this.toolMaterial.getHarvestLevel() == 3;
-        }
-        else if (block != Blocks.DIAMOND_BLOCK && block != Blocks.DIAMOND_ORE)
-        {
-            if (block != Blocks.EMERALD_ORE && block != Blocks.EMERALD_BLOCK)
-            {
-                if (block != Blocks.GOLD_BLOCK && block != Blocks.GOLD_ORE)
-                {
-                    if (block != Blocks.IRON_BLOCK && block != Blocks.IRON_ORE)
-                    {
-                        if (block != Blocks.LAPIS_BLOCK && block != Blocks.LAPIS_ORE)
-                        {
-                            if (block != Blocks.REDSTONE_ORE && block != Blocks.LIT_REDSTONE_ORE)
-                            {
-                                Material material = blockIn.getMaterial();
-
-                                if (material == Material.ROCK)
-                                {
-                                    return true;
-                                }
-                                else if (material == Material.IRON)
-                                {
-                                    return true;
-                                }
-                                else
-                                {
-                                    return material == Material.ANVIL;
-                                }
-                            }
-                            else
-                            {
-                                return this.toolMaterial.getHarvestLevel() >= 2;
-                            }
-                        }
-                        else
-                        {
-                            return this.toolMaterial.getHarvestLevel() >= 1;
-                        }
-                    }
-                    else
-                    {
-                        return this.toolMaterial.getHarvestLevel() >= 1;
-                    }
-                }
-                else
-                {
-                    return this.toolMaterial.getHarvestLevel() >= 2;
-                }
-            }
-            else
-            {
-                return this.toolMaterial.getHarvestLevel() >= 2;
-            }
-        }
-        else
-        {
-            return this.toolMaterial.getHarvestLevel() >= 2;
-        }
+    public boolean canHarvestBlock(@NotNull IBlockState state) {
+        Block block = state.getBlock();
+        Material material = state.getMaterial();
+        return !material.isToolNotRequired() && block.getHarvestLevel(state) <= toolMaterial.getHarvestLevel() && Objects.equals(block.getHarvestTool(state), "pickaxe");
     }
 
     @Override
-    public float getDestroySpeed(@NotNull ItemStack stack, @NotNull IBlockState state)
-    {
+    public float getDestroySpeed(@NotNull ItemStack stack, @NotNull IBlockState state) {
         Material material = state.getMaterial();
-        return material != Material.IRON && material != Material.ANVIL && material != Material.ROCK ? super.getDestroySpeed(stack, state) : this.efficiency;
+        if(this.canHarvestBlock(state)) {
+            return this.efficiency;
+        } else return material != Material.IRON && material != Material.ANVIL && material != Material.ROCK ? super.getDestroySpeed(stack, state) : this.efficiency;
     }
 }

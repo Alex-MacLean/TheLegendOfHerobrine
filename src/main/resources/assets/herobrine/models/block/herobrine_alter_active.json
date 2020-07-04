@@ -3,7 +3,7 @@
     "textures": {
         "particle": "herobrine:block/herobrine_alter_active_particle",
         "herobrine_alter_spire": "herobrine:block/herobrine_alter_spire",
-        "herobrine_alter_gem": "herobrine:block/herobrine_alter_gem",
+        "herobrine_alter_gem": "herobrine:block/cursed_diamond_block",
         "herobrine_alter_side": "herobrine:block/herobrine_alter_side",
         "herobrine_alter": "herobrine:block/herobrine_alter"
     },

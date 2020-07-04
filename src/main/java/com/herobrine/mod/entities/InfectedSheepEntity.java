@@ -1,15 +1,16 @@
 package com.herobrine.mod.entities;
 
 import com.google.common.collect.Maps;
+import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.loot_tables.LootTableInit;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntityGolem;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -42,15 +43,14 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Random;
 
-public class InfectedSheepEntity extends EntityMob implements IShearable {
+public class InfectedSheepEntity extends AbstractInfectedEntity implements IShearable {
     private static final DataParameter<Byte> DYE_COLOR = EntityDataManager.createKey(InfectedSheepEntity.class, DataSerializers.BYTE);
     private static final Map<EnumDyeColor, float[]> DYE_TO_RGB = Maps.newEnumMap(EnumDyeColor.class);
     private int sheepTimer;
     private EntityAIEatGrass entityAIEatGrass;
 
     @Contract(value = "_ -> new", pure = true)
-    private static float @NotNull [] createSheepColor(@NotNull EnumDyeColor p_192020_0_)
-    {
+    private static float @NotNull [] createSheepColor(@NotNull EnumDyeColor p_192020_0_) {
         float[] afloat = p_192020_0_.getColorComponentValues();
         return new float[] {afloat[0] * 0.75F, afloat[1] * 0.75F, afloat[2] * 0.75F};
     }
@@ -74,17 +74,43 @@ public class InfectedSheepEntity extends EntityMob implements IShearable {
     }
 
     @Override
+    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
+        if (source.getImmediateSource() instanceof HolyWaterEntity) {
+            EntitySheep sheepEntity = new EntitySheep(this.world);
+            sheepEntity.copyLocationAndAnglesFrom(this);
+            sheepEntity.onInitialSpawn(this.world.getDifficultyForLocation(new BlockPos(sheepEntity)), null);
+            sheepEntity.setNoAI(this.isAIDisabled());
+            if (this.hasCustomName()) {
+                sheepEntity.setCustomNameTag(this.getCustomNameTag());
+                sheepEntity.setAlwaysRenderNameTag(this.getAlwaysRenderNameTag());
+            }
+            sheepEntity.enablePersistence();
+            sheepEntity.setFleeceColor(this.getFleeceColor());
+            sheepEntity.setSheared(this.getSheared());
+            sheepEntity.setGrowingAge(0);
+            this.world.setEntityState(this, (byte)16);
+            this.world.spawnEntity(sheepEntity);
+            this.world.removeEntity(this);
+        }
+        return super.attackEntityFrom(source, amount);
+    }
+
+    @Override
     public void initEntityAI() {
         super.initEntityAI();
         this.entityAIEatGrass = new EntityAIEatGrass(this);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
-        this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
-        this.tasks.addTask(3, new EntityAIAttackMelee(this, 1.0d, true));
-        this.tasks.addTask(4, this.entityAIEatGrass);
-        this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0d));
-        this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
-        this.tasks.addTask(7, new EntityAILookIdle(this));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, AbstractSurvivorEntity.class, true));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityGolem.class, true));
+        this.targetTasks.addTask(4, new EntityAIHurtByTarget(this, false));
+        this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0d, true));
+        this.tasks.addTask(6, this.entityAIEatGrass);
+        this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 1.0d));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
+        this.tasks.addTask(9, new EntityAIWatchClosest(this, AbstractSurvivorEntity.class, 8.0f));
+        this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityGolem.class, 8.0f));
+        this.tasks.addTask(11, new EntityAILookIdle(this));
     }
 
     @Override
@@ -97,29 +123,7 @@ public class InfectedSheepEntity extends EntityMob implements IShearable {
     }
 
     @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        if (source.getImmediateSource() instanceof UnholyWaterEntity)
-            return false;
-        return super.attackEntityFrom(source, amount);
-    }
-
-    @Override
-    public boolean attackEntityAsMob(@NotNull Entity entityIn) {
-        boolean flag = super.attackEntityAsMob(entityIn);
-        if (flag) {
-            float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
-            if (this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
-                entityIn.setFire(2 * (int)f);
-            }
-        }
-        return flag;
-    }
-
-    @Override
     public IEntityLivingData onInitialSpawn(@NotNull DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
-        if ((!(Variables.WorldVariables.get(world).Spawn))) {
-            this.world.removeEntity(this);
-        }
         this.setFleeceColor(getRandomSheepColor(this.world.rand));
         return super.onInitialSpawn(difficulty, livingdata);
     }
@@ -362,5 +366,14 @@ public class InfectedSheepEntity extends EntityMob implements IShearable {
         }
 
         DYE_TO_RGB.put(EnumDyeColor.WHITE, new float[] {0.9019608F, 0.9019608F, 0.9019608F});
+    }
+
+    public boolean hasViewOfSky() {
+        return world.canSeeSky(new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ));
+    }
+
+    @Override
+    public boolean getCanSpawnHere() {
+        return super.getCanSpawnHere() && hasViewOfSky() && Variables.SaveData.get(world).Spawn || super.getCanSpawnHere() && hasViewOfSky() && Config.HerobrineAlwaysSpawns;
     }
 }

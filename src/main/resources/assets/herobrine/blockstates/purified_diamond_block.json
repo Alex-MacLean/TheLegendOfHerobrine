@@ -1,0 +1,7 @@
+{
+  "variants": {
+        "normal": [
+            { "model": "herobrine:purified_diamond_block" }
+        ]
+    }
+}

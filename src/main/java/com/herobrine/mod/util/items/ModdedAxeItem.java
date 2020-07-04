@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class ModdedAxeItem extends ItemTool {
@@ -21,8 +22,17 @@ public class ModdedAxeItem extends ItemTool {
     }
 
     @Override
+    public boolean canHarvestBlock(@NotNull IBlockState state) {
+        Block block = state.getBlock();
+        Material material = state.getMaterial();
+        return !material.isToolNotRequired() && block.getHarvestLevel(state) <= toolMaterial.getHarvestLevel() && Objects.equals(block.getHarvestTool(state), "axe");
+    }
+
+    @Override
     public float getDestroySpeed(@NotNull ItemStack stack, @NotNull IBlockState state) {
         Material material = state.getMaterial();
-        return material != Material.WOOD && material != Material.PLANTS && material != Material.VINE ? super.getDestroySpeed(stack, state) : this.efficiency;
+        if(this.canHarvestBlock(state)) {
+            return this.efficiency;
+        } else return material != Material.IRON && material != Material.ANVIL && material != Material.ROCK ? super.getDestroySpeed(stack, state) : this.efficiency;
     }
 }

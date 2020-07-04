@@ -3,7 +3,6 @@ package com.herobrine.mod.client.models;
 import com.herobrine.mod.entities.InfectedSheepEntity;
 import net.minecraft.client.model.ModelQuadruped;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.model.ModelSheep1;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,7 +21,6 @@ public class InfectedSheepEntityModel extends ModelQuadruped {
         this.body = new ModelRenderer(this, 28, 8);
         this.body.addBox(-4.0F, -10.0F, -7.0F, 8, 16, 6, 1.75F);
         this.body.setRotationPoint(0.0F, 5.0F, 2.0F);
-        float f = 0.5F;
         this.leg1 = new ModelRenderer(this, 0, 16);
         this.leg1.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.5F);
         this.leg1.setRotationPoint(-3.0F, 12.0F, 7.0F);

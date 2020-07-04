@@ -7,8 +7,11 @@ import com.herobrine.mod.entities.InfectedSheepEntity;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@SideOnly(Side.CLIENT)
 public class InfectedSheepEntityRenderer extends RenderLiving<InfectedSheepEntity> {
     public static ResourceLocation TEXTURES = HerobrineMod.location("textures/entity/infected_sheep/infected_sheep.png");
 

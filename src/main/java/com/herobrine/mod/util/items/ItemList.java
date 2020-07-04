@@ -18,4 +18,8 @@ public class ItemList {
     public static Item cursed_dust;
     public static Item holy_water;
     public static Item unholy_water;
+    public static Item purified_diamond;
+    public static Item cursed_diamond_block;
+    public static Item purified_diamond_block;
+    public static Item herobrine_statue;
 }

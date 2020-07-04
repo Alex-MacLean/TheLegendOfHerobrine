@@ -8,6 +8,7 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenBirchTree;
 import net.minecraftforge.fml.relauncher.Side;
@@ -81,7 +82,19 @@ public class CursedForest extends Biome {
         }
     }
 
+    @Override
+    public @NotNull BiomeDecorator createBiomeDecorator() {
+        return new CursedForest.Decorator();
+    }
 
+    static class Decorator extends BiomeDecorator {
+        private Decorator() {
+        }
+        protected void generateOres(@NotNull World worldIn, @NotNull Random random) {
+            super.generateOres(worldIn, random);
+            if (net.minecraftforge.event.terraingen.TerrainGen.generateOre(worldIn, random, goldGen, chunkPos, net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable.EventType.GOLD)) this.genStandardOre1(worldIn, random, 20, this.goldGen, 32, 80);
+        }
+    }
 
     @SideOnly(Side.CLIENT)
     @Override

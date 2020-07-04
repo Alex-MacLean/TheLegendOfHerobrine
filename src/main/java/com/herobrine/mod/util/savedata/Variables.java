@@ -15,14 +15,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class Variables {
-    public static class WorldVariables extends WorldSavedData {
+    public static class SaveData extends WorldSavedData {
         public static final String DATA_NAME = "herobrine_worldvars";
         public boolean Spawn = false;
-        public WorldVariables() {
+        public SaveData() {
             super(DATA_NAME);
         }
 
-        public WorldVariables(String s) {
+        /**Required or Minecraft will crash*/
+        @SuppressWarnings("unused")
+        public SaveData(String s) {
             super(s);
         }
 
@@ -40,17 +42,17 @@ public class Variables {
         public void syncData(@NotNull World world) {
             this.markDirty();
             if (world.isRemote) {
-                HerobrineMod.PACKET_HANDLER.sendToServer(new WorldSavedDataSyncMessage(1, this));
+                HerobrineMod.PACKET_HANDLER.sendToServer(new WorldSavedDataSyncMessage(this));
             } else {
-                HerobrineMod.PACKET_HANDLER.sendToDimension(new WorldSavedDataSyncMessage(1, this), world.provider.getDimension());
+                HerobrineMod.PACKET_HANDLER.sendToAll(new WorldSavedDataSyncMessage(this));
             }
         }
 
-        public static @NotNull WorldVariables get(@NotNull World world) {
-            WorldVariables instance = (WorldVariables) world.getPerWorldStorage().getOrLoadData(WorldVariables.class, DATA_NAME);
+        public static @NotNull SaveData get(@NotNull World world) {
+            SaveData instance = (SaveData) Objects.requireNonNull(world.getMapStorage()).getOrLoadData(SaveData.class, DATA_NAME);
             if (instance == null) {
-                instance = new WorldVariables();
-                world.getPerWorldStorage().setData(DATA_NAME, instance);
+                instance = new SaveData();
+                world.getMapStorage().setData(DATA_NAME, instance);
             }
             return instance;
         }
@@ -70,22 +72,19 @@ public class Variables {
         private void syncData(WorldSavedDataSyncMessage message, @NotNull MessageContext context, World world) {
             if (context.side == Side.SERVER) {
                 message.data.markDirty();
-                HerobrineMod.PACKET_HANDLER.sendToDimension(message, world.provider.getDimension());
+                HerobrineMod.PACKET_HANDLER.sendToAll(message);
             }
-            world.getPerWorldStorage().setData(WorldVariables.DATA_NAME, message.data);
+            Objects.requireNonNull(world.getMapStorage()).setData(SaveData.DATA_NAME, message.data);
         }
     }
 
     public static class WorldSavedDataSyncMessage implements IMessage {
         public int type;
         public WorldSavedData data;
-        //Required or Minecraft will crash
-        @SuppressWarnings("unused")
         public WorldSavedDataSyncMessage() {
         }
 
-        public WorldSavedDataSyncMessage(int type, WorldSavedData data) {
-            this.type = type;
+        public WorldSavedDataSyncMessage(WorldSavedData data) {
             this.data = data;
         }
 
@@ -98,7 +97,7 @@ public class Variables {
         @Override
         public void fromBytes(io.netty.buffer.@NotNull ByteBuf buf) {
             this.type = buf.readInt();
-            this.data = new WorldVariables();
+            this.data = new SaveData();
             this.data.readFromNBT(Objects.requireNonNull(ByteBufUtils.readTag(buf)));
         }
     }
