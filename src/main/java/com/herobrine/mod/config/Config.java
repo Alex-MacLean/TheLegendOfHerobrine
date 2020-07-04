@@ -45,7 +45,7 @@ public class Config {
     @net.minecraftforge.common.config.Config.Name("ShrineRemnantSpawnWeight")
     @net.minecraftforge.common.config.Config.Comment("The spawn weight of the Shrine Remnant Structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Shrine Remnants.")
     @net.minecraftforge.common.config.Config.RequiresMcRestart
-    public static int ShrineRemnantSpawnWeight = 200000;
+    public static int ShrineRemnantSpawnWeight = 10000;
 
     @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 1000000)
     @net.minecraftforge.common.config.Config.Name("StatueSpawnWeight")
