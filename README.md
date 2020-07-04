@@ -11,7 +11,7 @@ How to get development builds of the mod:
 
 (Warning: advanced users only!)
 
-Step 1: download the source code of the desired branch (currently only master and 1.14.4 branches supported) as a zip file.
+Step 1: download the source code of the desired branch as a zip file.
 
 Step 2: extract the zip file.
 
