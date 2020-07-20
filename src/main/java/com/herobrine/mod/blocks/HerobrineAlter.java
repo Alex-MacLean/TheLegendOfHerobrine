@@ -60,11 +60,13 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     @Override
     public int getLightValue(@NotNull BlockState state) {
         int i = state.get(ModBlockStates.TYPE);
-        if (i != 0) {
-            return 8;
-        } else {
-            return 0;
+        switch (i) {
+            case 1:
+                return 8;
+            case 2:
+                return 15;
         }
+        return 0;
     }
 
     @NotNull
@@ -145,62 +147,23 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     @Override
     public int getComparatorInputOverride(@NotNull BlockState blockState, @NotNull World worldIn, @NotNull BlockPos pos) {
         int i = blockState.get(ModBlockStates.TYPE);
-        if(i == 2) {
-            return 8;
-        } else if(i == 1) {
-            return 15;
-        } else return 0;
+        switch (i) {
+            case 1:
+                return 8;
+            case 2:
+                return 15;
+        }
+        return 0;
     }
 
-    private boolean shrineAccepted(@NotNull BlockPos pos, @NotNull World world) {
+    private boolean shrineAccepted(@NotNull BlockPos pos, World world) {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        BlockState netherrack = world.getBlockState(new BlockPos(x, y - 1, z));
-        BlockState gold1 = world.getBlockState(new BlockPos(x, y - 1, z + 1));
-        BlockState gold2 = world.getBlockState(new BlockPos(x, y - 1, z - 1));
-        BlockState gold3 = world.getBlockState(new BlockPos(x + 1, y - 1, z));
-        BlockState gold4 = world.getBlockState(new BlockPos(x - 1, y - 1, z));
-        BlockState torch1 = world.getBlockState(new BlockPos(x + 1, y, z));
-        BlockState torch2 = world.getBlockState(new BlockPos(x - 1, y, z));
-        BlockState torch3 = world.getBlockState(new BlockPos(x, y, z + 1));
-        BlockState torch4 = world.getBlockState(new BlockPos(x, y, z - 1));
-        BlockState lava1 = world.getBlockState(new BlockPos(x - 1, y - 1, z - 1));
-        BlockState lava2 = world.getBlockState(new BlockPos(x + 1, y - 1, z + 1));
-        BlockState lava3 = world.getBlockState(new BlockPos(x + 1, y - 1, z - 1));
-        BlockState lava4 = world.getBlockState(new BlockPos(x - 1, y - 1, z + 1));
-        if(netherrack == Blocks.NETHERRACK.getDefaultState()) {
-            if(gold1 == Blocks.GOLD_BLOCK.getDefaultState()) {
-                if(gold2 == Blocks.GOLD_BLOCK.getDefaultState()) {
-                    if(gold3 == Blocks.GOLD_BLOCK.getDefaultState()) {
-                        if(gold4 == Blocks.GOLD_BLOCK.getDefaultState()) {
-                            if(torch1 == Blocks.REDSTONE_TORCH.getDefaultState()) {
-                                if(torch2 == Blocks.REDSTONE_TORCH.getDefaultState()) {
-                                    if(torch3 == Blocks.REDSTONE_TORCH.getDefaultState()) {
-                                        if(torch4 == Blocks.REDSTONE_TORCH.getDefaultState()) {
-                                            if(lava1 == Blocks.LAVA.getDefaultState()) {
-                                                if(lava2 == Blocks.LAVA.getDefaultState()) {
-                                                    if(lava3 == Blocks.LAVA.getDefaultState()) {
-                                                        return lava4 == Blocks.LAVA.getDefaultState();
-                                                    } else return false;
-                                                } else return false;
-                                            } else return false;
-                                        } else return false;
-                                    } else return false;
-                                } else return false;
-                            } else return false;
-                        } else return false;
-                    } else return false;
-                } else return false;
-            } else return false;
-        } else return false;
-    }
-
-    private boolean shrineIsPresent(BlockPos pos, World world) {
         if(!Config.COMMON.AltarRequiresShrine.get()) {
             return true;
         } else {
-            return shrineAccepted(pos, world);
+            return world.getBlockState(new BlockPos(x, y - 1, z)) == Blocks.NETHERRACK.getDefaultState() && world.getBlockState(new BlockPos(x, y - 1, z + 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x, y - 1, z - 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y, z)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y, z)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x, y, z + 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x, y, z - 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z + 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z + 1)) == Blocks.LAVA.getDefaultState();
         }
     }
 
@@ -209,7 +172,7 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     public ActionResultType onBlockActivated(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand hand, @NotNull BlockRayTraceResult hit) {
         Variables.SaveData.get(world).syncData(world);
         ItemStack itemStack = player.getHeldItem(hand);
-        if(this.shrineIsPresent(pos, world)) {
+        if(this.shrineAccepted(pos, world)) {
             int i = state.get(ModBlockStates.TYPE);
             if(i == 0 && itemStack.getItem() == ItemList.cursed_diamond || i == 0 && itemStack.getItem() == ItemList.purified_diamond) {
                 if(itemStack.getItem() == ItemList.cursed_diamond) {

@@ -10,6 +10,7 @@ import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -89,5 +90,10 @@ public class InfectedPigEntity extends AbstractInfectedEntity {
     @Override
     protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
         this.playSound(SoundEvents.ENTITY_PIG_STEP, 0.15F, 1.0F);
+    }
+
+    @Override
+    public @NotNull ResourceLocation getLootTable() {
+        return EntityType.PIG.getLootTable();
     }
 }

@@ -14,6 +14,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -403,5 +404,10 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         public RabbitData(int type) {
             this.typeData = type;
         }
+    }
+
+    @Override
+    public @NotNull ResourceLocation getLootTable() {
+        return EntityType.RABBIT.getLootTable();
     }
 }

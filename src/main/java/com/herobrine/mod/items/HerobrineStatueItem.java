@@ -2,10 +2,11 @@ package com.herobrine.mod.items;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class HerobrineStatueItem extends BlockItem {
@@ -13,20 +14,18 @@ public class HerobrineStatueItem extends BlockItem {
         super(blockIn, builder);
     }
 
-    private boolean canBePlaced(@NotNull BlockItemUseContext context) {
-        BlockPos pos = context.getPos();
+    private boolean canBePlaced(@NotNull World world, @NotNull BlockPos pos) {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        if(context.getWorld().getBlockState(new BlockPos(x, y, z)).getMaterial() == Material.AIR || context.getWorld().getBlockState(new BlockPos(x, y, z)).isReplaceable(context) || context.getWorld().getBlockState(new BlockPos(x, y, z)).getMaterial() == Material.WATER || context.getWorld().getBlockState(new BlockPos(x, y, z)).getMaterial() == Material.LAVA || context.getWorld().getBlockState(new BlockPos(x, y, z)).getMaterial() == Material.BUBBLE_COLUMN) {
-            return context.getWorld().getBlockState(new BlockPos(x, y, z)).getMaterial() == Material.AIR || context.getWorld().getBlockState(new BlockPos(x, y, z)).isReplaceable(context) || context.getWorld().getBlockState(new BlockPos(x, y, z)).getMaterial() == Material.WATER || context.getWorld().getBlockState(new BlockPos(x, y, z)).getMaterial() == Material.LAVA || context.getWorld().getBlockState(new BlockPos(x, y, z)).getMaterial() == Material.BUBBLE_COLUMN;
-        } else return false;
+        BlockState state = world.getBlockState(new BlockPos(x, y + 1, z));
+        return state.getMaterial().isReplaceable();
     }
 
     @Override
-    protected boolean placeBlock(@NotNull BlockItemUseContext context, @NotNull BlockState state) {
-        if(canBePlaced(context)) {
-            return context.getWorld().setBlockState(context.getPos(), state, 3);
-        } else return false;
+    public @NotNull ActionResultType tryPlace(@NotNull BlockItemUseContext context) {
+        if (this.canBePlaced(context.getWorld(), context.getPos())) {
+            return super.tryPlace(context);
+        } else return ActionResultType.FAIL;
     }
 }

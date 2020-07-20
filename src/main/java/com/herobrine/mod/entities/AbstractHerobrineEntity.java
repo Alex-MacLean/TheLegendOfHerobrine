@@ -2,16 +2,20 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.savedata.Variables;
-import net.minecraft.entity.*;
+import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.projectile.PotionEntity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.*;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.LightType;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.Random;
 
 public class AbstractHerobrineEntity extends MonsterEntity {
@@ -78,15 +82,6 @@ public class AbstractHerobrineEntity extends MonsterEntity {
         }
         this.clearActivePotions();
         super.baseTick();
-    }
-
-    @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        Variables.SaveData.get(world).syncData(world);
-        if (!Variables.SaveData.get(world).Spawn && !Config.COMMON.HerobrineAlwaysSpawns.get()) {
-            this.remove();
-        }
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     @Override

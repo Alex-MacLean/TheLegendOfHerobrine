@@ -59,10 +59,8 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
         public boolean shouldExecute() {
             if (!this.survivorEntity.hasNoCustomer()) {
                 this.closestEntity = this.survivorEntity.getCustomer();
-                return true;
-            } else {
-                return false;
             }
+            return !this.survivorEntity.hasNoCustomer();
         }
     }
 
@@ -209,7 +207,6 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
                 this.healTimer = 80;
             }
             --this.healTimer;
-            //this.restockTrades();
             this.updateAITasks();
         }
     }

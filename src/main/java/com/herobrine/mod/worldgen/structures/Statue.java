@@ -34,7 +34,7 @@ public class Statue {
             public boolean place(@NotNull IWorld iworld, @NotNull ChunkGenerator generator, @NotNull Random random, @NotNull BlockPos pos, @NotNull NoFeatureConfig config) {
                 int ci = pos.getX();
                 int ck = pos.getZ();
-                if ((random.nextInt(1000000) + 1) <= Config.COMMON.StatueSpawnWeight.get()) {
+                if ((random.nextInt(1000000) + 1) <= Config.COMMON.HerobrineStatueWeight.get()) {
                     int count = random.nextInt(1) + 1;
                     for (int a = 0; a < count; a++) {
                         int i = ci + random.nextInt(16) + 8;
