@@ -2,6 +2,7 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.entities.EntityRegistry;
+import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -259,11 +260,6 @@ public class InfectedLlamaEntity extends LlamaEntity {
             spawnDataIn = new InfectedLlamaEntity.LlamaData(i);
         }
         this.setVariant(i);
-
-        Variables.SaveData.get(world).syncData(world);
-        if (!Variables.SaveData.get(world).Spawn && !Config.COMMON.HerobrineAlwaysSpawns.get()) {
-            this.remove();
-        }
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
@@ -324,5 +320,19 @@ public class InfectedLlamaEntity extends LlamaEntity {
 
     public static boolean canSpawn(EntityType<? extends InfectedLlamaEntity> type, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
         return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Variables.SaveData.get(worldIn.getWorld()).Spawn || worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Config.COMMON.HerobrineAlwaysSpawns.get();
+    }
+
+    @Override
+    protected void dropSpecialItems(@NotNull DamageSource source, int looting, boolean recentlyHitIn) {
+        super.dropSpecialItems(source, looting, recentlyHitIn);
+        Random rand = new Random();
+        if(rand.nextInt(100) <= 20 * (looting + 1)) {
+            this.entityDropItem(new ItemStack(ItemList.cursed_dust, 1));
+        }
+    }
+
+    @Override
+    public @NotNull ResourceLocation getLootTable() {
+        return EntityType.LLAMA.getLootTable();
     }
 }

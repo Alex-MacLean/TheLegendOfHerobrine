@@ -229,11 +229,11 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
             if (this.getOffers().isEmpty()) {
                 return super.processInteract(player, hand);
             } else {
+                player.swingArm(Hand.MAIN_HAND);
                 if (!this.world.isRemote) {
                     this.setCustomer(player);
                     this.openMerchantContainer(player, this.getDisplayName(), 1);
                 }
-
                 return true;
             }
         } else {

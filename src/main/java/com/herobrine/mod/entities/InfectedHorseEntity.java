@@ -15,6 +15,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -263,5 +264,10 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
 
     private void moveTail() {
         this.tailCounter = 1;
+    }
+
+    @Override
+    public @NotNull ResourceLocation getLootTable() {
+        return EntityType.HORSE.getLootTable();
     }
 }

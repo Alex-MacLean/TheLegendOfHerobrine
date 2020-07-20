@@ -160,7 +160,7 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
     @Override
     public ResourceLocation getLootTable() {
         if (this.getSheared()) {
-            return this.getType().getLootTable();
+            return EntityType.SHEEP.getLootTable();
         } else {
             switch(this.getFleeceColor()) {
                 case WHITE:

@@ -10,6 +10,7 @@ import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -121,5 +122,10 @@ public class InfectedChickenEntity extends AbstractInfectedEntity {
 
     @Override
     public void fall(float distance, float damageMultiplier) {
+    }
+
+    @Override
+    public @NotNull ResourceLocation getLootTable() {
+        return EntityType.CHICKEN.getLootTable();
     }
 }

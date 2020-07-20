@@ -11,14 +11,14 @@ public class Config {
     public static class CommonConfig {
         public final ForgeConfigSpec.BooleanValue WarriorBreaksBlocks;
         public final ForgeConfigSpec.BooleanValue HerobrineAlwaysSpawns;
-        public final ForgeConfigSpec.IntValue CursedForestBiomeWeight;
-        public final ForgeConfigSpec.IntValue TrappedHouseSpawnWeight;
+        public final ForgeConfigSpec.IntValue CursedForestWeight;
+        public final ForgeConfigSpec.IntValue TrappedHouseWeight;
         public final ForgeConfigSpec.BooleanValue BuilderBuilds;
         public final ForgeConfigSpec.BooleanValue BedrockSwordDrops;
         public final ForgeConfigSpec.BooleanValue AltarRequiresShrine;
-        public final ForgeConfigSpec.IntValue ShrineRemnantSpawnWeight;
-        public final ForgeConfigSpec.IntValue StatueSpawnWeight;
-        public final ForgeConfigSpec.IntValue SurvivorBaseSpawnWeight;
+        public final ForgeConfigSpec.IntValue ShrineRemnantWeight;
+        public final ForgeConfigSpec.IntValue HerobrineStatueWeight;
+        public final ForgeConfigSpec.IntValue SurvivorBaseWeight;
         public CommonConfig(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Common config file for The Legend of Herobrine Minecraft mod.").push("entity_config");
             WarriorBreaksBlocks = builder.comment("Determines if the Herobrine Warrior can break blocks.").worldRestart().define("WarriorBreaksBlocks", true);
@@ -26,13 +26,13 @@ public class Config {
             BuilderBuilds = builder.comment("Determines if the Herobrine Builder builds structures.").worldRestart().define("BuilderBuilds", true);
             builder.pop();
             builder.push("biome_config");
-            CursedForestBiomeWeight = builder.comment("The spawn weight of the Cursed Forest biome. Greater values make the biome more common. Setting the value to 0 disables the biome, while 1024 makes the entire world a Cursed Forest.").worldRestart().defineInRange("CursedForestBiomeWeight", 4, 0, 1024);
+            CursedForestWeight = builder.comment("The spawn weight of the Cursed Forest biome. Greater values make the biome more common. Setting the value to 0 disables the biome, while 1024 makes the entire world a Cursed Forest.").worldRestart().defineInRange("CursedForestWeight", 3, 0, 1024);
             builder.pop();
             builder.push("structure_config");
-            TrappedHouseSpawnWeight = builder.comment("The spawn weight of the Suspicious House structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Suspicious Houses.").worldRestart().defineInRange("TrappedHouseSpawnWeight", 550, 0, 1000000);
-            ShrineRemnantSpawnWeight = builder.comment("The spawn weight of the Shrine Remnant Structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Shrine Remnants.").worldRestart().defineInRange("ShrineRemnantSpawnWeight", 10000, 0, 1000000);
-            StatueSpawnWeight = builder.comment("The spawn weight of the Herobrine Statue Structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Herobrine Statues.").worldRestart().defineInRange("StatueSpawnWeight", 50000, 0, 1000000);
-            SurvivorBaseSpawnWeight = builder.comment("The spawn weight of the Survivor Base Structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Survivor Bases.").worldRestart().defineInRange("SurvivorBaseSpawnWeight", 1000, 0, 1000000);
+            TrappedHouseWeight = builder.comment("The spawn weight of the Trapped House structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Suspicious Houses.").worldRestart().defineInRange("TrappedHouseWeight", 550, 0, 1000000);
+            ShrineRemnantWeight = builder.comment("The spawn weight of the Shrine Remnant Structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Shrine Remnants.").worldRestart().defineInRange("ShrineRemnantWeight", 5000, 0, 1000000);
+            HerobrineStatueWeight = builder.comment("The spawn weight of the Herobrine Statue Structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Herobrine Statues.").worldRestart().defineInRange("HerobrineStatueWeight", 20000, 0, 1000000);
+            SurvivorBaseWeight = builder.comment("The spawn weight of the Survivor Base Structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Survivor Bases.").worldRestart().defineInRange("SurvivorBaseWeight", 1500, 0, 1000000);
             builder.pop();
             builder.push("item_config");
             BedrockSwordDrops = builder.comment("Determines if the Bedrock Sword can be obtained in Survival as an extremely rare drop from the Herobrine Warrior.").worldRestart().define("BedrockSwordDrops", false);

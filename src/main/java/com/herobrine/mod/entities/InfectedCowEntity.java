@@ -10,6 +10,7 @@ import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -94,5 +95,10 @@ public class InfectedCowEntity extends AbstractInfectedEntity {
     @Override
     protected float getSoundVolume() {
         return 0.4F;
+    }
+
+    @Override
+    public @NotNull ResourceLocation getLootTable() {
+        return EntityType.COW.getLootTable();
     }
 }

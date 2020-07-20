@@ -15,6 +15,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -250,5 +251,10 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
 
     public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> batIn, @NotNull IWorld worldIn, SpawnReason reason, @NotNull BlockPos pos, Random randomIn) {
         return canSpawnOn(batIn, worldIn, reason, pos, randomIn) && pos.getY() <= worldIn.getSeaLevel() && Variables.SaveData.get(worldIn.getWorld()).Spawn || canSpawnOn(batIn, worldIn, reason, pos, randomIn) && pos.getY() <= worldIn.getSeaLevel() && Config.COMMON.HerobrineAlwaysSpawns.get();
+    }
+
+    @Override
+    public @NotNull ResourceLocation getLootTable() {
+        return EntityType.BAT.getLootTable();
     }
 }

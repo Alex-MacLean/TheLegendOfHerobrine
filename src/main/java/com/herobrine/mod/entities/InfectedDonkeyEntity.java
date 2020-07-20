@@ -10,6 +10,7 @@ import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.horse.DonkeyEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -159,5 +160,10 @@ public class InfectedDonkeyEntity extends AbstractInfectedEntity {
     @OnlyIn(Dist.CLIENT)
     public float getMouthOpennessAngle(float p_110201_1_) {
         return MathHelper.lerp(p_110201_1_, this.prevMouthOpenness, this.mouthOpenness);
+    }
+
+    @Override
+    public @NotNull ResourceLocation getLootTable() {
+        return EntityType.DONKEY.getLootTable();
     }
 }
