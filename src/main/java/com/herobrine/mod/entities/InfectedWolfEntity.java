@@ -1,7 +1,6 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
-import com.herobrine.mod.util.loot_tables.LootTableInit;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -96,7 +96,7 @@ public class InfectedWolfEntity extends AbstractInfectedEntity {
     @Nullable
     @Override
     protected ResourceLocation getLootTable() {
-        return LootTableInit.INFECTED_WOLF;
+        return LootTableList.ENTITIES_WOLF;
     }
 
     public boolean hasViewOfSky() {

@@ -65,11 +65,13 @@ public class HerobrineAlter extends Block {
     @Override
     public int getComparatorInputOverride(@NotNull IBlockState blockState, @NotNull World worldIn, @NotNull BlockPos pos) {
         int i = blockState.getValue(ModBlockStates.TYPE);
-        if(i == 2) {
-            return 8;
-        } else if(i == 1) {
-            return 15;
-        } else return 0;
+        switch (i) {
+            case 1:
+                return 8;
+            case 2:
+                return 15;
+        }
+        return 0;
     }
 
     @Override
@@ -105,11 +107,13 @@ public class HerobrineAlter extends Block {
     @Override
     public int getLightValue(@NotNull IBlockState state) {
         int i = state.getValue(ModBlockStates.TYPE);
-        if (i != 0) {
-            return 8;
-        } else {
-            return 0;
+        switch (i) {
+            case 1:
+                return 8;
+            case 2:
+                return 15;
         }
+        return 0;
     }
 
     @Override
@@ -129,55 +133,14 @@ public class HerobrineAlter extends Block {
         }
     }
 
-    private boolean shrineAccepted(@NotNull BlockPos pos, @NotNull World world) {
+    private boolean shrineAccepted(@NotNull BlockPos pos, World world) {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        IBlockState netherrack = world.getBlockState(new BlockPos(x, y - 1, z));
-        IBlockState gold1 = world.getBlockState(new BlockPos(x, y - 1, z + 1));
-        IBlockState gold2 = world.getBlockState(new BlockPos(x, y - 1, z - 1));
-        IBlockState gold3 = world.getBlockState(new BlockPos(x + 1, y - 1, z));
-        IBlockState gold4 = world.getBlockState(new BlockPos(x - 1, y - 1, z));
-        IBlockState torch1 = world.getBlockState(new BlockPos(x + 1, y, z));
-        IBlockState torch2 = world.getBlockState(new BlockPos(x - 1, y, z));
-        IBlockState torch3 = world.getBlockState(new BlockPos(x, y, z + 1));
-        IBlockState torch4 = world.getBlockState(new BlockPos(x, y, z - 1));
-        IBlockState lava1 = world.getBlockState(new BlockPos(x - 1, y - 1, z - 1));
-        IBlockState lava2 = world.getBlockState(new BlockPos(x + 1, y - 1, z + 1));
-        IBlockState lava3 = world.getBlockState(new BlockPos(x + 1, y - 1, z - 1));
-        IBlockState lava4 = world.getBlockState(new BlockPos(x - 1, y - 1, z + 1));
-        if(netherrack == Blocks.NETHERRACK.getDefaultState()) {
-            if(gold1 == Blocks.GOLD_BLOCK.getDefaultState()) {
-                if(gold2 == Blocks.GOLD_BLOCK.getDefaultState()) {
-                    if(gold3 == Blocks.GOLD_BLOCK.getDefaultState()) {
-                        if(gold4 == Blocks.GOLD_BLOCK.getDefaultState()) {
-                            if(torch1 == Blocks.REDSTONE_TORCH.getDefaultState()) {
-                                if(torch2 == Blocks.REDSTONE_TORCH.getDefaultState()) {
-                                    if(torch3 == Blocks.REDSTONE_TORCH.getDefaultState()) {
-                                        if(torch4 == Blocks.REDSTONE_TORCH.getDefaultState()) {
-                                            if(lava1 == Blocks.LAVA.getDefaultState()) {
-                                                if(lava2 == Blocks.LAVA.getDefaultState()) {
-                                                    if(lava3 == Blocks.LAVA.getDefaultState()) {
-                                                        return lava4 == Blocks.LAVA.getDefaultState();
-                                                    } else return false;
-                                                } else return false;
-                                            } else return false;
-                                        } else return false;
-                                    } else return false;
-                                } else return false;
-                            } else return false;
-                        } else return false;
-                    } else return false;
-                } else return false;
-            } else return false;
-        } else return false;
-    }
-
-    private boolean shrineIsPresent(BlockPos pos, World world) {
         if(!Config.AltarRequiresShrine) {
             return true;
         } else {
-            return shrineAccepted(pos, world);
+            return world.getBlockState(new BlockPos(x, y - 1, z)) == Blocks.NETHERRACK.getDefaultState() && world.getBlockState(new BlockPos(x, y - 1, z + 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x, y - 1, z - 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y, z)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y, z)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x, y, z + 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x, y, z - 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z + 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z + 1)) == Blocks.LAVA.getDefaultState();
         }
     }
 
@@ -185,15 +148,15 @@ public class HerobrineAlter extends Block {
     public boolean onBlockActivated(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer player, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
         Variables.SaveData.get(world).syncData(world);
         ItemStack itemStack = player.getHeldItem(hand);
-        if(this.shrineIsPresent(pos, world)) {
+        if(this.shrineAccepted(pos, world)) {
             int i = state.getValue(ModBlockStates.TYPE);
             if(i == 0 && itemStack.getItem() == ItemList.cursed_diamond || i == 0 && itemStack.getItem() == ItemList.purified_diamond) {
+                player.swingArm(hand);
                 if(itemStack.getItem() == ItemList.cursed_diamond) {
                     if(!player.isCreative()) {
                         itemStack.shrink(1);
                     }
                     world.setBlockState(new BlockPos(pos.getX(), pos.getY(), pos.getZ()), this.getDefaultState().withProperty(ModBlockStates.TYPE, 1), 3);
-                    player.swingArm(EnumHand.MAIN_HAND);
                     world.addWeatherEffect(new EntityLightningBolt(world, pos.getX(), pos.getY(), pos.getZ(), false));
                     if(!Variables.SaveData.get(world).Spawn) {
                         if (world.isRemote) {
@@ -208,7 +171,6 @@ public class HerobrineAlter extends Block {
                         itemStack.shrink(1);
                     }
                     world.setBlockState(new BlockPos(pos.getX(), pos.getY(), pos.getZ()), this.getDefaultState().withProperty(ModBlockStates.TYPE, 2), 3);
-                    player.swingArm(EnumHand.MAIN_HAND);
                     world.addWeatherEffect(new EntityLightningBolt(world, pos.getX(), pos.getY(), pos.getZ(), false));
                     if(Variables.SaveData.get(world).Spawn) {
                         if (world.isRemote) {

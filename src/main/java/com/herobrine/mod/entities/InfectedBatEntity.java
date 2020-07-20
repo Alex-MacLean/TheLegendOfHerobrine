@@ -1,7 +1,6 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
-import com.herobrine.mod.util.loot_tables.LootTableInit;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -23,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -262,6 +262,6 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements EntityF
 
     @Nullable
     protected ResourceLocation getLootTable() {
-        return LootTableInit.INFECTED_BAT;
+        return LootTableList.ENTITIES_BAT;
     }
 }

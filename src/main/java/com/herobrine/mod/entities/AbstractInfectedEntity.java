@@ -1,21 +1,22 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
+import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.savedata.Variables;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
+import java.util.Random;
 
 public class AbstractInfectedEntity extends EntityMob {
     public AbstractInfectedEntity(World worldIn) {
@@ -53,20 +54,24 @@ public class AbstractInfectedEntity extends EntityMob {
     }
 
     @Override
-    public IEntityLivingData onInitialSpawn(@NotNull DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
-        Variables.SaveData.get(world).syncData(world);
-        if (!Variables.SaveData.get(world).Spawn && !Config.HerobrineAlwaysSpawns) {
-            this.world.removeEntity(this);
-        }
-        return super.onInitialSpawn(difficulty, livingdata);
-    }
-
-    @Override
     public void onUpdate() {
         super.onUpdate();
         Variables.SaveData.get(world).syncData(world);
         if (!Variables.SaveData.get(world).Spawn && !Config.HerobrineAlwaysSpawns) {
             this.world.removeEntity(this);
+        }
+    }
+
+    @Override
+    public void onDeath(@NotNull DamageSource source) {
+        super.onDeath(source);
+        EntityLivingBase entity = (EntityLivingBase) source.getTrueSource();
+        Random rand = new Random();
+        if(entity != null) {
+            int lootingModifier = EnchantmentHelper.getLootingModifier(entity);
+            if (rand.nextInt(100) <= 20 * (lootingModifier + 1)) {
+                this.dropItem(ItemList.cursed_dust, 1);
+            }
         }
     }
 }

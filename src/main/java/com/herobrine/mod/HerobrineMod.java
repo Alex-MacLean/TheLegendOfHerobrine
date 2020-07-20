@@ -44,7 +44,7 @@ public class HerobrineMod {
     public static final String NAME = "The Legend of Herobrine";
     public static final String UPDATEJSON = "https://raw.githubusercontent.com/Alex-MacLean/TheLegendOfHerobrine/master/update.json";
     public static final String MCVERSION = "[1.12.2]";
-    public static final String VERSION = "0.5.0";
+    public static final String VERSION = "0.5.1";
     public static final String MODID = "herobrine";
     public static final SimpleNetworkWrapper PACKET_HANDLER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID + "_" + "packet");
     private int messageID = 0;
@@ -110,21 +110,10 @@ public class HerobrineMod {
         @SubscribeEvent
         public void registerLootTables(@NotNull LootTableLoadEvent event) {
             event.getLootTableManager().getLootTableFromLocation(LootTableInit.TRAPPED_HOUSE);
-            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_CHICKEN);
-            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_COW);
-            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_PIG);
-            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_SHEEP);
-            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_VILLAGER);
             event.getLootTableManager().getLootTableFromLocation(LootTableInit.HEROBRINE);
-            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_BAT);
-            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_DONKEY);
-            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_RABBIT);
             event.getLootTableManager().getLootTableFromLocation(LootTableInit.SURVIVOR_BASE_BEDSIDE);
             event.getLootTableManager().getLootTableFromLocation(LootTableInit.SURVIVOR_BASE_BREWING);
             event.getLootTableManager().getLootTableFromLocation(LootTableInit.SURVIVOR_BASE_DISCS);
-            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_WOLF);
-            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_HORSE);
-            event.getLootTableManager().getLootTableFromLocation(LootTableInit.INFECTED_LLAMA);
         }
 
         @SubscribeEvent

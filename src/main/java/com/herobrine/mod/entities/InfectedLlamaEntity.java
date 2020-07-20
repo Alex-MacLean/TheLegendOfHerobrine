@@ -1,7 +1,7 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
-import com.herobrine.mod.util.loot_tables.LootTableInit;
+import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -28,11 +28,13 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public class InfectedLlamaEntity extends EntityLlama implements IMob {
     private static final DataParameter<Integer> DATA_VARIANT_ID = EntityDataManager.createKey(InfectedLlamaEntity.class, DataSerializers.VARINT);
@@ -172,7 +174,7 @@ public class InfectedLlamaEntity extends EntityLlama implements IMob {
     @Nullable
     @Override
     protected ResourceLocation getLootTable() {
-        return LootTableInit.INFECTED_LLAMA;
+        return LootTableList.ENTITIES_LLAMA;
     }
 
     public boolean hasViewOfSky() {
@@ -228,10 +230,6 @@ public class InfectedLlamaEntity extends EntityLlama implements IMob {
     @Nullable
     @Override
     public IEntityLivingData onInitialSpawn(@NotNull DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
-        Variables.SaveData.get(world).syncData(world);
-        if (!Variables.SaveData.get(world).Spawn && !Config.HerobrineAlwaysSpawns) {
-            this.world.removeEntity(this);
-        }
         int i;
         i = this.rand.nextInt(4);
         this.setVariant(i);
@@ -430,5 +428,18 @@ public class InfectedLlamaEntity extends EntityLlama implements IMob {
     @Override
     public boolean processInteract(@NotNull EntityPlayer player, @NotNull EnumHand hand) {
         return false;
+    }
+
+    @Override
+    public void onDeath(@NotNull DamageSource source) {
+        super.onDeath(source);
+        EntityLivingBase entity = (EntityLivingBase) source.getTrueSource();
+        Random rand = new Random();
+        if(entity != null) {
+            int lootingModifier = EnchantmentHelper.getLootingModifier(entity);
+            if (rand.nextInt(100) <= 20 * (lootingModifier + 1)) {
+                this.dropItem(ItemList.cursed_dust, 1);
+            }
+        }
     }
 }

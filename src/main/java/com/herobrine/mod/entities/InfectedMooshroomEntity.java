@@ -1,7 +1,6 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
-import com.herobrine.mod.util.loot_tables.LootTableInit;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -17,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.IShearable;
 import org.jetbrains.annotations.NotNull;
 
@@ -97,7 +97,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements I
     @Nullable
     @Override
     protected ResourceLocation getLootTable() {
-        return LootTableInit.INFECTED_COW;
+        return LootTableList.ENTITIES_MUSHROOM_COW;
     }
 
     @Override

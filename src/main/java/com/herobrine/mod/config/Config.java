@@ -30,32 +30,32 @@ public class Config {
     public static boolean WarriorBreaksBlocks = false;
 
     @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 1024)
-    @net.minecraftforge.common.config.Config.Name("CursedForestBiomeWeight")
+    @net.minecraftforge.common.config.Config.Name("CursedForestWeight")
     @net.minecraftforge.common.config.Config.Comment("The spawn weight of the Cursed Forest biome. Greater values make the biome more common. Setting the value to 0 disables the biome, while 1024 makes the entire world a Cursed Forest.")
     @net.minecraftforge.common.config.Config.RequiresMcRestart
-    public static int CursedForestBiomeWeight = 4;
+    public static int CursedForestWeight = 3;
 
     @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 1000000)
-    @net.minecraftforge.common.config.Config.Name("TrappedHouseSpawnWeight")
-    @net.minecraftforge.common.config.Config.Comment("The spawn weight of the Suspicious House structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Suspicious Houses.")
+    @net.minecraftforge.common.config.Config.Name("TrappedHouseWeight")
+    @net.minecraftforge.common.config.Config.Comment("The spawn weight of the Trapped House structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Suspicious Houses.")
     @net.minecraftforge.common.config.Config.RequiresMcRestart
-    public static int TrappedHouseSpawnWeight = 550;
+    public static int TrappedHouseWeight = 550;
 
     @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 1000000)
-    @net.minecraftforge.common.config.Config.Name("ShrineRemnantSpawnWeight")
+    @net.minecraftforge.common.config.Config.Name("ShrineRemnantWeight")
     @net.minecraftforge.common.config.Config.Comment("The spawn weight of the Shrine Remnant Structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Shrine Remnants.")
     @net.minecraftforge.common.config.Config.RequiresMcRestart
-    public static int ShrineRemnantSpawnWeight = 10000;
+    public static int ShrineRemnantWeight = 5000;
 
     @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 1000000)
-    @net.minecraftforge.common.config.Config.Name("StatueSpawnWeight")
+    @net.minecraftforge.common.config.Config.Name("HerobrineStatueWeight")
     @net.minecraftforge.common.config.Config.Comment("The spawn weight of the Herobrine Statue Structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Herobrine Statues.")
     @net.minecraftforge.common.config.Config.RequiresMcRestart
-    public static int StatueSpawnWeight = 50000;
+    public static int HerobrineStatueWeight = 20000;
 
     @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 1000000)
-    @net.minecraftforge.common.config.Config.Name("SurvivorBaseSpawnWeight")
+    @net.minecraftforge.common.config.Config.Name("SurvivorBaseWeight")
     @net.minecraftforge.common.config.Config.Comment("The spawn weight of the Survivor Base Structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Survivor Bases.")
     @net.minecraftforge.common.config.Config.RequiresMcRestart
-    public static int SurvivorBaseSpawnWeight = 1000;
+    public static int SurvivorBaseWeight = 1500;
 }

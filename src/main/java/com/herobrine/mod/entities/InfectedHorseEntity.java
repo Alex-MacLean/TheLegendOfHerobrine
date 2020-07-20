@@ -1,7 +1,6 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
-import com.herobrine.mod.util.loot_tables.LootTableInit;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.Block;
 import net.minecraft.entity.IEntityLivingData;
@@ -21,6 +20,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -218,7 +218,7 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
     @Nullable
     @Override
     protected ResourceLocation getLootTable() {
-        return LootTableInit.INFECTED_HORSE;
+        return LootTableList.ENTITIES_HORSE;
     }
 
     public boolean hasViewOfSky() {

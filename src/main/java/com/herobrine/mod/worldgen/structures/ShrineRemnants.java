@@ -21,7 +21,7 @@ import java.util.Random;
 public class ShrineRemnants {
     @SuppressWarnings("ConstantConditions")
     public static void generateWorld(@NotNull Random random, int i2, int k2, @NotNull World world) {
-        if ((random.nextInt(1000000) + 1) <= Config.ShrineRemnantSpawnWeight) {
+        if ((random.nextInt(1000000) + 1) <= Config.ShrineRemnantWeight) {
             int count = random.nextInt(1) + 1;
             for (int a = 0; a < count; a++) {
                 int i = i2 + random.nextInt(16) + 8;
@@ -54,21 +54,26 @@ public class ShrineRemnants {
                     return;
                 }
                 int type = random.nextInt(4);
-                Template template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "ruined_shrine"));
-                if(type == 0) {
-                    template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "ruined_shrine"));
-                }
-                if(type == 1) {
-                    template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt"));
-                }
-                if(type == 2) {
-                    template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_1"));
-                }
-                if(type == 3) {
-                    template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_2"));
-                }
-                if(type == 4) {
-                    template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_3"));
+                Template template;
+                switch(type) {
+                    case 0:
+                        template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "ruined_shrine"));
+                        break;
+                    case 1:
+                        template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt"));
+                        break;
+                    case 2:
+                        template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_1"));
+                        break;
+                    case 3:
+                        template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_2"));
+                        break;
+                    case 4:
+                        template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_3"));
+                        break;
+                    default:
+                        //I don't know how a value below zero or above four would happen with the bound of 4, but the IDE would error if a default state is not set.
+                        throw new IllegalStateException("[The Legend of Herobrine] Illegal type for Shrine Remnants: " + type + ". Please report this to the issue tracker.");
                 }
                 Rotation rotation = Rotation.values()[random.nextInt(3)];
                 Mirror mirror = Mirror.values()[random.nextInt(2)];

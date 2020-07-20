@@ -2,7 +2,6 @@ package com.herobrine.mod.entities;
 
 import com.google.common.collect.Maps;
 import com.herobrine.mod.config.Config;
-import com.herobrine.mod.util.loot_tables.LootTableInit;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.Block;
 import net.minecraft.entity.IEntityLivingData;
@@ -153,7 +152,7 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
     @Override
     protected ResourceLocation getLootTable() {
         if (this.getSheared()) {
-            return LootTableInit.INFECTED_SHEEP;
+            return LootTableList.ENTITIES_SHEEP;
         }
         else {
             switch (this.getFleeceColor())

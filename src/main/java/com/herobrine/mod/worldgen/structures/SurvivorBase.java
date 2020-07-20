@@ -21,7 +21,7 @@ import java.util.Random;
 public class SurvivorBase {
     @SuppressWarnings("ConstantConditions")
     public static void generateWorld(@NotNull Random random, int i2, int k2, @NotNull World world) {
-        if ((random.nextInt(1000000) + 1) <= Config.SurvivorBaseSpawnWeight) {
+        if ((random.nextInt(1000000) + 1) <= Config.SurvivorBaseWeight) {
             int count = random.nextInt(1) + 1;
             for (int a = 0; a < count; a++) {
                 int i = i2 + random.nextInt(16) + 8;

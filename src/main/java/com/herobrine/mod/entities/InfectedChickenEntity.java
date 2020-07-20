@@ -1,7 +1,6 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
-import com.herobrine.mod.util.loot_tables.LootTableInit;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -16,6 +15,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -106,15 +106,13 @@ public class InfectedChickenEntity extends AbstractInfectedEntity {
         this.destPos = (float)((double)this.destPos + (double)(this.onGround ? -1 : 4) * 0.3D);
         this.destPos = MathHelper.clamp(this.destPos, 0.0F, 1.0F);
 
-        if (!this.onGround && this.wingRotDelta < 1.0F)
-        {
+        if (!this.onGround && this.wingRotDelta < 1.0F) {
             this.wingRotDelta = 1.0F;
         }
 
         this.wingRotDelta = (float)((double)this.wingRotDelta * 0.9D);
 
-        if (!this.onGround && this.motionY < 0.0D)
-        {
+        if (!this.onGround && this.motionY < 0.0D) {
             this.motionY *= 0.6D;
         }
 
@@ -128,7 +126,7 @@ public class InfectedChickenEntity extends AbstractInfectedEntity {
     @Nullable
     @Override
     protected ResourceLocation getLootTable() {
-        return LootTableInit.INFECTED_CHICKEN;
+        return LootTableList.ENTITIES_CHICKEN;
     }
 
     public boolean hasViewOfSky() {
