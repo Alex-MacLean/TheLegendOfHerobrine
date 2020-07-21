@@ -166,9 +166,7 @@ public class HerobrineMod {
         public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
             if (!event.getPlayer().world.isRemote) {
                 WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
-                if (saveData != null) {
-                    HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
-                }
+                HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
             }
         }
     }
