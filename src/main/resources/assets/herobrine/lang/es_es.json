@@ -38,7 +38,7 @@
   "item.herobrine.herobrine_mage_spawn_egg": "Generar Herobrine Mago",
   "entity.herobrine.herobrine_mage": "Herobrine",
   "entity.herobrine.fake_herobrine_mage": "Herobrine",
-  "block.herobrine.cursed_diamond_block": "Bloquear de Diamante Maldita",
+  "block.herobrine.cursed_diamond_block": "Bloque de Diamante Maldito",
   "block.herobrine.herobrine_statue": "Estatua de Herobrine",
   "block.herobrine.herobrine_statue_top": "Estatua de Herobrine",
   "item.herobrine.steve_survivor_spawn_egg": "Generar Sobreviviente",
@@ -47,8 +47,8 @@
   "entity.herobrine.alex_survivor": "Sobreviviente",
   "entity.herobrine.infected_wolf": "Lobo Infectado",
   "item.herobrine.infected_wolf_spawn_egg": "Generar Lobo Infectado",
-  "entity.herobrine.infected_llama": "Llama Infectado",
-  "item.herobrine.infected_llama_spawn_egg": "Generar Llama Infectado",
+  "entity.herobrine.infected_llama": "Llama Infectada",
+  "item.herobrine.infected_llama_spawn_egg": "Generar Llama Infectada",
   "entity.herobrine.infected_horse": "Caballo Infectado",
   "item.herobrine.infected_horse_spawn_egg": "Generar Caballo Infectado",
   "entity.herobrine.infected_donkey": "Burro Infectado",
@@ -58,5 +58,5 @@
   "entity.herobrine.infected_bat": "Murciélago Infectado",
   "item.herobrine.infected_bat_spawn_egg": "Generar Murciélago Infectado",
   "item.herobrine.purified_diamond": "Diamante Purificado",
-  "block.herobrine.purified_diamond_block": "Bloquear de Diamante Purificado"
+  "block.herobrine.purified_diamond_block": "Bloque de Diamante Purificado"
 }
