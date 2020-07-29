@@ -20,6 +20,7 @@ archivesBaseName = modFileName
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // The mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   Snapshot are built nightly.
     // stable_#            Stables are built at the discretion of the MCP team.
