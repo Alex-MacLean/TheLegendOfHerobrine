@@ -63,12 +63,14 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
             }
             mooshroomEntity.enablePersistence();
             mooshroomEntity.setGrowingAge(0);
+            mooshroomEntity.setMooshroomType(MooshroomEntity.Type.valueOf(this.getMooshroomType().toString()));
             this.world.setEntityState(this, (byte)16);
             this.world.addEntity(mooshroomEntity);
             this.remove();
         }
         return super.attackEntityFrom(source, amount);
     }
+
 
     public InfectedMooshroomEntity(World worldIn) {
         this(EntityRegistry.INFECTED_MOOSHROOM_ENTITY, worldIn);
