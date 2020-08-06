@@ -19,11 +19,23 @@ public class Config {
         public final ForgeConfigSpec.IntValue ShrineRemnantWeight;
         public final ForgeConfigSpec.IntValue HerobrineStatueWeight;
         public final ForgeConfigSpec.IntValue SurvivorBaseWeight;
+        public final ForgeConfigSpec.IntValue HerobrineWarriorWeight;
+        public final ForgeConfigSpec.IntValue HerobrineSpyWeight;
+        public final ForgeConfigSpec.IntValue HerobrineBuilderWeight;
+        public final ForgeConfigSpec.IntValue HerobrineMageWeight;
+        public final ForgeConfigSpec.IntValue InfectedMobWeight;
+        public final ForgeConfigSpec.IntValue HerobrineSpyObservationDistance;
         public CommonConfig(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Common config file for The Legend of Herobrine Minecraft mod.").push("entity_config");
-            WarriorBreaksBlocks = builder.comment("Determines if the Herobrine Warrior can break blocks.").worldRestart().define("WarriorBreaksBlocks", true);
+            WarriorBreaksBlocks = builder.comment("Determines if the Herobrine warrior can break blocks.").worldRestart().define("WarriorBreaksBlocks", true);
             HerobrineAlwaysSpawns = builder.comment("If set to true Herobrine and infected mobs can exist even if Altar of Herobrine is not activated in a world.").worldRestart().define("HerobrineAlwaysSpawns", false);
             BuilderBuilds = builder.comment("Determines if the Herobrine Builder builds structures.").worldRestart().define("BuilderBuilds", true);
+            HerobrineWarriorWeight = builder.comment("The spawn weight of the Herobrine warrior. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineWarriorWeight", 20, 0, 1024);
+            HerobrineSpyWeight = builder.comment("The spawn weight of the Herobrine spy. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineSpyWeight", 35, 0, 1024);
+            HerobrineBuilderWeight = builder.comment("The spawn weight of the Herobrine builder. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineBuilderWeight", 30, 0, 1024);
+            HerobrineMageWeight = builder.comment("The spawn weight of the Herobrine mage. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineMageWeight", 25, 0, 1024);
+            InfectedMobWeight = builder.comment("The spawn weight of Infected mobs. Higher values makes them more common, while 0 disables them.").worldRestart().defineInRange("InfectedMobWeight", 30, 0, 1024);
+            HerobrineSpyObservationDistance = builder.comment("The distance in blocks the Herobrine spy observes the player from.").worldRestart().defineInRange("HerobrineSpyObservationDistance", 32, 0, 64);
             builder.pop();
             builder.push("biome_config");
             CursedForestWeight = builder.comment("The spawn weight of the Cursed Forest biome. Greater values make the biome more common. Setting the value to 0 disables the biome, while 1024 makes the entire world a Cursed Forest.").worldRestart().defineInRange("CursedForestWeight", 3, 0, 1024);

@@ -1,6 +1,7 @@
 package com.herobrine.mod.util.entities;
 
 import com.herobrine.mod.HerobrineMod;
+import com.herobrine.mod.config.Config;
 import com.herobrine.mod.entities.*;
 import com.herobrine.mod.util.items.ItemList;
 import net.minecraft.entity.EntityClassification;
@@ -185,60 +186,60 @@ public class EntityRegistry {
         for (BiomeDictionary.Type t : InfectedVillagerTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_VILLAGER_ENTITY, 60, 1, 4));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_VILLAGER_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 4));
             }
         }
 
         for (BiomeDictionary.Type t : InfectedRabbitTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_RABBIT_ENTITY, 60, 2, 3));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_RABBIT_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 3));
             }
         }
 
         for (BiomeDictionary.Type t : InfectedHorseTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_HORSE_ENTITY, 60, 2, 6));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_HORSE_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 6));
             }
         }
 
         for (BiomeDictionary.Type t : PlainsTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_DONKEY_ENTITY, 60, 1, 3));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_DONKEY_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 3));
             }
         }
 
         for (BiomeDictionary.Type t : SavannaTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_LLAMA_ENTITY, 60, 4, 4));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_DONKEY_ENTITY, 60, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_LLAMA_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 4));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_DONKEY_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 1));
             }
         }
 
         for (BiomeDictionary.Type t : MountainTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_LLAMA_ENTITY, 60, 4, 6));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_LLAMA_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 6));
             }
         }
 
         for (BiomeDictionary.Type t : InfectedWolfTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_WOLF_ENTITY, 60, 4, 4));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_WOLF_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 4));
             }
         }
 
         for (BiomeDictionary.Type t : InfectedAnimalTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_PIG_ENTITY, 60, 3, 6));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_COW_ENTITY, 60, 2, 4));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_CHICKEN_ENTITY, 60, 4, 8));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_SHEEP_ENTITY, 60, 3, 6));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_PIG_ENTITY, Config.COMMON.InfectedMobWeight.get(), 3, 6));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_COW_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 4));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_CHICKEN_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 8));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_SHEEP_ENTITY, Config.COMMON.InfectedMobWeight.get(), 3, 6));
             }
         }
 
@@ -252,11 +253,11 @@ public class EntityRegistry {
         for (BiomeDictionary.Type t : HerobrineTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_BUILDER_ENTITY, 30, 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_MAGE_ENTITY, 30, 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_SPY_ENTITY, 50, 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_WARRIOR_ENTITY, 15, 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_BAT_ENTITY, 80, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_BUILDER_ENTITY, Config.COMMON.HerobrineBuilderWeight.get(), 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_MAGE_ENTITY, Config.COMMON.HerobrineMageWeight.get(), 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_SPY_ENTITY, Config.COMMON.HerobrineSpyWeight.get(), 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_WARRIOR_ENTITY, Config.COMMON.HerobrineWarriorWeight.get(), 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_BAT_ENTITY, (int) (Config.COMMON.InfectedMobWeight.get() * 2.5), 1, 1));
             }
         }
 
@@ -275,10 +276,10 @@ public class EntityRegistry {
         for (BiomeDictionary.Type t : NetherTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_BUILDER_ENTITY, 8, 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_MAGE_ENTITY, 6, 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_SPY_ENTITY, 10, 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_WARRIOR_ENTITY, 5, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_BUILDER_ENTITY, Config.COMMON.HerobrineBuilderWeight.get() / 3, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_MAGE_ENTITY, Config.COMMON.HerobrineMageWeight.get() / 5, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_SPY_ENTITY, Config.COMMON.HerobrineSpyWeight.get() / 3, 1, 1));
+                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_WARRIOR_ENTITY, Config.COMMON.HerobrineWarriorWeight.get() / 4, 1, 1));
             }
         }
     }

@@ -3,7 +3,7 @@ loaderVersion="[31.2,)" #mandatory
 issueTrackerURL="https://github.com/Alex-MacLean/TheLegendOfHerobrine/issues" #optional
 [[mods]] #mandatory
 modId="herobrine" #mandatory
-version="0.5.1" #mandatory
+version="0.5.2" #mandatory
 displayName="The Legend of Herobrine" #mandatory
 updateJSONURL="https://raw.githubusercontent.com/Alex-MacLean/TheLegendOfHerobrine/master/update.json" #optional
 displayURL="https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine" #optional

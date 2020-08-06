@@ -1,5 +1,6 @@
 package com.herobrine.mod.entities;
 
+import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
@@ -7,10 +8,11 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -39,10 +41,7 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new LookAtGoal(this, PlayerEntity.class, 1024.0F));
-        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PlayerEntity.class, 48.0F, 0.7D, 1.0D));
-        this.goalSelector.addGoal(3, new LookAtGoal(this, AbstractSurvivorEntity.class, 1024.0F));
-        this.goalSelector.addGoal(4, new AvoidEntityGoal<>(this, AbstractSurvivorEntity.class, 48.0F, 0.7D, 1.0D));
-        this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PlayerEntity.class, Config.COMMON.HerobrineSpyObservationDistance.get(), 0.7D, 1.0D));
     }
 
     @Override
@@ -76,6 +75,18 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
             this.lifeTimer = 6000;
         }
         if(this.lifeTimer <= 0) {
+            if (this.world.isRemote) {
+                if (!this.isSilent()) {
+                    this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+                }
+
+                for (int i = 0; i < 20; ++i) {
+                    double d0 = this.rand.nextGaussian() * 0.02D;
+                    double d1 = this.rand.nextGaussian() * 0.02D;
+                    double d2 = this.rand.nextGaussian() * 0.02D;
+                    this.world.addParticle(ParticleTypes.POOF, this.getPosXWidth(1.0D) - d0 * 10.0D, this.getPosYRandom() - d1 * 10.0D, this.getPosZRandom(1.0D) - d2 * 10.0D, d0, d1, d2);
+                }
+            }
             this.remove();
         }
     }
