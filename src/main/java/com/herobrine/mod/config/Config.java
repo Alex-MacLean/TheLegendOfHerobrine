@@ -58,4 +58,40 @@ public class Config {
     @net.minecraftforge.common.config.Config.Comment("The spawn weight of the Survivor Base Structure. Greater values make the structure more common. Setting the value to 0 disables the structure, while 1000000 covers the entire world in Survivor Bases.")
     @net.minecraftforge.common.config.Config.RequiresMcRestart
     public static int SurvivorBaseWeight = 1500;
+
+    @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 1024)
+    @net.minecraftforge.common.config.Config.Name("HerobrineWarriorWeight")
+    @net.minecraftforge.common.config.Config.Comment("The spawn weight of the Herobrine warrior. Higher values makes it more common, while 0 disables it.")
+    @net.minecraftforge.common.config.Config.RequiresMcRestart
+    public static int HerobrineWarriorWeight = 7;
+
+    @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 1024)
+    @net.minecraftforge.common.config.Config.Name("HerobrineSpyWeight")
+    @net.minecraftforge.common.config.Config.Comment("The spawn weight of the Herobrine spy. Higher values makes it more common, while 0 disables it.")
+    @net.minecraftforge.common.config.Config.RequiresMcRestart
+    public static int HerobrineSpyWeight = 12;
+
+    @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 1024)
+    @net.minecraftforge.common.config.Config.Name("HerobrineBuilderWeight")
+    @net.minecraftforge.common.config.Config.Comment("The spawn weight of the Herobrine builder. Higher values makes it more common, while 0 disables it.")
+    @net.minecraftforge.common.config.Config.RequiresMcRestart
+    public static int HerobrineBuilderWeight = 10;
+
+    @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 1024)
+    @net.minecraftforge.common.config.Config.Name("HerobrineMageWeight")
+    @net.minecraftforge.common.config.Config.Comment("The spawn weight of the Herobrine mage. Higher values makes it more common, while 0 disables it.")
+    @net.minecraftforge.common.config.Config.RequiresMcRestart
+    public static int HerobrineMageWeight = 8;
+
+    @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 1024)
+    @net.minecraftforge.common.config.Config.Name("InfectedMobWeight")
+    @net.minecraftforge.common.config.Config.Comment("The spawn weight of Infected mobs. Higher values makes them more common, while 0 disables them.")
+    @net.minecraftforge.common.config.Config.RequiresMcRestart
+    public static int InfectedMobWeight = 10;
+
+    @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 64)
+    @net.minecraftforge.common.config.Config.Name("HerobrineSpyObservationDistance")
+    @net.minecraftforge.common.config.Config.Comment("The distance in blocks the Herobrine spy observes the player from.")
+    @net.minecraftforge.common.config.Config.RequiresMcRestart
+    public static int HerobrineSpyObservationDistance = 32;
 }

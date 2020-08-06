@@ -27,6 +27,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -44,7 +45,7 @@ public class HerobrineMod {
     public static final String NAME = "The Legend of Herobrine";
     public static final String UPDATEJSON = "https://raw.githubusercontent.com/Alex-MacLean/TheLegendOfHerobrine/master/update.json";
     public static final String MCVERSION = "[1.12.2]";
-    public static final String VERSION = "0.5.1";
+    public static final String VERSION = "0.5.2";
     public static final String MODID = "herobrine";
     public static final SimpleNetworkWrapper PACKET_HANDLER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID + "_" + "packet");
     private int messageID = 0;
@@ -161,6 +162,14 @@ public class HerobrineMod {
 
         @SubscribeEvent
         public void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.@NotNull PlayerLoggedInEvent event) {
+            if (!event.player.world.isRemote) {
+                WorldSavedData saveData = Variables.SaveData.get(event.player.world);
+                HerobrineMod.PACKET_HANDLER.sendTo(new Variables.WorldSavedDataSyncMessage(saveData), (EntityPlayerMP) event.player);
+            }
+        }
+
+        @SubscribeEvent
+        public void onPlayerChangeDimension(PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
             if (!event.player.world.isRemote) {
                 WorldSavedData saveData = Variables.SaveData.get(event.player.world);
                 HerobrineMod.PACKET_HANDLER.sendTo(new Variables.WorldSavedDataSyncMessage(saveData), (EntityPlayerMP) event.player);

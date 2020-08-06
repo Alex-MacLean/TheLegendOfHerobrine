@@ -42,7 +42,7 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity {
         this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(this, EntityGolem.class, true));
         this.targetTasks.addTask(5, new EntityAIHurtByTarget(this, false));
         this.tasks.addTask(6, new EntityAIAttackMelee(this, 1.0d, true));
-        this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 1.0d));
+        this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 0.4d));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, AbstractIllager.class, 8.0f));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, AbstractSurvivorEntity.class, 8.0f));

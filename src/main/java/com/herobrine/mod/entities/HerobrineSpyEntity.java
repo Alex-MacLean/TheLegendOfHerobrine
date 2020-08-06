@@ -1,13 +1,15 @@
 package com.herobrine.mod.entities;
 
+import com.herobrine.mod.config.Config;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
-import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -29,10 +31,7 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
         super.initEntityAI();
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIWatchClosest(this, EntityPlayer.class, 1024));
-        this.tasks.addTask(2, new EntityAIAvoidEntity<>(this, EntityPlayer.class, 48.0F, 1.0D, 1.2D));
-        this.tasks.addTask(3, new EntityAIWatchClosest(this, AbstractSurvivorEntity.class, 1024));
-        this.tasks.addTask(4, new EntityAIAvoidEntity<>(this, AbstractSurvivorEntity.class, 48.0F, 1.0D, 1.2D));
-        this.tasks.addTask(5, new EntityAILookIdle(this));
+        this.tasks.addTask(2, new EntityAIAvoidEntity<>(this, EntityPlayer.class, Config.HerobrineSpyObservationDistance, 0.7D, 1.0D));
     }
 
     protected void applyEntityAttributes() {
@@ -68,6 +67,17 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
             this.lifeTimer = 6000;
         }
         if(this.lifeTimer <= 0) {
+            if (this.world.isRemote) {
+                if (!this.isSilent()) {
+                    this.world.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+                }
+                for (int i = 0; i < 20; ++i) {
+                    double d0 = this.rand.nextGaussian() * 0.02D;
+                    double d1 = this.rand.nextGaussian() * 0.02D;
+                    double d2 = this.rand.nextGaussian() * 0.02D;
+                    this.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, this.posY + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, d2, d0, d1);
+                }
+            }
             this.world.removeEntity(this);
         }
     }

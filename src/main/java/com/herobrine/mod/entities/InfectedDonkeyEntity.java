@@ -75,7 +75,7 @@ public class InfectedDonkeyEntity extends AbstractInfectedEntity {
         this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityGolem.class, true));
         this.targetTasks.addTask(4, new EntityAIHurtByTarget(this, false));
         this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0d, true));
-        this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0d));
+        this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 0.6d));
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, AbstractSurvivorEntity.class, 8.0f));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityGolem.class, 8.0f));

@@ -1,6 +1,7 @@
 package com.herobrine.mod.util.entities;
 
 import com.herobrine.mod.HerobrineMod;
+import com.herobrine.mod.config.Config;
 import com.herobrine.mod.entities.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -165,60 +166,60 @@ public class EntityRegistry {
         for (BiomeDictionary.Type t : InfectedVillagerTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedVillagerEntity.class, 10, 1, 4));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedVillagerEntity.class, Config.InfectedMobWeight, 1, 4));
             }
         }
 
         for (BiomeDictionary.Type t : InfectedRabbitTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedRabbitEntity.class, 8, 2, 3));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedRabbitEntity.class, Config.InfectedMobWeight, 2, 3));
             }
         }
 
         for (BiomeDictionary.Type t : InfectedHorseTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedHorseEntity.class, 10, 2, 6));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedHorseEntity.class, Config.InfectedMobWeight, 2, 6));
             }
         }
 
         for (BiomeDictionary.Type t : PlainsTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedDonkeyEntity.class, 10, 1, 3));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedDonkeyEntity.class, Config.InfectedMobWeight, 1, 3));
             }
         }
 
         for (BiomeDictionary.Type t : SavannaTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedLlamaEntity.class, 10, 4, 4));
-               currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedDonkeyEntity.class, 10, 1, 1));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedLlamaEntity.class, Config.InfectedMobWeight, 4, 4));
+               currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedDonkeyEntity.class, Config.InfectedMobWeight, 1, 1));
             }
         }
 
         for (BiomeDictionary.Type t : MountainTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedLlamaEntity.class, 10, 4, 6));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedLlamaEntity.class, Config.InfectedMobWeight, 4, 6));
             }
         }
 
         for (BiomeDictionary.Type t : InfectedWolfTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedWolfEntity.class, 10, 4, 4));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedWolfEntity.class, Config.InfectedMobWeight, 4, 4));
             }
         }
 
         for (BiomeDictionary.Type t : InfectedAnimalTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedPigEntity.class, 10, 3, 6));
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedCowEntity.class, 10, 2, 4));
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedChickenEntity.class, 10, 4, 8));
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedSheepEntity.class, 10, 3, 6));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedPigEntity.class, Config.InfectedMobWeight, 3, 6));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedCowEntity.class, Config.InfectedMobWeight, 2, 4));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedChickenEntity.class, Config.InfectedMobWeight, 4, 8));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedSheepEntity.class, Config.InfectedMobWeight, 3, 6));
             }
         }
 
@@ -232,11 +233,11 @@ public class EntityRegistry {
         for (BiomeDictionary.Type t : HerobrineTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineBuilderEntity.class, 8, 1, 1));
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineMageEntity.class, 8, 1, 1));
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineSpyEntity.class, 9, 1, 1));
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineWarriorEntity.class, 6, 1, 1));
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedBatEntity.class, 80, 1, 1));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineBuilderEntity.class, Config.HerobrineBuilderWeight, 1, 1));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineMageEntity.class, Config.HerobrineMageWeight, 1, 1));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineSpyEntity.class, Config.HerobrineSpyWeight, 1, 1));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineWarriorEntity.class, Config.HerobrineWarriorWeight, 1, 1));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(InfectedBatEntity.class, (int) (Config.InfectedMobWeight * 2.5), 1, 1));
             }
         }
 
@@ -256,10 +257,10 @@ public class EntityRegistry {
         for (BiomeDictionary.Type t : NetherTypes) {
             Set<Biome> biomes = BiomeDictionary.getBiomes(t);
             for (Biome currentBiome : biomes) {
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineBuilderEntity.class, 6, 1, 1));
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineMageEntity.class, 6, 1, 1));
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineSpyEntity.class, 7, 1, 1));
-                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineWarriorEntity.class, 5, 1, 1));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineBuilderEntity.class, Config.HerobrineBuilderWeight / 3, 1, 1));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineMageEntity.class, Config.HerobrineMageWeight / 5, 1, 1));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineSpyEntity.class, Config.HerobrineSpyWeight / 3, 1, 1));
+                currentBiome.getSpawnableList(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(HerobrineWarriorEntity.class, Config.HerobrineWarriorWeight / 4, 1, 1));
             }
         }
     }
