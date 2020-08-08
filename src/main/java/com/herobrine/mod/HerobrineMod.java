@@ -169,7 +169,7 @@ public class HerobrineMod {
         }
 
         @SubscribeEvent
-        public void onPlayerChangeDimension(PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
+        public void onPlayerChangedDimension(PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
             if (!event.player.world.isRemote) {
                 WorldSavedData saveData = Variables.SaveData.get(event.player.world);
                 HerobrineMod.PACKET_HANDLER.sendTo(new Variables.WorldSavedDataSyncMessage(saveData), (EntityPlayerMP) event.player);
