@@ -1,6 +1,8 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
+import com.herobrine.mod.util.items.ItemList;
+import com.herobrine.mod.util.loot_tables.LootTableInit;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
@@ -8,7 +10,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.projectile.PotionEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.IWorld;
@@ -107,5 +111,19 @@ public class AbstractHerobrineEntity extends MonsterEntity {
 
     public static boolean canSpawn(EntityType<? extends AbstractHerobrineEntity> type, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
         return worldIn.getDifficulty() != Difficulty.PEACEFUL && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Variables.SaveData.get(worldIn.getWorld()).Spawn || worldIn.getDifficulty() != Difficulty.PEACEFUL && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Config.COMMON.HerobrineAlwaysSpawns.get();
+    }
+
+    @Override
+    public @NotNull ResourceLocation getLootTable() {
+        return LootTableInit.HEROBRINE;
+    }
+
+    @Override
+    protected void dropSpecialItems(@NotNull DamageSource source, int looting, boolean recentlyHitIn) {
+        super.dropSpecialItems(source, looting, recentlyHitIn);
+        Random rand = new Random();
+        if(rand.nextInt(100) <= 20 * (looting + 1) && !(this instanceof FakeHerobrineMageEntity)) {
+            this.entityDropItem(new ItemStack(ItemList.cursed_dust, 1));
+        }
     }
 }

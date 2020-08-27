@@ -11,6 +11,7 @@ import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
@@ -95,5 +96,11 @@ public class FakeHerobrineMageEntity extends AbstractHerobrineEntity {
         }
         --this.lifeTimer;
         super.livingTick();
+    }
+
+    @Override
+    @SuppressWarnings("ConstantConditions")
+    public @NotNull ResourceLocation getLootTable() {
+        return null;
     }
 }

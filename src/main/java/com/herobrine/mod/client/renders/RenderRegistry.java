@@ -23,7 +23,7 @@ public class RenderRegistry {
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_SPY_ENTITY, new AbstractHerobrineEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_BUILDER_ENTITY, new AbstractHerobrineEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_MAGE_ENTITY, new AbstractHerobrineMageEntityRender.RenderFactory());
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, new AbstractHerobrineEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, new AbstractHerobrineMageEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.STEVE_SURVIVOR_ENTITY, new SteveSurvivorEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.ALEX_SURVIVOR_ENTITY, new AlexSurvivorEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_WOLF_ENTITY, new InfectedWolfEntityRender.RenderFactory());
