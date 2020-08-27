@@ -1,10 +1,13 @@
 package com.herobrine.mod.entities;
 
 import com.herobrine.mod.config.Config;
+import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.loot_tables.LootTableInit;
 import com.herobrine.mod.util.savedata.Variables;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.util.DamageSource;
@@ -14,6 +17,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public class AbstractHerobrineEntity extends EntityMob {
     public AbstractHerobrineEntity(World worldIn) {
@@ -101,5 +105,18 @@ public class AbstractHerobrineEntity extends EntityMob {
     @Override
     protected ResourceLocation getLootTable() {
         return LootTableInit.HEROBRINE;
+    }
+
+    @Override
+    public void onDeath(@NotNull DamageSource source) {
+        super.onDeath(source);
+        EntityLivingBase entity = (EntityLivingBase) source.getTrueSource();
+        Random rand = new Random();
+        if(entity != null) {
+            int lootingModifier = EnchantmentHelper.getLootingModifier(entity);
+            if (rand.nextInt(100) <= 20 * (lootingModifier + 1) && !(this instanceof FakeHerobrineMageEntity)) {
+                this.dropItem(ItemList.cursed_dust, 1);
+            }
+        }
     }
 }
