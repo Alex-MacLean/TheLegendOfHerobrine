@@ -2,6 +2,7 @@ package com.herobrine.mod.client.renders;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.AbstractHerobrineMageEntityModel;
+import com.herobrine.mod.client.renders.layers.eyes.HerobrineMageEyesLayer;
 import com.herobrine.mod.entities.AbstractHerobrineEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class AbstractHerobrineMageEntityRender extends MobRenderer<AbstractHerobrineEntity, AbstractHerobrineMageEntityModel<AbstractHerobrineEntity>> {
     private AbstractHerobrineMageEntityRender(EntityRendererManager manager) {
         super(manager, new AbstractHerobrineMageEntityModel<>(0.0F, false), 0.5F);
+        this.addLayer(new HerobrineMageEyesLayer(this));
     }
 
     @NotNull

@@ -2,6 +2,7 @@ package com.herobrine.mod.client.renders;
 
 import com.google.common.collect.Maps;
 import com.herobrine.mod.client.models.InfectedHorseEntityModel;
+import com.herobrine.mod.client.renders.layers.eyes.InfectedHorseEyesLayer;
 import com.herobrine.mod.entities.InfectedHorseEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -25,6 +26,7 @@ public class InfectedHorseEntityRender extends MobRenderer<InfectedHorseEntity, 
 
     public InfectedHorseEntityRender(EntityRendererManager manager) {
         super(manager, new InfectedHorseEntityModel(0.0F), 0.75F);
+        this.addLayer(new InfectedHorseEyesLayer(this));
         this.scale = 1.1F;
     }
 
