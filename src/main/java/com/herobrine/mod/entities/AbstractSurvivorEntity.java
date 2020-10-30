@@ -7,10 +7,7 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.merchant.IMerchant;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.AbstractIllagerEntity;
-import net.minecraft.entity.monster.AbstractRaiderEntity;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -24,6 +21,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
@@ -31,9 +29,10 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Set;
 
-public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMerchant, INPC {
+public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant, INPC {
     protected AbstractSurvivorEntity(EntityType<? extends AbstractSurvivorEntity> type, World world) {
         super(type, world);
         this.experienceValue = 5;
@@ -71,6 +70,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2D, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, SlimeEntity.class, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, InfectedLlamaEntity.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractHerobrineEntity.class, true));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractIllagerEntity.class, true));
@@ -80,6 +80,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 64.0F));
         this.goalSelector.addGoal(9, new LookAtGoal(this, AbstractSurvivorEntity.class, 64.0F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, MonsterEntity.class, 64.0F));
+        this.goalSelector.addGoal(10, new LookAtGoal(this, SlimeEntity.class, 64.0F));
         this.goalSelector.addGoal(11, new LookAtGoal(this, AbstractHerobrineEntity.class, 64.0F));
         this.goalSelector.addGoal(12, new LookAtGoal(this, GolemEntity.class, 64.0F));
         this.goalSelector.addGoal(13, new LookAtGoal(this, AbstractVillagerEntity.class, 64.0F));
@@ -205,6 +206,25 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMob, IMer
             }
             --this.healTimer;
             this.updateAITasks();
+        }
+
+        AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(64.0D, 64.0D, 64.0D);
+        List<LivingEntity> list = this.world.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
+        if (!list.isEmpty()) {
+            for (LivingEntity entity : list) {
+                if (entity instanceof MonsterEntity && ((MonsterEntity) entity).getAttackTarget() == null && !(entity instanceof EndermanEntity)) {
+                    ((MonsterEntity) entity).setAttackTarget(this);
+                }
+                if (entity instanceof SlimeEntity && ((SlimeEntity) entity).getAttackTarget() == null) {
+                    ((SlimeEntity) entity).setAttackTarget(this);
+                }
+                if (entity instanceof AbstractIllagerEntity && ((AbstractIllagerEntity) entity).getAttackTarget() == null) {
+                    ((AbstractIllagerEntity) entity).setAttackTarget(this);
+                }
+                if (entity instanceof AbstractRaiderEntity && ((AbstractRaiderEntity) entity).getAttackTarget() == null) {
+                    ((AbstractRaiderEntity) entity).setAttackTarget(this);
+                }
+            }
         }
     }
 

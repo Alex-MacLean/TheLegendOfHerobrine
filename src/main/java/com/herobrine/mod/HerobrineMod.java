@@ -164,18 +164,14 @@ public class HerobrineMod {
 
         @SubscribeEvent
         public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
-            if (!event.getPlayer().world.isRemote) {
-                WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
-                HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
-            }
+            WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
+            HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
         }
 
         @SubscribeEvent
         public void onPlayerChangedDimension(PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
-            if (!event.getPlayer().world.isRemote) {
-                WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
-                HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
-            }
+            WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
+            HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
         }
     }
 }

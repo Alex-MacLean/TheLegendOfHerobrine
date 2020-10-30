@@ -81,7 +81,7 @@ public class AbstractHerobrineEntity extends MonsterEntity {
     @Override
     public void baseTick() {
         Variables.SaveData.get(world).syncData(world);
-        if (!Variables.SaveData.get(world).Spawn && !Config.COMMON.HerobrineAlwaysSpawns.get()) {
+        if (!Variables.SaveData.get(world).Spawn && !Config.COMMON.HerobrineAlwaysSpawns.get() && !world.isRemote) {
             this.remove();
         }
         this.clearActivePotions();
