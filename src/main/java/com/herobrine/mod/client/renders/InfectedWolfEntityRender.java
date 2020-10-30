@@ -2,7 +2,6 @@ package com.herobrine.mod.client.renders;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedWolfEntityModel;
-import com.herobrine.mod.client.renders.layers.eyes.InfectedWolfEyesLayer;
 import com.herobrine.mod.entities.InfectedWolfEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -17,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 public class InfectedWolfEntityRender extends MobRenderer<InfectedWolfEntity, InfectedWolfEntityModel> {
     public InfectedWolfEntityRender(EntityRendererManager manager) {
         super(manager, new InfectedWolfEntityModel(), 0.5F);
-        this.addLayer(new InfectedWolfEyesLayer(this));
     }
 
     @Override

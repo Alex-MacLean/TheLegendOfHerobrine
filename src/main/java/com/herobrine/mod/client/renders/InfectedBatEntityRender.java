@@ -2,7 +2,6 @@ package com.herobrine.mod.client.renders;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedBatEntityModel;
-import com.herobrine.mod.client.renders.layers.eyes.InfectedBatEyesLayer;
 import com.herobrine.mod.entities.InfectedBatEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -19,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 public class InfectedBatEntityRender extends MobRenderer<InfectedBatEntity, InfectedBatEntityModel> {
     public InfectedBatEntityRender(EntityRendererManager manager) {
         super(manager, new InfectedBatEntityModel(), 0.25F);
-        this.addLayer(new InfectedBatEyesLayer(this));
     }
 
     @NotNull

@@ -3,7 +3,6 @@ package com.herobrine.mod.client.renders;
 import com.google.common.collect.Maps;
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.renders.layers.InfectedMooshroomMushroomLayer;
-import com.herobrine.mod.client.renders.layers.eyes.InfectedMooshroomEyesLayer;
 import com.herobrine.mod.entities.InfectedMooshroomEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -27,7 +26,6 @@ public class InfectedMooshroomEntityRender extends MobRenderer<InfectedMooshroom
 
     public InfectedMooshroomEntityRender(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new CowModel<>(), 0.7F);
-        this.addLayer(new InfectedMooshroomEyesLayer(this));
         this.addLayer(new InfectedMooshroomMushroomLayer<>(this));
     }
 

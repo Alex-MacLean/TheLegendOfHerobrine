@@ -2,7 +2,6 @@ package com.herobrine.mod.client.renders;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedPigEntityModel;
-import com.herobrine.mod.client.renders.layers.eyes.InfectedPigEyesLayer;
 import com.herobrine.mod.entities.InfectedPigEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -17,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 public class InfectedPigEntityRender extends MobRenderer<InfectedPigEntity, InfectedPigEntityModel> {
     public InfectedPigEntityRender(EntityRendererManager manager) {
         super(manager, new InfectedPigEntityModel(), 0.7F);
-        this.addLayer(new InfectedPigEyesLayer(this));
     }
 
     @NotNull

@@ -3,7 +3,6 @@ package com.herobrine.mod.client.renders;
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedSheepEntityModel;
 import com.herobrine.mod.client.renders.layers.InfectedSheepWoolLayer;
-import com.herobrine.mod.client.renders.layers.eyes.InfectedSheepEyesLayer;
 import com.herobrine.mod.entities.InfectedSheepEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -19,7 +18,6 @@ public class InfectedSheepEntityRender extends MobRenderer<InfectedSheepEntity, 
 
     public InfectedSheepEntityRender(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new InfectedSheepEntityModel<>(), 0.7F);
-        this.addLayer(new InfectedSheepEyesLayer(this));
         this.addLayer(new InfectedSheepWoolLayer(this));
     }
 

@@ -2,7 +2,6 @@ package com.herobrine.mod.client.renders;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedRabbitEntityModel;
-import com.herobrine.mod.client.renders.layers.eyes.InfectedRabbitEyesLayer;
 import com.herobrine.mod.entities.InfectedRabbitEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -27,7 +26,6 @@ public class InfectedRabbitEntityRender extends MobRenderer<InfectedRabbitEntity
 
     public InfectedRabbitEntityRender(EntityRendererManager manager) {
         super(manager, new InfectedRabbitEntityModel(), 0.3F);
-        this.addLayer(new InfectedRabbitEyesLayer(this));
     }
 
     @Override
