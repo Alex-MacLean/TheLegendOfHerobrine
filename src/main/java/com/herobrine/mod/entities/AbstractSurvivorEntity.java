@@ -6,10 +6,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.monster.AbstractIllager;
-import net.minecraft.entity.monster.EntityGolem;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -20,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.village.MerchantRecipe;
@@ -35,7 +33,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class AbstractSurvivorEntity extends EntityCreature implements IMob, IMerchant {
+public class AbstractSurvivorEntity extends EntityCreature implements IMerchant {
     private int healTimer = 80;
     @Nullable
     private EntityPlayer customer;
@@ -55,20 +53,21 @@ public class AbstractSurvivorEntity extends EntityCreature implements IMob, IMer
         super.initEntityAI();
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityMob.class, true));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, InfectedLlamaEntity.class, true));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, AbstractHerobrineEntity.class, true));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, AbstractIllager.class, true));
-        this.targetTasks.addTask(4, new EntityAIHurtByTarget(this, false));
-        this.tasks.addTask(6, new EntityAIAttackMelee(this, 1.2D, true));
-        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 64.0F));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, AbstractSurvivorEntity.class, 64.0F));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityMob.class, 64.0F));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, InfectedLlamaEntity.class, 64.0F));
-        this.tasks.addTask(10, new EntityAIWatchClosest(this, AbstractHerobrineEntity.class, 64.0F));
-        this.tasks.addTask(11, new EntityAIWatchClosest(this, EntityGolem.class, 64.0F));
-        this.tasks.addTask(12, new EntityAIWatchClosest(this, EntityVillager.class, 64.0F));
-        this.tasks.addTask(13, new EntityAIWatchClosest(this, AbstractIllager.class, 64.0F));
-        this.tasks.addTask(14, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, InfectedLlamaEntity.class, true));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntitySlime.class, true));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, AbstractHerobrineEntity.class, true));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, AbstractIllager.class, true));
+        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false));
+        this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.2D, true));
+        this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 64.0F));
+        this.tasks.addTask(6, new EntityAIWatchClosest(this, AbstractSurvivorEntity.class, 64.0F));
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityMob.class, 64.0F));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, InfectedLlamaEntity.class, 64.0F));
+        this.tasks.addTask(9, new EntityAIWatchClosest(this, AbstractHerobrineEntity.class, 64.0F));
+        this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityGolem.class, 64.0F));
+        this.tasks.addTask(11, new EntityAIWatchClosest(this, EntityVillager.class, 64.0F));
+        this.tasks.addTask(12, new EntityAIWatchClosest(this, AbstractIllager.class, 64.0F));
+        this.tasks.addTask(13, new EntityAILookIdle(this));
     }
 
     @Override
@@ -190,6 +189,22 @@ public class AbstractSurvivorEntity extends EntityCreature implements IMob, IMer
         }
         --this.healTimer;
         this.updateAITasks();
+
+        AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().grow(1.0D, 1.0D, 1.0D);
+        List<EntityLivingBase> list = this.world.getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
+        if (!list.isEmpty()) {
+            for (EntityLivingBase entity : list) {
+                if (entity instanceof EntityMob && ((EntityMob) entity).getAttackTarget() == null && !(entity instanceof EntityEnderman)) {
+                    ((EntityMob) entity).setAttackTarget(this);
+                }
+                if (entity instanceof EntitySlime && ((EntitySlime) entity).getAttackTarget() == null) {
+                    ((EntitySlime) entity).setAttackTarget(this);
+                }
+                if (entity instanceof AbstractIllager && ((AbstractIllager) entity).getAttackTarget() == null) {
+                    ((AbstractIllager) entity).setAttackTarget(this);
+                }
+            }
+        }
     }
 
     @Override

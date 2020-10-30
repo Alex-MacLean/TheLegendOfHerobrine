@@ -32,6 +32,8 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIWatchClosest(this, EntityPlayer.class, 1024));
         this.tasks.addTask(2, new EntityAIAvoidEntity<>(this, EntityPlayer.class, Config.HerobrineSpyObservationDistance, 0.7D, 1.0D));
+        this.tasks.addTask(3, new EntityAIWatchClosest(this, AbstractSurvivorEntity.class, 1024));
+        this.tasks.addTask(4, new EntityAIAvoidEntity<>(this, AbstractSurvivorEntity.class, Config.HerobrineSpyObservationDistance, 0.7D, 1.0D));
     }
 
     protected void applyEntityAttributes() {

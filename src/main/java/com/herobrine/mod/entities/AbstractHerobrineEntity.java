@@ -95,7 +95,7 @@ public class AbstractHerobrineEntity extends EntityMob {
     public void onUpdate() {
         super.onUpdate();
         Variables.SaveData.get(world).syncData(world);
-        if (!Variables.SaveData.get(world).Spawn && !Config.HerobrineAlwaysSpawns) {
+        if (!Variables.SaveData.get(world).Spawn && !Config.HerobrineAlwaysSpawns && !world.isRemote) {
             this.world.removeEntity(this);
         }
         this.clearActivePotions();
