@@ -42,13 +42,10 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.glfw.GLFWVidMode;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 
 @Mod(HerobrineMod.MODID)
 @Mod.EventBusSubscriber(modid = HerobrineMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -168,18 +165,14 @@ public class HerobrineMod {
 
         @SubscribeEvent
         public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
-            if (!event.getPlayer().world.isRemote) {
-                WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
-                HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
-            }
+            WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
+            HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
         }
 
         @SubscribeEvent
         public void onPlayerChangedDimension(PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
-            if (!event.getPlayer().world.isRemote) {
-                WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
-                HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
-            }
+            WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
+            HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
         }
     }
 }
