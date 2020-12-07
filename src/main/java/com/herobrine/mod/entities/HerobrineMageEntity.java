@@ -6,9 +6,11 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -51,16 +53,15 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
         this.goalSelector.addGoal(12, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40.0D);
-        this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(64.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.6D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 40.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D)
+                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
+                .createMutableAttribute(Attributes.ARMOR, 1.0D)
+                .createMutableAttribute(Attributes.ARMOR_TOUGHNESS, 1.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 64.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.6D);
     }
 
     @Override

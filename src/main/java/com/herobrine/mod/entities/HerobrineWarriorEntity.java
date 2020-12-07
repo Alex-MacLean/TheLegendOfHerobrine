@@ -6,8 +6,11 @@ import com.herobrine.mod.util.items.ItemList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -19,7 +22,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.extensions.IForgeBlockState;
 import org.jetbrains.annotations.NotNull;
@@ -56,16 +59,15 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
         this.goalSelector.addGoal(12, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(50.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
-        this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(64.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.6D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 50.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D)
+                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
+                .createMutableAttribute(Attributes.ARMOR, 2.0D)
+                .createMutableAttribute(Attributes.ARMOR_TOUGHNESS, 2.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 64.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.6D);
     }
 
     @Override
@@ -102,7 +104,7 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
                             BlockPos blockpos = new BlockPos(i3, k, l);
                             BlockState blockstate = this.world.getBlockState(blockpos);
                             IForgeBlockState state = this.world.getBlockState(blockpos);
-                            if (!blockstate.isFoliage(world, blockpos) && blockstate.getMaterial() != Material.FIRE && !state.isAir(world, blockpos) && !blockstate.isReplaceable(Fluids.EMPTY) && !blockstate.isReplaceable(Fluids.WATER) && !blockstate.isReplaceable(Fluids.LAVA) && !blockstate.isReplaceable(Fluids.FLOWING_LAVA) && !blockstate.isReplaceable(Fluids.FLOWING_WATER) && !BlockTags.WITHER_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.DRAGON_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.BEDS.contains(blockstate.getBlock()) && !BlockTags.CROPS.contains(blockstate.getBlock()) && !BlockTags.CARPETS.contains(blockstate.getBlock()) && !BlockTags.BUTTONS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_BUTTONS.contains(blockstate.getBlock()) && !BlockTags.CORAL_PLANTS.contains(blockstate.getBlock()) && !BlockTags.CORALS.contains(blockstate.getBlock()) && !BlockTags.FLOWER_POTS.contains(blockstate.getBlock()) && !BlockTags.PORTALS.contains(blockstate.getBlock()) && !BlockTags.RAILS.contains(blockstate.getBlock()) && !BlockTags.SAPLINGS.contains(blockstate.getBlock()) && !BlockTags.SMALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.SIGNS.contains(blockstate.getBlock()) && !BlockTags.STANDING_SIGNS.contains(blockstate.getBlock()) && !BlockTags.UNDERWATER_BONEMEALS.contains(blockstate.getBlock()) && !BlockTags.WALL_CORALS.contains(blockstate.getBlock()) && !BlockTags.WALL_SIGNS.contains(blockstate.getBlock()) && !BlockTags.TALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_PRESSURE_PLATES.contains(blockstate.getBlock()) && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, blockstate)) {
+                            if (blockstate.getMaterial() != Material.FIRE && !state.isAir(world, blockpos) && !blockstate.isReplaceable(Fluids.EMPTY) && !blockstate.isReplaceable(Fluids.WATER) && !blockstate.isReplaceable(Fluids.LAVA) && !blockstate.isReplaceable(Fluids.FLOWING_LAVA) && !blockstate.isReplaceable(Fluids.FLOWING_WATER) && !BlockTags.WITHER_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.DRAGON_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.BEDS.contains(blockstate.getBlock()) && !BlockTags.CROPS.contains(blockstate.getBlock()) && !BlockTags.CARPETS.contains(blockstate.getBlock()) && !BlockTags.BUTTONS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_BUTTONS.contains(blockstate.getBlock()) && !BlockTags.CORAL_PLANTS.contains(blockstate.getBlock()) && !BlockTags.CORALS.contains(blockstate.getBlock()) && !BlockTags.FLOWER_POTS.contains(blockstate.getBlock()) && !BlockTags.PORTALS.contains(blockstate.getBlock()) && !BlockTags.RAILS.contains(blockstate.getBlock()) && !BlockTags.SAPLINGS.contains(blockstate.getBlock()) && !BlockTags.SMALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.SIGNS.contains(blockstate.getBlock()) && !BlockTags.STANDING_SIGNS.contains(blockstate.getBlock()) && !BlockTags.UNDERWATER_BONEMEALS.contains(blockstate.getBlock()) && !BlockTags.WALL_CORALS.contains(blockstate.getBlock()) && !BlockTags.WALL_SIGNS.contains(blockstate.getBlock()) && !BlockTags.TALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_PRESSURE_PLATES.contains(blockstate.getBlock()) && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, blockstate)) {
                                 flag1 = this.world.destroyBlock(blockpos, true, this) || flag1;
                                 this.swingArm(Hand.MAIN_HAND);
                             }
@@ -125,7 +127,7 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemList.bedrock_sword));
         if(!Config.COMMON.BedrockSwordDrops.get()) {
             this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.0F;

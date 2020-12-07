@@ -8,6 +8,8 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ISeedReader;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
@@ -27,11 +29,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class TrappedHouse {
-
+/*
     public static void registerStructure() {
-        Feature<NoFeatureConfig> feature = new Feature<NoFeatureConfig>(NoFeatureConfig::deserialize) {
+        Feature<NoFeatureConfig> feature = new Feature<NoFeatureConfig>(NoFeatureConfig.NO_FEATURE_CONFIG) {
             @Override
-            public boolean place(@NotNull IWorld iworld, @NotNull ChunkGenerator generator, @NotNull Random random, @NotNull BlockPos pos, @NotNull NoFeatureConfig config) {
+            public boolean generate(@NotNull ISeedReader iSeedReader, @NotNull ChunkGenerator chunkGenerator, Random random, BlockPos pos, @NotNull NoFeatureConfig noFeatureConfig) {
+                ServerWorld iworld = iSeedReader.getWorld();
                 int ci = pos.getX();
                 int ck = pos.getZ();
                 if ((random.nextInt(1000000) + 1) <= Config.COMMON.TrappedHouseWeight.get()) {
@@ -47,18 +50,18 @@ public class TrappedHouse {
                             blockCriteria = true;
                         if (!blockCriteria)
                             continue;
-                        Template template = ((ServerWorld) iworld.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "trapped_house"));
+                        Template template = iworld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "trapped_house"));
                         Rotation rotation = Rotation.values()[random.nextInt(3)];
                         Mirror mirror = Mirror.values()[random.nextInt(2)];
                         BlockPos spawnTo = new BlockPos(i, j - 2, k);
-                        template.addBlocksToWorldChunk(iworld, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).setIgnoreEntities(false));
+                        template.func_237144_a_(iworld, spawnTo, new PlacementSettings().setRotation(rotation).setMirror(mirror).setIgnoreEntities(false), random);
                     }
                 }
                 return true;
             }
         };
         for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
-            biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, feature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
+            biome.generateFeatures(f);
         }
-    }
+    }*/
 }

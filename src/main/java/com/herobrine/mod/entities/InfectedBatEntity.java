@@ -5,7 +5,10 @@ import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
@@ -20,8 +23,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.IWorld;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,7 +51,7 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
             BatEntity batEntity = EntityType.BAT.create(this.world);
             assert batEntity != null;
             batEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            batEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(batEntity)), SpawnReason.CONVERSION, null, null);
+            batEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
             batEntity.setNoAI(this.isAIDisabled());
             if (this.hasCustomName()) {
                 batEntity.setCustomName(this.getCustomName());
@@ -84,12 +87,11 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 6.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 1.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D);
     }
 
     protected void registerData() {
@@ -153,7 +155,7 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
     public void tick() {
         super.tick();
         if (this.getIsBatHanging()) {
-            this.setMotion(Vec3d.ZERO);
+            this.setMotion(Vector3d.ZERO);
             this.setRawPosition(this.getPosX(), (double) MathHelper.floor(this.getPosY()) + 1.0D - (double)this.getHeight(), this.getPosZ());
         } else {
             this.setMotion(this.getMotion().mul(1.0D, 0.6D, 1.0D));
@@ -164,7 +166,7 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
     @Override
     protected void updateAITasks() {
         super.updateAITasks();
-        BlockPos blockpos = new BlockPos(this);
+        BlockPos blockpos = this.getPosition();
         BlockPos blockpos1 = blockpos.up();
         if (this.getIsBatHanging()) {
             if (this.world.getBlockState(blockpos1).isNormalCube(this.world, blockpos)) {
@@ -192,8 +194,8 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
             double d0 = (double)this.spawnPosition.getX() + 0.5D - this.getPosX();
             double d1 = (double)this.spawnPosition.getY() + 0.1D - this.getPosY();
             double d2 = (double)this.spawnPosition.getZ() + 0.5D - this.getPosZ();
-            Vec3d vec3d = this.getMotion();
-            Vec3d vec3d1 = vec3d.add((Math.signum(d0) * 0.5D - vec3d.x) * (double)0.1F, (Math.signum(d1) * (double)0.7F - vec3d.y) * (double)0.1F, (Math.signum(d2) * 0.5D - vec3d.z) * (double)0.1F);
+            Vector3d vec3d = this.getMotion();
+            Vector3d vec3d1 = vec3d.add((Math.signum(d0) * 0.5D - vec3d.x) * (double)0.1F, (Math.signum(d1) * (double)0.7F - vec3d.y) * (double)0.1F, (Math.signum(d2) * 0.5D - vec3d.z) * (double)0.1F);
             this.setMotion(vec3d1);
             float f = (float)(MathHelper.atan2(vec3d1.z, vec3d1.x) * (double)(180F / (float)Math.PI)) - 90.0F;
             float f1 = MathHelper.wrapDegrees(f - this.rotationYaw);
@@ -210,7 +212,7 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
     }
 
     public void moveToEntity(@NotNull Entity entity) {
-        Vec3d motion = new Vec3d((entity.getPosX() - this.getPosX()) / 10, ((entity.getPosY() + 1) - this.getPosY()) / 10,(entity.getPosZ() - this.getPosZ()) / 10);
+        Vector3d motion = new Vector3d((entity.getPosX() - this.getPosX()) / 10, ((entity.getPosY() + 1) - this.getPosY()) / 10,(entity.getPosZ() - this.getPosZ()) / 10);
         this.setMotion(motion);
     }
 
@@ -250,7 +252,7 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
         return sizeIn.height / 2.0F;
     }
 
-    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> batIn, @NotNull IWorld worldIn, SpawnReason reason, @NotNull BlockPos pos, Random randomIn) {
+    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> batIn, @NotNull IServerWorld worldIn, SpawnReason reason, @NotNull BlockPos pos, Random randomIn) {
         if (pos.getY() >= worldIn.getSeaLevel() || !Variables.SaveData.get(worldIn.getWorld()).Spawn && !Config.COMMON.HerobrineAlwaysSpawns.get()) {
             return false;
         } else {

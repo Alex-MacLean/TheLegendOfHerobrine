@@ -26,7 +26,7 @@ public class HolyWaterItem extends Item {
         if (!worldIn.isRemote) {
             HolyWaterEntity entity = new HolyWaterEntity(worldIn, playerIn);
             entity.setItem(itemstack);
-            entity.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
+            entity.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
             worldIn.addEntity(entity);
         }
 

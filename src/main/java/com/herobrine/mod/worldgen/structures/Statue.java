@@ -28,7 +28,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Statue {
-    public static void registerStructure() {
+/*    public static void registerStructure() {
         Feature<NoFeatureConfig> feature = new Feature<NoFeatureConfig>(NoFeatureConfig::deserialize) {
             @Override
             public boolean place(@NotNull IWorld iworld, @NotNull ChunkGenerator generator, @NotNull Random random, @NotNull BlockPos pos, @NotNull NoFeatureConfig config) {
@@ -67,5 +67,5 @@ public class Statue {
                 currentBiome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, feature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
             }
         }
-    }
+    }*/
 }

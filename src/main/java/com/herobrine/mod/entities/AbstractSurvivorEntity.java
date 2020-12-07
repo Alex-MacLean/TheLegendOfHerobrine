@@ -2,7 +2,10 @@ package com.herobrine.mod.entities;
 
 import com.google.common.collect.Sets;
 import com.herobrine.mod.util.entities.SurvivorTrades;
+import net.minecraft.dispenser.IPosition;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.merchant.IMerchant;
@@ -18,13 +21,14 @@ import net.minecraft.item.MerchantOffer;
 import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -88,14 +92,12 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
         this.goalSelector.addGoal(16, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(64.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 1.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 64.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.4D);
     }
 
     @Override
@@ -127,7 +129,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     public boolean attackEntityAsMob(@NotNull Entity entityIn) {
         boolean flag = super.attackEntityAsMob(entityIn);
         if (flag) {
-            float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
+            float f = this.world.getDifficultyForLocation(new BlockPos((IPosition) this)).getAdditionalDifficulty();
             if (this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
                 entityIn.setFire(2 * (int)f);
             }
@@ -136,7 +138,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         this.enablePersistence();
         this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_SWORD));
         this.setItemStackToSlot(EquipmentSlotType.OFFHAND, new ItemStack(Items.SHIELD));
@@ -247,20 +249,20 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     }
 
     @Override
-    public boolean processInteract(@NotNull PlayerEntity player, @NotNull Hand hand) {
+    public @NotNull ActionResultType func_230254_b_(@NotNull PlayerEntity player, @NotNull Hand hand) {
         if (this.isAlive() && this.hasNoCustomer()) {
             if (this.getOffers().isEmpty()) {
-                return super.processInteract(player, hand);
+                return super.func_230254_b_(player, hand);
             } else {
                 if (!this.world.isRemote) {
                     this.setCustomer(player);
                     this.openMerchantContainer(player, this.getDisplayName(), -1);
                 }
 
-                return true;
+                return ActionResultType.SUCCESS;
             }
         } else {
-            return super.processInteract(player, hand);
+            return super.func_230254_b_(player, hand);
         }
     }
 
@@ -340,7 +342,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     }
 
     @Override
-    public boolean func_213705_dZ() {
+    public boolean hasXPBar() {
         return false;
     }
 

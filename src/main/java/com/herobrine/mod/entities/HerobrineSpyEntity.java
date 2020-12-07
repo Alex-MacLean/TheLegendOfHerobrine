@@ -4,17 +4,19 @@ import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,15 +48,14 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
         this.goalSelector.addGoal(4, new AvoidEntityGoal<>(this, PlayerEntity.class, Config.COMMON.HerobrineSpyObservationDistance.get(), 0.7D, 1.0D));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
-        this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(128.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.6D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
+                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
+                .createMutableAttribute(Attributes.ARMOR, 2.0D)
+                .createMutableAttribute(Attributes.ARMOR_TOUGHNESS, 2.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 128.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.6D);
     }
 
     @Override
@@ -94,7 +95,7 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         this.enablePersistence();
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }

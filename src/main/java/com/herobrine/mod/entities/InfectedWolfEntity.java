@@ -3,9 +3,11 @@ package com.herobrine.mod.entities;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -35,7 +38,7 @@ public class InfectedWolfEntity extends AbstractInfectedEntity{
             WolfEntity wolfEntity = EntityType.WOLF.create(this.world);
             assert wolfEntity != null;
             wolfEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            wolfEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(wolfEntity)), SpawnReason.CONVERSION, null, null);
+            wolfEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
             wolfEntity.setNoAI(this.isAIDisabled());
             if (this.hasCustomName()) {
                 wolfEntity.setCustomName(this.getCustomName());
@@ -71,13 +74,12 @@ public class InfectedWolfEntity extends AbstractInfectedEntity{
         this.goalSelector.addGoal(11, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(8.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 8.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D);
     }
 
     @Override

@@ -12,7 +12,6 @@ import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.MultipleRandomFeatureConfig;
-import net.minecraft.world.gen.feature.TreeFeatureConfig;
 import net.minecraft.world.gen.feature.structure.MineshaftConfig;
 import net.minecraft.world.gen.feature.structure.MineshaftStructure;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
@@ -21,10 +20,8 @@ import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import static net.minecraft.world.biome.DefaultBiomeFeatures.FANCY_TREE_CONFIG;
-import static net.minecraft.world.biome.DefaultBiomeFeatures.OAK_TREE_CONFIG;
 
-public class CursedForest extends Biome {
+/*public class CursedForest extends Biome {
 
     public CursedForest(Builder biomeBuilder) {
         super(biomeBuilder);
@@ -83,4 +80,4 @@ public class CursedForest extends Biome {
     public int getGrassColor(double posX, double posZ) {
         return 0x90A94D;
     }
-}
+}*/

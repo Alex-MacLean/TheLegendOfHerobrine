@@ -15,7 +15,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -57,8 +57,6 @@ public class AbstractHerobrineEntity extends MonsterEntity {
             return false;
         if (source == DamageSource.FALLING_BLOCK)
             return false;
-        if (source == DamageSource.FIREWORKS)
-            return false;
         if (source == DamageSource.FLY_INTO_WALL)
             return false;
         if (source == DamageSource.HOT_FLOOR)
@@ -92,7 +90,7 @@ public class AbstractHerobrineEntity extends MonsterEntity {
     public boolean attackEntityAsMob(@NotNull Entity entityIn) {
         boolean flag = super.attackEntityAsMob(entityIn);
         if (flag) {
-            float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
+            float f = this.world.getDifficultyForLocation(this.getPosition()).getAdditionalDifficulty();
             if (this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
                 entityIn.setFire(2 * (int)f);
             }
@@ -100,7 +98,7 @@ public class AbstractHerobrineEntity extends MonsterEntity {
         return flag;
     }
 
-    public static boolean isValidLightLevel(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
+    public static boolean isValidLightLevel(@NotNull IServerWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
         if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
             return false;
         } else {
@@ -109,7 +107,7 @@ public class AbstractHerobrineEntity extends MonsterEntity {
         }
     }
 
-    public static boolean canSpawn(EntityType<? extends AbstractHerobrineEntity> type, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+    public static boolean canSpawn(EntityType<? extends AbstractHerobrineEntity> type, @NotNull IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
         return worldIn.getDifficulty() != Difficulty.PEACEFUL && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Variables.SaveData.get(worldIn.getWorld()).Spawn || worldIn.getDifficulty() != Difficulty.PEACEFUL && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Config.COMMON.HerobrineAlwaysSpawns.get();
     }
 

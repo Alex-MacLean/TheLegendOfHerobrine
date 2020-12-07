@@ -5,14 +5,18 @@ import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -21,12 +25,11 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootTables;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.IShearable;
+import net.minecraftforge.common.IForgeShearable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +39,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class InfectedSheepEntity extends AbstractInfectedEntity implements IShearable {
+public class InfectedSheepEntity extends AbstractInfectedEntity implements IShearable, IForgeShearable {
     private static final DataParameter<Byte> DYE_COLOR = EntityDataManager.createKey(InfectedSheepEntity.class, DataSerializers.BYTE);
     private static final Map<DyeColor, IItemProvider> WOOL_BY_COLOR = Util.make(Maps.newEnumMap(DyeColor.class), (woolDrop) -> {
         woolDrop.put(DyeColor.WHITE, Blocks.WHITE_WOOL);
@@ -88,7 +91,7 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
             SheepEntity sheepEntity = EntityType.SHEEP.create(this.world);
             assert sheepEntity != null;
             sheepEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            sheepEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(sheepEntity)), SpawnReason.CONVERSION, null, null);
+            sheepEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
             sheepEntity.setNoAI(this.isAIDisabled());
             if (this.hasCustomName()) {
                 sheepEntity.setCustomName(this.getCustomName());
@@ -132,13 +135,12 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
         super.updateAITasks();
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(8.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 8.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.23D);
     }
 
     @Override
@@ -233,34 +235,40 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
     }
 
     @Override
-    public boolean processInteract(@NotNull PlayerEntity player, @NotNull Hand hand) {
-        ItemStack itemstack = player.getHeldItem(hand);
-        if (itemstack.getItem() == Items.SHEARS && !this.getSheared()) {
-            this.func_213612_dV();
-            if (!this.world.isRemote) {
-                itemstack.damageItem(1, player, (p_213613_1_) -> p_213613_1_.sendBreakAnimation(hand));
+    public @NotNull ActionResultType func_230254_b_(PlayerEntity entity, @NotNull Hand hand) {
+        ItemStack itemstack = entity.getHeldItem(hand);
+        if (itemstack.getItem() == Items.SHEARS) {
+            if (!this.world.isRemote && this.isShearable()) {
+                this.shear(SoundCategory.PLAYERS);
+                itemstack.damageItem(1, entity, (p_213613_1_) -> p_213613_1_.sendBreakAnimation(hand));
+                return ActionResultType.SUCCESS;
+            } else {
+                return ActionResultType.CONSUME;
             }
-
-            return true;
         } else {
-            return super.processInteract(player, hand);
+            return super.func_230254_b_(entity, hand);
         }
     }
 
-    public void func_213612_dV() {
-        if (!this.world.isRemote) {
-            this.setSheared(true);
-            int i = 1 + this.rand.nextInt(3);
 
-            for(int j = 0; j < i; ++j) {
-                ItemEntity itementity = this.entityDropItem(WOOL_BY_COLOR.get(this.getFleeceColor()), 1);
-                if (itementity != null) {
-                    itementity.setMotion(itementity.getMotion().add((this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F, this.rand.nextFloat() * 0.05F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F));
-                }
+    @Override
+    public void shear(@NotNull SoundCategory category) {
+        this.world.playMovingSound(null, this, SoundEvents.ENTITY_SHEEP_SHEAR, category, 1.0F, 1.0F);
+        this.setSheared(true);
+        int i = 1 + this.rand.nextInt(3);
+
+        for(int j = 0; j < i; ++j) {
+            ItemEntity itementity = this.entityDropItem(WOOL_BY_COLOR.get(this.getFleeceColor()), 1);
+            if (itementity != null) {
+                itementity.setMotion(itementity.getMotion().add((this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F, this.rand.nextFloat() * 0.05F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F));
             }
         }
 
-        this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+    }
+
+    @Override
+    public boolean isShearable() {
+        return this.isAlive() && !this.getSheared();
     }
 
     @Override
@@ -342,7 +350,7 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         this.setFleeceColor(getRandomSheepColor(worldIn.getRandom()));
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
@@ -350,26 +358,5 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
     @Override
     protected float getStandingEyeHeight(@NotNull Pose poseIn, @NotNull EntitySize sizeIn) {
         return 0.95F * sizeIn.height;
-    }
-
-    @Override
-    public boolean isShearable(@NotNull ItemStack item, net.minecraft.world.IWorldReader world, BlockPos pos) {
-        return !this.getSheared();
-    }
-
-    @NotNull
-    @Override
-    public java.util.List<ItemStack> onSheared(@NotNull ItemStack item, net.minecraft.world.IWorld world, BlockPos pos, int fortune) {
-        java.util.List<ItemStack> ret = new java.util.ArrayList<>();
-        if (!this.world.isRemote) {
-            this.setSheared(true);
-            int i = 1 + this.rand.nextInt(3);
-
-            for(int j = 0; j < i; ++j) {
-                ret.add(new ItemStack(WOOL_BY_COLOR.get(this.getFleeceColor())));
-            }
-        }
-        this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-        return ret;
     }
 }

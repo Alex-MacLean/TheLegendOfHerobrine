@@ -8,7 +8,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.DirectionProperty;
@@ -36,8 +36,16 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final VoxelShape North_South = VoxelShapes.or(Block.makeCuboidShape(4, 0, 6, 12, 12, 10), Block.makeCuboidShape(0, 12, 6, 16, 16, 10));
     public static final VoxelShape East_West = VoxelShapes.or(Block.makeCuboidShape(6, 0, 4, 10, 12, 12), Block.makeCuboidShape(6, 12, 0, 10, 16, 16));
+
+    private static Boolean neverAllowSpawn(BlockState state, IBlockReader reader, BlockPos pos, EntityType<?> entity) {
+        return false;
+    }
+    private static boolean isntSolid(BlockState state, IBlockReader reader, BlockPos pos) {
+        return false;
+    }
+
     public HerobrineStatue() {
-        super(Properties.create(BlockMaterialList.HEROBRINE_STATUE_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity());
+        super(Properties.create(BlockMaterialList.HEROBRINE_STATUE_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity().setAllowsSpawn(HerobrineStatue::neverAllowSpawn).setSuffocates(HerobrineStatue::isntSolid));
         setRegistryName(HerobrineMod.location("herobrine_statue"));
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(BlockStateProperties.WATERLOGGED, Boolean.FALSE));
     }
@@ -65,7 +73,7 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
     }
 
     @Override
-    public boolean removedByPlayer(BlockState state, @NotNull World world, @NotNull BlockPos pos, PlayerEntity entity, boolean willHarvest, IFluidState fluid) {
+    public boolean removedByPlayer(BlockState state, @NotNull World world, @NotNull BlockPos pos, PlayerEntity entity, boolean willHarvest, FluidState fluid) {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
@@ -83,9 +91,9 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        IFluidState ifluidstate = world.getFluidState(new BlockPos(x, y + 1, z));
+        FluidState FluidState = world.getFluidState(new BlockPos(x, y + 1, z));
         assert false;
-        world.setBlockState(new BlockPos(x, y + 1, z), HerobrineStatueTop.block.getDefaultState().with(FACING, state.get(FACING)).with(BlockStateProperties.WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER));
+        world.setBlockState(new BlockPos(x, y + 1, z), HerobrineStatueTop.block.getDefaultState().with(FACING, state.get(FACING)).with(BlockStateProperties.WATERLOGGED, FluidState.getFluid() == Fluids.WATER));
     }
 
     @Override
@@ -96,8 +104,8 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
     @Override
     public BlockState getStateForPlacement(@NotNull BlockItemUseContext context) {
         BlockPos blockpos = context.getPos();
-        IFluidState ifluidstate = context.getWorld().getFluidState(blockpos);
-        return this.getDefaultState().with(BlockStateProperties.WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER).with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+        FluidState FluidState = context.getWorld().getFluidState(blockpos);
+        return this.getDefaultState().with(BlockStateProperties.WATERLOGGED, FluidState.getFluid() == Fluids.WATER).with(FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 
     @Override
@@ -107,7 +115,7 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
     }
 
     @Override
-    public boolean receiveFluid(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IFluidState fluidStateIn) {
+    public boolean receiveFluid(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
         return IWaterLoggable.super.receiveFluid(worldIn, pos, state, fluidStateIn);
     }
 
@@ -127,7 +135,7 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
 
     @NotNull
     @Override
-    public IFluidState getFluidState(@NotNull BlockState state) {
+    public FluidState getFluidState(@NotNull BlockState state) {
         return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
@@ -136,11 +144,6 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
         if (type == PathType.WATER) {
             return worldIn.getFluidState(pos).isTagged(FluidTags.WATER);
         }
-        return false;
-    }
-
-    @Override
-    public boolean canEntitySpawn(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull EntityType<?> type) {
         return false;
     }
 
@@ -153,15 +156,5 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
     @Override
     public boolean propagatesSkylightDown(@NotNull BlockState state, @NotNull IBlockReader reader, @NotNull BlockPos pos) {
         return true;
-    }
-
-    @Override
-    public boolean causesSuffocation(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos) {
-        return false;
     }
 }

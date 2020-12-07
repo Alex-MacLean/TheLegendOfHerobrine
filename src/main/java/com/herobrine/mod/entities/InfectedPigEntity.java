@@ -3,9 +3,11 @@ package com.herobrine.mod.entities;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +36,7 @@ public class InfectedPigEntity extends AbstractInfectedEntity {
             PigEntity pigEntity = EntityType.PIG.create(this.world);
             assert pigEntity != null;
             pigEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            pigEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(pigEntity)), SpawnReason.CONVERSION, null, null);
+            pigEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
             pigEntity.setNoAI(this.isAIDisabled());
             if (this.hasCustomName()) {
                 pigEntity.setCustomName(this.getCustomName());
@@ -63,13 +66,12 @@ public class InfectedPigEntity extends AbstractInfectedEntity {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 10.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D);
     }
 
     @Override

@@ -49,7 +49,7 @@ public class UnholyWaterEntity extends SnowballEntity {
                     entity.addPotionEffect(new EffectInstance(Effects.WITHER, 300, 1));
                     entity.addPotionEffect(new EffectInstance(Effects.HUNGER, 300, 1));
                     entity.setFire(15);
-                    entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 4.0F);
+                    entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.func_234616_v_()), 4.0F);
                 }
             }
             this.playSound(SoundEvents.BLOCK_GLASS_BREAK, 0.8F,  0.9F / (rand.nextFloat() * 0.4F + 0.8F));

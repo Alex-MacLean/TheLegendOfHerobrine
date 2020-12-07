@@ -3,9 +3,11 @@ package com.herobrine.mod.entities;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.horse.DonkeyEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,6 +17,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -52,13 +55,12 @@ public class InfectedDonkeyEntity extends AbstractInfectedEntity {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(25.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 25.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 3.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.35D);
     }
 
     @Override
@@ -67,7 +69,7 @@ public class InfectedDonkeyEntity extends AbstractInfectedEntity {
             DonkeyEntity donkeyEntity = EntityType.DONKEY.create(this.world);
             assert donkeyEntity != null;
             donkeyEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            donkeyEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(donkeyEntity)), SpawnReason.CONVERSION, null, null);
+            donkeyEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
             donkeyEntity.setNoAI(this.isAIDisabled());
             if (this.hasCustomName()) {
                 donkeyEntity.setCustomName(this.getCustomName());

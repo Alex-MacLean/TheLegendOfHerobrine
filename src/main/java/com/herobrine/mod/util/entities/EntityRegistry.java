@@ -7,20 +7,31 @@ import com.herobrine.mod.util.items.ItemList;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings("unchecked")
+@Mod.EventBusSubscriber(modid = HerobrineMod.MODID)
 public class EntityRegistry {
     public static EntityType<HerobrineWarriorEntity> HEROBRINE_WARRIOR_ENTITY = (EntityType<HerobrineWarriorEntity>) EntityType.Builder.create((EntityType<HerobrineWarriorEntity> type, World worldIn) -> new HerobrineWarriorEntity(worldIn), EntityClassification.MONSTER).size(0.6F, 1.95F).build("herobrine_warrior").setRegistryName("herobrine_warrior");
     public static EntityType<?> HOLY_WATER_ENTITY = EntityType.Builder.create((EntityType<HolyWaterEntity> type, World worldIn) -> new HolyWaterEntity(worldIn), EntityClassification.MISC).build("holy_water").setRegistryName("holy_water");
@@ -46,25 +57,56 @@ public class EntityRegistry {
 
     public static void registerEntitySpawnEggs(@NotNull final RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
-                ItemList.herobrine_warrior_spawn_egg = registerEntitySpawnEgg(HEROBRINE_WARRIOR_ENTITY, 0x000000, 0xFF0000, "herobrine_warrior_spawn_egg"),
-                ItemList.infected_pig_spawn_egg = registerEntitySpawnEgg(INFECTED_PIG_ENTITY, 0xF0A5A2, 0xFFFFFF, "infected_pig_spawn_egg"),
-                ItemList.infected_chicken_spawn_egg = registerEntitySpawnEgg(INFECTED_CHICKEN_ENTITY, 0xA1A1A1, 0xFFFFFF, "infected_chicken_spawn_egg"),
-                ItemList.infected_sheep_spawn_egg = registerEntitySpawnEgg(INFECTED_SHEEP_ENTITY, 0xE7E7E7, 0xFFFFFF, "infected_sheep_spawn_egg"),
-                ItemList.infected_cow_spawn_egg = registerEntitySpawnEgg(INFECTED_COW_ENTITY, 0x443626, 0xFFFFFF, "infected_cow_spawn_egg"),
-                ItemList.infected_mooshroom_spawn_egg = registerEntitySpawnEgg(INFECTED_MOOSHROOM_ENTITY, 0xA00F10, 0xFFFFFF, "infected_mooshroom_spawn_egg"),
-                ItemList.infected_villager_spawn_egg = registerEntitySpawnEgg(INFECTED_VILLAGER_ENTITY, 0x563C33, 0xFFFFFF, "infected_villager_spawn_egg"),
-                ItemList.herobrine_spy_spawn_egg = registerEntitySpawnEgg(HEROBRINE_SPY_ENTITY, 0x000000, 0x00FF00, "herobrine_spy_spawn_egg"),
-                ItemList.herobrine_builder_spawn_egg = registerEntitySpawnEgg(HEROBRINE_BUILDER_ENTITY, 0x000000, 0xFFFF00, "herobrine_builder_spawn_egg"),
-                ItemList.herobrine_mage_spawn_egg = registerEntitySpawnEgg(HEROBRINE_MAGE_ENTITY, 0x000000, 0x0000FF, "herobrine_mage_spawn_egg"),
-                ItemList.steve_survivor_spawn_egg = registerEntitySpawnEgg(STEVE_SURVIVOR_ENTITY, 0x00AFAF, 0xAA7D66, "steve_survivor_spawn_egg"),
-                ItemList.alex_survivor_spawn_egg = registerEntitySpawnEgg(ALEX_SURVIVOR_ENTITY, 0x8BBA88, 0xF2DABA, "alex_survivor_spawn_egg"),
-                ItemList.infected_wolf_spawn_egg = registerEntitySpawnEgg(INFECTED_WOLF_ENTITY, 0xD7D3D3, 0xFFFFFF, "infected_wolf_spawn_egg"),
-                ItemList.infected_llama_spawn_egg = registerEntitySpawnEgg(INFECTED_LLAMA_ENTITY, 0xC09E7D, 0xFFFFFF, "infected_llama_spawn_egg"),
-                ItemList.infected_horse_spawn_egg = registerEntitySpawnEgg(INFECTED_HORSE_ENTITY, 0xC09E7D, 0xFFFFFF, "infected_horse_spawn_egg"),
-                ItemList.infected_donkey_spawn_egg = registerEntitySpawnEgg(INFECTED_DONKEY_ENTITY, 0x534539, 0xFFFFFF, "infected_donkey_spawn_egg"),
-                ItemList.infected_rabbit_spawn_egg = registerEntitySpawnEgg(INFECTED_RABBIT_ENTITY, 0x995F40, 0xFFFFFF, "infected_rabbit_spawn_egg"),
-                ItemList.infected_bat_spawn_egg = registerEntitySpawnEgg(INFECTED_BAT_ENTITY, 0x4C3E30, 0xFFFFFF, "infected_bat_spawn_egg")
+                ItemList.herobrine_warrior_spawn_egg = registerEntitySpawnEggs(HEROBRINE_WARRIOR_ENTITY, 0x000000, 0xFF0000, "herobrine_warrior_spawn_egg"),
+                ItemList.infected_pig_spawn_egg = registerEntitySpawnEggs(INFECTED_PIG_ENTITY, 0xF0A5A2, 0xFFFFFF, "infected_pig_spawn_egg"),
+                ItemList.infected_chicken_spawn_egg = registerEntitySpawnEggs(INFECTED_CHICKEN_ENTITY, 0xA1A1A1, 0xFFFFFF, "infected_chicken_spawn_egg"),
+                ItemList.infected_sheep_spawn_egg = registerEntitySpawnEggs(INFECTED_SHEEP_ENTITY, 0xE7E7E7, 0xFFFFFF, "infected_sheep_spawn_egg"),
+                ItemList.infected_cow_spawn_egg = registerEntitySpawnEggs(INFECTED_COW_ENTITY, 0x443626, 0xFFFFFF, "infected_cow_spawn_egg"),
+                ItemList.infected_mooshroom_spawn_egg = registerEntitySpawnEggs(INFECTED_MOOSHROOM_ENTITY, 0xA00F10, 0xFFFFFF, "infected_mooshroom_spawn_egg"),
+                ItemList.infected_villager_spawn_egg = registerEntitySpawnEggs(INFECTED_VILLAGER_ENTITY, 0x563C33, 0xFFFFFF, "infected_villager_spawn_egg"),
+                ItemList.herobrine_spy_spawn_egg = registerEntitySpawnEggs(HEROBRINE_SPY_ENTITY, 0x000000, 0x00FF00, "herobrine_spy_spawn_egg"),
+                ItemList.herobrine_builder_spawn_egg = registerEntitySpawnEggs(HEROBRINE_BUILDER_ENTITY, 0x000000, 0xFFFF00, "herobrine_builder_spawn_egg"),
+                ItemList.herobrine_mage_spawn_egg = registerEntitySpawnEggs(HEROBRINE_MAGE_ENTITY, 0x000000, 0x0000FF, "herobrine_mage_spawn_egg"),
+                ItemList.steve_survivor_spawn_egg = registerEntitySpawnEggs(STEVE_SURVIVOR_ENTITY, 0x00AFAF, 0xAA7D66, "steve_survivor_spawn_egg"),
+                ItemList.alex_survivor_spawn_egg = registerEntitySpawnEggs(ALEX_SURVIVOR_ENTITY, 0x8BBA88, 0xF2DABA, "alex_survivor_spawn_egg"),
+                ItemList.infected_wolf_spawn_egg = registerEntitySpawnEggs(INFECTED_WOLF_ENTITY, 0xD7D3D3, 0xFFFFFF, "infected_wolf_spawn_egg"),
+                ItemList.infected_llama_spawn_egg = registerEntitySpawnEggs(INFECTED_LLAMA_ENTITY, 0xC09E7D, 0xFFFFFF, "infected_llama_spawn_egg"),
+                ItemList.infected_horse_spawn_egg = registerEntitySpawnEggs(INFECTED_HORSE_ENTITY, 0xC09E7D, 0xFFFFFF, "infected_horse_spawn_egg"),
+                ItemList.infected_donkey_spawn_egg = registerEntitySpawnEggs(INFECTED_DONKEY_ENTITY, 0x534539, 0xFFFFFF, "infected_donkey_spawn_egg"),
+                ItemList.infected_rabbit_spawn_egg = registerEntitySpawnEggs(INFECTED_RABBIT_ENTITY, 0x995F40, 0xFFFFFF, "infected_rabbit_spawn_egg"),
+                ItemList.infected_bat_spawn_egg = registerEntitySpawnEggs(INFECTED_BAT_ENTITY, 0x4C3E30, 0xFFFFFF, "infected_bat_spawn_egg")
         );
+    }
+
+    @NotNull
+    private static Item registerEntitySpawnEggs(EntityType<?> type, int primaryColor, int secondaryColor, String name) {
+        SpawnEggItem item = new SpawnEggItem(type, primaryColor, secondaryColor, new Item.Properties().group(ItemGroup.MISC));
+        item.setRegistryName(HerobrineMod.location(name));
+        return item;
+    }
+
+    public static void registerEntityAttributes() {
+        GlobalEntityTypeAttributes.put(HEROBRINE_WARRIOR_ENTITY, HerobrineWarriorEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) HOLY_WATER_ENTITY, LivingEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) UNHOLY_WATER_ENTITY, LivingEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(INFECTED_PIG_ENTITY, InfectedPigEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(INFECTED_CHICKEN_ENTITY, InfectedChickenEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(INFECTED_SHEEP_ENTITY, InfectedSheepEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(INFECTED_COW_ENTITY, InfectedCowEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(INFECTED_MOOSHROOM_ENTITY, InfectedMooshroomEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(INFECTED_VILLAGER_ENTITY, InfectedVillagerEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(HEROBRINE_SPY_ENTITY, HerobrineSpyEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(HEROBRINE_BUILDER_ENTITY, HerobrineBuilderEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(HEROBRINE_MAGE_ENTITY, HerobrineMageEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(FAKE_HEROBRINE_MAGE_ENTITY, FakeHerobrineMageEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(STEVE_SURVIVOR_ENTITY, AbstractSurvivorEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(ALEX_SURVIVOR_ENTITY, AbstractSurvivorEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(INFECTED_WOLF_ENTITY, InfectedWolfEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(INFECTED_LLAMA_ENTITY, InfectedLlamaEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(INFECTED_HORSE_ENTITY, InfectedHorseEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(INFECTED_DONKEY_ENTITY, InfectedDonkeyEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(INFECTED_RABBIT_ENTITY, InfectedRabbitEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(INFECTED_BAT_ENTITY, InfectedBatEntity.registerAttributes().create());
     }
 
     public static void registerSpawnPlacement() {
@@ -86,7 +128,8 @@ public class EntityRegistry {
         EntitySpawnPlacementRegistry.register(EntityRegistry.INFECTED_VILLAGER_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedVillagerEntity::canSpawn);
     }
 
-    public static void registerEntityWorldSpawns() {
+    @SubscribeEvent
+    public static void onBiomeLoad(BiomeLoadingEvent event) {
         BiomeDictionary.Type[] InfectedVillagerTypes = {
                 BiomeDictionary.Type.CONIFEROUS,
                 BiomeDictionary.Type.PLAINS,
@@ -182,112 +225,108 @@ public class EntityRegistry {
                 BiomeDictionary.Type.PLAINS
         };
 
-
-        for (BiomeDictionary.Type t : InfectedVillagerTypes) {
-            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
-            for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_VILLAGER_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 4));
-            }
-        }
-
-        for (BiomeDictionary.Type t : InfectedRabbitTypes) {
-            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
-            for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_RABBIT_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 3));
-            }
-        }
-
-        for (BiomeDictionary.Type t : InfectedHorseTypes) {
-            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
-            for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_HORSE_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 6));
-            }
-        }
-
-        for (BiomeDictionary.Type t : PlainsTypes) {
-            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
-            for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_DONKEY_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 3));
-            }
-        }
-
-        for (BiomeDictionary.Type t : SavannaTypes) {
-            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
-            for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_LLAMA_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 4));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_DONKEY_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 1));
-            }
-        }
-
-        for (BiomeDictionary.Type t : MountainTypes) {
-            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
-            for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_LLAMA_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 6));
-            }
-        }
-
-        for (BiomeDictionary.Type t : InfectedWolfTypes) {
-            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
-            for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_WOLF_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 4));
-            }
-        }
-
-        for (BiomeDictionary.Type t : InfectedAnimalTypes) {
-            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
-            for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_PIG_ENTITY, Config.COMMON.InfectedMobWeight.get(), 3, 6));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_COW_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 4));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_CHICKEN_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 8));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_SHEEP_ENTITY, Config.COMMON.InfectedMobWeight.get(), 3, 6));
-            }
-        }
-
-        for (BiomeDictionary.Type t : MushroomBiomeTypes) {
-            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
-            for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_MOOSHROOM_ENTITY, 1, 1, 1));
-            }
-        }
-
+        RegistryKey<Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, Objects.requireNonNull(event.getName()));
+        Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
         for (BiomeDictionary.Type t : HerobrineTypes) {
-            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
-            for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_BUILDER_ENTITY, Config.COMMON.HerobrineBuilderWeight.get(), 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_MAGE_ENTITY, Config.COMMON.HerobrineMageWeight.get(), 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_SPY_ENTITY, Config.COMMON.HerobrineSpyWeight.get(), 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_WARRIOR_ENTITY, Config.COMMON.HerobrineWarriorWeight.get(), 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(INFECTED_BAT_ENTITY, (int) (Config.COMMON.InfectedMobWeight.get() * 2.5), 1, 1));
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t)) {
+                if(event.getCategory() != Biome.Category.NETHER) {
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_WARRIOR_ENTITY, Config.COMMON.HerobrineWarriorWeight.get(), 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_BUILDER_ENTITY, Config.COMMON.HerobrineBuilderWeight.get(), 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_MAGE_ENTITY, Config.COMMON.HerobrineMageWeight.get(), 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_SPY_ENTITY, Config.COMMON.HerobrineSpyWeight.get(), 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_BAT_ENTITY, (int) (Config.COMMON.InfectedMobWeight.get() * 2.5), 1, 1));
+                }
             }
         }
 
         for (BiomeDictionary.Type t : EndTypes) {
-            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
-            for (Biome currentBiome : biomes) {
-                if(currentBiome != Biomes.THE_END) {
-                    currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_BUILDER_ENTITY, 1, 1, 1));
-                    currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_MAGE_ENTITY, 1, 1, 1));
-                    currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_SPY_ENTITY, 1, 1, 1));
-                    currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_WARRIOR_ENTITY, 1, 1, 1));
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t)) {
+                if(event.getName() != Biomes.THE_END.getLocation()) {
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_WARRIOR_ENTITY, 1, 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_BUILDER_ENTITY, 1, 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_MAGE_ENTITY, 1, 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_SPY_ENTITY, 1, 1, 1));
                 }
             }
         }
 
         for (BiomeDictionary.Type t : NetherTypes) {
-            Set<Biome> biomes = BiomeDictionary.getBiomes(t);
-            for (Biome currentBiome : biomes) {
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_BUILDER_ENTITY, Config.COMMON.HerobrineBuilderWeight.get() / 3, 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_MAGE_ENTITY, Config.COMMON.HerobrineMageWeight.get() / 5, 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_SPY_ENTITY, Config.COMMON.HerobrineSpyWeight.get() / 3, 1, 1));
-                currentBiome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(HEROBRINE_WARRIOR_ENTITY, Config.COMMON.HerobrineWarriorWeight.get() / 4, 1, 1));
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t)) {
+                spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_WARRIOR_ENTITY, Config.COMMON.HerobrineWarriorWeight.get() / 4, 1, 1));
+                spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_BUILDER_ENTITY, Config.COMMON.HerobrineBuilderWeight.get() / 3, 1, 1));
+                spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_MAGE_ENTITY, Config.COMMON.HerobrineMageWeight.get() / 5, 1, 1));
+                spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_SPY_ENTITY, Config.COMMON.HerobrineSpyWeight.get() / 3, 1, 1));
             }
         }
-    }
 
-    @NotNull
-    private static Item registerEntitySpawnEgg(EntityType<?> type, int primaryColor, int secondaryColor, String name) {
-        SpawnEggItem item = new SpawnEggItem(type, primaryColor, secondaryColor, new Item.Properties().group(ItemGroup.MISC));
-        item.setRegistryName(HerobrineMod.location(name));
-        return item;
+        for (BiomeDictionary.Type t : MushroomBiomeTypes) {
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t)) {
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_MOOSHROOM_ENTITY, 1, 1, 1));
+            }
+        }
+
+        for (BiomeDictionary.Type t : InfectedAnimalTypes) {
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t)) {
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_PIG_ENTITY, Config.COMMON.InfectedMobWeight.get(), 3, 6));
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_COW_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 4));
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_CHICKEN_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 8));
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_SHEEP_ENTITY, Config.COMMON.InfectedMobWeight.get(), 3, 6));
+            }
+        }
+
+        for (BiomeDictionary.Type t : InfectedWolfTypes) {
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t)) {
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_WOLF_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 4));
+            }
+        }
+
+        for (BiomeDictionary.Type t : MountainTypes) {
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t)) {
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_LLAMA_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 6));
+            }
+        }
+
+        for (BiomeDictionary.Type t : SavannaTypes) {
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t)) {
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_LLAMA_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 4));
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_DONKEY_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 1));
+            }
+        }
+
+        for (BiomeDictionary.Type t : PlainsTypes) {
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t)) {
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_DONKEY_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 3));
+            }
+        }
+
+        for (BiomeDictionary.Type t : InfectedHorseTypes) {
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t)) {
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_HORSE_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 6));
+            }
+        }
+
+        for (BiomeDictionary.Type t : InfectedVillagerTypes) {
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t)) {
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_VILLAGER_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 4));
+            }
+        }
+
+        for (BiomeDictionary.Type t : InfectedRabbitTypes) {
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t)) {
+                spawns.add(new MobSpawnInfo.Spawners(INFECTED_RABBIT_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 3));
+            }
+        }
     }
 }

@@ -2,9 +2,16 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
+import net.minecraft.entity.AgeableEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.passive.horse.CoatColors;
 import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,7 +25,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,13 +35,10 @@ import javax.annotation.Nullable;
 
 public class InfectedHorseEntity extends AbstractInfectedEntity {
     private static final DataParameter<Integer> HORSE_VARIANT = EntityDataManager.createKey(InfectedHorseEntity.class, DataSerializers.VARINT);
-    private static final String[] HORSE_TEXTURES = new String[]{"herobrine:textures/entity/infected_horse/horse_white.png", "herobrine:textures/entity/infected_horse/horse_creamy.png", "herobrine:textures/entity/infected_horse/horse_chestnut.png", "herobrine:textures/entity/infected_horse/horse_brown.png", "herobrine:textures/entity/infected_horse/horse_black.png", "herobrine:textures/entity/infected_horse/horse_gray.png", "herobrine:textures/entity/infected_horse/horse_darkbrown.png"};
     private static final String[] HORSE_TEXTURES_ABBR = new String[]{"hwh", "hcr", "hch", "hbr", "hbl", "hgr", "hdb"};
-    private static final String[] HORSE_MARKING_TEXTURES = new String[]{null, "textures/entity/horse/horse_markings_white.png", "textures/entity/horse/horse_markings_whitefield.png", "textures/entity/horse/horse_markings_whitedots.png", "textures/entity/horse/horse_markings_blackdots.png"};
     private static final String[] HORSE_MARKING_TEXTURES_ABBR = new String[]{"", "wo_", "wmo", "wdo", "bdo"};
     @Nullable
     private String texturePrefix;
-    private final String[] horseTexturesArray = new String[2];
     public int tailCounter;
     private float prevHeadLean;
     private float headLean;
@@ -57,14 +61,14 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
             HorseEntity horseEntity = EntityType.HORSE.create(this.world);
             assert horseEntity != null;
             horseEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            horseEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(horseEntity)), SpawnReason.CONVERSION, null, null);
+            horseEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
             horseEntity.setNoAI(this.isAIDisabled());
             if (this.hasCustomName()) {
                 horseEntity.setCustomName(this.getCustomName());
                 horseEntity.setCustomNameVisible(this.isCustomNameVisible());
             }
             horseEntity.enablePersistence();
-            horseEntity.setHorseVariant(this.getHorseVariant());
+            horseEntity.func_234242_w_(this.func_234239_eK_().getId());
             horseEntity.setGrowingAge(0);
             this.world.setEntityState(this, (byte)16);
             this.world.addEntity(horseEntity);
@@ -88,13 +92,12 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(25.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 25.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.35D);
     }
 
     @Override
@@ -115,6 +118,14 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
     @Override
     protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
         this.playSound(SoundEvents.ENTITY_HORSE_STEP, 0.15F, 1.0F);
+    }
+
+    public CoatColors func_234239_eK_() {
+        return CoatColors.func_234254_a_(this.func_234241_eS_() & 255);
+    }
+
+    private int func_234241_eS_() {
+        return this.dataManager.get(HORSE_VARIANT);
     }
 
     @Override
@@ -153,8 +164,6 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
         int i = this.getHorseVariant();
         int j = (i & 255) % 7;
         int k = ((i & '\uff00') >> 8) % 5;
-        this.horseTexturesArray[0] = HORSE_TEXTURES[j];
-        this.horseTexturesArray[1] = HORSE_MARKING_TEXTURES[k];
         this.texturePrefix = "infected_horse/" + HORSE_TEXTURES_ABBR[j] + HORSE_MARKING_TEXTURES_ABBR[k];
     }
 
@@ -165,15 +174,6 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
         }
 
         return this.texturePrefix;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public String[] getVariantTexturePaths() {
-        if (this.texturePrefix == null) {
-            this.setHorseTexturePaths();
-        }
-
-        return this.horseTexturesArray;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -238,7 +238,7 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         int i;
         if (spawnDataIn instanceof InfectedHorseEntity.HorseData) {
             i = ((InfectedHorseEntity.HorseData)spawnDataIn).variant;
@@ -255,6 +255,7 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
         public final int variant;
 
         public HorseData(int variantIn) {
+            super(false);
             this.variant = variantIn;
         }
     }

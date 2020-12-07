@@ -2,9 +2,12 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.JumpController;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,10 +20,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -54,7 +57,7 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
             RabbitEntity rabbitEntity = EntityType.RABBIT.create(this.world);
             assert rabbitEntity != null;
             rabbitEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            rabbitEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(rabbitEntity)), SpawnReason.CONVERSION, null, null);
+            rabbitEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
             rabbitEntity.setNoAI(this.isAIDisabled());
             if (this.hasCustomName()) {
                 rabbitEntity.setCustomName(this.getCustomName());
@@ -85,13 +88,12 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(3.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 3.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 1.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D);
     }
 
     @Override
@@ -99,7 +101,7 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         if (!this.collidedHorizontally && (!this.moveController.isUpdating() || !(this.moveController.getY() > this.getPosY() + 0.5D))) {
             Path path = this.navigator.getPath();
             if (path != null && path.getCurrentPathIndex() < path.getCurrentPathLength()) {
-                Vec3d vec3d = path.getPosition(this);
+                Vector3d vec3d = path.getPosition(this);
                 if (vec3d.y > this.getPosY() + 0.5D) {
                     return 0.5F;
                 }
@@ -118,7 +120,7 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         if (d0 > 0.0D) {
             double d1 = horizontalMag(this.getMotion());
             if (d1 < 0.01D) {
-                this.moveRelative(0.1F, new Vec3d(0.0D, 0.0D, 1.0D));
+                this.moveRelative(0.1F, new Vector3d(0.0D, 0.0D, 1.0D));
             }
         }
 
@@ -190,7 +192,7 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
             if (infectedrabbitentity$jumphelpercontroller.getIsNotJumping()) {
                 if (this.moveController.isUpdating() && this.currentMoveTypeDuration == 0) {
                     Path path = this.navigator.getPath();
-                    Vec3d vec3d = new Vec3d(this.moveController.getX(), this.moveController.getY(), this.moveController.getZ());
+                    Vector3d vec3d = new Vector3d(this.moveController.getX(), this.moveController.getY(), this.moveController.getZ());
                     if (path != null && path.getCurrentPathIndex() < path.getCurrentPathLength()) {
                         vec3d = path.getPosition(this);
                     }
@@ -204,10 +206,6 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         }
 
         this.wasOnGround = this.onGround;
-    }
-
-    @Override
-    public void spawnRunningParticles() {
     }
 
     @Override
@@ -277,7 +275,7 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         int i = this.getRandomRabbitType(worldIn);
         if (spawnDataIn instanceof InfectedRabbitEntity.RabbitData) {
             i = ((InfectedRabbitEntity.RabbitData)spawnDataIn).typeData;
@@ -293,7 +291,7 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
     @Override
     public void handleStatusUpdate(byte id) {
         if (id == 1) {
-            this.createRunningParticles();
+            this.handleRunningEffect();
             this.jumpDuration = 10;
             this.jumpTicks = 0;
         } else {
@@ -303,7 +301,7 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
     }
 
     private int getRandomRabbitType(@NotNull IWorld p_213610_1_) {
-        Biome biome = p_213610_1_.getBiome(new BlockPos(this));
+        Biome biome = p_213610_1_.getBiome(this.getPosition());
         int i = this.rand.nextInt(100);
         if (biome.getPrecipitation() == Biome.RainType.SNOW) {
             return i < 80 ? 1 : 3;
@@ -402,6 +400,7 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         public final int typeData;
 
         public RabbitData(int type) {
+            super(false);
             this.typeData = type;
         }
     }

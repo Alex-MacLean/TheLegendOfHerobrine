@@ -3,9 +3,11 @@ package com.herobrine.mod.entities;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,7 +17,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +40,7 @@ public class InfectedChickenEntity extends AbstractInfectedEntity {
             ChickenEntity chickenEntity = EntityType.CHICKEN.create(this.world);
             assert chickenEntity != null;
             chickenEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            chickenEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(chickenEntity)), SpawnReason.CONVERSION, null, null);
+            chickenEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
             chickenEntity.setNoAI(this.isAIDisabled());
             if (this.hasCustomName()) {
                 chickenEntity.setCustomName(this.getCustomName());
@@ -71,13 +74,12 @@ public class InfectedChickenEntity extends AbstractInfectedEntity {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(4.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 4.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 1.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D);
     }
 
     @Override
@@ -92,7 +94,7 @@ public class InfectedChickenEntity extends AbstractInfectedEntity {
         }
 
         this.wingRotDelta = (float)((double)this.wingRotDelta * 0.9D);
-        Vec3d vec3d = this.getMotion();
+        Vector3d vec3d = this.getMotion();
         if (!this.onGround && vec3d.y < 0.0D) {
             this.setMotion(vec3d.mul(1.0D, 0.6D, 1.0D));
         }

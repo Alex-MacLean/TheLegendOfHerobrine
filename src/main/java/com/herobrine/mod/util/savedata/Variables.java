@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.fml.LogicalSide;
@@ -46,7 +45,7 @@ public class Variables {
         static SaveData clientSide = new SaveData();
         public static SaveData get(World world) {
             if (world instanceof ServerWorld) {
-                return Objects.requireNonNull(world.getServer()).getWorld(DimensionType.OVERWORLD).getSavedData().getOrCreate(SaveData::new, DATA_NAME);
+                return Objects.requireNonNull(Objects.requireNonNull(world.getServer()).getWorld(world.getDimensionKey())).getSavedData().getOrCreate(SaveData::new, DATA_NAME);
             } else {
                 return clientSide;
             }
@@ -85,7 +84,7 @@ public class Variables {
             if (side.isServer()) {
                 message.data.markDirty();
                 HerobrineMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), message);
-                Objects.requireNonNull(world.getServer()).getWorld(DimensionType.OVERWORLD).getSavedData().set(message.data);
+                Objects.requireNonNull(Objects.requireNonNull(world.getServer()).getWorld(world.getDimensionKey())).getSavedData().set(message.data);
 
             } else {
                 SaveData.clientSide = (SaveData) message.data;

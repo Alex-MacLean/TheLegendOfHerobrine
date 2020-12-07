@@ -12,7 +12,7 @@ import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
@@ -42,6 +42,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Random;
+import java.util.UUID;
+import java.util.function.ToIntFunction;
 
 import static com.herobrine.mod.HerobrineMod.location;
 
@@ -51,14 +53,7 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     public static final VoxelShape SHAPE = VoxelShapes.or(Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 9.0D, 0.0D, 1.0D, 15.0D, 1.0D), Block.makeCuboidShape(16.0D, 9.0D, 0.0D, 15.0D, 15.0D, 1.0D), Block.makeCuboidShape(16.0D, 9.0D, 16.0D, 15.0D, 15.0D, 15.0D), Block.makeCuboidShape(0.0D, 9.0D, 16.0D, 1.0D, 15.0D, 15.0D), Block.makeCuboidShape(0.0D, 15.0D, 0.0D, 2.0D, 16.0D, 2.0D), Block.makeCuboidShape(14.0D, 15.0D, 0.0D, 16.0D, 16.0D, 2.0D), Block.makeCuboidShape(14.0D, 15.0D, 14.0D, 16.0D, 16.0D, 16.0D), Block.makeCuboidShape(0.0D, 15.0D, 14.0D, 2.0D, 16.0D, 16.0D), Block.makeCuboidShape(0.0D, 8.0D, 0.0D, 2.0D, 9.0D, 2.0D), Block.makeCuboidShape(14.0D, 8.0D, 0.0D, 16.0D, 9.0D, 2.0D), Block.makeCuboidShape(14.0D, 8.0D, 14.0D, 16.0D, 9.0D, 16.0D), Block.makeCuboidShape(0.0D, 8.0D, 14.0D, 2.0D, 9.0D, 16.0D));
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public HerobrineAlter() {
-        super(Properties.create(BlockMaterialList.HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity());
-        this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE).with(ModBlockStates.TYPE, 0));
-        setRegistryName(location("herobrine_alter"));
-    }
-
-    @Override
-    public int getLightValue(@NotNull BlockState state) {
+    private static int getLightValue(BlockState state) {
         int i = state.get(ModBlockStates.TYPE);
         switch (i) {
             case 1:
@@ -69,15 +64,20 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
         return 0;
     }
 
+    private static Boolean neverAllowSpawn(BlockState state, IBlockReader reader, BlockPos pos, EntityType<?> entity) {
+        return false;
+    }
+
+    public HerobrineAlter() {
+        super(Properties.create(BlockMaterialList.HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity().setLightLevel(HerobrineAlter::getLightValue).setAllowsSpawn(HerobrineAlter::neverAllowSpawn));
+        this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE).with(ModBlockStates.TYPE, 0));
+        setRegistryName(location("herobrine_alter"));
+    }
+
     @NotNull
     @Override
     public VoxelShape getShape(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull ISelectionContext context) {
         return SHAPE;
-    }
-
-    @Override
-    public boolean canEntitySpawn(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull EntityType<?> type) {
-        return false;
     }
 
     @Override
@@ -88,12 +88,12 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
 
     @NotNull
     @Override
-    public IFluidState getFluidState(@NotNull BlockState state) {
+    public FluidState getFluidState(@NotNull BlockState state) {
         return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override
-    public boolean receiveFluid(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IFluidState fluidStateIn) {
+    public boolean receiveFluid(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
         return IWaterLoggable.super.receiveFluid(worldIn, pos, state, fluidStateIn);
     }
 
@@ -115,7 +115,7 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
     @Override
     public BlockState getStateForPlacement(@NotNull BlockItemUseContext context) {
         BlockPos blockpos = context.getPos();
-        IFluidState ifluidstate = context.getWorld().getFluidState(blockpos);
+        FluidState ifluidstate = context.getWorld().getFluidState(blockpos);
         return this.getDefaultState().with(BlockStateProperties.WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
     }
 
@@ -185,11 +185,14 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
                         world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
                     }
                     if (world instanceof ServerWorld) {
-                        ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, pos.getX(), pos.getY(), pos.getZ(), false));
+                        LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(world);
+                        assert lightningboltentity != null;
+                        lightningboltentity.moveForced(pos.getX(), pos.getY(), pos.getZ());
+                        world.addEntity(lightningboltentity);
                     }
                     if(!Variables.SaveData.get(world).Spawn) {
                         if (world.isRemote) {
-                            player.sendMessage(new StringTextComponent("<Herobrine> You have no idea what you have done!"));
+                            player.sendMessage(new StringTextComponent("<Herobrine> You have no idea what you have done!"), UUID.randomUUID());
                         }
                         Variables.SaveData.get(world).Spawn = true;
                         Variables.SaveData.get(world).syncData(world);
@@ -205,11 +208,14 @@ public class HerobrineAlter extends Block implements IWaterLoggable {
                         world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
                     }
                     if (world instanceof ServerWorld) {
-                        ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, pos.getX(), pos.getY(), pos.getZ(), false));
+                        LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(world);
+                        assert lightningboltentity != null;
+                        lightningboltentity.moveForced(pos.getX(), pos.getY(), pos.getZ());
+                        world.addEntity(lightningboltentity);
                     }
                     if(Variables.SaveData.get(world).Spawn) {
                         if (world.isRemote) {
-                            player.sendMessage(new StringTextComponent("<Herobrine> I shall return!"));
+                            player.sendMessage(new StringTextComponent("<Herobrine> I shall return!"), UUID.randomUUID());
                         }
                         Variables.SaveData.get(world).Spawn = false;
                         Variables.SaveData.get(world).syncData(world);

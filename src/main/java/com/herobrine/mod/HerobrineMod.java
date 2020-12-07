@@ -11,11 +11,6 @@ import com.herobrine.mod.util.items.ArmorMaterialList;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.items.ItemTierList;
 import com.herobrine.mod.util.savedata.Variables;
-import com.herobrine.mod.util.worldgen.BiomeInit;
-import com.herobrine.mod.worldgen.structures.ShrineRemnants;
-import com.herobrine.mod.worldgen.structures.Statue;
-import com.herobrine.mod.worldgen.structures.SurvivorBase;
-import com.herobrine.mod.worldgen.structures.TrappedHouse;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -59,7 +54,7 @@ public class HerobrineMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientRegistries);
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
-        BiomeInit.BIOMES.register(modEventBus);
+        //BiomeInit.BIOMES.register(modEventBus);
         this.addNetworkMessage(Variables.WorldSavedDataSyncMessage.class, Variables.WorldSavedDataSyncMessage::buffer, Variables.WorldSavedDataSyncMessage::new, Variables.WorldSavedDataSyncMessage::handler);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC, MODID + "-" + "common.toml");
         MinecraftForge.EVENT_BUS.register(this);
@@ -83,10 +78,10 @@ public class HerobrineMod {
     }
 
     private void init(FMLCommonSetupEvent event) {
-        TrappedHouse.registerStructure();
+        /*TrappedHouse.registerStructure();
         ShrineRemnants.registerStructure();
         Statue.registerStructure();
-        SurvivorBase.registerStructure();
+        SurvivorBase.registerStructure();*/
         EntityRegistry.registerSpawnPlacement();
     }
 
@@ -106,7 +101,7 @@ public class HerobrineMod {
                     ItemList.cursed_diamond_axe = new AxeItem(ItemTierList.cursed_diamond_item_tier, 5, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_axe")),
                     ItemList.cursed_diamond_pickaxe = new PickaxeItem(ItemTierList.cursed_diamond_item_tier, 1, -2.8f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_pickaxe")),
                     ItemList.cursed_diamond_shovel = new ShovelItem(ItemTierList.cursed_diamond_item_tier, 1.5f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_shovel")),
-                    ItemList.cursed_diamond_hoe = new HoeItem(ItemTierList.cursed_diamond_item_tier, 1.0F, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_hoe")),
+                    ItemList.cursed_diamond_hoe = new HoeItem(ItemTierList.cursed_diamond_item_tier, -4,0.0f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_hoe")),
                     ItemList.cursed_diamond_helmet = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_helmet")),
                     ItemList.cursed_diamond_chestplate = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_chestplate")),
                     ItemList.cursed_diamond_leggings = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_leggings")),
@@ -155,12 +150,12 @@ public class HerobrineMod {
                     EntityRegistry.INFECTED_RABBIT_ENTITY,
                     EntityRegistry.INFECTED_BAT_ENTITY
             );
-            EntityRegistry.registerEntityWorldSpawns();
+            EntityRegistry.registerEntityAttributes();
         }
 
         @SubscribeEvent
         public static void registerBiomes(@NotNull final RegistryEvent.Register<Biome> event) {
-            BiomeInit.registerBiomes();
+            //BiomeInit.registerBiomes();
         }
 
         @SubscribeEvent

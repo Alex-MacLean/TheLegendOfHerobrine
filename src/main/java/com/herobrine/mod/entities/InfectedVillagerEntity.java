@@ -4,10 +4,12 @@ import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
@@ -15,10 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
@@ -41,7 +40,7 @@ public class InfectedVillagerEntity extends AbstractInfectedEntity {
             VillagerEntity villagerEntity = EntityType.VILLAGER.create(this.world);
             assert villagerEntity != null;
             villagerEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            villagerEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(villagerEntity)), SpawnReason.CONVERSION, null, null);
+            villagerEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
             villagerEntity.setNoAI(this.isAIDisabled());
             if (this.hasCustomName()) {
                 villagerEntity.setCustomName(this.getCustomName());
@@ -71,13 +70,12 @@ public class InfectedVillagerEntity extends AbstractInfectedEntity {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(48.0D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 48.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D);
     }
 
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
@@ -94,7 +92,7 @@ public class InfectedVillagerEntity extends AbstractInfectedEntity {
         return SoundEvents.ENTITY_VILLAGER_AMBIENT;
     }
 
-    public static boolean isValidLightLevel(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
+    public static boolean isValidLightLevel(@NotNull IServerWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
         if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
             return false;
         } else {
@@ -107,7 +105,7 @@ public class InfectedVillagerEntity extends AbstractInfectedEntity {
         return worldIn.canSeeSky(pos);
     }
 
-    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> type, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> type, @NotNull IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
         return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Variables.SaveData.get(worldIn.getWorld()).Spawn || worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Config.COMMON.HerobrineAlwaysSpawns.get();
     }
 

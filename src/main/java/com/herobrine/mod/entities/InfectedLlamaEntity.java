@@ -6,7 +6,10 @@ import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.horse.LlamaEntity;
@@ -55,7 +58,7 @@ public class InfectedLlamaEntity extends LlamaEntity {
             LlamaEntity llamaEntity = EntityType.LLAMA.create(this.world);
             assert llamaEntity != null;
             llamaEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            llamaEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(llamaEntity)), SpawnReason.CONVERSION, null, null);
+            llamaEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
             llamaEntity.setNoAI(this.isAIDisabled());
             if (this.hasCustomName()) {
                 llamaEntity.setCustomName(this.getCustomName());
@@ -89,12 +92,11 @@ public class InfectedLlamaEntity extends LlamaEntity {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(25.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 25.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.4D);
     }
 
     @Override
@@ -124,10 +126,6 @@ public class InfectedLlamaEntity extends LlamaEntity {
         return false;
     }
 
-    public boolean wearsArmor() {
-        return false;
-    }
-
     @Override
     public boolean isArmor(@NotNull ItemStack stack) {
         return false;
@@ -146,11 +144,6 @@ public class InfectedLlamaEntity extends LlamaEntity {
     @Override
     @SuppressWarnings("ConstantConditions")
     protected @NotNull LlamaEntity createChild() {
-        return null;
-    }
-
-    @Override
-    public LlamaEntity createChild(@NotNull AgeableEntity ageable) {
         return null;
     }
 
@@ -239,7 +232,7 @@ public class InfectedLlamaEntity extends LlamaEntity {
     @Override
     public void baseTick() {
         Variables.SaveData.get(world).syncData(world);
-        if (!Variables.SaveData.get(world).Spawn && !Config.COMMON.HerobrineAlwaysSpawns.get()) {
+        if (!Variables.SaveData.get(world).Spawn && !Config.COMMON.HerobrineAlwaysSpawns.get() && !world.isRemote) {
             this.remove();
         }
         super.baseTick();
@@ -247,7 +240,7 @@ public class InfectedLlamaEntity extends LlamaEntity {
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         int i;
         if (spawnDataIn instanceof InfectedLlamaEntity.LlamaData) {
             i = ((InfectedLlamaEntity.LlamaData)spawnDataIn).variant;
@@ -263,6 +256,7 @@ public class InfectedLlamaEntity extends LlamaEntity {
         public final int variant;
 
         private LlamaData(int variantIn) {
+            super(false);
             this.variant = variantIn;
         }
     }
@@ -287,8 +281,8 @@ public class InfectedLlamaEntity extends LlamaEntity {
     }
 
     @Override
-    public boolean processInteract(@NotNull PlayerEntity player, @NotNull Hand hand) {
-        return false;
+    public @NotNull ActionResultType func_230254_b_(@NotNull PlayerEntity player, @NotNull Hand hand) {
+        return ActionResultType.FAIL;
     }
 
     @Override
@@ -301,7 +295,7 @@ public class InfectedLlamaEntity extends LlamaEntity {
         return false;
     }
 
-    public static boolean isValidLightLevel(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
+    public static boolean isValidLightLevel(@NotNull IServerWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
         if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
             return false;
         } else {
@@ -314,7 +308,7 @@ public class InfectedLlamaEntity extends LlamaEntity {
         return worldIn.canSeeSky(pos);
     }
 
-    public static boolean canSpawn(EntityType<? extends InfectedLlamaEntity> type, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+    public static boolean canSpawn(EntityType<? extends InfectedLlamaEntity> type, @NotNull IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
         return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Variables.SaveData.get(worldIn.getWorld()).Spawn || worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Config.COMMON.HerobrineAlwaysSpawns.get();
     }
 

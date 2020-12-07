@@ -6,11 +6,14 @@ import com.herobrine.mod.util.savedata.Variables;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.IShearable;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.MooshroomEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,18 +27,17 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.IForgeShearable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 import java.util.UUID;
 
-public class InfectedMooshroomEntity extends AbstractInfectedEntity implements net.minecraftforge.common.IShearable {
+public class InfectedMooshroomEntity extends AbstractInfectedEntity implements IShearable, IForgeShearable {
     private static final DataParameter<String> MOOSHROOM_TYPE = EntityDataManager.createKey(InfectedMooshroomEntity.class, DataSerializers.STRING);
     private Effect hasStewEffect;
     private int effectDuration;
@@ -55,7 +57,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
             MooshroomEntity mooshroomEntity = EntityType.MOOSHROOM.create(this.world);
             assert mooshroomEntity != null;
             mooshroomEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            mooshroomEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(mooshroomEntity)), SpawnReason.CONVERSION, null, null);
+            mooshroomEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
             mooshroomEntity.setNoAI(this.isAIDisabled());
             if (this.hasCustomName()) {
                 mooshroomEntity.setCustomName(this.getCustomName());
@@ -91,13 +93,12 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 10.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 3.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2D);
     }
 
     @Override
@@ -126,7 +127,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
     }
 
     @Override
-    public void onStruckByLightning(@NotNull LightningBoltEntity lightningBolt) {
+    public void func_241841_a(@NotNull ServerWorld world, LightningBoltEntity lightningBolt) {
         UUID uuid = lightningBolt.getUniqueID();
         if (!uuid.equals(this.lightningUUID)) {
             this.setMooshroomType(this.getMooshroomType() == InfectedMooshroomEntity.Type.RED ? InfectedMooshroomEntity.Type.BROWN : InfectedMooshroomEntity.Type.RED);
@@ -143,7 +144,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
     }
 
     @Override
-    public boolean processInteract(@NotNull PlayerEntity player, @NotNull Hand hand) {
+    public @NotNull ActionResultType func_230254_b_(@NotNull PlayerEntity player, @NotNull Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
          if (itemstack.getItem() == Items.SHEARS) {
             this.world.addParticle(ParticleTypes.EXPLOSION, this.getPosX(), this.getPosYHeight(0.5D), this.getPosZ(), 0.0D, 0.0D, 0.0D);
@@ -174,9 +175,9 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
                 this.playSound(SoundEvents.ENTITY_MOOSHROOM_SHEAR, 1.0F, 1.0F);
             }
 
-            return true;
+            return ActionResultType.SUCCESS;
         } else {
-            return super.processInteract(player, hand);
+            return super.func_230254_b_(player, hand);
         }
     }
 
@@ -212,33 +213,38 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
     }
 
     @Override
-    public boolean isShearable(@NotNull ItemStack item, net.minecraft.world.IWorldReader world, net.minecraft.util.math.BlockPos pos) {
-        return true;
+    public void shear(@NotNull SoundCategory category) {
+        this.world.playMovingSound(null, this, SoundEvents.ENTITY_MOOSHROOM_SHEAR, category, 1.0F, 1.0F);
+        if (!this.world.isRemote()) {
+            ((ServerWorld)this.world).spawnParticle(ParticleTypes.EXPLOSION, this.getPosX(), this.getPosYHeight(0.5D), this.getPosZ(), 1, 0.0D, 0.0D, 0.0D, 0.0D);
+            this.remove();
+            InfectedCowEntity entity = EntityRegistry.INFECTED_COW_ENTITY.create(this.world);
+            assert entity != null;
+            entity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
+            entity.setHealth(this.getHealth());
+            entity.renderYawOffset = this.renderYawOffset;
+            if (this.hasCustomName()) {
+                entity.setCustomName(this.getCustomName());
+                entity.setCustomNameVisible(this.isCustomNameVisible());
+            }
+
+            if (this.isNoDespawnRequired()) {
+                entity.enablePersistence();
+            }
+
+            entity.setInvulnerable(this.isInvulnerable());
+            this.world.addEntity(entity);
+
+            for(int i = 0; i < 5; ++i) {
+                this.world.addEntity(new ItemEntity(this.world, this.getPosX(), this.getPosYHeight(1.0D), this.getPosZ(), new ItemStack(this.getMooshroomType().renderState.getBlock())));
+            }
+        }
+
     }
 
-    @NotNull
     @Override
-    public java.util.List<ItemStack> onSheared(@NotNull ItemStack item, net.minecraft.world.IWorld world, net.minecraft.util.math.BlockPos pos, int fortune) {
-        java.util.List<ItemStack> ret = new java.util.ArrayList<>();
-        this.world.addParticle(ParticleTypes.EXPLOSION, this.getPosX(), this.getPosYHeight(0.5D), this.getPosZ(), 0.0D, 0.0D, 0.0D);
-        if (!this.world.isRemote) {
-            this.remove();
-            InfectedCowEntity cowentity = EntityRegistry.INFECTED_COW_ENTITY.create(this.world);
-            assert cowentity != null;
-            cowentity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            cowentity.setHealth(this.getHealth());
-            cowentity.renderYawOffset = this.renderYawOffset;
-            if (this.hasCustomName()) {
-                cowentity.setCustomName(this.getCustomName());
-                cowentity.setCustomNameVisible(this.isCustomNameVisible());
-            }
-            this.world.addEntity(cowentity);
-            for(int i = 0; i < 5; ++i) {
-                ret.add(new ItemStack(this.getMooshroomType().renderState.getBlock()));
-            }
-            this.playSound(SoundEvents.ENTITY_MOOSHROOM_SHEAR, 1.0F, 1.0F);
-        }
-        return ret;
+    public boolean isShearable() {
+        return true;
     }
 
     public enum Type {
@@ -268,7 +274,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
         }
     }
 
-    public static boolean isValidLightLevel(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
+    public static boolean isValidLightLevel(@NotNull IServerWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
         if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
             return false;
         } else {
@@ -281,7 +287,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements n
         return worldIn.canSeeSky(pos);
     }
 
-    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> type, @NotNull IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> type, @NotNull IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
         return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Variables.SaveData.get(worldIn.getWorld()).Spawn || worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Config.COMMON.HerobrineAlwaysSpawns.get();
     }
 

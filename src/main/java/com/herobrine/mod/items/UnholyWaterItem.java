@@ -25,7 +25,7 @@ public class UnholyWaterItem extends Item {
         if (!worldIn.isRemote) {
             UnholyWaterEntity entity = new UnholyWaterEntity(worldIn, playerIn);
             entity.setItem(itemstack);
-            entity.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
+            entity.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
             worldIn.addEntity(entity);
         }
 
