@@ -11,6 +11,7 @@ import com.herobrine.mod.util.items.ArmorMaterialList;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.items.ItemTierList;
 import com.herobrine.mod.util.savedata.Variables;
+import com.herobrine.mod.util.worldgen.BiomeInit;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -23,7 +24,6 @@ import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -50,11 +50,9 @@ public class HerobrineMod {
     public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
     public HerobrineMod() {
-        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientRegistries);
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
-        //BiomeInit.BIOMES.register(modEventBus);
         this.addNetworkMessage(Variables.WorldSavedDataSyncMessage.class, Variables.WorldSavedDataSyncMessage::buffer, Variables.WorldSavedDataSyncMessage::new, Variables.WorldSavedDataSyncMessage::handler);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC, MODID + "-" + "common.toml");
         MinecraftForge.EVENT_BUS.register(this);
@@ -155,7 +153,7 @@ public class HerobrineMod {
 
         @SubscribeEvent
         public static void registerBiomes(@NotNull final RegistryEvent.Register<Biome> event) {
-            //BiomeInit.registerBiomes();
+            BiomeInit.registerBiomes();
         }
 
         @SubscribeEvent
