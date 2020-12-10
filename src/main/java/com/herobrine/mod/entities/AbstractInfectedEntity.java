@@ -3,7 +3,6 @@ package com.herobrine.mod.entities;
 import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.savedata.Variables;
-import net.minecraft.dispenser.IPosition;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -36,7 +35,7 @@ public class AbstractInfectedEntity extends MonsterEntity{
     public boolean attackEntityAsMob(@NotNull Entity entityIn) {
         boolean flag = super.attackEntityAsMob(entityIn);
         if (flag) {
-            float f = this.world.getDifficultyForLocation(new BlockPos((IPosition) this)).getAdditionalDifficulty();
+            float f = this.world.getDifficultyForLocation(this.getPosition()).getAdditionalDifficulty();
             if (this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
                 entityIn.setFire(2 * (int)f);
             }
