@@ -1,9 +1,9 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a report to help improve this mod
 title: ''
-labels: ''
-assignees: ''
+labels: 'bug'
+assignees: 'Alex-MacLean'
 
 ---
 
@@ -12,10 +12,6 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
@@ -24,15 +20,10 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
+ - OS: [e.g. Windows 10 64 bit]
+ - Java Version: [e.g. JRE 1.8.0_51 64 bit]
+ - Mod Version [e.g. 1.0]
+ - Minecraft Version [e.g. 1.15.2]
+ 
 **Additional context**
 Add any other context about the problem here.
