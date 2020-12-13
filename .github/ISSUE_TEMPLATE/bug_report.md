@@ -11,7 +11,7 @@ assignees: 'Alex-MacLean'
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Steps to reproduce the behavior:
+Steps to reproduce this bug.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
@@ -19,11 +19,11 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
+**Environment**
  - OS: [e.g. Windows 10 64 bit]
  - Java Version: [e.g. JRE 1.8.0_51 64 bit]
- - Mod Version [e.g. 1.0]
- - Minecraft Version [e.g. 1.15.2]
+ - Minecraft Version: [e.g. 1.15.2]
+ - Mod Version: [e.g. 1.0]
  
 **Additional context**
 Add any other context about the problem here.
