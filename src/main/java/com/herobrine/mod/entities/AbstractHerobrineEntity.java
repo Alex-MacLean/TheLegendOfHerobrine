@@ -27,11 +27,14 @@ public class AbstractHerobrineEntity extends MonsterEntity {
     protected AbstractHerobrineEntity(EntityType<? extends AbstractHerobrineEntity> type, World worldIn) {
         super(type, worldIn);
     }
-
-    public static final HashSet<String> aef_conditions = new HashSet<String>()
+    // (from Guliver Jham)
+    // This is made to correct 20 instances of if statements to make it the code easier.
+    private static final HashSet<String> aef_conditions = new HashSet<String>()
     {{
         DamageSource[] addHere = new DamageSource[]
                 {
+                        // All of the damage sources below will make the function
+                        // "attackEntityFrom" return false.
                         DamageSource.FALL,
                         DamageSource.CACTUS,
                         DamageSource.DROWN,
@@ -52,13 +55,11 @@ public class AbstractHerobrineEntity extends MonsterEntity {
                         DamageSource.STARVE,
                         DamageSource.SWEET_BERRY_BUSH,
                         DamageSource.WITHER
-
                 };
 
+        //This piece right here adds all 'possibilities' to the hash set.
         for (int i = 0; i < addHere.length; ++i)
-        {
             add( addHere[i].getDamageType() );
-        }
 
     }};
 
@@ -71,6 +72,12 @@ public class AbstractHerobrineEntity extends MonsterEntity {
             return false;
         if (source.getImmediateSource() instanceof UnholyWaterEntity)
             return false;
+        // From Guliver Jham
+        //Idk what purpose this function serves (now i know)
+        //but i shortened 20 if statements with the line below...
+        //resulting in a better performance... (for taking damage)
+        //this was frustrating.
+        //Idk who made this code before but please don't do that again...
         if (aef_conditions.contains( source.getDamageType() ))
             return false;
         return super.attackEntityFrom(source, amount);
