@@ -20,60 +20,65 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
 import java.util.Random;
 
 public class AbstractHerobrineEntity extends MonsterEntity {
     protected AbstractHerobrineEntity(EntityType<? extends AbstractHerobrineEntity> type, World worldIn) {
         super(type, worldIn);
     }
+    // (from Guliver Jham)
+    // This is made to correct 20 instances of if statements to make it the code easier.
+    private static final HashSet<String> aef_conditions = new HashSet<String>()
+    {{
+        DamageSource[] addHere = new DamageSource[]
+                {
+                        // All of the damage sources below will make the function
+                        // "attackEntityFrom" return false.
+                        DamageSource.FALL,
+                        DamageSource.CACTUS,
+                        DamageSource.DROWN,
+                        DamageSource.LIGHTNING_BOLT,
+                        DamageSource.IN_FIRE,
+                        DamageSource.ON_FIRE,
+                        DamageSource.ANVIL,
+                        DamageSource.CRAMMING,
+                        DamageSource.DRAGON_BREATH,
+                        DamageSource.DRYOUT,
+                        DamageSource.FALLING_BLOCK,
+                        DamageSource.FIREWORKS,
+                        DamageSource.FLY_INTO_WALL,
+                        DamageSource.HOT_FLOOR,
+                        DamageSource.LAVA,
+                        DamageSource.IN_WALL,
+                        DamageSource.MAGIC,
+                        DamageSource.STARVE,
+                        DamageSource.SWEET_BERRY_BUSH,
+                        DamageSource.WITHER
+                };
+
+        //This piece right here adds all 'possibilities' to the hash set.
+        for (int i = 0; i < addHere.length; ++i)
+            add( addHere[i].getDamageType() );
+
+    }};
 
     @Override
     public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
+
         if (source.getImmediateSource() instanceof AreaEffectCloudEntity)
             return false;
         if (source.getImmediateSource() instanceof PotionEntity)
             return false;
         if (source.getImmediateSource() instanceof UnholyWaterEntity)
             return false;
-        if (source == DamageSource.FALL)
-            return false;
-        if (source == DamageSource.CACTUS)
-            return false;
-        if (source == DamageSource.DROWN)
-            return false;
-        if (source == DamageSource.LIGHTNING_BOLT)
-            return false;
-        if (source == DamageSource.IN_FIRE)
-            return false;
-        if (source == DamageSource.ON_FIRE)
-            return false;
-        if (source == DamageSource.ANVIL)
-            return false;
-        if (source == DamageSource.CRAMMING)
-            return false;
-        if (source == DamageSource.DRAGON_BREATH)
-            return false;
-        if (source == DamageSource.DRYOUT)
-            return false;
-        if (source == DamageSource.FALLING_BLOCK)
-            return false;
-        if (source == DamageSource.FIREWORKS)
-            return false;
-        if (source == DamageSource.FLY_INTO_WALL)
-            return false;
-        if (source == DamageSource.HOT_FLOOR)
-            return false;
-        if (source == DamageSource.LAVA)
-            return false;
-        if (source == DamageSource.IN_WALL)
-            return false;
-        if (source == DamageSource.MAGIC)
-            return false;
-        if (source == DamageSource.STARVE)
-            return false;
-        if (source == DamageSource.SWEET_BERRY_BUSH)
-            return false;
-        if (source == DamageSource.WITHER)
+        // From Guliver Jham
+        //Idk what purpose this function serves (now i know)
+        //but i shortened 20 if statements with the line below...
+        //resulting in a better performance... (for taking damage)
+        //this was frustrating.
+        //Idk who made this code before but please don't do that again...
+        if (aef_conditions.contains( source.getDamageType() ))
             return false;
         return super.attackEntityFrom(source, amount);
     }

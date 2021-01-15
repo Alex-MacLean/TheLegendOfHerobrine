@@ -111,12 +111,11 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
         }
         --this.lifeTimer;
 
-        if (this.placeTimer <= 0) {
+        //This was 2 if statements with the same result (GJ said)
+        if (this.placeTimer < 1 || this.placeTimer > 1000) {
             this.placeTimer = 1000;
         }
-        if (this.placeTimer > 1000) {
-            this.placeTimer = 1000;
-        }
+
         --this.placeTimer;
         if (this.placeTimer == 0 && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
             int x = (int) this.getPosX();
@@ -126,6 +125,7 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
             Mirror mirror = Mirror.values()[rand.nextInt(2)];
             BlockState blockAt = world.getBlockState(new BlockPos(x, y - 1, z));
             if (!world.isRemote && Config.COMMON.BuilderBuilds.get()) {
+                // Document this, idk what is this. (GJ)
                 if (blockAt.getBlock() == Blocks.GRASS_BLOCK.getDefaultState().getBlock() && y >= 62 || blockAt.getBlock() == Blocks.DIRT.getDefaultState().getBlock() && y >= 62) {
                     Template template = ((ServerWorld) world.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "dirt_structure"));
                     template.addBlocksToWorldChunk(world, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false));
