@@ -13,9 +13,13 @@ How to build this mod from the source code:
 (Warning: advanced users only!)
 
 Prerequisites:
+
 JDK 1.8.0 (Requires Oracle accout to download): https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html
+
 (Windows Only) Add Java to path environment variable: https://www.javatpoint.com/how-to-set-path-in-java (Use second, permanent method)
+
 IDE with Java support. I use Intellij Idea: https://www.jetbrains.com/idea/download/
+
 
 Step 1: download the source code of the desired branch as a zip file.
 
