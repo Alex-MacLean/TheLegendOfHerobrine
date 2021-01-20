@@ -8,21 +8,28 @@ This mod aims to add many features related to Herobrine to Minecraft with a larg
 
 View the curseforge page for an in depth desctiption of the mod.
 
-How to get development builds of the mod:
+How to build this mod from the source code:
 
 (Warning: advanced users only!)
+
+Prerequisites:
+JDK 1.8.0 (Requires Oracle accout to download): https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html
+(Windows Only) Add Java to path environment variable: https://www.javatpoint.com/how-to-set-path-in-java (Use second, permanent method)
+IDE with Java support. I use Intellij Idea: https://www.jetbrains.com/idea/download/
 
 Step 1: download the source code of the desired branch as a zip file.
 
 Step 2: extract the zip file.
 
-Setp 3: open the base directory of the source code(Should contain the gradlew files)
+Step 3: Open build.gradle in your IDE. This file is located in the base directory of the source code. In Intellij Idea press open and browse to where you extracted the code locate build.gradle and open it
 
-Step 4: run Build.cmd if you are on on Windows, Build.COMMAND on MacOSX, Build.sh on Linux. Wait until the process is completed. This may take a while.
+Setp 4: In the gradle processes window sync/reload the project if your IDE doesn't do it automatically. In Intellij Idea it is the arrow circle button in the top left corner.
 
-Step 5: locate the mod jar file. It should be located in build/libs/LegendOfHerobrine-VERSION.jar
+Setp 5: The gradle processes window should now be populated with directories and processes. Go to Tasks -> fg_runs and run gen*name of your ide*Runs (For intellij idea run genIntellijRuns). This should download the rest of the required files to begin building the mod.
 
-Step 6: simply install the jar file like any normal minecraft mod.
+Setp 6: In the gradle window go to Tasks -> build and run build. If everything is set up properly it should build the mod file.
+
+Step 7: The jar file is located in build/libs/LegendOfHerobrine-*VERSION*.jar. You can install this file like any other forge mod.
 
 Permissions:
 
