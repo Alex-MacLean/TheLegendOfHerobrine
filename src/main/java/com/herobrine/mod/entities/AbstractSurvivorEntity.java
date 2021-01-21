@@ -180,28 +180,34 @@ public class AbstractSurvivorEntity extends EntityCreature implements IMerchant 
     public void onUpdate() {
         super.onUpdate();
         this.updateArmSwingProgress();
-        if (this.healTimer <= 0 && this.getHealth() < this.getMaxHealth()) {
-            this.healTimer = 80;
-            this.heal(1.0F);
-        }
-        if (this.healTimer > 80) {
-            this.healTimer = 80;
-        }
-        --this.healTimer;
-        this.updateAITasks();
+        //Regeneration code, regens 1 (half a heart) every 80 tick.
+        if (!this.isDead && this.getHealth() < this.getMaxHealth()) {
+            if (this.healTimer < 1 && this.getHealth() < this.getMaxHealth()) {
+                this.healTimer = 80;
+                this.heal(1.0F);
 
-        AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().grow(1.0D, 1.0D, 1.0D);
-        List<EntityLivingBase> list = this.world.getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
-        if (!list.isEmpty()) {
-            for (EntityLivingBase entity : list) {
-                if (entity instanceof EntityMob && ((EntityMob) entity).getAttackTarget() == null && !(entity instanceof EntityEnderman)) {
-                    ((EntityMob) entity).setAttackTarget(this);
+                if (this.healTimer > 80) {
+                    this.healTimer = 80;
                 }
-                if (entity instanceof EntitySlime && ((EntitySlime) entity).getAttackTarget() == null) {
-                    ((EntitySlime) entity).setAttackTarget(this);
-                }
-                if (entity instanceof AbstractIllager && ((AbstractIllager) entity).getAttackTarget() == null) {
-                    ((AbstractIllager) entity).setAttackTarget(this);
+                --this.healTimer;
+            }
+            this.updateAITasks();
+
+            // Code below is detecting if there's an entity that the
+            // survivor wants to fight nearby, if so, it will start attacking it.
+            AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().grow(1.0D, 1.0D, 1.0D);
+            List<EntityLivingBase> list = this.world.getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
+            if (!list.isEmpty()) {
+                for (EntityLivingBase entity : list) {
+                    if (entity instanceof EntityMob && ((EntityMob) entity).getAttackTarget() == null && !(entity instanceof EntityEnderman)) {
+                        ((EntityMob) entity).setAttackTarget(this);
+                    }
+                    if (entity instanceof EntitySlime && ((EntitySlime) entity).getAttackTarget() == null) {
+                        ((EntitySlime) entity).setAttackTarget(this);
+                    }
+                    if (entity instanceof AbstractIllager && ((AbstractIllager) entity).getAttackTarget() == null) {
+                        ((AbstractIllager) entity).setAttackTarget(this);
+                    }
                 }
             }
         }

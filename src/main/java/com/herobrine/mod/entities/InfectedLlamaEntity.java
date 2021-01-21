@@ -303,7 +303,7 @@ public class InfectedLlamaEntity extends EntityLlama implements IMob {
     public void onUpdate() {
         super.onUpdate();
         Variables.SaveData.get(world).syncData(world);
-        if (!Variables.SaveData.get(world).Spawn && !Config.HerobrineAlwaysSpawns) {
+        if (!Variables.SaveData.get(world).Spawn && !Config.HerobrineAlwaysSpawns && !world.isRemote) {
             this.world.removeEntity(this);
         }
         if (!this.world.isRemote && this.world.getDifficulty() == EnumDifficulty.PEACEFUL) {

@@ -97,10 +97,9 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
             this.world.removeEntity(this);
         }
         --this.lifeTimer;
-        if (this.placeTimer <= 0) {
-            this.placeTimer = 1000;
-        }
-        if (this.placeTimer > 1000) {
+
+        //This was 2 if statements with the same result (GJ said)
+        if (this.placeTimer < 1 || this.placeTimer > 1000) {
             this.placeTimer = 1000;
         }
         --this.placeTimer;
@@ -111,6 +110,7 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
             Rotation rotation = Rotation.values()[rand.nextInt(3)];
             Mirror mirror = Mirror.values()[rand.nextInt(2)];
             IBlockState blockAt = world.getBlockState(new BlockPos(x, y - 1, z));
+            //Checks that the world is not remote and that the builder builds config is true. This code determines what structure the builder places. A ton of if statements probably isn't the best way to do this
             if (!world.isRemote && Config.BuilderBuilds) {
                 if (blockAt.getBlock() == Blocks.GRASS.getDefaultState().getBlock() && y >= 62 || blockAt.getBlock() == Blocks.DIRT.getDefaultState().getBlock() && y >= 62) {
                     Template template = ((WorldServer) world).getStructureTemplateManager().getTemplate(world.getMinecraftServer(), new ResourceLocation(HerobrineMod.MODID, "dirt_structure"));

@@ -150,26 +150,17 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
             }
         }
 
-        if (this.illusionCastingTime <= 0) {
-            this.illusionCastingTime = 400;
-        }
-        if (this.illusionCastingTime > 400) {
+        if (this.illusionCastingTime < 1 || this.illusionCastingTime > 400) {
             this.illusionCastingTime = 400;
         }
         --this.illusionCastingTime;
 
-        if (this.effectsCastingTime <= 0) {
-            this.effectsCastingTime = 250;
-        }
-        if (this.effectsCastingTime > 250) {
+        if (this.effectsCastingTime < 1 || this.effectsCastingTime > 250) {
             this.effectsCastingTime = 250;
         }
         --this.effectsCastingTime;
 
-        if (this.teleportCastingTime <= 0) {
-            this.teleportCastingTime = 500;
-        }
-        if (this.teleportCastingTime > 500) {
+        if (this.teleportCastingTime < 1 || this.teleportCastingTime > 500) {
             this.teleportCastingTime = 500;
         }
         --this.teleportCastingTime;

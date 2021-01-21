@@ -64,7 +64,7 @@ public class FakeHerobrineMageEntity extends AbstractHerobrineEntity {
 
     @Override
     public void onUpdate() {
-        if (this.lifeTimer <= 0) {
+        if (this.lifeTimer < 1) {
             if (this.world.isRemote) {
                 if (!this.isSilent()) {
                     this.world.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
