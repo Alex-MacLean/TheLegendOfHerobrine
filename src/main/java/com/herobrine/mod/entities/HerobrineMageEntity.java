@@ -82,22 +82,17 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
     @Override
     public void livingTick() {
         if(this.isAlive()) {
-            //Again, this was 2 if statements with the same result. (GJ)
-            if (this.illusionCastingTime <= 0 || this.illusionCastingTime > 400) {
+            if (this.illusionCastingTime < 1 || this.illusionCastingTime > 400) {
                 this.illusionCastingTime = 400;
             }
-
             --this.illusionCastingTime;
 
-            //Same situation as before.
-            if (this.effectsCastingTime <= 0 || this.effectsCastingTime > 250) {
+            if (this.effectsCastingTime < 1 || this.effectsCastingTime > 250) {
                 this.effectsCastingTime = 250;
             }
-
             --this.effectsCastingTime;
 
-            //Again.
-            if (this.teleportCastingTime <= 0 || this.teleportCastingTime > 500) {
+            if (this.teleportCastingTime < 1 || this.teleportCastingTime > 500) {
                 this.teleportCastingTime = 500;
             }
             --this.teleportCastingTime;
@@ -106,7 +101,6 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
                 int x = (int) this.getPosX();
                 int y = (int) this.getPosY();
                 int z = (int) this.getPosZ();
-
                 if (!world.isRemote) {
                     Entity entity1 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
                     Entity entity2 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
@@ -121,9 +115,8 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
                     world.addEntity(entity3);
                     world.addEntity(entity4);
                 }
-                //This was "if (world.isRemote)" directly below the if above, i changed it because
-                //to use the result of the if above (GJ)
-                else {
+
+                if (this.world.isRemote) {
                     if (!this.isSilent()) {
                         this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
                     }

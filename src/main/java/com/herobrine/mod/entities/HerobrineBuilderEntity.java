@@ -115,7 +115,6 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
         if (this.placeTimer < 1 || this.placeTimer > 1000) {
             this.placeTimer = 1000;
         }
-
         --this.placeTimer;
         if (this.placeTimer == 0 && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
             int x = (int) this.getPosX();
@@ -124,8 +123,8 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
             Rotation rotation = Rotation.values()[rand.nextInt(3)];
             Mirror mirror = Mirror.values()[rand.nextInt(2)];
             BlockState blockAt = world.getBlockState(new BlockPos(x, y - 1, z));
+            //Checks that the world is not remote and that the builder builds config is true. This code determines what structure the builder places. A ton of if statements probably isn't the best way to do this
             if (!world.isRemote && Config.COMMON.BuilderBuilds.get()) {
-                // Document this, idk what is this. (GJ)
                 if (blockAt.getBlock() == Blocks.GRASS_BLOCK.getDefaultState().getBlock() && y >= 62 || blockAt.getBlock() == Blocks.DIRT.getDefaultState().getBlock() && y >= 62) {
                     Template template = ((ServerWorld) world.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "dirt_structure"));
                     template.addBlocksToWorldChunk(world, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false));

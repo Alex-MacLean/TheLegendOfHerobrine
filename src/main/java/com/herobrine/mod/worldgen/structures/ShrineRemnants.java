@@ -80,7 +80,7 @@ public class ShrineRemnants {
             }
         };
         BiomeDictionary.Type[] Biome = {
-                BiomeDictionary.Type.SPOOKY,
+                BiomeDictionary.Type.SPOOKY
         };
         for (BiomeDictionary.Type biomeType : Biome) {
             Set<Biome> biome = BiomeDictionary.getBiomes(biomeType);

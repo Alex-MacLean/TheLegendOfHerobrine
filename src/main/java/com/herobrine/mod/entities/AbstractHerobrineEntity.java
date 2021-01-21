@@ -27,11 +27,12 @@ public class AbstractHerobrineEntity extends MonsterEntity {
     protected AbstractHerobrineEntity(EntityType<? extends AbstractHerobrineEntity> type, World worldIn) {
         super(type, worldIn);
     }
+
     // (from Guliver Jham)
     // This is made to correct 20 instances of if statements to make it the code easier.
     private static final HashSet<String> aef_conditions = new HashSet<String>()
     {{
-        DamageSource[] addHere = new DamageSource[]
+        DamageSource[] damageSources = new DamageSource[]
                 {
                         // All of the damage sources below will make the function
                         // "attackEntityFrom" return false.
@@ -46,7 +47,6 @@ public class AbstractHerobrineEntity extends MonsterEntity {
                         DamageSource.DRAGON_BREATH,
                         DamageSource.DRYOUT,
                         DamageSource.FALLING_BLOCK,
-                        DamageSource.FIREWORKS,
                         DamageSource.FLY_INTO_WALL,
                         DamageSource.HOT_FLOOR,
                         DamageSource.LAVA,
@@ -54,30 +54,21 @@ public class AbstractHerobrineEntity extends MonsterEntity {
                         DamageSource.MAGIC,
                         DamageSource.STARVE,
                         DamageSource.SWEET_BERRY_BUSH,
-                        DamageSource.WITHER
+                        DamageSource.WITHER,
+                        DamageSource.FIREWORKS
                 };
-
         //This piece right here adds all 'possibilities' to the hash set.
-        for (int i = 0; i < addHere.length; ++i)
-            add( addHere[i].getDamageType() );
-
+        for (DamageSource damageSource : damageSources) add(damageSource.getDamageType());
     }};
 
     @Override
     public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-
         if (source.getImmediateSource() instanceof AreaEffectCloudEntity)
             return false;
         if (source.getImmediateSource() instanceof PotionEntity)
             return false;
         if (source.getImmediateSource() instanceof UnholyWaterEntity)
             return false;
-        // From Guliver Jham
-        //Idk what purpose this function serves (now i know)
-        //but i shortened 20 if statements with the line below...
-        //resulting in a better performance... (for taking damage)
-        //this was frustrating.
-        //Idk who made this code before but please don't do that again...
         if (aef_conditions.contains( source.getDamageType() ))
             return false;
         return super.attackEntityFrom(source, amount);

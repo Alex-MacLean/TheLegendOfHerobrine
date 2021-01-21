@@ -76,7 +76,7 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
         if(this.lifeTimer > 6000) {
             this.lifeTimer = 6000;
         }
-        if(this.lifeTimer <= 0) {
+        if(this.lifeTimer < 1) {
             if (this.world.isRemote) {
                 if (!this.isSilent()) {
                     this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
