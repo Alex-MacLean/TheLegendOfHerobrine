@@ -114,11 +114,8 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
 
     @Override
     public void livingTick() {
-        if (this.blockBreakCounter <= 0) {
-            this.blockBreakCounter = 100;
-        }
-        if (this.blockBreakCounter > 100) {
-            this.blockBreakCounter = 100;
+        if (this.blockBreakCounter < 1 || this.blockBreakCounter > 500) {
+            this.blockBreakCounter = 500;
         }
         super.livingTick();
     }

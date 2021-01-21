@@ -240,7 +240,7 @@ public class InfectedLlamaEntity extends LlamaEntity {
     @Override
     public void baseTick() {
         Variables.SaveData.get(world).syncData(world);
-        if (!Variables.SaveData.get(world).Spawn && !Config.COMMON.HerobrineAlwaysSpawns.get()) {
+        if (!Variables.SaveData.get(world).Spawn && !Config.COMMON.HerobrineAlwaysSpawns.get() && !world.isRemote) {
             this.remove();
         }
         if (!this.world.isRemote && this.world.getDifficulty() == Difficulty.PEACEFUL) {

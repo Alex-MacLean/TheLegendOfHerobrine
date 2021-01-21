@@ -196,8 +196,9 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     public void livingTick() {
         super.livingTick();
         this.updateArmSwingProgress();
-        if(this.isAlive()) {
-            if (this.healTimer <= 0 && this.getHealth() < this.getMaxHealth()) {
+        //Regeneration code, regens 1 (half a heart) every 80 tick.
+        if(this.isAlive() && this.getHealth() < this.getMaxHealth()) {
+            if (this.healTimer < 1 && this.getHealth() < this.getMaxHealth()) {
                 this.healTimer = 80;
                 this.heal(1.0F);
             }
@@ -208,6 +209,8 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
             this.updateAITasks();
         }
 
+        // Code below is detecting if there's an entity that the
+        // survivor wants to fight nearby, if so, it will start attacking it.
         AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(64.0D, 64.0D, 64.0D);
         List<LivingEntity> list = this.world.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
         if (!list.isEmpty()) {

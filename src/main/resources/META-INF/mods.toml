@@ -3,7 +3,7 @@ loaderVersion="[28.2,)" #mandatory
 issueTrackerURL="https://github.com/Alex-MacLean/TheLegendOfHerobrine/issues" #optional
 [[mods]] #mandatory
 modId="herobrine" #mandatory
-version="0.5.3" #mandatory
+version="0.5.4" #mandatory
 displayName="The Legend of Herobrine" #mandatory
 updateJSONURL="https://raw.githubusercontent.com/Alex-MacLean/TheLegendOfHerobrine/master/update.json" #optional
 displayURL="https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine" #optional
@@ -11,7 +11,8 @@ logoFile="Logo.png" #optional
 credits='''Russian Translation - KickDemonAss,
 Polish Translation - kubix1006, 
 Chinese Translation - rtxyd,
-Spanish Translation - Dewinn12''' #optional
+Spanish Translation - Dewinn12,
+Optimization - guliver-jham''' #optional
 authors="Alex MacLean" #optional
 description='''
 Adds Herobrine to Minecraft, and other herobrine related things

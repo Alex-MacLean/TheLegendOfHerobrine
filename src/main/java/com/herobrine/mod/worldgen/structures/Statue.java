@@ -43,7 +43,7 @@ public class Statue {
                         j -= 1;
                         BlockState blockAt = iworld.getBlockState(new BlockPos(i, j, k));
                         boolean blockCriteria = false;
-                        if (blockAt.getBlock() == Blocks.STONE.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.GRAVEL.getDefaultState().getBlock())
+                        if (blockAt.getBlock() == Blocks.STONE.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.DIORITE.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.ANDESITE.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.GRANITE.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.GRAVEL.getDefaultState().getBlock())
                             blockCriteria = true;
                         if (!blockCriteria)
                             continue;
