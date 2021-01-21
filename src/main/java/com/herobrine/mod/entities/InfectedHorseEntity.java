@@ -35,10 +35,6 @@ import javax.annotation.Nullable;
 
 public class InfectedHorseEntity extends AbstractInfectedEntity {
     private static final DataParameter<Integer> HORSE_VARIANT = EntityDataManager.createKey(InfectedHorseEntity.class, DataSerializers.VARINT);
-    private static final String[] HORSE_TEXTURES_ABBR = new String[]{"hwh", "hcr", "hch", "hbr", "hbl", "hgr", "hdb"};
-    private static final String[] HORSE_MARKING_TEXTURES_ABBR = new String[]{"", "wo_", "wmo", "wdo", "bdo"};
-    @Nullable
-    private String texturePrefix;
     public int tailCounter;
     private float prevHeadLean;
     private float headLean;
@@ -148,32 +144,10 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
 
     public void setHorseVariant(int variant) {
         this.dataManager.set(HORSE_VARIANT, variant);
-        this.resetTexturePrefix();
     }
 
     public int getHorseVariant() {
         return this.dataManager.get(HORSE_VARIANT);
-    }
-
-    private void resetTexturePrefix() {
-        this.texturePrefix = null;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    private void setHorseTexturePaths() {
-        int i = this.getHorseVariant();
-        int j = (i & 255) % 7;
-        int k = ((i & '\uff00') >> 8) % 5;
-        this.texturePrefix = "infected_horse/" + HORSE_TEXTURES_ABBR[j] + HORSE_MARKING_TEXTURES_ABBR[k];
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public String getHorseTexture() {
-        if (this.texturePrefix == null) {
-            this.setHorseTexturePaths();
-        }
-
-        return this.texturePrefix;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -194,7 +168,6 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
         }
         if (this.world.isRemote && this.dataManager.isDirty()) {
             this.dataManager.setClean();
-            this.resetTexturePrefix();
         }
 
         if (this.tailCounter > 0 && ++this.tailCounter > 8) {

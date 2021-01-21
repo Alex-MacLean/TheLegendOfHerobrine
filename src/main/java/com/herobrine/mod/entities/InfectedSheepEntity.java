@@ -64,7 +64,6 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
     private int sheepTimer;
     private EatGrassGoal eatGrassGoal;
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
     private static float[] createSheepColor(DyeColor dyeColorIn) {
         if (dyeColorIn == DyeColor.WHITE) {

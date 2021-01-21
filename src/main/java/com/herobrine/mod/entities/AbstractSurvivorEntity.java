@@ -201,7 +201,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
         this.updateArmSwingProgress();
         //Regeneration code, regens 1 (half a heart) every 80 tick.
         if(this.isAlive() && this.getHealth() < this.getMaxHealth()) {
-            if (this.healTimer <= 0 && this.getHealth() < this.getMaxHealth()) {
+            if (this.healTimer < 1 && this.getHealth() < this.getMaxHealth()) {
                 this.healTimer = 80;
                 this.heal(1.0F);
             }

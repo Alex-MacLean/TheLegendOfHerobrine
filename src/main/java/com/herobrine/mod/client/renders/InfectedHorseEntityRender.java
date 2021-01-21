@@ -31,8 +31,6 @@ public class InfectedHorseEntityRender extends MobRenderer<InfectedHorseEntity, 
         p_239384_0_.put(CoatColors.DARKBROWN, new ResourceLocation("herobrine:textures/entity/infected_horse/horse_darkbrown.png"));
     });
 
-    private static final Map<String, ResourceLocation> LAYERED_LOCATION_CACHE = Maps.newHashMap();
-
     public InfectedHorseEntityRender(EntityRendererManager manager) {
         super(manager, new InfectedHorseEntityModel(0.0F), 0.75F);
         this.scale = 1.1F;

@@ -127,7 +127,7 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
             Mirror mirror = Mirror.values()[rand.nextInt(2)];
             Random rand = new Random();
             BlockState blockAt = world.getBlockState(new BlockPos(x, y - 1, z));
-            // Checks that the world is not remote and that the builder builds config is true. This code determines what structure the builder places. A ton of if statements probably isn't the best way to do this
+            //Checks that the world is not remote and that the builder builds config is true. This code determines what structure the builder places. A ton of if statements probably isn't the best way to do this
             if (!world.isRemote && Config.COMMON.BuilderBuilds.get()) {
                 if (blockAt.getBlock() == Blocks.GRASS_BLOCK.getDefaultState().getBlock() && y >= 62 || blockAt.getBlock() == Blocks.DIRT.getDefaultState().getBlock() && y >= 62) {
                     Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "dirt_structure"));
