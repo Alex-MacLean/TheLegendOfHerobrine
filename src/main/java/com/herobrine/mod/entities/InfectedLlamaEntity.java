@@ -9,6 +9,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.GolemEntity;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class InfectedLlamaEntity extends LlamaEntity {
+public class InfectedLlamaEntity extends LlamaEntity implements IMob {
     private static final DataParameter<Integer> DATA_VARIANT_ID = EntityDataManager.createKey(InfectedLlamaEntity.class, DataSerializers.VARINT);
     public InfectedLlamaEntity(EntityType<? extends InfectedLlamaEntity> type, World worldIn) {
         super(type, worldIn);

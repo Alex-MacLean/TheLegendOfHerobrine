@@ -76,10 +76,6 @@ public class HerobrineMod {
     }
 
     private void init(FMLCommonSetupEvent event) {
-        /*TrappedHouse.registerStructure();
-        ShrineRemnants.registerStructure();
-        Statue.registerStructure();
-        SurvivorBase.registerStructure();*/
         EntityRegistry.registerSpawnPlacement();
     }
 
@@ -156,11 +152,6 @@ public class HerobrineMod {
             BiomeInit.registerBiomes();
         }
 
-        /*@SubscribeEvent
-        public static void registerFeatures(@NotNull final RegistryEvent.Register<Feature<?>> event) {
-            ForgeRegistries.FEATURES.register(new TrappedHouse(NoFeatureConfig.field_236558_a_).setRegistryName(HerobrineMod.location("trapped_house")));
-        }
-*/
         @SubscribeEvent
         public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
             WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);

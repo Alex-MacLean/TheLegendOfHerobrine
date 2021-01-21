@@ -2,7 +2,6 @@ package com.herobrine.mod.entities;
 
 import com.google.common.collect.Sets;
 import com.herobrine.mod.util.entities.SurvivorTrades;
-import net.minecraft.dispenser.IPosition;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -26,7 +25,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
@@ -129,7 +127,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     public boolean attackEntityAsMob(@NotNull Entity entityIn) {
         boolean flag = super.attackEntityAsMob(entityIn);
         if (flag) {
-            float f = this.world.getDifficultyForLocation(new BlockPos((IPosition) this)).getAdditionalDifficulty();
+            float f = this.world.getDifficultyForLocation(this.getPosition()).getAdditionalDifficulty();
             if (this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
                 entityIn.setFire(2 * (int)f);
             }
@@ -201,7 +199,8 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     public void livingTick() {
         super.livingTick();
         this.updateArmSwingProgress();
-        if(this.isAlive()) {
+        //Regeneration code, regens 1 (half a heart) every 80 tick.
+        if(this.isAlive() && this.getHealth() < this.getMaxHealth()) {
             if (this.healTimer <= 0 && this.getHealth() < this.getMaxHealth()) {
                 this.healTimer = 80;
                 this.heal(1.0F);
@@ -213,6 +212,9 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
             this.updateAITasks();
         }
 
+
+        // Code below is detecting if there's an entity that the
+        // survivor wants to fight nearby, if so, it will start attacking it.
         AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(64.0D, 64.0D, 64.0D);
         List<LivingEntity> list = this.world.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
         if (!list.isEmpty()) {
