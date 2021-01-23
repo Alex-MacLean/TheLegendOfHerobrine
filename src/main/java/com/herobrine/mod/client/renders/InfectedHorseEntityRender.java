@@ -2,6 +2,7 @@ package com.herobrine.mod.client.renders;
 
 import com.google.common.collect.Maps;
 import com.herobrine.mod.client.models.InfectedHorseEntityModel;
+import com.herobrine.mod.client.renders.layers.InfectedHorseEyesLayer;
 import com.herobrine.mod.entities.InfectedHorseEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -19,8 +20,8 @@ import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public class InfectedHorseEntityRender extends MobRenderer<InfectedHorseEntity, InfectedHorseEntityModel> {
-    private final float scale;
 
+    @SuppressWarnings("rawtypes") //Suppresses raw usage of parameterized class map
     private static final Map field_239383_a_ = Util.make(Maps.newEnumMap(CoatColors.class), (p_239384_0_) -> {
         p_239384_0_.put(CoatColors.WHITE, new ResourceLocation("herobrine:textures/entity/infected_horse/horse_white.png"));
         p_239384_0_.put(CoatColors.CREAMY, new ResourceLocation("herobrine:textures/entity/infected_horse/horse_creamy.png"));
@@ -33,12 +34,12 @@ public class InfectedHorseEntityRender extends MobRenderer<InfectedHorseEntity, 
 
     public InfectedHorseEntityRender(EntityRendererManager manager) {
         super(manager, new InfectedHorseEntityModel(0.0F), 0.75F);
-        this.scale = 1.1F;
+        this.addLayer(new InfectedHorseEyesLayer(this));
     }
 
     @Override
     protected void preRenderCallback(@NotNull InfectedHorseEntity entitylivingbaseIn, @NotNull MatrixStack matrixStackIn, float partialTickTime) {
-        matrixStackIn.scale(this.scale, this.scale, this.scale);
+        matrixStackIn.scale(1.1F, 1.1F, 1.1F);
         super.preRenderCallback(entitylivingbaseIn, matrixStackIn, partialTickTime);
     }
 

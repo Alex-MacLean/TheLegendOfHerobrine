@@ -2,6 +2,7 @@ package com.herobrine.mod.client.renders;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedVillagerEntityModel;
+import com.herobrine.mod.client.renders.layers.InfectedVillagerEyesLayer;
 import com.herobrine.mod.entities.InfectedVillagerEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -17,6 +18,7 @@ public class InfectedVillagerEntityRenderer extends MobRenderer<InfectedVillager
 
     public InfectedVillagerEntityRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new InfectedVillagerEntityModel(0.0f), 0.5f);
+        this.addLayer(new InfectedVillagerEyesLayer(this));
     }
 
     @NotNull

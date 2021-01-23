@@ -2,6 +2,7 @@ package com.herobrine.mod.client.renders;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedCowEntityModel;
+import com.herobrine.mod.client.renders.layers.InfectedCowEyesLayer;
 import com.herobrine.mod.entities.InfectedCowEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class InfectedCowEntityRender extends MobRenderer<InfectedCowEntity, InfectedCowEntityModel> {
     public InfectedCowEntityRender(EntityRendererManager manager) {
         super(manager, new InfectedCowEntityModel(), 0.7F);
+        this.addLayer(new InfectedCowEyesLayer(this));
     }
 
     @NotNull

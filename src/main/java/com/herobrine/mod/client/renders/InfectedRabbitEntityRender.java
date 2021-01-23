@@ -2,7 +2,9 @@ package com.herobrine.mod.client.renders;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedRabbitEntityModel;
+import com.herobrine.mod.client.renders.layers.InfectedRabbitEyesLayer;
 import com.herobrine.mod.entities.InfectedRabbitEntity;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -26,6 +28,7 @@ public class InfectedRabbitEntityRender extends MobRenderer<InfectedRabbitEntity
 
     public InfectedRabbitEntityRender(EntityRendererManager manager) {
         super(manager, new InfectedRabbitEntityModel(), 0.3F);
+        this.addLayer(new InfectedRabbitEyesLayer(this));
     }
 
     @Override
@@ -49,6 +52,7 @@ public class InfectedRabbitEntityRender extends MobRenderer<InfectedRabbitEntity
                 case 5:
                     return SALT;
                 case 99:
+                    InfectedRabbitEyesLayer.RENDER_TYPE = RenderType.getEyes(HerobrineMod.location("textures/entity/eyes/infected_rabbit/caerbannog.png"));
                     return CAERBANNOG;
             }
         }

@@ -2,6 +2,7 @@ package com.herobrine.mod.client.renders;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedLlamaEntityModel;
+import com.herobrine.mod.client.renders.layers.InfectedLlamaEyesLayer;
 import com.herobrine.mod.entities.InfectedLlamaEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -18,6 +19,7 @@ public class InfectedLlamaEntityRender extends MobRenderer<InfectedLlamaEntity, 
 
     public InfectedLlamaEntityRender(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new InfectedLlamaEntityModel<>(0.0F), 0.7F);
+        this.addLayer(new InfectedLlamaEyesLayer(this));
     }
 
     @Override

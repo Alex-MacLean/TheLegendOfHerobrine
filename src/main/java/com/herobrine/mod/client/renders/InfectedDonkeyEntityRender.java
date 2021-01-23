@@ -2,6 +2,7 @@ package com.herobrine.mod.client.renders;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedDonkeyEntityModel;
+import com.herobrine.mod.client.renders.layers.InfectedDonkeyEyesLayer;
 import com.herobrine.mod.entities.InfectedDonkeyEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class InfectedDonkeyEntityRender extends MobRenderer<InfectedDonkeyEntity, InfectedDonkeyEntityModel> {
     public InfectedDonkeyEntityRender(EntityRendererManager manager) {
         super(manager, new InfectedDonkeyEntityModel(0.0F), 0.75F);
+        this.addLayer(new InfectedDonkeyEyesLayer(this));
     }
 
     @Override
