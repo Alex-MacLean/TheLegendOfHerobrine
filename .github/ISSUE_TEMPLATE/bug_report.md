@@ -22,7 +22,8 @@ If applicable, add screenshots to help explain your problem.
 **Environment**
  - OS: [e.g. Windows 10 64 bit]
  - Java Version: [e.g. JRE 1.8.0_51 64 bit]
- - Minecraft Version: [e.g. 1.15.2]
+ - Minecraft Version: [e.g. 1.16.5]
+ - Forge Version: [e.g. 36.0.0] (If you're using an MDK environment please state that you are)
  - Mod Version: [e.g. 1.0]
  
 **Additional context**
