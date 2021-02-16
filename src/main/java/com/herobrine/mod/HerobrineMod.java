@@ -6,6 +6,7 @@ import com.herobrine.mod.config.Config;
 import com.herobrine.mod.items.HerobrineStatueItem;
 import com.herobrine.mod.items.HolyWaterItem;
 import com.herobrine.mod.items.UnholyWaterItem;
+import com.herobrine.mod.util.entities.DefaultSurvivorSkins;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.items.ArmorMaterialList;
 import com.herobrine.mod.util.items.ItemList;
@@ -19,6 +20,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.MinecraftForge;
@@ -54,7 +56,7 @@ public class HerobrineMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientRegistries);
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
         this.addNetworkMessage(Variables.WorldSavedDataSyncMessage.class, Variables.WorldSavedDataSyncMessage::buffer, Variables.WorldSavedDataSyncMessage::new, Variables.WorldSavedDataSyncMessage::handler);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC, MODID + "-" + "common.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC, MODID + "-common.toml");
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -144,6 +146,7 @@ public class HerobrineMod {
                     EntityRegistry.INFECTED_RABBIT_ENTITY,
                     EntityRegistry.INFECTED_BAT_ENTITY
             );
+            DefaultSurvivorSkins.registerDefaultSkins();
             EntityRegistry.registerEntityAttributes();
         }
 
@@ -154,14 +157,10 @@ public class HerobrineMod {
 
         @SubscribeEvent
         public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
-            WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
+            World world = event.getPlayer().world;
+            WorldSavedData saveData = Variables.SaveData.get(world);
             HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
-        }
-
-        @SubscribeEvent
-        public void onPlayerChangedDimension(PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
-            WorldSavedData saveData = Variables.SaveData.get(event.getPlayer().world);
-            HerobrineMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new Variables.WorldSavedDataSyncMessage(saveData));
+            Variables.SaveData.get(world).syncData(world);
         }
     }
 }

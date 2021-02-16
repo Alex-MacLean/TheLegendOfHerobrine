@@ -98,7 +98,7 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
             }
             --this.teleportCastingTime;
 
-            if (this.illusionCastingTime == 0 && this.isAggressive()) {
+            if (this.illusionCastingTime == 0 && this.isAggressive() && this.getAttackTarget() != null) {
                 int x = (int) this.getPosX();
                 int y = (int) this.getPosY();
                 int z = (int) this.getPosZ();
@@ -131,7 +131,7 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
                 }
             }
 
-            if (this.effectsCastingTime == 0 && this.isAggressive()) {
+            if (this.effectsCastingTime == 0 && this.isAggressive() && this.getAttackTarget() != null) {
                 LivingEntity entity = HerobrineMageEntity.this.getAttackTarget();
                 if (entity != null) {
                     entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 400, 1));
@@ -152,7 +152,7 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
                 }
             }
 
-            if (this.teleportCastingTime == 0 && this.isAggressive()) {
+            if (this.teleportCastingTime == 0 && this.isAggressive() && this.getAttackTarget() != null) {
                 LivingEntity entity = HerobrineMageEntity.this.getAttackTarget();
                 if (entity != null) {
                     int x = (int) entity.getPosX();

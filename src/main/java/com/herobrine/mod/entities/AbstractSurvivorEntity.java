@@ -20,10 +20,7 @@ import net.minecraft.item.MerchantOffer;
 import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
@@ -46,6 +43,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     protected MerchantOffers offers;
     private final Inventory survivorInventory = new Inventory(27);
     private int healTimer = 80;
+    public String textureLocation;
     WaterAvoidingRandomWalkingGoal wanderGoal = new WaterAvoidingRandomWalkingGoal(this, 0.8D);
 
     protected static class LookAtCustomerGoal extends LookAtGoal {
@@ -150,6 +148,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     @Override
     public void writeAdditional(@NotNull CompoundNBT compound) {
         super.writeAdditional(compound);
+        compound.putString("textureLocation", textureLocation);
         compound.putInt("RegenSpeed", this.healTimer);
         MerchantOffers merchantoffers = this.getOffers();
         if (!merchantoffers.isEmpty()) {
@@ -171,6 +170,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     @Override
     public void readAdditional(@NotNull CompoundNBT compound) {
         super.readAdditional(compound);
+        this.textureLocation = compound.getString("textureLocation");
         this.healTimer = compound.getInt("RegenSpeed");
         if (compound.contains("Offers", 10)) {
             this.offers = new MerchantOffers(compound.getCompound("Offers"));
@@ -184,6 +184,10 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
                 this.survivorInventory.addItem(itemstack);
             }
         }
+    }
+
+    public ResourceLocation getSkin() {
+        return null;
     }
 
     protected void resetCustomer() {
@@ -212,24 +216,16 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
             this.updateAITasks();
         }
 
-
-        // Code below is detecting if there's an entity that the
-        // survivor wants to fight nearby, if so, it will start attacking it.
+        //Code that makes every entity that extends MonsterEntity attack Survivors. This is to allow any vanilla or modded monster to properly recognise the survivor as an enemy before being attacked. There is an exception for endermen because of how they interact with players.
         AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(64.0D, 64.0D, 64.0D);
         List<LivingEntity> list = this.world.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
         if (!list.isEmpty()) {
             for (LivingEntity entity : list) {
-                if (entity instanceof MonsterEntity && ((MonsterEntity) entity).getAttackTarget() == null && !(entity instanceof EndermanEntity)) {
+                if (entity instanceof MonsterEntity && ((MonsterEntity) entity).getAttackTarget() == null && !(entity instanceof EndermanEntity) && this.canEntityBeSeen(entity)) {
                     ((MonsterEntity) entity).setAttackTarget(this);
                 }
-                if (entity instanceof SlimeEntity && ((SlimeEntity) entity).getAttackTarget() == null) {
+                if (entity instanceof SlimeEntity && ((SlimeEntity) entity).getAttackTarget() == null && this.canEntityBeSeen(entity)) {
                     ((SlimeEntity) entity).setAttackTarget(this);
-                }
-                if (entity instanceof AbstractIllagerEntity && ((AbstractIllagerEntity) entity).getAttackTarget() == null) {
-                    ((AbstractIllagerEntity) entity).setAttackTarget(this);
-                }
-                if (entity instanceof AbstractRaiderEntity && ((AbstractRaiderEntity) entity).getAttackTarget() == null) {
-                    ((AbstractRaiderEntity) entity).setAttackTarget(this);
                 }
             }
         }

@@ -4,6 +4,7 @@ import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.AbstractHerobrineMageEntityModel;
 import com.herobrine.mod.client.renders.layers.HerobrineMageEyesLayer;
 import com.herobrine.mod.entities.AbstractHerobrineEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -24,6 +25,11 @@ public class AbstractHerobrineMageEntityRender extends MobRenderer<AbstractHerob
     @Override
     public ResourceLocation getEntityTexture(@NotNull AbstractHerobrineEntity entity) {
         return HerobrineMod.location("textures/entity/herobrine.png");
+    }
+
+    @Override
+    protected void preRenderCallback(@NotNull AbstractHerobrineEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+        matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
     }
 
     @SuppressWarnings("rawtypes")

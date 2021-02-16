@@ -27,8 +27,6 @@ public class ItemList {
     public static Item herobrine_spy_spawn_egg;
     public static Item herobrine_builder_spawn_egg;
     public static Item herobrine_mage_spawn_egg;
-    public static Item steve_survivor_spawn_egg;
-    public static Item alex_survivor_spawn_egg;
     public static Item infected_wolf_spawn_egg;
     public static Item infected_llama_spawn_egg;
     public static Item infected_horse_spawn_egg;
@@ -36,4 +34,6 @@ public class ItemList {
     public static Item infected_rabbit_spawn_egg;
     public static Item infected_bat_spawn_egg;
     public static Item purified_diamond;
+    public static Item alex_survivor_spawn_egg;
+    public static Item steve_survivor_spawn_egg;
 }

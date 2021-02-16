@@ -3,6 +3,7 @@ package com.herobrine.mod.client.renders;
 import com.herobrine.mod.client.models.AbstractSurvivorEntityModel;
 import com.herobrine.mod.entities.AbstractSurvivorEntity;
 import com.herobrine.mod.entities.AlexSurvivorEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -29,7 +30,12 @@ public class AlexSurvivorEntityRender extends MobRenderer<AbstractSurvivorEntity
     @NotNull
     @Override
     public ResourceLocation getEntityTexture(@NotNull AbstractSurvivorEntity entity) {
-        return new ResourceLocation("textures/entity/alex.png");
+        return entity.getSkin();
+    }
+
+    @Override
+    protected void preRenderCallback(@NotNull AbstractSurvivorEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+        matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
     }
 
     @SuppressWarnings("rawtypes")

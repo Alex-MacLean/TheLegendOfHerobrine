@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[36,)" #mandatory
+loaderVersion="[35.1,36,)" #mandatory
 license="GNU General Public License version 3 (GPLv3)"
 issueTrackerURL="https://github.com/Alex-MacLean/TheLegendOfHerobrine/issues" #optional
 [[mods]] #mandatory
@@ -21,13 +21,12 @@ Adds Herobrine to Minecraft, and other herobrine related things.
 [[dependencies.herobrine]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[36,)" #mandatory
+    versionRange="[35.1,36,)" #mandatory
     ordering="NONE"
     side="BOTH"
-# Here's another dependency
 [[dependencies.herobrine]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.5]"
+    versionRange="[1.16.4,1.16.5,)"
     ordering="NONE"
     side="BOTH"

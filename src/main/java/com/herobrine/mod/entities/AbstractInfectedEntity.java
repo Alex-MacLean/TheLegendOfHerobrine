@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class AbstractInfectedEntity extends MonsterEntity{
+public class AbstractInfectedEntity extends MonsterEntity {
     protected AbstractInfectedEntity(EntityType<? extends AbstractInfectedEntity> type, World worldIn) {
         super(type, worldIn);
     }
