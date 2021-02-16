@@ -78,7 +78,7 @@ public class HerobrineMod {
     }
 
     private void init(FMLCommonSetupEvent event) {
-        EntityRegistry.registerSpawnPlacement();
+        DefaultSurvivorSkins.registerDefaultSkins();
     }
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -146,7 +146,7 @@ public class HerobrineMod {
                     EntityRegistry.INFECTED_RABBIT_ENTITY,
                     EntityRegistry.INFECTED_BAT_ENTITY
             );
-            DefaultSurvivorSkins.registerDefaultSkins();
+            EntityRegistry.registerSpawnPlacement();
             EntityRegistry.registerEntityAttributes();
         }
 
