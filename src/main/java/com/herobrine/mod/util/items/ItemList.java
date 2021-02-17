@@ -36,4 +36,5 @@ public class ItemList {
     public static Item purified_diamond;
     public static Item alex_survivor_spawn_egg;
     public static Item steve_survivor_spawn_egg;
+    public static Item herobrine_stalker_spawn_egg;
 }

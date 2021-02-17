@@ -144,7 +144,8 @@ public class HerobrineMod {
                     EntityRegistry.INFECTED_HORSE_ENTITY,
                     EntityRegistry.INFECTED_DONKEY_ENTITY,
                     EntityRegistry.INFECTED_RABBIT_ENTITY,
-                    EntityRegistry.INFECTED_BAT_ENTITY
+                    EntityRegistry.INFECTED_BAT_ENTITY,
+                    EntityRegistry.HEROBRINE_STALKER_ENTITY
             );
             EntityRegistry.registerSpawnPlacement();
             EntityRegistry.registerEntityAttributes();

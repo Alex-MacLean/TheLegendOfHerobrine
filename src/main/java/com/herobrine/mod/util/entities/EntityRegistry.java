@@ -54,6 +54,7 @@ public class EntityRegistry {
     public static EntityType<InfectedDonkeyEntity> INFECTED_DONKEY_ENTITY = (EntityType<InfectedDonkeyEntity>) EntityType.Builder.create((EntityType<InfectedDonkeyEntity> type, World worldIn) -> new InfectedDonkeyEntity(worldIn), EntityClassification.MONSTER).size(1.3964844F, 1.5F).build("infected_donkey").setRegistryName("infected_donkey");
     public static EntityType<InfectedRabbitEntity> INFECTED_RABBIT_ENTITY = (EntityType<InfectedRabbitEntity>) EntityType.Builder.create((EntityType<InfectedRabbitEntity> type, World worldIn) -> new InfectedRabbitEntity(worldIn), EntityClassification.MONSTER).size(0.4F, 0.5F).build("infected_rabbit").setRegistryName("infected_rabbit");
     public static EntityType<InfectedBatEntity> INFECTED_BAT_ENTITY = (EntityType<InfectedBatEntity>) EntityType.Builder.create((EntityType<InfectedBatEntity> type, World worldIn) -> new InfectedBatEntity(worldIn), EntityClassification.MONSTER).size(0.5F, 0.9F).build("infected_bat").setRegistryName("infected_bat");
+    public static EntityType<HerobrineStalkerEntity> HEROBRINE_STALKER_ENTITY = (EntityType<HerobrineStalkerEntity>) EntityType.Builder.create((EntityType<HerobrineStalkerEntity> type, World worldIn) -> new HerobrineStalkerEntity(worldIn), EntityClassification.MONSTER).size(0.6F, 1.8F).build("herobrine_stalker").setRegistryName("herobrine_stalker");
 
     public static void registerEntitySpawnEggs(@NotNull final RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
@@ -74,7 +75,8 @@ public class EntityRegistry {
                 ItemList.infected_horse_spawn_egg = registerEntitySpawnEggs(INFECTED_HORSE_ENTITY, 0xC09E7D, 0xFFFFFF, "infected_horse_spawn_egg"),
                 ItemList.infected_donkey_spawn_egg = registerEntitySpawnEggs(INFECTED_DONKEY_ENTITY, 0x534539, 0xFFFFFF, "infected_donkey_spawn_egg"),
                 ItemList.infected_rabbit_spawn_egg = registerEntitySpawnEggs(INFECTED_RABBIT_ENTITY, 0x995F40, 0xFFFFFF, "infected_rabbit_spawn_egg"),
-                ItemList.infected_bat_spawn_egg = registerEntitySpawnEggs(INFECTED_BAT_ENTITY, 0x4C3E30, 0xFFFFFF, "infected_bat_spawn_egg")
+                ItemList.infected_bat_spawn_egg = registerEntitySpawnEggs(INFECTED_BAT_ENTITY, 0x4C3E30, 0xFFFFFF, "infected_bat_spawn_egg"),
+                ItemList.herobrine_stalker_spawn_egg = registerEntitySpawnEggs(HEROBRINE_STALKER_ENTITY, 0x000000, 0xFFA500, "herobrine_stalker_spawn_egg")
         );
     }
 
@@ -107,6 +109,7 @@ public class EntityRegistry {
         GlobalEntityTypeAttributes.put(INFECTED_DONKEY_ENTITY, InfectedDonkeyEntity.registerAttributes().create());
         GlobalEntityTypeAttributes.put(INFECTED_RABBIT_ENTITY, InfectedRabbitEntity.registerAttributes().create());
         GlobalEntityTypeAttributes.put(INFECTED_BAT_ENTITY, InfectedBatEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(HEROBRINE_STALKER_ENTITY, HerobrineStalkerEntity.registerAttributes().create());
     }
 
     public static void registerSpawnPlacement() {
@@ -126,6 +129,7 @@ public class EntityRegistry {
         EntitySpawnPlacementRegistry.register(EntityRegistry.INFECTED_COW_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractInfectedEntity::canSpawn);
         EntitySpawnPlacementRegistry.register(EntityRegistry.INFECTED_PIG_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractInfectedEntity::canSpawn);
         EntitySpawnPlacementRegistry.register(EntityRegistry.INFECTED_VILLAGER_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedVillagerEntity::canSpawn);
+        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_STALKER_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineStalkerEntity::canSpawn);
     }
 
     @SubscribeEvent
@@ -236,6 +240,7 @@ public class EntityRegistry {
                     spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_MAGE_ENTITY, Config.COMMON.HerobrineMageWeight.get(), 1, 1));
                     spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_SPY_ENTITY, Config.COMMON.HerobrineSpyWeight.get(), 1, 1));
                     spawns.add(new MobSpawnInfo.Spawners(INFECTED_BAT_ENTITY, (int) (Config.COMMON.InfectedMobWeight.get() * 2.5), 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_STALKER_ENTITY, Config.COMMON.HerobrineStalkerWeight.get(), 1, 1));
                 }
             }
         }

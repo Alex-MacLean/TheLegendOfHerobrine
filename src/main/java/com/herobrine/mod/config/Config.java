@@ -25,6 +25,7 @@ public class Config {
         public final ForgeConfigSpec.IntValue HerobrineMageWeight;
         public final ForgeConfigSpec.IntValue InfectedMobWeight;
         public final ForgeConfigSpec.IntValue HerobrineSpyObservationDistance;
+        public final ForgeConfigSpec.IntValue HerobrineStalkerWeight;
         public CommonConfig(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Common config file for The Legend of Herobrine Minecraft mod.").push("entity_config");
             WarriorBreaksBlocks = builder.comment("Determines if the Herobrine warrior can break blocks.").worldRestart().define("WarriorBreaksBlocks", true);
@@ -34,6 +35,7 @@ public class Config {
             HerobrineSpyWeight = builder.comment("The spawn weight of the Herobrine spy. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineSpyWeight", 40, 0, 1024);
             HerobrineBuilderWeight = builder.comment("The spawn weight of the Herobrine builder. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineBuilderWeight", 25, 0, 1024);
             HerobrineMageWeight = builder.comment("The spawn weight of the Herobrine mage. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineMageWeight", 20, 0, 1024);
+            HerobrineStalkerWeight = builder.comment("The spawn weight of the Herobrine stalker. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineStalkerWeight", 35, 0, 1024);
             InfectedMobWeight = builder.comment("The spawn weight of Infected mobs. Higher values makes them more common, while 0 disables them.").worldRestart().defineInRange("InfectedMobWeight", 30, 0, 1024);
             HerobrineSpyObservationDistance = builder.comment("The distance in blocks the Herobrine spy observes the player from.").worldRestart().defineInRange("HerobrineSpyObservationDistance", 32, 0, 64);
             builder.pop();

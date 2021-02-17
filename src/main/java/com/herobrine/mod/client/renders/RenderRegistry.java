@@ -32,5 +32,6 @@ public class RenderRegistry {
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_DONKEY_ENTITY, new InfectedDonkeyEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_RABBIT_ENTITY, new InfectedRabbitEntityRender.RenderFactory());
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFECTED_BAT_ENTITY, new InfectedBatEntityRender.RenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HEROBRINE_STALKER_ENTITY, new AbstractHerobrineEntityRender.RenderFactory());
     }
 }
