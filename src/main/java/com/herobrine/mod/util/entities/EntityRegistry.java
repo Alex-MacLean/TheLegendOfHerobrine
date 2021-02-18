@@ -253,6 +253,7 @@ public class EntityRegistry {
                     spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_BUILDER_ENTITY, 1, 1, 1));
                     spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_MAGE_ENTITY, 1, 1, 1));
                     spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_SPY_ENTITY, 1, 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_STALKER_ENTITY, 1, 1, 1));
                 }
             }
         }
@@ -261,9 +262,10 @@ public class EntityRegistry {
             List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
             if (types.contains(t)) {
                 spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_WARRIOR_ENTITY, Config.COMMON.HerobrineWarriorWeight.get() / 4, 1, 1));
-                spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_BUILDER_ENTITY, Config.COMMON.HerobrineBuilderWeight.get() / 3, 1, 1));
-                spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_MAGE_ENTITY, Config.COMMON.HerobrineMageWeight.get() / 5, 1, 1));
-                spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_SPY_ENTITY, Config.COMMON.HerobrineSpyWeight.get() / 3, 1, 1));
+                spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_BUILDER_ENTITY, Config.COMMON.HerobrineBuilderWeight.get() / 4, 1, 1));
+                spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_MAGE_ENTITY, Config.COMMON.HerobrineMageWeight.get() / 4, 1, 1));
+                spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_SPY_ENTITY, Config.COMMON.HerobrineSpyWeight.get() / 5, 1, 1));
+                spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_STALKER_ENTITY, Config.COMMON.HerobrineStalkerWeight.get() / 5, 1, 1));
             }
         }
 
