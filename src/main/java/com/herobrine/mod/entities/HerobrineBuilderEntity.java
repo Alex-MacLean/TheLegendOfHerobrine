@@ -129,44 +129,83 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
             BlockState blockAt = world.getBlockState(new BlockPos(x, y - 1, z));
             //Checks that the world is not remote and that the builder builds config is true. This code determines what structure the builder places. A ton of if statements probably isn't the best way to do this
             if (!world.isRemote && Config.COMMON.BuilderBuilds.get()) {
-                if (blockAt.getBlock() == Blocks.GRASS_BLOCK.getDefaultState().getBlock() && y >= 62 || blockAt.getBlock() == Blocks.DIRT.getDefaultState().getBlock() && y >= 62) {
-                    Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "dirt_structure"));
-                    template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                    this.swingArm(Hand.MAIN_HAND);
-                }
-                if (blockAt.getBlock() == Blocks.STONE.getDefaultState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.ANDESITE.getDefaultState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.DIORITE.getDefaultState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.GRANITE.getDefaultState().getBlock() && y <= 61) {
-                    Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ominous_mineshaft"));
-                    template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(rotation).setMirror(mirror).setIgnoreEntities(false), rand);
-                    this.swingArm(Hand.MAIN_HAND);
-                }
-                if (blockAt.getBlock() == Blocks.SAND.getDefaultState().getBlock() && y >= 62) {
-                    Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "sand_structure"));
-                    template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                    this.swingArm(Hand.MAIN_HAND);
-                }
-                if (blockAt.getBlock() == Blocks.RED_SAND.getDefaultState().getBlock() && y >= 62) {
-                    Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "red_sand_structure"));
-                    template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                    this.swingArm(Hand.MAIN_HAND);
-                }
-                if (blockAt.getBlock() == Blocks.TERRACOTTA.getDefaultState().getBlock() && y >= 62) {
-                    Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "terracotta_structure"));
-                    template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                    this.swingArm(Hand.MAIN_HAND);
-                }
-                if (blockAt.getBlock() == Blocks.STONE.getDefaultState().getBlock() && y >= 62) {
-                    Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "stone_structure"));
-                    template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                    this.swingArm(Hand.MAIN_HAND);
-                }
-                if (blockAt.getBlock() == Blocks.NETHERRACK.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.WARPED_NYLIUM.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.CRIMSON_NYLIUM.getDefaultState().getBlock()) {
-                    Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "netherrack_structure"));
-                    template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                    this.swingArm(Hand.MAIN_HAND);
-                }
-                if (blockAt.getBlock() == Blocks.END_STONE.getDefaultState().getBlock()) {
-                    Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "end_stone_structure"));
-                    template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                if (rand.nextInt(10) >= 1) {
+                    if (blockAt.getBlock() == Blocks.GRASS_BLOCK.getDefaultState().getBlock() && y >= 62 || blockAt.getBlock() == Blocks.DIRT.getDefaultState().getBlock() && y >= 62) {
+                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "dirt_structure"));
+                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swingArm(Hand.MAIN_HAND);
+                    }
+                    if (blockAt.getBlock() == Blocks.STONE.getDefaultState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.ANDESITE.getDefaultState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.DIORITE.getDefaultState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.GRANITE.getDefaultState().getBlock() && y <= 61) {
+                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ominous_mineshaft"));
+                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(rotation).setMirror(mirror).setIgnoreEntities(false), rand);
+                        this.swingArm(Hand.MAIN_HAND);
+                    }
+                    if (blockAt.getBlock() == Blocks.SAND.getDefaultState().getBlock() && y >= 62) {
+                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "sand_structure"));
+                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swingArm(Hand.MAIN_HAND);
+                    }
+                    if (blockAt.getBlock() == Blocks.RED_SAND.getDefaultState().getBlock() && y >= 62) {
+                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "red_sand_structure"));
+                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swingArm(Hand.MAIN_HAND);
+                    }
+                    if (blockAt.getBlock() == Blocks.TERRACOTTA.getDefaultState().getBlock() && y >= 62) {
+                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "terracotta_structure"));
+                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swingArm(Hand.MAIN_HAND);
+                    }
+                    if (blockAt.getBlock() == Blocks.STONE.getDefaultState().getBlock() && y >= 62) {
+                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "stone_structure"));
+                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swingArm(Hand.MAIN_HAND);
+                    }
+                    if (blockAt.getBlock() == Blocks.NETHERRACK.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.WARPED_NYLIUM.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.CRIMSON_NYLIUM.getDefaultState().getBlock()) {
+                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "netherrack_structure"));
+                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swingArm(Hand.MAIN_HAND);
+                    }
+                    if (blockAt.getBlock() == Blocks.END_STONE.getDefaultState().getBlock()) {
+                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "end_stone_structure"));
+                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swingArm(Hand.MAIN_HAND);
+                    }
+                } else {
+                    int type = rand.nextInt(8);
+                    Template template;
+                    switch (type) {
+                        case 0:
+                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/normal1"));
+                            break;
+                        case 1:
+                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/normal2"));
+                            break;
+                        case 2:
+                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/normal3"));
+                            break;
+                        case 3:
+                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/lore1"));
+                            break;
+                        case 4:
+                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/lore2"));
+                            break;
+                        case 5:
+                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/lore3"));
+                            break;
+                        case 6:
+                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/lore4"));
+                            break;
+                        case 7:
+                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/lore5"));
+                            break;
+                        case 8:
+                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/lore6"));
+                            break;
+                        default:
+                            //I don't know how a value below zero or above eight would happen with the bound of 8, but the IDE would error if a default state is not set.
+                            throw new IllegalStateException("[The Legend of Herobrine] Illegal type for Herobrine Builder Signs: " + type + ". Please report this to the issue tracker.");
+                    }
+                    template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(rotation).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
                     this.swingArm(Hand.MAIN_HAND);
                 }
             }
