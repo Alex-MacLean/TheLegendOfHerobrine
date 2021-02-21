@@ -11,6 +11,8 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -41,6 +43,12 @@ public class UnholyWaterEntity extends SnowballEntity {
 
     @Override
     protected void onImpact(@NotNull RayTraceResult result) {
+        RayTraceResult.Type raytraceresult$type = result.getType();
+        if (raytraceresult$type == RayTraceResult.Type.ENTITY) {
+            this.onEntityHit((EntityRayTraceResult)result);
+        } else if (raytraceresult$type == RayTraceResult.Type.BLOCK) {
+            this.func_230299_a_((BlockRayTraceResult)result);
+        }
         if (!this.world.isRemote) {
             AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(1.0D, 1.0D, 1.0D);
             List<LivingEntity> list = this.world.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);

@@ -18,6 +18,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -70,28 +72,36 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
         this.lifeTimer = compound.getInt("LifeTime");
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
-    public void baseTick() {
-        super.baseTick();
-        --this.lifeTimer;
+    public void handleStatusUpdate(byte id) {
+        super.handleStatusUpdate(id);
+        if (id == 4) {
+            for (int i = 0; i < 20; ++i) {
+                double d0 = this.rand.nextGaussian() * 0.02D;
+                double d1 = this.rand.nextGaussian() * 0.02D;
+                double d2 = this.rand.nextGaussian() * 0.02D;
+                this.world.addParticle(ParticleTypes.POOF, this.getPosXWidth(1.0D) - d0 * 10.0D, this.getPosYRandom() - d1 * 10.0D, this.getPosZRandom(1.0D) - d2 * 10.0D, d0, d1, d2);
+            }
+            if (!this.isSilent()) {
+                this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+            }
+        }
+    }
+
+    @Override
+    public void livingTick() {
+        super.livingTick();
         if(this.lifeTimer > 6000) {
             this.lifeTimer = 6000;
         }
-        if(this.lifeTimer < 1) {
-            if (this.world.isRemote) {
-                if (!this.isSilent()) {
-                    this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
-                }
-
-                for (int i = 0; i < 20; ++i) {
-                    double d0 = this.rand.nextGaussian() * 0.02D;
-                    double d1 = this.rand.nextGaussian() * 0.02D;
-                    double d2 = this.rand.nextGaussian() * 0.02D;
-                    this.world.addParticle(ParticleTypes.POOF, this.getPosXWidth(1.0D) - d0 * 10.0D, this.getPosYRandom() - d1 * 10.0D, this.getPosZRandom(1.0D) - d2 * 10.0D, d0, d1, d2);
-                }
+        if (this.lifeTimer < 1) {
+            if (!this.world.isRemote) {
+                this.world.setEntityState(this, (byte)4);
             }
             this.remove();
         }
+        --this.lifeTimer;
     }
 
     @Override

@@ -20,6 +20,8 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 public class HerobrineMageEntity extends AbstractHerobrineEntity {
@@ -80,6 +82,24 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
         this.teleportCastingTime = compound.getInt("WarpCastingInterval");
     }
 
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void handleStatusUpdate(byte id) {
+        super.handleStatusUpdate(id);
+        if (id == 4) {
+            if (!this.isSilent()) {
+                this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+            }
+            for (int i = 0; i < 20; ++i) {
+                double d0 = this.rand.nextGaussian() * 0.02D;
+                double d1 = this.rand.nextGaussian() * 0.02D;
+                double d2 = this.rand.nextGaussian() * 0.02D;
+                this.world.addParticle(ParticleTypes.EFFECT, this.getPosXWidth(1.0D) - d0 * 10.0D, this.getPosYRandom() - d1 * 10.0D, this.getPosZRandom(1.0D) - d2 * 10.0D, d0, d1, d2);
+            }
+        }
+    }
+
+
     @Override
     public void livingTick() {
         if(this.isAlive()) {
@@ -117,17 +137,8 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
                     world.addEntity(entity4);
                 }
 
-                if (this.world.isRemote) {
-                    if (!this.isSilent()) {
-                        this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
-                    }
-
-                    for (int i = 0; i < 20; ++i) {
-                        double d0 = this.rand.nextGaussian() * 0.02D;
-                        double d1 = this.rand.nextGaussian() * 0.02D;
-                        double d2 = this.rand.nextGaussian() * 0.02D;
-                        this.world.addParticle(ParticleTypes.EFFECT, this.getPosXWidth(1.0D) - d0 * 10.0D, this.getPosYRandom() - d1 * 10.0D, this.getPosZRandom(1.0D) - d2 * 10.0D, d0, d1, d2);
-                    }
+                if (!this.world.isRemote) {
+                    this.world.setEntityState(this, (byte)4);
                 }
             }
 
@@ -138,17 +149,8 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
                     entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 400));
                 }
 
-                if (this.world.isRemote) {
-                    if (!this.isSilent()) {
-                        this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
-                    }
-
-                    for (int i = 0; i < 20; ++i) {
-                        double d0 = this.rand.nextGaussian() * 0.02D;
-                        double d1 = this.rand.nextGaussian() * 0.02D;
-                        double d2 = this.rand.nextGaussian() * 0.02D;
-                        this.world.addParticle(ParticleTypes.EFFECT, this.getPosXWidth(1.0D) - d0 * 10.0D, this.getPosYRandom() - d1 * 10.0D, this.getPosZRandom(1.0D) - d2 * 10.0D, d0, d1, d2);
-                    }
+                if (!this.world.isRemote) {
+                    this.world.setEntityState(this, (byte)4);
                 }
             }
 
@@ -162,16 +164,8 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
                     BlockState blockAt = world.getBlockState(new BlockPos(x, y + 4, z));
                     if (blockAt.getBlock() == Blocks.AIR.getDefaultState().getBlock() && block.getBlock() == Blocks.AIR.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.CAVE_AIR.getDefaultState().getBlock() && block.getBlock() == Blocks.CAVE_AIR.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.CAVE_AIR.getDefaultState().getBlock() && block.getBlock() == Blocks.AIR.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.AIR.getDefaultState().getBlock() && block.getBlock() == Blocks.CAVE_AIR.getDefaultState().getBlock()) {
                         entity.setPositionAndUpdate(x, y + 4, z);
-                        if (this.world.isRemote) {
-                            if (!this.isSilent()) {
-                                this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
-                            }
-                            for (int i = 0; i < 20; ++i) {
-                                double d0 = this.rand.nextGaussian() * 0.02D;
-                                double d1 = this.rand.nextGaussian() * 0.02D;
-                                double d2 = this.rand.nextGaussian() * 0.02D;
-                                this.world.addParticle(ParticleTypes.EFFECT, this.getPosXWidth(1.0D) - d0 * 10.0D, this.getPosYRandom() - d1 * 10.0D, this.getPosZRandom(1.0D) - d2 * 10.0D, d0, d1, d2);
-                            }
+                        if (!this.world.isRemote) {
+                            this.world.setEntityState(this, (byte)4);
                         }
                     }
                 }
