@@ -24,6 +24,7 @@ public class AlexSurvivorEntity extends AbstractSurvivorEntity {
     }
 
     @Override
+    //Returns the resource location of the skin that is saved in the survivor's nbt data.
     public ResourceLocation getSkin() {
         if(textureLocation == null) {
             textureLocation = SurvivorSkinRegistry.chooseSmallArmsSkinFromList().toString();
@@ -33,7 +34,19 @@ public class AlexSurvivorEntity extends AbstractSurvivorEntity {
 
     @Override
     public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        //Chooses random resource location from an ArrayList and converts to a string value.
         textureLocation = SurvivorSkinRegistry.chooseSmallArmsSkinFromList().toString();
+
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    }
+
+    @Override
+    public void livingTick() {
+        super.livingTick();
+        //This is here so when updating from 0.5 any survivor that is already spawned can choose a skin.
+        if(textureLocation == null) {
+            //Chooses random resource location from an ArrayList and converts to a string value.
+            textureLocation = SurvivorSkinRegistry.chooseSmallArmsSkinFromList().toString();
+        }
     }
 }

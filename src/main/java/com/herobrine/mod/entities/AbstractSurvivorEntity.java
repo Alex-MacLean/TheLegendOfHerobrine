@@ -43,7 +43,10 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     protected MerchantOffers offers;
     private final Inventory survivorInventory = new Inventory(27);
     private int healTimer = 80;
+
+    //Initializes string for saving texture resource location to nbt data.
     public String textureLocation;
+
     WaterAvoidingRandomWalkingGoal wanderGoal = new WaterAvoidingRandomWalkingGoal(this, 0.8D);
 
     protected static class LookAtCustomerGoal extends LookAtGoal {
@@ -148,7 +151,10 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     @Override
     public void writeAdditional(@NotNull CompoundNBT compound) {
         super.writeAdditional(compound);
+
+        //Registers writing the texture location string to nbt.
         compound.putString("textureLocation", textureLocation);
+
         compound.putInt("RegenSpeed", this.healTimer);
         MerchantOffers merchantoffers = this.getOffers();
         if (!merchantoffers.isEmpty()) {
@@ -170,7 +176,10 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     @Override
     public void readAdditional(@NotNull CompoundNBT compound) {
         super.readAdditional(compound);
+
+        //Registers reading the texture location string from nbt.
         this.textureLocation = compound.getString("textureLocation");
+
         this.healTimer = compound.getInt("RegenSpeed");
         if (compound.contains("Offers", 10)) {
             this.offers = new MerchantOffers(compound.getCompound("Offers"));
@@ -186,6 +195,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
         }
     }
 
+    //Placeholder to allow each renderer to properly reference the getSkin function. Overridden in the specific survivor's class file.
     public ResourceLocation getSkin() {
         return null;
     }

@@ -78,6 +78,7 @@ public class HerobrineMod {
     }
 
     private void init(FMLCommonSetupEvent event) {
+        //Calls the registerDefaultSkins function in DefaultSurvivorSkins.
         DefaultSurvivorSkins.registerDefaultSkins();
     }
 
