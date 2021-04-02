@@ -1,10 +1,10 @@
 modLoader="javafml" #mandatory
-loaderVersion="[35.1,36,)" #mandatory
+loaderVersion="[35.1,36.9]" #mandatory
 license="GNU General Public License version 3 (GPLv3)"
 issueTrackerURL="https://github.com/Alex-MacLean/TheLegendOfHerobrine/issues" #optional
 [[mods]] #mandatory
 modId="herobrine" #mandatory
-version="0.5.4" #mandatory
+version="0.6.0-20210402-PREVIEW" #mandatory
 displayName="The Legend of Herobrine" #mandatory
 updateJSONURL="https://raw.githubusercontent.com/Alex-MacLean/TheLegendOfHerobrine/master/update.json" #optional
 displayURL="https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine" #optional
@@ -21,12 +21,12 @@ Adds Herobrine to Minecraft, and other herobrine related things.
 [[dependencies.herobrine]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[35.1,36,)" #mandatory
+    versionRange="[35.1,36.9]" #mandatory
     ordering="NONE"
     side="BOTH"
 [[dependencies.herobrine]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.4,1.16.5,)"
+    versionRange="[1.16.4,1.16.5]"
     ordering="NONE"
     side="BOTH"

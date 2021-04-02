@@ -32,11 +32,11 @@ public class Config {
             HerobrineAlwaysSpawns = builder.comment("If set to true Herobrine and infected mobs can exist even if Altar of Herobrine is not activated in a world.").worldRestart().define("HerobrineAlwaysSpawns", false);
             BuilderBuilds = builder.comment("Determines if the Herobrine Builder builds structures.").worldRestart().define("BuilderBuilds", true);
             HerobrineWarriorWeight = builder.comment("The spawn weight of the Herobrine warrior. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineWarriorWeight", 15, 0, 1024);
-            HerobrineSpyWeight = builder.comment("The spawn weight of the Herobrine spy. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineSpyWeight", 40, 0, 1024);
-            HerobrineBuilderWeight = builder.comment("The spawn weight of the Herobrine builder. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineBuilderWeight", 25, 0, 1024);
-            HerobrineMageWeight = builder.comment("The spawn weight of the Herobrine mage. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineMageWeight", 20, 0, 1024);
-            HerobrineStalkerWeight = builder.comment("The spawn weight of the Herobrine stalker. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineStalkerWeight", 35, 0, 1024);
-            InfectedMobWeight = builder.comment("The spawn weight of Infected mobs. Higher values makes them more common, while 0 disables them.").worldRestart().defineInRange("InfectedMobWeight", 30, 0, 1024);
+            HerobrineSpyWeight = builder.comment("The spawn weight of the Herobrine spy. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineSpyWeight", 30, 0, 1024);
+            HerobrineBuilderWeight = builder.comment("The spawn weight of the Herobrine builder. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineBuilderWeight", 20, 0, 1024);
+            HerobrineMageWeight = builder.comment("The spawn weight of the Herobrine mage. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineMageWeight", 15, 0, 1024);
+            HerobrineStalkerWeight = builder.comment("The spawn weight of the Herobrine stalker. Higher values makes it more common, while 0 disables it.").worldRestart().defineInRange("HerobrineStalkerWeight", 25, 0, 1024);
+            InfectedMobWeight = builder.comment("The spawn weight of Infected mobs. Higher values makes them more common, while 0 disables them.").worldRestart().defineInRange("InfectedMobWeight", 20, 0, 1024);
             HerobrineSpyObservationDistance = builder.comment("The distance in blocks the Herobrine spy observes the player from.").worldRestart().defineInRange("HerobrineSpyObservationDistance", 32, 0, 64);
             builder.pop();
             builder.push("biome_config");

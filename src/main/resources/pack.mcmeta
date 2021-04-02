@@ -1,7 +1,6 @@
 {
     "pack": {
-        "description": "Resources for the Legend of Herobrine Mod",
-        "pack_format": 6,
-         "_comment": "A pack_format of 4 requires json lang files. Note: we require v4 pack meta for all mods."
+        "description": "Resources for The Legend of Herobrine",
+        "pack_format": 6
     }
 }
