@@ -150,12 +150,13 @@ public class HerobrineStalkerEntity extends AbstractHerobrineEntity {
             this.isRunningAtTarget = false;
         }
 
-        AxisAlignedBB axisalignedbb = this.getBoundingBox();
+        AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(1.0D);
         List<LivingEntity> list = this.world.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
         if (!list.isEmpty()) {
             for (LivingEntity entity : list) {
                 if (entity instanceof PlayerEntity && this.getAttackTarget() == entity && this.isRunningAtTarget) {
                     entity.addPotionEffect(new EffectInstance(Effects.NAUSEA, 300, 0));
+                    entity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 600, 0));
                     if (!this.world.isRemote) {
                         this.world.setEntityState(this, (byte)5);
                     }

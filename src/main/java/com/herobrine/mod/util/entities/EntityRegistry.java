@@ -16,7 +16,6 @@ import net.minecraft.util.RegistryKey;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.BiomeDictionary;
@@ -245,19 +244,6 @@ public class EntityRegistry {
             }
         }
 
-        for (BiomeDictionary.Type t : EndTypes) {
-            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
-            if (types.contains(t)) {
-                if(event.getName() != Biomes.THE_END.getLocation()) {
-                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_WARRIOR_ENTITY, 1, 1, 1));
-                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_BUILDER_ENTITY, 1, 1, 1));
-                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_MAGE_ENTITY, 1, 1, 1));
-                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_SPY_ENTITY, 1, 1, 1));
-                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_STALKER_ENTITY, 1, 1, 1));
-                }
-            }
-        }
-
         for (BiomeDictionary.Type t : NetherTypes) {
             List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
             if (types.contains(t)) {
@@ -266,6 +252,23 @@ public class EntityRegistry {
                 spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_MAGE_ENTITY, Config.COMMON.HerobrineMageWeight.get() / 4, 1, 1));
                 spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_SPY_ENTITY, Config.COMMON.HerobrineSpyWeight.get() / 5, 1, 1));
                 spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_STALKER_ENTITY, Config.COMMON.HerobrineStalkerWeight.get() / 5, 1, 1));
+            }
+        }
+
+        for (BiomeDictionary.Type t : EndTypes) {
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            if (types.contains(t) && !types.contains(BiomeDictionary.Type.COLD) && !types.contains(BiomeDictionary.Type.DRY)) {
+                if(Config.COMMON.HerobrineEndSpawnType.get() > 0) {
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_SPY_ENTITY, 1, 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_STALKER_ENTITY, 1, 1, 1));
+                }
+                if(Config.COMMON.HerobrineEndSpawnType.get() > 1) {
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_BUILDER_ENTITY, 1, 1, 1));
+                }
+                if(Config.COMMON.HerobrineEndSpawnType.get() > 2) {
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_WARRIOR_ENTITY, 1, 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_MAGE_ENTITY, 1, 1, 1));
+                }
             }
         }
 

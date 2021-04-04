@@ -1,7 +1,7 @@
 {
   "item.herobrine.bedrock_sword": "§d基岩剑",
   "item.herobrine.herobrine_warrior_spawn_egg": "Herobrine战士刷怪蛋",
-  "block.herobrine.herobrine_alter": "§eHerobrine祭坛",
+  "block.herobrine.herobrine_altar": "§eHerobrine祭坛",
   "entity.herobrine.herobrine_warrior": "Herobrine",
   "item.herobrine.cursed_diamond": "诅咒钻石",
   "item.herobrine.cursed_diamond_sword": "诅咒钻石剑",
@@ -58,5 +58,10 @@
   "entity.herobrine.infected_bat": "感染的蝙蝠",
   "item.herobrine.infected_bat_spawn_egg": "感染的蝙蝠刷怪蛋",
   "item.herobrine.purified_diamond": "纯化钻石",
-  "block.herobrine.purified_diamond_block": "纯化钻石块"
+  "block.herobrine.purified_diamond_block": "纯化钻石块",
+  
+  "item.herobrine.herobrine_stalker_spawn_egg": "Herobrine Stalker Spawn Egg",
+  "entity.herobrine.herobrine_stalker": "Herobrine",
+  "item.herobrine.music_disc_dog": "Music Disc",
+  "item.herobrine.music_disc_dog.desc": "C418 - dog"
 }

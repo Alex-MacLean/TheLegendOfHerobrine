@@ -2,6 +2,7 @@ package com.herobrine.mod.worldgen.structures;
 
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.config.Config;
+import com.herobrine.mod.util.savedata.SaveDataUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Mirror;
@@ -54,7 +55,9 @@ public class TrappedHouse {
                         Mirror mirror = Mirror.values()[random.nextInt(2)];
                         BlockPos spawnTo = new BlockPos(i, j - 2, k);
                         Template template = world.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "trapped_house"));
-                        template.func_237144_a_(world, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunk(null).setIgnoreEntities(false), random);
+                        if(SaveDataUtil.canHerobrineSpawn(world.getWorld())) {
+                            template.func_237144_a_(world, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunk(null).setIgnoreEntities(false), random);
+                        }
                     }
                 }
                 return true;

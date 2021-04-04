@@ -1,8 +1,7 @@
 package com.herobrine.mod.entities;
 
-import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.items.ItemList;
-import com.herobrine.mod.util.savedata.Variables;
+import com.herobrine.mod.util.savedata.SaveDataUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -56,9 +55,10 @@ public class AbstractInfectedEntity extends MonsterEntity {
 
     @Override
     public void baseTick() {
-        Variables.SaveData.get(world).syncData(world);
-        if (!Variables.SaveData.get(world).Spawn && !Config.COMMON.HerobrineAlwaysSpawns.get() && !world.isRemote) {
-            this.remove();
+        if(!world.isRemote) {
+            if (!SaveDataUtil.canHerobrineSpawn(world)) {
+                this.remove();
+            }
         }
         super.baseTick();
     }
@@ -77,7 +77,7 @@ public class AbstractInfectedEntity extends MonsterEntity {
     }
 
     public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> type, @NotNull IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
-        return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Variables.SaveData.get(worldIn.getWorld()).Spawn || worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && Config.COMMON.HerobrineAlwaysSpawns.get();
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && SaveDataUtil.canHerobrineSpawn(worldIn);
     }
 
     @Override

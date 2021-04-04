@@ -105,11 +105,17 @@ public class InfectedDonkeyEntityModel extends AgeableModel<InfectedDonkeyEntity
         this.field_217135_l = new ModelRenderer[]{modelrenderer6, modelrenderer7};
     }
 
-    protected void func_199047_a(@NotNull ModelRenderer p_199047_1_) {
-        ModelRenderer modelrenderer = new ModelRenderer(this, 19, 16);
-        modelrenderer.addBox(0.55F, -13.0F, 4.0F, 2.0F, 3.0F, 1.0F, -0.001F);
-        ModelRenderer modelrenderer1 = new ModelRenderer(this, 19, 16);
-        modelrenderer1.addBox(-2.55F, -13.0F, 4.0F, 2.0F, 3.0F, 1.0F, -0.001F);
+    protected void func_199047_a(ModelRenderer p_199047_1_) {
+        ModelRenderer modelrenderer = new ModelRenderer(this, 0, 12);
+        modelrenderer.addBox(-1.0F, -7.0F, 0.0F, 2.0F, 7.0F, 1.0F);
+        modelrenderer.setRotationPoint(1.25F, -10.0F, 4.0F);
+        ModelRenderer modelrenderer1 = new ModelRenderer(this, 0, 12);
+        modelrenderer1.addBox(-1.0F, -7.0F, 0.0F, 2.0F, 7.0F, 1.0F);
+        modelrenderer1.setRotationPoint(-1.25F, -10.0F, 4.0F);
+        modelrenderer.rotateAngleX = 0.2617994F;
+        modelrenderer.rotateAngleZ = 0.2617994F;
+        modelrenderer1.rotateAngleX = 0.2617994F;
+        modelrenderer1.rotateAngleZ = -0.2617994F;
         p_199047_1_.addChild(modelrenderer);
         p_199047_1_.addChild(modelrenderer1);
     }

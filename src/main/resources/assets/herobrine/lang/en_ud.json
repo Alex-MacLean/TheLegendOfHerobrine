@@ -1,7 +1,7 @@
 {
   "item.herobrine.bedrock_sword": "§dBedrock Sword",
   "item.herobrine.herobrine_warrior_spawn_egg": "Herobrine Warrior Spawn Egg",
-  "block.herobrine.herobrine_alter": "§eAltar of Herobrine",
+  "block.herobrine.herobrine_altar": "§eAltar of Herobrine",
   "entity.herobrine.herobrine_warrior": "Herobrine",
   "item.herobrine.cursed_diamond": "Cursed Diamond",
   "item.herobrine.cursed_diamond_sword": "Cursed Diamond Sword",
@@ -58,5 +58,9 @@
   "entity.herobrine.infected_bat": "Infected Bat",
   "item.herobrine.infected_bat_spawn_egg": "Infected Bat Spawn Egg",
   "item.herobrine.purified_diamond": "Purified Diamond",
-  "block.herobrine.purified_diamond_block": "Purified Block of Diamond"
+  "block.herobrine.purified_diamond_block": "Purified Block of Diamond",
+  "item.herobrine.herobrine_stalker_spawn_egg": "Herobrine Stalker Spawn Egg",
+  "entity.herobrine.herobrine_stalker": "Herobrine",
+  "item.herobrine.music_disc_dog": "Music Disc",
+  "item.herobrine.music_disc_dog.desc": "C418 - dog"
 }

@@ -1,0 +1,224 @@
+package com.herobrine.mod.blocks;
+
+import com.herobrine.mod.HerobrineMod;
+import com.herobrine.mod.config.Config;
+import com.herobrine.mod.util.blocks.BlockMaterialList;
+import com.herobrine.mod.util.blocks.ModBlockStates;
+import com.herobrine.mod.util.items.ItemList;
+import com.herobrine.mod.util.savedata.SaveDataUtil;
+import net.minecraft.block.*;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.pathfinding.PathType;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ToolType;
+import net.minecraftforge.registries.ObjectHolder;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+import java.util.Random;
+import java.util.UUID;
+
+import static com.herobrine.mod.HerobrineMod.location;
+
+public class HerobrineAltar extends Block implements IWaterLoggable {
+    @ObjectHolder(HerobrineMod.MODID + ":herobrine_altar")
+    public static final Block block = null;
+    public static final VoxelShape SHAPE = VoxelShapes.or(Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 9.0D, 0.0D, 1.0D, 15.0D, 1.0D), Block.makeCuboidShape(16.0D, 9.0D, 0.0D, 15.0D, 15.0D, 1.0D), Block.makeCuboidShape(16.0D, 9.0D, 16.0D, 15.0D, 15.0D, 15.0D), Block.makeCuboidShape(0.0D, 9.0D, 16.0D, 1.0D, 15.0D, 15.0D), Block.makeCuboidShape(0.0D, 15.0D, 0.0D, 2.0D, 16.0D, 2.0D), Block.makeCuboidShape(14.0D, 15.0D, 0.0D, 16.0D, 16.0D, 2.0D), Block.makeCuboidShape(14.0D, 15.0D, 14.0D, 16.0D, 16.0D, 16.0D), Block.makeCuboidShape(0.0D, 15.0D, 14.0D, 2.0D, 16.0D, 16.0D), Block.makeCuboidShape(0.0D, 8.0D, 0.0D, 2.0D, 9.0D, 2.0D), Block.makeCuboidShape(14.0D, 8.0D, 0.0D, 16.0D, 9.0D, 2.0D), Block.makeCuboidShape(14.0D, 8.0D, 14.0D, 16.0D, 9.0D, 16.0D), Block.makeCuboidShape(0.0D, 8.0D, 14.0D, 2.0D, 9.0D, 16.0D));
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
+    private static int getLightValue(BlockState state) {
+        int i = state.get(ModBlockStates.TYPE);
+        switch (i) {
+            case 1:
+                return 8;
+            case 2:
+                return 15;
+        }
+        return 0;
+    }
+
+    private static Boolean neverAllowSpawn(BlockState state, IBlockReader reader, BlockPos pos, EntityType<?> entity) {
+        return false;
+    }
+
+    public HerobrineAltar() {
+        super(Properties.create(BlockMaterialList.HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity().setLightLevel(HerobrineAltar::getLightValue).setAllowsSpawn(HerobrineAltar::neverAllowSpawn));
+        this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE).with(ModBlockStates.TYPE, 0));
+        setRegistryName(location("herobrine_altar"));
+    }
+
+    @NotNull
+    @Override
+    public VoxelShape getShape(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull ISelectionContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    protected void fillStateContainer(@NotNull StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(BlockStateProperties.WATERLOGGED);
+        builder.add(ModBlockStates.TYPE);
+    }
+
+    @NotNull
+    @Override
+    public FluidState getFluidState(@NotNull BlockState state) {
+        return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public boolean receiveFluid(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
+        return IWaterLoggable.super.receiveFluid(worldIn, pos, state, fluidStateIn);
+    }
+
+    @Override
+    public boolean canContainFluid(@NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Fluid fluidIn) {
+        return IWaterLoggable.super.canContainFluid(worldIn, pos, state, fluidIn);
+    }
+
+    @NotNull
+    @Override
+    public BlockState updatePostPlacement(@NotNull BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull IWorld worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
+        if (stateIn.get(BlockStateProperties.WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
+        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(@NotNull BlockItemUseContext context) {
+        BlockPos blockpos = context.getPos();
+        FluidState ifluidstate = context.getWorld().getFluidState(blockpos);
+        return this.getDefaultState().with(BlockStateProperties.WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
+    }
+
+    @Override
+    public boolean allowsMovement(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull PathType type) {
+        if (type == PathType.WATER) {
+            return worldIn.getFluidState(pos).isTagged(FluidTags.WATER);
+        }
+        return false;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void animateTick(@NotNull BlockState stateIn, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull Random rand) {
+        int i = stateIn.get(ModBlockStates.TYPE);
+        if (i == 1) {
+            double d0 = (double) pos.getX() + 0.5D + ((double) rand.nextFloat() - 0.5D) * 0.2D;
+            double d1 = (double) pos.getY() + 0.05F;
+            double d2 = (double) pos.getZ() + 0.5D + ((double) rand.nextFloat() - 0.5D) * 0.2D;
+            worldIn.addParticle(ParticleTypes.PORTAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+        }
+    }
+
+    @Override
+    public boolean hasComparatorInputOverride(@NotNull BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(@NotNull BlockState blockState, @NotNull World worldIn, @NotNull BlockPos pos) {
+        int i = blockState.get(ModBlockStates.TYPE);
+        switch (i) {
+            case 1:
+                return 8;
+            case 2:
+                return 15;
+        }
+        return 0;
+    }
+
+    private boolean shrineAccepted(@NotNull BlockPos pos, World world) {
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        if(!Config.COMMON.AltarRequiresShrine.get()) {
+            return true;
+        } else {
+            return world.getBlockState(new BlockPos(x, y - 1, z)) == Blocks.NETHERRACK.getDefaultState() && world.getBlockState(new BlockPos(x, y - 1, z + 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x, y - 1, z - 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y, z)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y, z)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x, y, z + 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x, y, z - 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z + 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z + 1)) == Blocks.LAVA.getDefaultState();
+        }
+    }
+
+    @NotNull
+    @Override
+    public ActionResultType onBlockActivated(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand hand, @NotNull BlockRayTraceResult hit) {
+        ItemStack itemStack = player.getHeldItem(hand);
+        if(this.shrineAccepted(pos, world)) {
+            int i = state.get(ModBlockStates.TYPE);
+            if(i == 0 && itemStack.getItem() == ItemList.cursed_diamond && !Config.COMMON.HerobrineAlwaysSpawns.get() || i == 0 && itemStack.getItem() == ItemList.purified_diamond && !Config.COMMON.HerobrineAlwaysSpawns.get()) {
+                if(itemStack.getItem() == ItemList.cursed_diamond) {
+                    if(!player.abilities.isCreativeMode) {
+                        itemStack.shrink(1);
+                    }
+                    state = state.getBlockState().with(ModBlockStates.TYPE, 1);
+                    world.setBlockState(pos, state);
+                    if (state.get(WATERLOGGED)) {
+                        world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+                    }
+                    if (world instanceof ServerWorld) {
+                        LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(world);
+                        assert lightningboltentity != null;
+                        lightningboltentity.moveForced(pos.getX(), pos.getY(), pos.getZ());
+                        world.addEntity(lightningboltentity);
+                    }
+                    if(!world.isRemote) {
+                        if (!SaveDataUtil.readBoolean(world, "Spawn")) {
+                            player.sendMessage(new StringTextComponent("<Herobrine> You have no idea what you have done!"), UUID.randomUUID());
+                            SaveDataUtil.writeBoolean(world, "Spawn", true);
+                        }
+                    }
+                }
+                if(itemStack.getItem() == ItemList.purified_diamond) {
+                    if(!player.abilities.isCreativeMode) {
+                        itemStack.shrink(1);
+                    }
+                    state = state.getBlockState().with(ModBlockStates.TYPE, 2);
+                    world.setBlockState(pos, state);
+                    if (state.get(WATERLOGGED)) {
+                        world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+                    }
+                    if (world instanceof ServerWorld) {
+                        LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(world);
+                        assert lightningboltentity != null;
+                        lightningboltentity.moveForced(pos.getX(), pos.getY(), pos.getZ());
+                        world.addEntity(lightningboltentity);
+                    }
+                    if(!world.isRemote) {
+                        if (SaveDataUtil.readBoolean(world, "Spawn")) {
+                            player.sendMessage(new StringTextComponent("<Herobrine> I shall return!"), UUID.randomUUID());
+                            SaveDataUtil.writeBoolean(world, "Spawn", false);
+                        }
+                    }
+                }
+            } else return ActionResultType.FAIL;
+        } else return ActionResultType.FAIL;
+        return ActionResultType.SUCCESS;
+    }
+}

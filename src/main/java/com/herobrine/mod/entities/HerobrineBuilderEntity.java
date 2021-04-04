@@ -145,7 +145,7 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
             Mirror mirror = Mirror.values()[rand.nextInt(2)];
             Random rand = new Random();
             BlockState blockAt = world.getBlockState(new BlockPos(x, y - 1, z));
-            //Checks that the world is not remote and that the builder builds config is true. This code determines what structure the builder places. A ton of if statements probably isn't the best way to do this
+            //Checks that the world is not remote and that the builder builds config is true. This code determines what structure the builder places. There is likely a better way to do this
             if (!world.isRemote && Config.COMMON.BuilderBuilds.get()) {
                 if (rand.nextInt(10) >= 1) {
                     if (blockAt.getBlock() == Blocks.GRASS_BLOCK.getDefaultState().getBlock() && y >= 62 || blockAt.getBlock() == Blocks.DIRT.getDefaultState().getBlock() && y >= 62) {
@@ -155,10 +155,12 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
                         this.world.setEntityState(this, (byte)5);
                     }
                     if (blockAt.getBlock() == Blocks.STONE.getDefaultState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.ANDESITE.getDefaultState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.DIORITE.getDefaultState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.GRANITE.getDefaultState().getBlock() && y <= 61) {
-                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ominous_mineshaft"));
-                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(rotation).setMirror(mirror).setIgnoreEntities(false), rand);
-                        this.swingArm(Hand.MAIN_HAND);
-                        this.world.setEntityState(this, (byte)5);
+                        if(!(rand.nextInt(10) >= 1)) {
+                            Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ominous_mineshaft"));
+                            template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(rotation).setMirror(mirror).setIgnoreEntities(false), rand);
+                            this.swingArm(Hand.MAIN_HAND);
+                            this.world.setEntityState(this, (byte) 5);
+                        }
                     }
                     if (blockAt.getBlock() == Blocks.SAND.getDefaultState().getBlock() && y >= 62) {
                         Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "sand_structure"));
