@@ -147,6 +147,7 @@ public class HerobrineMod {
             if(!saver.data.contains("Spawn")) {
                 saver.data.putBoolean("Spawn", false);
             }
+            saver.markDirty();
         }
     }
 

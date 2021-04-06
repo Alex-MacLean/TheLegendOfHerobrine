@@ -252,7 +252,7 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
     }
 
     public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> batIn, @NotNull IServerWorld worldIn, SpawnReason reason, @NotNull BlockPos pos, Random randomIn) {
-        if (pos.getY() >= worldIn.getSeaLevel() && SaveDataUtil.canHerobrineSpawn(worldIn)) {
+        if (pos.getY() >= worldIn.getSeaLevel() || !SaveDataUtil.canHerobrineSpawn(worldIn)) {
             return false;
         } else {
             int i = worldIn.getLight(pos);
