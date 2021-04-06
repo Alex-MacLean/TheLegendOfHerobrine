@@ -11,7 +11,8 @@ public class SaveDataUtil {
         if(!world.isRemote()) {
             HerobrineSaveData saver = HerobrineSaveData.forWorld((ServerWorld) world);
             return saver.data.getBoolean(name);
-        } else return false;
+        }
+        return false;
     }
 
     public static void writeBoolean(IWorld world, String name, Boolean data) {

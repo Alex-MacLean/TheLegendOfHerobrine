@@ -74,6 +74,12 @@
         },
         {
           "type": "item",
+          "weight": 4,
+          "name": "herobrine:music_disc_dog",
+          "quality": 3
+        },
+        {
+          "type": "item",
           "weight": 2,
           "name": "minecraft:diamond",
           "quality": 3

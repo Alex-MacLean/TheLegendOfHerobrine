@@ -67,6 +67,16 @@
           "type": "minecraft:item",
           "name": "minecraft:music_disc_stal",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "herobrine:music_disc_dog",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_pigstep",
+          "weight": 1
         }
       ]
     }
