@@ -4,6 +4,7 @@ import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedVillagerEntityModel;
 import com.herobrine.mod.client.renders.layers.InfectedVillagerEyesLayer;
 import com.herobrine.mod.entities.InfectedVillagerEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -25,6 +26,10 @@ public class InfectedVillagerEntityRenderer extends MobRenderer<InfectedVillager
     @Override
     public ResourceLocation getEntityTexture(@NotNull InfectedVillagerEntity entity) {
         return HerobrineMod.location("textures/entity/infected_villager.png");
+    }
+
+    protected void preRenderCallback(@NotNull InfectedVillagerEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+        matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
     }
 
     @SuppressWarnings("rawtypes")

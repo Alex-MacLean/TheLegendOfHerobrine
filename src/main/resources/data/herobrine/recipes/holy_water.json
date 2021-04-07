@@ -1,22 +1,36 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "CAC",
-    "ABA",
-    "CAC"
-  ],
-  "key": {
-    "A": {
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
       "item": "minecraft:gold_nugget"
     },
-    "B": {
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:gold_nugget"
+    },
+    {
       "item": "minecraft:potion"
     },
-    "C": {
+    {
+      "item": "minecraft:gold_nugget"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:gold_nugget"
+    },
+    {
       "item": "minecraft:iron_nugget"
     }
-  },
+  ],
   "result": {
-    "item": "herobrine:holy_water"
+    "item": "herobrine:holy_water",
+    "count": 1
   }
 }
