@@ -59,9 +59,8 @@
   "item.herobrine.infected_bat_spawn_egg": "感染的蝙蝠刷怪蛋",
   "item.herobrine.purified_diamond": "纯化钻石",
   "block.herobrine.purified_diamond_block": "纯化钻石块",
-  
-  "item.herobrine.herobrine_stalker_spawn_egg": "Herobrine Stalker Spawn Egg",
+  "item.herobrine.herobrine_stalker_spawn_egg": "Herobrine潜行者刷怪蛋",
   "entity.herobrine.herobrine_stalker": "Herobrine",
-  "item.herobrine.music_disc_dog": "Music Disc",
+  "item.herobrine.music_disc_dog": "音乐唱片",
   "item.herobrine.music_disc_dog.desc": "C418 - dog"
 }
