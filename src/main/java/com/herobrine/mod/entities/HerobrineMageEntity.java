@@ -2,7 +2,6 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -55,7 +54,7 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
         this.goalSelector.addGoal(12, new LookRandomlyGoal(this));
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+    public static AttributeModifierMap.@NotNull MutableAttribute registerAttributes() {
         return MonsterEntity.func_234295_eP_()
                 .createMutableAttribute(Attributes.MAX_HEALTH, 40.0D)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D)
@@ -162,10 +161,13 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
                     int z = (int) entity.getPosZ();
                     BlockState block = world.getBlockState(new BlockPos(x, y + 3, z));
                     BlockState blockAt = world.getBlockState(new BlockPos(x, y + 4, z));
-                    if (blockAt.getBlock() == Blocks.AIR.getDefaultState().getBlock() && block.getBlock() == Blocks.AIR.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.CAVE_AIR.getDefaultState().getBlock() && block.getBlock() == Blocks.CAVE_AIR.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.CAVE_AIR.getDefaultState().getBlock() && block.getBlock() == Blocks.AIR.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.AIR.getDefaultState().getBlock() && block.getBlock() == Blocks.CAVE_AIR.getDefaultState().getBlock()) {
+                    if (blockAt.getBlockState().isAir() && block.getBlockState().isAir()) {
+                        if(entity.getRidingEntity() != null) {
+                            entity.stopRiding();
+                        }
                         entity.setPositionAndUpdate(x, y + 4, z);
                         if (!this.world.isRemote) {
-                            this.world.setEntityState(this, (byte)4);
+                            this.world.setEntityState(this, (byte) 4);
                         }
                     }
                 }
