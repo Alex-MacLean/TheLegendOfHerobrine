@@ -1,6 +1,5 @@
 package com.herobrine.mod.blocks;
 
-import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.util.blocks.BlockMaterialList;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
@@ -27,12 +26,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.registries.ObjectHolder;
 import org.jetbrains.annotations.NotNull;
 
 public class HerobrineStatueTop extends HorizontalBlock implements IWaterLoggable {
-    @ObjectHolder(HerobrineMod.MODID + ":herobrine_statue_top")
-    public static final Block block = null;
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final VoxelShape North_South = VoxelShapes.or(Block.makeCuboidShape(0, 0, 6, 16, 8, 10), Block.makeCuboidShape(4, 8, 4, 12, 16, 12));
     public static final VoxelShape East_West = VoxelShapes.or(Block.makeCuboidShape(6, 0, 0, 10, 8, 16), Block.makeCuboidShape(4, 8, 4, 12, 16, 12));
@@ -46,7 +42,6 @@ public class HerobrineStatueTop extends HorizontalBlock implements IWaterLoggabl
 
     public HerobrineStatueTop() {
         super(Properties.create(BlockMaterialList.HEROBRINE_STATUE_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity().setAllowsSpawn(HerobrineStatueTop::neverAllowSpawn).setSuffocates(HerobrineStatueTop::isntSolid));
-        setRegistryName(HerobrineMod.location("herobrine_statue_top"));
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(BlockStateProperties.WATERLOGGED, Boolean.FALSE));
     }
 

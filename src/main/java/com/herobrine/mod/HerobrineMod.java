@@ -7,6 +7,7 @@ import com.herobrine.mod.items.HerobrineStatueItem;
 import com.herobrine.mod.items.HolyWaterItem;
 import com.herobrine.mod.items.UnholyWaterItem;
 import com.herobrine.mod.savedata.HerobrineSaveData;
+import com.herobrine.mod.util.blocks.BlockList;
 import com.herobrine.mod.util.entities.DefaultSurvivorSkins;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.items.ArmorMaterialList;
@@ -64,81 +65,78 @@ public class HerobrineMod {
         DefaultSurvivorSkins.registerDefaultSkins();
     }
 
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-        @SubscribeEvent
-        public static void registerItems(@NotNull final RegistryEvent.Register<Item> event) {
-            assert false;
-            event.getRegistry().registerAll(
-                    new BlockItem(HerobrineAltar.block, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("herobrine_altar")),
-                    new BlockItem(CursedDiamondBlock.block, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("cursed_diamond_block")),
-                    new HerobrineStatueItem(HerobrineStatue.block, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("herobrine_statue")),
-                    new BlockItem(PurifiedDiamondBlock.block, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("purified_diamond_block")),
-                    ItemList.bedrock_sword = new SwordItem(ItemTierList.bedrock_item_tier, 0, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("bedrock_sword")),
-                    ItemList.cursed_diamond = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("cursed_diamond")),
-                    ItemList.cursed_diamond_sword = new SwordItem(ItemTierList.cursed_diamond_item_tier, 3, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_sword")),
-                    ItemList.cursed_diamond_axe = new AxeItem(ItemTierList.cursed_diamond_item_tier, 5, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_axe")),
-                    ItemList.cursed_diamond_pickaxe = new PickaxeItem(ItemTierList.cursed_diamond_item_tier, 1, -2.8f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_pickaxe")),
-                    ItemList.cursed_diamond_shovel = new ShovelItem(ItemTierList.cursed_diamond_item_tier, 1.5f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_shovel")),
-                    ItemList.cursed_diamond_hoe = new HoeItem(ItemTierList.cursed_diamond_item_tier, -4,0.0f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_hoe")),
-                    ItemList.cursed_diamond_helmet = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_helmet")),
-                    ItemList.cursed_diamond_chestplate = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_chestplate")),
-                    ItemList.cursed_diamond_leggings = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_leggings")),
-                    ItemList.cursed_diamond_boots = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_boots")),
-                    ItemList.cursed_dust = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("cursed_dust")),
-                    ItemList.holy_water = new HolyWaterItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("holy_water")),
-                    ItemList.unholy_water = new UnholyWaterItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("unholy_water")),
-                    ItemList.purified_diamond = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("purified_diamond")),
-                    ItemList.music_disc_dog = new MusicDiscItem(14, () -> new SoundEvent(HerobrineMod.location("music_disc_dog")), new Item.Properties().maxStackSize(1).group(ItemGroup.MISC).rarity(Rarity.RARE)).setRegistryName(location("music_disc_dog"))
-            );
-            EntityRegistry.registerEntitySpawnEggs(event);
-        }
+    @SubscribeEvent
+    public static void registerItems(@NotNull final RegistryEvent.Register<Item> event) {
+        assert false;
+        event.getRegistry().registerAll(
+                ItemList.herobrine_altar = new BlockItem(BlockList.herobrine_altar, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("herobrine_altar")),
+                ItemList.cursed_diamond_block = new BlockItem(BlockList.cursed_diamond_block, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("cursed_diamond_block")),
+                ItemList.herobrine_statue = new HerobrineStatueItem(BlockList.herobrine_statue, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("herobrine_statue")),
+                ItemList.purified_diamond_block = new BlockItem(BlockList.herobrine_statue_top, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("purified_diamond_block")),
+                ItemList.bedrock_sword = new SwordItem(ItemTierList.bedrock_item_tier, 0, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("bedrock_sword")),
+                ItemList.cursed_diamond = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("cursed_diamond")),
+                ItemList.cursed_diamond_sword = new SwordItem(ItemTierList.cursed_diamond_item_tier, 3, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_sword")),
+                ItemList.cursed_diamond_axe = new AxeItem(ItemTierList.cursed_diamond_item_tier, 5, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_axe")),
+                ItemList.cursed_diamond_pickaxe = new PickaxeItem(ItemTierList.cursed_diamond_item_tier, 1, -2.8f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_pickaxe")),
+                ItemList.cursed_diamond_shovel = new ShovelItem(ItemTierList.cursed_diamond_item_tier, 1.5f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_shovel")),
+                ItemList.cursed_diamond_hoe = new HoeItem(ItemTierList.cursed_diamond_item_tier, -4,0.0f, new Item.Properties().group(ItemGroup.TOOLS)).setRegistryName(location("cursed_diamond_hoe")),
+                ItemList.cursed_diamond_helmet = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_helmet")),
+                ItemList.cursed_diamond_chestplate = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_chestplate")),
+                ItemList.cursed_diamond_leggings = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_leggings")),
+                ItemList.cursed_diamond_boots = new ArmorItem(ArmorMaterialList.cursed_diamond_armor_material, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_boots")),
+                ItemList.cursed_dust = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("cursed_dust")),
+                ItemList.holy_water = new HolyWaterItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("holy_water")),
+                ItemList.unholy_water = new UnholyWaterItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("unholy_water")),
+                ItemList.purified_diamond = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("purified_diamond")),
+                ItemList.music_disc_dog = new MusicDiscItem(14, () -> new SoundEvent(HerobrineMod.location("music_disc_dog")), new Item.Properties().maxStackSize(1).group(ItemGroup.MISC).rarity(Rarity.RARE)).setRegistryName(location("music_disc_dog"))
+        );
+        EntityRegistry.registerEntitySpawnEggs(event);
+    }
 
-        @SubscribeEvent
-        public static void registerBlocks(@NotNull final RegistryEvent.Register<Block> event) {
-            event.getRegistry().registerAll(
-                    new HerobrineAltar(),
-                    new CursedDiamondBlock(),
-                    new HerobrineStatue(),
-                    new HerobrineStatueTop(),
-                    new PurifiedDiamondBlock()
-            );
-        }
+    @SubscribeEvent
+    public static void registerBlocks(@NotNull final RegistryEvent.Register<Block> event) {
+        event.getRegistry().registerAll(
+                BlockList.herobrine_altar = new HerobrineAltar().setRegistryName(location("herobrine_altar")),
+                BlockList.cursed_diamond_block = new CursedDiamondBlock().setRegistryName(location("cursed_diamond_block")),
+                BlockList.herobrine_statue = new HerobrineStatue().setRegistryName(location("herobrine_statue")),
+                BlockList.herobrine_statue_top = new HerobrineStatueTop().setRegistryName(location("herobrine_statue_top")),
+                BlockList.purified_diamond_block = new PurifiedDiamondBlock().setRegistryName(location("purified_diamond_block"))
+        );
+    }
 
-        @SubscribeEvent
-        public static void registerEntities(@NotNull final RegistryEvent.Register<EntityType<?>> event) {
-            event.getRegistry().registerAll(
-                    EntityRegistry.HEROBRINE_WARRIOR_ENTITY,
-                    EntityRegistry.INFECTED_PIG_ENTITY,
-                    EntityRegistry.INFECTED_CHICKEN_ENTITY,
-                    EntityRegistry.INFECTED_SHEEP_ENTITY,
-                    EntityRegistry.INFECTED_COW_ENTITY,
-                    EntityRegistry.INFECTED_MOOSHROOM_ENTITY,
-                    EntityRegistry.INFECTED_VILLAGER_ENTITY,
-                    EntityRegistry.HEROBRINE_SPY_ENTITY,
-                    EntityRegistry.HEROBRINE_BUILDER_ENTITY,
-                    EntityRegistry.HEROBRINE_MAGE_ENTITY,
-                    EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY,
-                    EntityRegistry.HOLY_WATER_ENTITY,
-                    EntityRegistry.UNHOLY_WATER_ENTITY,
-                    EntityRegistry.STEVE_SURVIVOR_ENTITY,
-                    EntityRegistry.ALEX_SURVIVOR_ENTITY,
-                    EntityRegistry.INFECTED_WOLF_ENTITY,
-                    EntityRegistry.INFECTED_LLAMA_ENTITY,
-                    EntityRegistry.INFECTED_HORSE_ENTITY,
-                    EntityRegistry.INFECTED_DONKEY_ENTITY,
-                    EntityRegistry.INFECTED_RABBIT_ENTITY,
-                    EntityRegistry.INFECTED_BAT_ENTITY,
-                    EntityRegistry.HEROBRINE_STALKER_ENTITY
-            );
-            EntityRegistry.registerSpawnPlacement();
-            EntityRegistry.registerEntityAttributes();
-        }
+    @SubscribeEvent
+    public static void registerEntities(@NotNull final RegistryEvent.Register<EntityType<?>> event) {
+        event.getRegistry().registerAll(
+                EntityRegistry.HEROBRINE_WARRIOR_ENTITY,
+                EntityRegistry.INFECTED_PIG_ENTITY,
+                EntityRegistry.INFECTED_CHICKEN_ENTITY,
+                EntityRegistry.INFECTED_SHEEP_ENTITY,
+                EntityRegistry.INFECTED_COW_ENTITY,
+                EntityRegistry.INFECTED_MOOSHROOM_ENTITY,
+                EntityRegistry.INFECTED_VILLAGER_ENTITY,
+                EntityRegistry.HEROBRINE_SPY_ENTITY,
+                EntityRegistry.HEROBRINE_BUILDER_ENTITY,
+                EntityRegistry.HEROBRINE_MAGE_ENTITY,
+                EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY,
+                EntityRegistry.HOLY_WATER_ENTITY,
+                EntityRegistry.UNHOLY_WATER_ENTITY,
+                EntityRegistry.STEVE_SURVIVOR_ENTITY,
+                EntityRegistry.ALEX_SURVIVOR_ENTITY,
+                EntityRegistry.INFECTED_WOLF_ENTITY,
+                EntityRegistry.INFECTED_LLAMA_ENTITY,
+                EntityRegistry.INFECTED_HORSE_ENTITY,
+                EntityRegistry.INFECTED_DONKEY_ENTITY,
+                EntityRegistry.INFECTED_RABBIT_ENTITY,
+                EntityRegistry.INFECTED_BAT_ENTITY,
+                EntityRegistry.HEROBRINE_STALKER_ENTITY
+        );
+        EntityRegistry.registerSpawnPlacement();
+        EntityRegistry.registerEntityAttributes();
+    }
 
-        @SubscribeEvent
-        public static void registerBiomes(@NotNull final RegistryEvent.Register<Biome> event) {
-            BiomeInit.registerBiomes();
-        }
+    @SubscribeEvent
+    public static void registerBiomes(@NotNull final RegistryEvent.Register<Biome> event) {
+        BiomeInit.registerBiomes();
     }
 
     public void onWorldLoaded(WorldEvent.Load event) {

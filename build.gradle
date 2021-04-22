@@ -21,13 +21,15 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
     mappings channel: mappingsChannel, version: mappingsVersion
-    //makeObfSourceJar = false
+    // makeObfSourceJar = false
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+	
     runs {
         client {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+			
             mods {
                 herobrine {
                     source sourceSets.main
@@ -38,7 +40,7 @@ minecraft {
         server {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
+			
             mods {
                 herobrine {
                     source sourceSets.main
@@ -51,6 +53,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             args '--mod', modId, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+			
             mods {
                 herobrine {
                     source sourceSets.main
@@ -81,7 +84,7 @@ jar {
     }
 }
 
-jar.finalizedBy('reobfJar')
+jar.finalizedBy('reobfJar') 
 //publish.dependsOn('reobfJar')
 
 publishing {

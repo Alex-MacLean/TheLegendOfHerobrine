@@ -38,4 +38,8 @@ public class ItemList {
     public static Item steve_survivor_spawn_egg;
     public static Item herobrine_stalker_spawn_egg;
     public static Item music_disc_dog;
+    public static Item herobrine_altar;
+    public static Item cursed_diamond_block;
+    public static Item herobrine_statue;
+    public static Item purified_diamond_block;
 }

@@ -1,6 +1,5 @@
 package com.herobrine.mod.blocks;
 
-import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.blocks.BlockMaterialList;
 import com.herobrine.mod.util.blocks.ModBlockStates;
@@ -37,20 +36,19 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.registries.ObjectHolder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 import java.util.UUID;
 
-import static com.herobrine.mod.HerobrineMod.location;
-
 public class HerobrineAltar extends Block implements IWaterLoggable {
-    @ObjectHolder(HerobrineMod.MODID + ":herobrine_altar")
-    public static final Block block = null;
     public static final VoxelShape SHAPE = VoxelShapes.or(Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 9.0D, 0.0D, 1.0D, 15.0D, 1.0D), Block.makeCuboidShape(16.0D, 9.0D, 0.0D, 15.0D, 15.0D, 1.0D), Block.makeCuboidShape(16.0D, 9.0D, 16.0D, 15.0D, 15.0D, 15.0D), Block.makeCuboidShape(0.0D, 9.0D, 16.0D, 1.0D, 15.0D, 15.0D), Block.makeCuboidShape(0.0D, 15.0D, 0.0D, 2.0D, 16.0D, 2.0D), Block.makeCuboidShape(14.0D, 15.0D, 0.0D, 16.0D, 16.0D, 2.0D), Block.makeCuboidShape(14.0D, 15.0D, 14.0D, 16.0D, 16.0D, 16.0D), Block.makeCuboidShape(0.0D, 15.0D, 14.0D, 2.0D, 16.0D, 16.0D), Block.makeCuboidShape(0.0D, 8.0D, 0.0D, 2.0D, 9.0D, 2.0D), Block.makeCuboidShape(14.0D, 8.0D, 0.0D, 16.0D, 9.0D, 2.0D), Block.makeCuboidShape(14.0D, 8.0D, 14.0D, 16.0D, 9.0D, 16.0D), Block.makeCuboidShape(0.0D, 8.0D, 14.0D, 2.0D, 9.0D, 16.0D));
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public HerobrineAltar() {
+        super(Properties.create(BlockMaterialList.HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity().setLightLevel(HerobrineAltar::getLightValue).setAllowsSpawn(HerobrineAltar::neverAllowSpawn));
+        this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE).with(ModBlockStates.TYPE, 0));
+    }
 
     private static int getLightValue(BlockState state) {
         int i = state.get(ModBlockStates.TYPE);
@@ -65,12 +63,6 @@ public class HerobrineAltar extends Block implements IWaterLoggable {
 
     private static Boolean neverAllowSpawn(BlockState state, IBlockReader reader, BlockPos pos, EntityType<?> entity) {
         return false;
-    }
-
-    public HerobrineAltar() {
-        super(Properties.create(BlockMaterialList.HEROBRINE_ALTER_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity().setLightLevel(HerobrineAltar::getLightValue).setAllowsSpawn(HerobrineAltar::neverAllowSpawn));
-        this.setDefaultState(this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.FALSE).with(ModBlockStates.TYPE, 0));
-        setRegistryName(location("herobrine_altar"));
     }
 
     @NotNull

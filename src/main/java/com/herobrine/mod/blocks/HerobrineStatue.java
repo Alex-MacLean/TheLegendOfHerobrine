@@ -1,6 +1,6 @@
 package com.herobrine.mod.blocks;
 
-import com.herobrine.mod.HerobrineMod;
+import com.herobrine.mod.util.blocks.BlockList;
 import com.herobrine.mod.util.blocks.BlockMaterialList;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
@@ -27,12 +27,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.registries.ObjectHolder;
 import org.jetbrains.annotations.NotNull;
 
 public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
-    @ObjectHolder(HerobrineMod.MODID + ":herobrine_statue")
-    public static final Block block = null;
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final VoxelShape North_South = VoxelShapes.or(Block.makeCuboidShape(4, 0, 6, 12, 12, 10), Block.makeCuboidShape(0, 12, 6, 16, 16, 10));
     public static final VoxelShape East_West = VoxelShapes.or(Block.makeCuboidShape(6, 0, 4, 10, 12, 12), Block.makeCuboidShape(6, 12, 0, 10, 16, 16));
@@ -46,7 +43,6 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
 
     public HerobrineStatue() {
         super(Properties.create(BlockMaterialList.HEROBRINE_STATUE_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity().setAllowsSpawn(HerobrineStatue::neverAllowSpawn).setSuffocates(HerobrineStatue::isntSolid));
-        setRegistryName(HerobrineMod.location("herobrine_statue"));
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(BlockStateProperties.WATERLOGGED, Boolean.FALSE));
     }
 
@@ -93,7 +89,7 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
         int z = pos.getZ();
         FluidState FluidState = world.getFluidState(new BlockPos(x, y + 1, z));
         assert false;
-        world.setBlockState(new BlockPos(x, y + 1, z), HerobrineStatueTop.block.getDefaultState().with(FACING, state.get(FACING)).with(BlockStateProperties.WATERLOGGED, FluidState.getFluid() == Fluids.WATER));
+        world.setBlockState(new BlockPos(x, y + 1, z), BlockList.herobrine_statue_top.getDefaultState().with(FACING, state.get(FACING)).with(BlockStateProperties.WATERLOGGED, FluidState.getFluid() == Fluids.WATER));
     }
 
     @Override
