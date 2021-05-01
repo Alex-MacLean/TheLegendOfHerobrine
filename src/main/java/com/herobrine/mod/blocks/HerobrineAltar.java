@@ -182,9 +182,15 @@ public class HerobrineAltar extends Block implements IWaterLoggable {
                     }
                     if(!world.isRemote) {
                         if (!SaveDataUtil.readBoolean(world, "Spawn")) {
-                            player.sendMessage(new StringTextComponent("<Herobrine> You have no idea what you have done!"), UUID.randomUUID());
                             SaveDataUtil.writeBoolean(world, "Spawn", true);
                         }
+                    }
+                    if(Config.COMMON.GlobalHerobrineMessages.get() && !world.isRemote) {
+                        player.sendMessage(new StringTextComponent("<Herobrine> You have no idea what you have done!"), UUID.randomUUID());
+                    }
+
+                    if(!Config.COMMON.GlobalHerobrineMessages.get() && world.isRemote) {
+                        player.sendMessage(new StringTextComponent("<Herobrine> You have no idea what you have done!"), UUID.randomUUID());
                     }
                 }
                 if(itemStack.getItem() == ItemList.purified_diamond) {
@@ -204,9 +210,16 @@ public class HerobrineAltar extends Block implements IWaterLoggable {
                     }
                     if(!world.isRemote) {
                         if (SaveDataUtil.readBoolean(world, "Spawn")) {
-                            player.sendMessage(new StringTextComponent("<Herobrine> I shall return!"), UUID.randomUUID());
                             SaveDataUtil.writeBoolean(world, "Spawn", false);
                         }
+                    }
+
+                    if(Config.COMMON.GlobalHerobrineMessages.get() && !world.isRemote) {
+                        player.sendMessage(new StringTextComponent("<Herobrine> I shall return!"), UUID.randomUUID());
+                    }
+
+                    if(!Config.COMMON.GlobalHerobrineMessages.get() && world.isRemote) {
+                        player.sendMessage(new StringTextComponent("<Herobrine> I shall return!"), UUID.randomUUID());
                     }
                 }
             } else return ActionResultType.FAIL;

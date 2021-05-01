@@ -29,6 +29,7 @@ public class Config {
         public final ForgeConfigSpec.IntValue GlowstonePillarWeight;
         public final ForgeConfigSpec.IntValue SandPyramidWeight;
         public final ForgeConfigSpec.IntValue HerobrineEndSpawnType;
+        public final ForgeConfigSpec.BooleanValue GlobalHerobrineMessages;
         public CommonConfig(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Common config file for The Legend of Herobrine Minecraft mod.").push("entity_config");
             WarriorBreaksBlocks = builder.comment("Determines if the Herobrine warrior can break blocks.").worldRestart().define("WarriorBreaksBlocks", true);
@@ -59,6 +60,9 @@ public class Config {
             builder.pop();
             builder.push("block_config");
             AltarRequiresShrine = builder.comment("Determines if the Altar of Herobrine needs to be built on a shrine to be activated.").define("AltarRequiresShrine", true);
+            builder.pop();
+            builder.push("misc");
+            GlobalHerobrineMessages = builder.comment("If set to true makes chat messages from summoning and removing Herobrine appear to all players instead of just the player that is responsible for it.").worldRestart().define("GlobalHerobrineMessages", true);
             builder.pop();
         }
     }

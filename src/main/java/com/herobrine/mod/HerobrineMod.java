@@ -72,7 +72,7 @@ public class HerobrineMod {
                 ItemList.herobrine_altar = new BlockItem(BlockList.herobrine_altar, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("herobrine_altar")),
                 ItemList.cursed_diamond_block = new BlockItem(BlockList.cursed_diamond_block, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("cursed_diamond_block")),
                 ItemList.herobrine_statue = new HerobrineStatueItem(BlockList.herobrine_statue, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("herobrine_statue")),
-                ItemList.purified_diamond_block = new BlockItem(BlockList.herobrine_statue_top, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("purified_diamond_block")),
+                ItemList.purified_diamond_block = new BlockItem(BlockList.purified_diamond_block, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(location("purified_diamond_block")),
                 ItemList.bedrock_sword = new SwordItem(ItemTierList.bedrock_item_tier, 0, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("bedrock_sword")),
                 ItemList.cursed_diamond = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(location("cursed_diamond")),
                 ItemList.cursed_diamond_sword = new SwordItem(ItemTierList.cursed_diamond_item_tier, 3, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName(location("cursed_diamond_sword")),
