@@ -282,7 +282,7 @@ public class InfectedLlamaEntity extends LlamaEntity implements IMob {
     }
 
     @Override
-    public @NotNull ActionResultType func_230254_b_(@NotNull PlayerEntity player, @NotNull Hand hand) {
+    public @NotNull ActionResultType getEntityInteractionResult(@NotNull PlayerEntity player, @NotNull Hand hand) {
         return ActionResultType.FAIL;
     }
 

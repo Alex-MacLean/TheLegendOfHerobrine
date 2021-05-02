@@ -126,7 +126,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements I
     }
 
     @Override
-    public void func_241841_a(@NotNull ServerWorld world, LightningBoltEntity lightningBolt) {
+    public void causeLightningStrike(@NotNull ServerWorld world, LightningBoltEntity lightningBolt) {
         UUID uuid = lightningBolt.getUniqueID();
         if (!uuid.equals(this.lightningUUID)) {
             this.setMooshroomType(this.getMooshroomType() == InfectedMooshroomEntity.Type.RED ? InfectedMooshroomEntity.Type.BROWN : InfectedMooshroomEntity.Type.RED);
@@ -143,7 +143,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements I
     }
 
     @Override
-    public @NotNull ActionResultType func_230254_b_(@NotNull PlayerEntity player, @NotNull Hand hand) {
+    public @NotNull ActionResultType getEntityInteractionResult(@NotNull PlayerEntity player, @NotNull Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
          if (itemstack.getItem() == Items.SHEARS) {
             this.world.addParticle(ParticleTypes.EXPLOSION, this.getPosX(), this.getPosYHeight(0.5D), this.getPosZ(), 0.0D, 0.0D, 0.0D);
@@ -176,7 +176,7 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements I
 
             return ActionResultType.SUCCESS;
         } else {
-            return super.func_230254_b_(player, hand);
+            return super.getEntityInteractionResult(player, hand);
         }
     }
 

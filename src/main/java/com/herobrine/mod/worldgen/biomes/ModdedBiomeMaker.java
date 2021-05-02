@@ -16,7 +16,7 @@ public class ModdedBiomeMaker {
     }
 
     private static Biome makeGenericCursedForestBiome(float depth, float scale, MobSpawnInfo.Builder mobSpawnBuilder) {
-        BiomeGenerationSettings.Builder biomegenerationsettings$builder = (new BiomeGenerationSettings.Builder()).withSurfaceBuilder(ConfiguredSurfaceBuilders.field_244178_j);
+        BiomeGenerationSettings.Builder biomegenerationsettings$builder = (new BiomeGenerationSettings.Builder()).withSurfaceBuilder(ConfiguredSurfaceBuilders.NOPE);
         DefaultBiomeFeatures.withStrongholdAndMineshaft(biomegenerationsettings$builder);
         biomegenerationsettings$builder.withStructure(StructureFeatures.RUINED_PORTAL);
         DefaultBiomeFeatures.withCavesAndCanyons(biomegenerationsettings$builder);
@@ -36,7 +36,7 @@ public class ModdedBiomeMaker {
         DefaultBiomeFeatures.withExtraGoldOre(biomegenerationsettings$builder);
         DefaultBiomeFeatures.withTreesInWater(biomegenerationsettings$builder);
         DefaultBiomeFeatures.withEmeraldOre(biomegenerationsettings$builder);
-        return (new Biome.Builder()).precipitation(Biome.RainType.RAIN).category(Biome.Category.FOREST).depth(depth).scale(scale).temperature(0.7F).downfall(0.8F).setEffects((new BiomeAmbience.Builder()).setWaterColor(4159204).setWaterFogColor(329011).setFogColor(12638463).withFoliageColor(0x9EA94D).withGrassColor(0x90A94D).withSkyColor(getSkyColorWithTemperatureModifier(0.7F)).setMoodSound(MoodSoundAmbience.DEFAULT_CAVE).build()).withMobSpawnSettings(mobSpawnBuilder.copy()).withGenerationSettings(biomegenerationsettings$builder.build()).build();
+        return (new Biome.Builder()).precipitation(Biome.RainType.RAIN).category(Biome.Category.FOREST).depth(depth).scale(scale).temperature(0.7F).downfall(0.8F).setEffects((new BiomeAmbience.Builder()).setWaterColor(4159204).setWaterFogColor(329011).setFogColor(12638463).withFoliageColor(0x9EA94D).withGrassColor(0x90A94D).withSkyColor(getSkyColorWithTemperatureModifier(0.7F)).setMoodSound(MoodSoundAmbience.DEFAULT_CAVE).build()).withMobSpawnSettings(mobSpawnBuilder.build()).withGenerationSettings(biomegenerationsettings$builder.build()).build();
     }
 
     private static MobSpawnInfo.Builder getStandardMobSpawnBuilder() {

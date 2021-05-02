@@ -257,10 +257,10 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     }
 
     @Override
-    public @NotNull ActionResultType func_230254_b_(@NotNull PlayerEntity player, @NotNull Hand hand) {
+    public @NotNull ActionResultType getEntityInteractionResult(@NotNull PlayerEntity player, @NotNull Hand hand) {
         if (this.isAlive() && this.hasNoCustomer()) {
             if (this.getOffers().isEmpty()) {
-                return super.func_230254_b_(player, hand);
+                return super.getEntityInteractionResult(player, hand);
             } else {
                 if (!this.world.isRemote) {
                     this.setCustomer(player);
@@ -270,7 +270,7 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
                 return ActionResultType.SUCCESS;
             }
         } else {
-            return super.func_230254_b_(player, hand);
+            return super.getEntityInteractionResult(player, hand);
         }
     }
 

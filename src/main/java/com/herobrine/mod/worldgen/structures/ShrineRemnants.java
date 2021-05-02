@@ -37,7 +37,7 @@ import java.util.Set;
 public class ShrineRemnants {
     @SubscribeEvent
     public static void onBiomeLoad(BiomeLoadingEvent event) {
-        Feature<NoFeatureConfig> feature = new Feature<NoFeatureConfig>(NoFeatureConfig.field_236558_a_) {
+        Feature<NoFeatureConfig> feature = new Feature<NoFeatureConfig>(NoFeatureConfig.CODEC) {
             @Override
             @SuppressWarnings("ConstantConditions") //suppresses passing null to argument annotated as NotNull for PlacementSettings.setChunk()
             public boolean generate(@NotNull ISeedReader world, @NotNull ChunkGenerator generator, @NotNull Random random, BlockPos pos, @NotNull NoFeatureConfig config) {

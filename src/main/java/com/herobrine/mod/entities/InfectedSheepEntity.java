@@ -234,7 +234,7 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
     }
 
     @Override
-    public @NotNull ActionResultType func_230254_b_(PlayerEntity entity, @NotNull Hand hand) {
+    public @NotNull ActionResultType getEntityInteractionResult(PlayerEntity entity, @NotNull Hand hand) {
         ItemStack itemstack = entity.getHeldItem(hand);
         if (itemstack.getItem() == Items.SHEARS) {
             if (!this.world.isRemote && this.isShearable()) {
@@ -245,7 +245,7 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
                 return ActionResultType.CONSUME;
             }
         } else {
-            return super.func_230254_b_(entity, hand);
+            return super.getEntityInteractionResult(entity, hand);
         }
     }
 
