@@ -9,8 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-//Suppresses rawtypes warning for Supplier
-@SuppressWarnings("rawtypes")
 public class HerobrineSaveData extends WorldSavedData implements Supplier {
     public CompoundNBT data = new CompoundNBT();
     private static final String dataFileName = HerobrineMod.MODID;
@@ -30,12 +28,10 @@ public class HerobrineSaveData extends WorldSavedData implements Supplier {
         return nbt;
     }
 
-    //Suppresses unchecked assignment warning for HerobrineSaveData
-    @SuppressWarnings("unchecked")
     public static HerobrineSaveData forWorld(ServerWorld world) {
         DimensionSavedDataManager storage = world.getServer().func_241755_D_().getSavedData();
-        HerobrineSaveData data = new HerobrineSaveData();
-        return (HerobrineSaveData) storage.getOrCreate(data, dataFileName);
+        HerobrineSaveData sup = new HerobrineSaveData();
+        return (HerobrineSaveData) storage.getOrCreate(sup, dataFileName);
     }
 
     @Override
