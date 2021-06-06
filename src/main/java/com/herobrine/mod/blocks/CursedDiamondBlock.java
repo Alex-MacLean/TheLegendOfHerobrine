@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class CursedDiamondBlock extends Block {
     public CursedDiamondBlock() {
-        super(Properties.create(BlockMaterialList.CURSED_DIAMOND_BLOCK_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(1));
+        super(Properties.of(BlockMaterialList.CURSED_DIAMOND_BLOCK_MATERIAL).strength(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(1));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -27,7 +27,7 @@ public class CursedDiamondBlock extends Block {
     }
 
     private static void spawnParticles(@NotNull World world, BlockPos pos) {
-        Random random = world.rand;
+        Random random = world.random;
         for(Direction direction : Direction.values()) {
             BlockPos blockpos = pos.offset(direction);
             if (!world.getBlockState(blockpos).isOpaqueCube(world, blockpos)) {
