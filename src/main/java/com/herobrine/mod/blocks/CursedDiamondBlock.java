@@ -26,17 +26,18 @@ public class CursedDiamondBlock extends Block {
         spawnParticles(worldIn, pos);
     }
 
-    private static void spawnParticles(@NotNull World world, BlockPos pos) {
+    private static void spawnParticles(World world, BlockPos pos) {
         Random random = world.random;
-        for(Direction direction : Direction.values()) {
-            BlockPos blockpos = pos.offset(direction);
-            if (!world.getBlockState(blockpos).isOpaqueCube(world, blockpos)) {
+        for (Direction direction : Direction.values()) {
+            BlockPos blockpos = pos.relative(direction);
+            if (!world.getBlockState(blockpos).isSolidRender(world, blockpos)) {
                 Direction.Axis direction$axis = direction.getAxis();
-                double d1 = direction$axis == Direction.Axis.X ? 0.5D + 0.5625D * (double)direction.getXOffset() : (double)random.nextFloat();
-                double d2 = 0.5D * (double) random.nextFloat();
-                double d3 = direction$axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double)direction.getZOffset() : (double)random.nextFloat();
+                double d1 = direction$axis == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getStepX() : (double) random.nextFloat();
+                double d2 = direction$axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getStepY() : (double) random.nextFloat();
+                double d3 = direction$axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getStepZ() : (double) random.nextFloat();
                 world.addParticle(ParticleTypes.PORTAL, (double) pos.getX() + d1, (double) pos.getY() + d2, (double) pos.getZ() + d3, 0.0D, 0.0D, 0.0D);
             }
         }
+
     }
 }

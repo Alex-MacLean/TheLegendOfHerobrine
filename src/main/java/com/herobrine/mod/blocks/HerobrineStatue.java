@@ -3,7 +3,6 @@ package com.herobrine.mod.blocks;
 import com.herobrine.mod.util.blocks.BlockList;
 import com.herobrine.mod.util.blocks.BlockMaterialList;
 import net.minecraft.block.*;
-import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -24,47 +23,46 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import org.jetbrains.annotations.NotNull;
 
-public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-    public static final VoxelShape North_South = VoxelShapes.or(Block.makeCuboidShape(4, 0, 6, 12, 12, 10), Block.makeCuboidShape(0, 12, 6, 16, 16, 10));
-    public static final VoxelShape East_West = VoxelShapes.or(Block.makeCuboidShape(6, 0, 4, 10, 12, 12), Block.makeCuboidShape(6, 12, 0, 10, 16, 16));
+public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable {
+    public static final DirectionProperty FACING = HorizontalBlock.FACING;
+    public static final VoxelShape North_South = VoxelShapes.or(Block.box(4, 0, 6, 12, 12, 10), Block.box(0, 12, 6, 16, 16, 10));
+    public static final VoxelShape East_West = VoxelShapes.or(Block.box(6, 0, 4, 10, 12, 12), Block.box(6, 12, 0, 10, 16, 16));
 
     private static Boolean neverAllowSpawn(BlockState state, IBlockReader reader, BlockPos pos, EntityType<?> entity) {
         return false;
     }
+
     private static boolean isntSolid(BlockState state, IBlockReader reader, BlockPos pos) {
         return false;
     }
 
     public HerobrineStatue() {
-        super(Properties.create(BlockMaterialList.HEROBRINE_STATUE_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid().variableOpacity().setAllowsSpawn(HerobrineStatue::neverAllowSpawn).setSuffocates(HerobrineStatue::isntSolid));
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(BlockStateProperties.WATERLOGGED, Boolean.FALSE));
+        super(Properties.of(BlockMaterialList.HEROBRINE_STATUE_MATERIAL).strength(1.5F).sound(SoundType.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).requiresCorrectToolForDrops().isValidSpawn(HerobrineStatue::neverAllowSpawn).isSuffocating(HerobrineStatue::isntSolid));
+        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE));
     }
 
     @NotNull
     @Override
     public VoxelShape getShape(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull ISelectionContext context) {
-        Direction i = state.get(FACING);
+        Direction i = state.getValue(FACING);
         if(i == Direction.NORTH || i == Direction.SOUTH) {
             return North_South;
         } else return East_West;
     }
 
     @Override
-    public void onExplosionDestroy(@NotNull World world, @NotNull BlockPos pos, @NotNull Explosion explosion) {
-        super.onExplosionDestroy(world, pos, explosion);
+    public void wasExploded(@NotNull World world, @NotNull BlockPos pos, @NotNull Explosion explosion) {
+        super.wasExploded(world, pos, explosion);
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
         if (world.getBlockState(new BlockPos(x, y + 1, z)).getMaterial() == BlockMaterialList.HEROBRINE_STATUE_MATERIAL) {
-            if(world.getBlockState(new BlockPos(x, y + 1, z)).get(BlockStateProperties.WATERLOGGED)) {
-                world.setBlockState(new BlockPos(x, y + 1, z), Blocks.WATER.getDefaultState(), 3);
-            } else world.setBlockState(new BlockPos(x, y + 1, z), Blocks.AIR.getDefaultState(), 3);
+            if (world.getBlockState(new BlockPos(x, y + 1, z)).getValue(BlockStateProperties.WATERLOGGED)) {
+                world.setBlockAndUpdate(new BlockPos(x, y + 1, z), Blocks.WATER.defaultBlockState());
+            } else world.setBlockAndUpdate(new BlockPos(x, y + 1, z), Blocks.AIR.defaultBlockState());
         }
     }
 
@@ -74,79 +72,68 @@ public class HerobrineStatue extends HorizontalBlock implements IWaterLoggable{
         int y = pos.getY();
         int z = pos.getZ();
         if (world.getBlockState(new BlockPos(x, y + 1, z)).getMaterial() == BlockMaterialList.HEROBRINE_STATUE_MATERIAL) {
-            if(world.getBlockState(new BlockPos(x, y + 1, z)).get(BlockStateProperties.WATERLOGGED)) {
-                world.setBlockState(new BlockPos(x, y + 1, z), Blocks.WATER.getDefaultState(), 3);
-            } else world.setBlockState(new BlockPos(x, y + 1, z), Blocks.AIR.getDefaultState(), 3);
+            if (world.getBlockState(new BlockPos(x, y + 1, z)).getValue(BlockStateProperties.WATERLOGGED)) {
+                world.setBlockAndUpdate(new BlockPos(x, y + 1, z), Blocks.WATER.defaultBlockState());
+            } else world.setBlockAndUpdate(new BlockPos(x, y + 1, z), Blocks.AIR.defaultBlockState());
         }
         return super.removedByPlayer(state, world, pos, entity, willHarvest, fluid);
     }
 
     @Override
-    public void onBlockAdded(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull BlockState oldState, boolean moving) {
-        super.onBlockAdded(state, world, pos, oldState, moving);
+    public void onPlace(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull BlockState oldState, boolean moving) {
+        super.onPlace(state, world, pos, oldState, moving);
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
         FluidState FluidState = world.getFluidState(new BlockPos(x, y + 1, z));
         assert false;
-        world.setBlockState(new BlockPos(x, y + 1, z), BlockList.herobrine_statue_top.getDefaultState().with(FACING, state.get(FACING)).with(BlockStateProperties.WATERLOGGED, FluidState.getFluid() == Fluids.WATER));
-    }
-
-    @Override
-    public @NotNull PushReaction getPushReaction(@NotNull BlockState state) {
-        return PushReaction.BLOCK;
+        world.setBlockAndUpdate(new BlockPos(x, y + 1, z), BlockList.herobrine_statue_top.defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(BlockStateProperties.WATERLOGGED, FluidState.getType() == Fluids.WATER));
     }
 
     @Override
     public BlockState getStateForPlacement(@NotNull BlockItemUseContext context) {
-        BlockPos blockpos = context.getPos();
-        FluidState FluidState = context.getWorld().getFluidState(blockpos);
-        return this.getDefaultState().with(BlockStateProperties.WATERLOGGED, FluidState.getFluid() == Fluids.WATER).with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+        BlockPos blockpos = context.getClickedPos();
+        FluidState ifluidstate = context.getLevel().getFluidState(blockpos);
+        return this.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, ifluidstate.getType() == Fluids.WATER).setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.@NotNull Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.@NotNull Builder<Block, BlockState> builder) {
         builder.add(FACING);
         builder.add(BlockStateProperties.WATERLOGGED);
     }
 
     @Override
-    public boolean receiveFluid(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
-        return IWaterLoggable.super.receiveFluid(worldIn, pos, state, fluidStateIn);
+    public boolean placeLiquid(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
+        return IWaterLoggable.super.placeLiquid(worldIn, pos, state, fluidStateIn);
     }
 
     @Override
-    public boolean canContainFluid(@NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Fluid fluidIn) {
-        return IWaterLoggable.super.canContainFluid(worldIn, pos, state, fluidIn);
+    public boolean canPlaceLiquid(@NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Fluid fluidIn) {
+        return IWaterLoggable.super.canPlaceLiquid(worldIn, pos, state, fluidIn);
     }
 
     @NotNull
     @Override
-    public BlockState updatePostPlacement(@NotNull BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull IWorld worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
-        if (stateIn.get(BlockStateProperties.WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+    public BlockState updateShape(@NotNull BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull IWorld worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
+        if (stateIn.getValue(BlockStateProperties.WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @NotNull
     @Override
     public FluidState getFluidState(@NotNull BlockState state) {
-        return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public boolean allowsMovement(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull PathType type) {
+    public boolean isPathfindable(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull PathType type) {
         if (type == PathType.WATER) {
-            return worldIn.getFluidState(pos).isTagged(FluidTags.WATER);
+            return worldIn.getFluidState(pos).is(FluidTags.WATER);
         }
         return false;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public float getAmbientOcclusionLightValue(@NotNull BlockState state, @NotNull IBlockReader worldIn, @NotNull BlockPos pos) {
-        return 1.0F;
     }
 
     @Override

@@ -22,7 +22,7 @@ public class InfectedPigEntityRender extends MobRenderer<InfectedPigEntity, Infe
 
     @NotNull
     @Override
-    public ResourceLocation getEntityTexture(@NotNull InfectedPigEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull InfectedPigEntity entity) {
         return HerobrineMod.location("textures/entity/infected_pig.png");
     }
 

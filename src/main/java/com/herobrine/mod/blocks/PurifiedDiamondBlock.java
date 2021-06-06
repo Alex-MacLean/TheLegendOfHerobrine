@@ -7,6 +7,6 @@ import net.minecraftforge.common.ToolType;
 
 public class PurifiedDiamondBlock extends Block {
     public PurifiedDiamondBlock() {
-        super(Properties.create(BlockMaterialList.PURIFIED_DIAMOND_BLOCK_MATERIAL).hardnessAndResistance(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(1));
+        super(Properties.of(BlockMaterialList.PURIFIED_DIAMOND_BLOCK_MATERIAL).strength(1.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(1));
     }
 }

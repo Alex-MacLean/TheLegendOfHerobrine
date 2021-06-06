@@ -23,9 +23,9 @@ public class HerobrineStatueItem extends BlockItem {
     }
 
     @Override
-    public @NotNull ActionResultType tryPlace(@NotNull BlockItemUseContext context) {
-        if (this.canBePlaced(context.getWorld(), context.getPos())) {
-            return super.tryPlace(context);
+    public @NotNull ActionResultType place(@NotNull BlockItemUseContext context) {
+        if (this.canBePlaced(context.getLevel(), context.getClickedPos())) {
+            return super.place(context);
         } else return ActionResultType.FAIL;
     }
 }

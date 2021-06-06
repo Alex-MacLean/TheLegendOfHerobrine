@@ -22,14 +22,14 @@ public class InfectedDonkeyEntityRender extends MobRenderer<InfectedDonkeyEntity
     }
 
     @Override
-    public @NotNull ResourceLocation getEntityTexture(@NotNull InfectedDonkeyEntity entity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull InfectedDonkeyEntity entity) {
         return HerobrineMod.location("textures/entity/infected_donkey.png");
     }
 
     @Override
-    protected void preRenderCallback(@NotNull InfectedDonkeyEntity entitylivingbaseIn, @NotNull MatrixStack matrixStackIn, float partialTickTime) {
+    protected void scale(@NotNull InfectedDonkeyEntity entitylivingbaseIn, @NotNull MatrixStack matrixStackIn, float partialTickTime) {
         matrixStackIn.scale(0.87F, 0.87F, 0.87F);
-        super.preRenderCallback(entitylivingbaseIn, matrixStackIn, partialTickTime);
+        super.scale(entitylivingbaseIn, matrixStackIn, partialTickTime);
     }
 
     @SuppressWarnings("rawtypes")

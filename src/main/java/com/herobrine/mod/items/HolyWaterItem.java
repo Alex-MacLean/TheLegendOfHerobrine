@@ -19,21 +19,21 @@ public class HolyWaterItem extends Item {
 
     @NotNull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, @NotNull PlayerEntity playerIn, @NotNull Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
-        worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-        playerIn.getCooldownTracker().setCooldown(this, 10);
-        if (!worldIn.isRemote) {
+    public ActionResult<ItemStack> use(@NotNull World worldIn, @NotNull PlayerEntity playerIn, @NotNull Hand handIn) {
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
+        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SPLASH_POTION_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+        playerIn.getCooldowns().addCooldown(this, 10);
+        if (!worldIn.isClientSide) {
             HolyWaterEntity entity = new HolyWaterEntity(worldIn, playerIn);
             entity.setItem(itemstack);
-            entity.setDirectionAndMovement(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
-            worldIn.addEntity(entity);
+            entity.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, -20.0F, 0.5F, 1.0F);
+            worldIn.addFreshEntity(entity);
         }
 
-        if (!playerIn.abilities.isCreativeMode) {
+        if (!playerIn.abilities.instabuild) {
             itemstack.shrink(1);
         }
 
-        return ActionResult.resultSuccess(itemstack);
+        return ActionResult.success(itemstack);
     }
 }

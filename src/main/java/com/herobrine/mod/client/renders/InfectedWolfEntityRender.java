@@ -21,13 +21,13 @@ public class InfectedWolfEntityRender extends MobRenderer<InfectedWolfEntity, In
     }
 
     @Override
-    protected float handleRotationFloat(@NotNull InfectedWolfEntity livingBase, float partialTicks) {
+    protected float getBob(@NotNull InfectedWolfEntity livingBase, float partialTicks) {
         return livingBase.getTailRotation();
     }
 
     @NotNull
     @Override
-    public ResourceLocation getEntityTexture(@NotNull InfectedWolfEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull InfectedWolfEntity entity) {
         return HerobrineMod.location("textures/entity/infected_wolf.png");
     }
 

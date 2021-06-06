@@ -27,14 +27,14 @@ public class InfectedHorseEntityModel extends AgeableModel<InfectedHorseEntity> 
 
     public InfectedHorseEntityModel(float p_i51065_1_) {
         super(true, 16.2F, 1.36F, 2.7272F, 2.0F, 20.0F);
-        this.textureWidth = 64;
-        this.textureHeight = 64;
+        this.texWidth = 64;
+        this.texHeight = 64;
         this.body = new ModelRenderer(this, 0, 32);
         this.body.addBox(-5.0F, -8.0F, -17.0F, 10.0F, 10.0F, 22.0F, 0.05F);
-        this.body.setRotationPoint(0.0F, 11.0F, 5.0F);
+        this.body.setPos(0.0F, 11.0F, 5.0F);
         this.head = new ModelRenderer(this, 0, 35);
         this.head.addBox(-2.05F, -6.0F, -2.0F, 4.0F, 12.0F, 7.0F);
-        this.head.rotateAngleX = ((float)Math.PI / 6F);
+        this.head.xRot = ((float) Math.PI / 6F);
         ModelRenderer modelrenderer = new ModelRenderer(this, 0, 13);
         modelrenderer.addBox(-3.0F, -11.0F, -2.0F, 6.0F, 5.0F, 7.0F, p_i51065_1_);
         ModelRenderer modelrenderer1 = new ModelRenderer(this, 56, 36);
@@ -48,35 +48,35 @@ public class InfectedHorseEntityModel extends AgeableModel<InfectedHorseEntity> 
         this.field_228262_f_ = new ModelRenderer(this, 48, 21);
         this.field_228262_f_.mirror = true;
         this.field_228262_f_.addBox(-3.0F, -1.01F, -1.0F, 4.0F, 11.0F, 4.0F, p_i51065_1_);
-        this.field_228262_f_.setRotationPoint(4.0F, 14.0F, 7.0F);
+        this.field_228262_f_.setPos(4.0F, 14.0F, 7.0F);
         this.field_228263_g_ = new ModelRenderer(this, 48, 21);
         this.field_228263_g_.addBox(-1.0F, -1.01F, -1.0F, 4.0F, 11.0F, 4.0F, p_i51065_1_);
-        this.field_228263_g_.setRotationPoint(-4.0F, 14.0F, 7.0F);
+        this.field_228263_g_.setPos(-4.0F, 14.0F, 7.0F);
         this.field_228264_h_ = new ModelRenderer(this, 48, 21);
         this.field_228264_h_.mirror = true;
         this.field_228264_h_.addBox(-3.0F, -1.01F, -1.9F, 4.0F, 11.0F, 4.0F, p_i51065_1_);
-        this.field_228264_h_.setRotationPoint(4.0F, 6.0F, -12.0F);
+        this.field_228264_h_.setPos(4.0F, 6.0F, -12.0F);
         this.field_228265_i_ = new ModelRenderer(this, 48, 21);
         this.field_228265_i_.addBox(-1.0F, -1.01F, -1.9F, 4.0F, 11.0F, 4.0F, p_i51065_1_);
-        this.field_228265_i_.setRotationPoint(-4.0F, 6.0F, -12.0F);
+        this.field_228265_i_.setPos(-4.0F, 6.0F, -12.0F);
         this.field_228266_j_ = new ModelRenderer(this, 48, 21);
         this.field_228266_j_.mirror = true;
         this.field_228266_j_.addBox(-3.0F, -1.01F, -1.0F, 4.0F, 11.0F, 4.0F, p_i51065_1_, p_i51065_1_ + 5.5F, p_i51065_1_);
-        this.field_228266_j_.setRotationPoint(4.0F, 14.0F, 7.0F);
+        this.field_228266_j_.setPos(4.0F, 14.0F, 7.0F);
         this.field_228267_k_ = new ModelRenderer(this, 48, 21);
         this.field_228267_k_.addBox(-1.0F, -1.01F, -1.0F, 4.0F, 11.0F, 4.0F, p_i51065_1_, p_i51065_1_ + 5.5F, p_i51065_1_);
-        this.field_228267_k_.setRotationPoint(-4.0F, 14.0F, 7.0F);
+        this.field_228267_k_.setPos(-4.0F, 14.0F, 7.0F);
         this.field_228268_l_ = new ModelRenderer(this, 48, 21);
         this.field_228268_l_.mirror = true;
         this.field_228268_l_.addBox(-3.0F, -1.01F, -1.9F, 4.0F, 11.0F, 4.0F, p_i51065_1_, p_i51065_1_ + 5.5F, p_i51065_1_);
-        this.field_228268_l_.setRotationPoint(4.0F, 6.0F, -12.0F);
+        this.field_228268_l_.setPos(4.0F, 6.0F, -12.0F);
         this.field_228269_m_ = new ModelRenderer(this, 48, 21);
         this.field_228269_m_.addBox(-1.0F, -1.01F, -1.9F, 4.0F, 11.0F, 4.0F, p_i51065_1_, p_i51065_1_ + 5.5F, p_i51065_1_);
-        this.field_228269_m_.setRotationPoint(-4.0F, 6.0F, -12.0F);
+        this.field_228269_m_.setPos(-4.0F, 6.0F, -12.0F);
         this.field_217133_j = new ModelRenderer(this, 42, 36);
         this.field_217133_j.addBox(-1.5F, 0.0F, 0.0F, 3.0F, 14.0F, 4.0F, p_i51065_1_);
-        this.field_217133_j.setRotationPoint(0.0F, -5.0F, 2.0F);
-        this.field_217133_j.rotateAngleX = ((float)Math.PI / 6F);
+        this.field_217133_j.setPos(0.0F, -5.0F, 2.0F);
+        this.field_217133_j.xRot = ((float) Math.PI / 6F);
         this.body.addChild(this.field_217133_j);
         ModelRenderer modelrenderer3 = new ModelRenderer(this, 26, 0);
         modelrenderer3.addBox(-5.0F, -8.0F, -9.0F, 10.0F, 9.0F, 9.0F, 0.5F);
@@ -89,11 +89,11 @@ public class InfectedHorseEntityModel extends AgeableModel<InfectedHorseEntity> 
         this.head.addChild(modelrenderer5);
         ModelRenderer modelrenderer6 = new ModelRenderer(this, 32, 2);
         modelrenderer6.addBox(3.1F, -6.0F, -8.0F, 0.0F, 3.0F, 16.0F, p_i51065_1_);
-        modelrenderer6.rotateAngleX = (-(float)Math.PI / 6F);
+        modelrenderer6.xRot = (-(float) Math.PI / 6F);
         this.head.addChild(modelrenderer6);
         ModelRenderer modelrenderer7 = new ModelRenderer(this, 32, 2);
         modelrenderer7.addBox(-3.1F, -6.0F, -8.0F, 0.0F, 3.0F, 16.0F, p_i51065_1_);
-        modelrenderer7.rotateAngleX = (-(float)Math.PI / 6F);
+        modelrenderer7.xRot = (-(float) Math.PI / 6F);
         this.head.addChild(modelrenderer7);
         ModelRenderer modelrenderer8 = new ModelRenderer(this, 1, 1);
         modelrenderer8.addBox(-3.0F, -11.0F, -1.9F, 6.0F, 5.0F, 6.0F, 0.2F);
@@ -115,39 +115,39 @@ public class InfectedHorseEntityModel extends AgeableModel<InfectedHorseEntity> 
     }
 
     @Override
-    public void setRotationAngles(@NotNull InfectedHorseEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull InfectedHorseEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         boolean flag = entityIn.isHorseSaddled();
-        boolean flag1 = entityIn.isBeingRidden();
+        boolean flag1 = entityIn.isVehicle();
 
-        for(ModelRenderer modelrenderer : this.field_217134_k) {
-            modelrenderer.showModel = flag;
+        for (ModelRenderer modelrenderer : this.field_217134_k) {
+            modelrenderer.visible = flag;
         }
 
-        for(ModelRenderer modelrenderer1 : this.field_217135_l) {
-            modelrenderer1.showModel = flag1 && flag;
+        for (ModelRenderer modelrenderer1 : this.field_217135_l) {
+            modelrenderer1.visible = flag1 && flag;
         }
 
-        this.body.rotationPointY = 11.0F;
+        this.body.yRot = 11.0F;
     }
 
     @Override
-    public @NotNull Iterable<ModelRenderer> getHeadParts() {
+    public @NotNull Iterable<ModelRenderer> headParts() {
         return ImmutableList.of(this.head);
     }
 
     @Override
-    protected @NotNull Iterable<ModelRenderer> getBodyParts() {
+    protected @NotNull Iterable<ModelRenderer> bodyParts() {
         return ImmutableList.of(this.body, this.field_228262_f_, this.field_228263_g_, this.field_228264_h_, this.field_228265_i_, this.field_228266_j_, this.field_228267_k_, this.field_228268_l_, this.field_228269_m_);
     }
 
     @Override
-    public void setLivingAnimations(@NotNull InfectedHorseEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
-        super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
-        float f = MathHelper.rotLerp(entityIn.prevRenderYawOffset, entityIn.renderYawOffset, partialTick);
-        float f1 = MathHelper.rotLerp(entityIn.prevRotationYawHead, entityIn.rotationYawHead, partialTick);
-        float f2 = MathHelper.lerp(partialTick, entityIn.prevRotationPitch, entityIn.rotationPitch);
+    public void prepareMobModel(@NotNull InfectedHorseEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+        super.prepareMobModel(entityIn, limbSwing, limbSwingAmount, partialTick);
+        float f = MathHelper.rotLerp(entityIn.yBodyRotO, entityIn.yBodyRot, partialTick);
+        float f1 = MathHelper.rotLerp(entityIn.yBodyRotO, entityIn.yBodyRot, partialTick);
+        float f2 = MathHelper.lerp(partialTick, entityIn.xRotO, entityIn.xRot);
         float f3 = f1 - f;
-        float f4 = f2 * ((float)Math.PI / 180F);
+        float f4 = f2 * ((float) Math.PI / 180F);
         if (f3 > 20.0F) {
             f3 = 20.0F;
         }
@@ -165,63 +165,63 @@ public class InfectedHorseEntityModel extends AgeableModel<InfectedHorseEntity> 
         float f7 = 1.0F - f6;
         float f8 = entityIn.getMouthOpennessAngle(partialTick);
         boolean flag = entityIn.tailCounter != 0;
-        float f9 = (float)entityIn.ticksExisted + partialTick;
-        this.head.rotationPointY = 4.0F;
-        this.head.rotationPointZ = -12.0F;
-        this.body.rotateAngleX = 0.0F;
-        this.head.rotateAngleX = ((float)Math.PI / 6F) + f4;
-        this.head.rotateAngleY = f3 * ((float)Math.PI / 180F);
+        float f9 = (float) entityIn.tickCount + partialTick;
+        this.head.yRot = 4.0F;
+        this.head.zRot = -12.0F;
+        this.body.xRot = 0.0F;
+        this.head.xRot = ((float) Math.PI / 6F) + f4;
+        this.head.yRot = f3 * ((float) Math.PI / 180F);
         float f10 = entityIn.isInWater() ? 0.2F : 1.0F;
-        float f11 = MathHelper.cos(f10 * limbSwing * 0.6662F + (float)Math.PI);
+        float f11 = MathHelper.cos(f10 * limbSwing * 0.6662F + (float) Math.PI);
         float f12 = f11 * 0.8F * limbSwingAmount;
-        float f13 = (1.0F - Math.max(f6, f5)) * (((float)Math.PI / 6F) + f4 + f8 * MathHelper.sin(f9) * 0.05F);
-        this.head.rotateAngleX = f6 * (0.2617994F + f4) + f5 * (2.1816616F + MathHelper.sin(f9) * 0.05F) + f13;
-        this.head.rotateAngleY = f6 * f3 * ((float)Math.PI / 180F) + (1.0F - Math.max(f6, f5)) * this.head.rotateAngleY;
-        this.head.rotationPointY = f6 * -4.0F + f5 * 11.0F + (1.0F - Math.max(f6, f5)) * this.head.rotationPointY;
-        this.head.rotationPointZ = f6 * -4.0F + f5 * -12.0F + (1.0F - Math.max(f6, f5)) * this.head.rotationPointZ;
-        this.body.rotateAngleX = f6 * (-(float)Math.PI / 4F) + f7 * this.body.rotateAngleX;
+        float f13 = (1.0F - Math.max(f6, f5)) * (((float) Math.PI / 6F) + f4 + f8 * MathHelper.sin(f9) * 0.05F);
+        this.head.xRot = f6 * (0.2617994F + f4) + f5 * (2.1816616F + MathHelper.sin(f9) * 0.05F) + f13;
+        this.head.yRot = f6 * f3 * ((float) Math.PI / 180F) + (1.0F - Math.max(f6, f5)) * this.head.yRot;
+        this.head.yRot = f6 * -4.0F + f5 * 11.0F + (1.0F - Math.max(f6, f5)) * this.head.yRot;
+        this.head.zRot = f6 * -4.0F + f5 * -12.0F + (1.0F - Math.max(f6, f5)) * this.head.zRot;
+        this.body.xRot = f6 * (-(float) Math.PI / 4F) + f7 * this.body.xRot;
         float f14 = 0.2617994F * f6;
-        float f15 = MathHelper.cos(f9 * 0.6F + (float)Math.PI);
-        this.field_228264_h_.rotationPointY = 2.0F * f6 + 14.0F * f7;
-        this.field_228264_h_.rotationPointZ = -6.0F * f6 - 10.0F * f7;
-        this.field_228265_i_.rotationPointY = this.field_228264_h_.rotationPointY;
-        this.field_228265_i_.rotationPointZ = this.field_228264_h_.rotationPointZ;
-        float f16 = ((-(float)Math.PI / 3F) + f15) * f6 + f12 * f7;
-        float f17 = ((-(float)Math.PI / 3F) - f15) * f6 - f12 * f7;
-        this.field_228262_f_.rotateAngleX = f14 - f11 * 0.5F * limbSwingAmount * f7;
-        this.field_228263_g_.rotateAngleX = f14 + f11 * 0.5F * limbSwingAmount * f7;
-        this.field_228264_h_.rotateAngleX = f16;
-        this.field_228265_i_.rotateAngleX = f17;
-        this.field_217133_j.rotateAngleX = ((float)Math.PI / 6F) + limbSwingAmount * 0.75F;
-        this.field_217133_j.rotationPointY = -5.0F + limbSwingAmount;
-        this.field_217133_j.rotationPointZ = 2.0F + limbSwingAmount * 2.0F;
+        float f15 = MathHelper.cos(f9 * 0.6F + (float) Math.PI);
+        this.field_228264_h_.yRot = 2.0F * f6 + 14.0F * f7;
+        this.field_228264_h_.zRot = -6.0F * f6 - 10.0F * f7;
+        this.field_228265_i_.yRot = this.field_228264_h_.yRot;
+        this.field_228265_i_.zRot = this.field_228264_h_.zRot;
+        float f16 = ((-(float) Math.PI / 3F) + f15) * f6 + f12 * f7;
+        float f17 = ((-(float) Math.PI / 3F) - f15) * f6 - f12 * f7;
+        this.field_228262_f_.xRot = f14 - f11 * 0.5F * limbSwingAmount * f7;
+        this.field_228263_g_.xRot = f14 + f11 * 0.5F * limbSwingAmount * f7;
+        this.field_228264_h_.xRot = f16;
+        this.field_228265_i_.xRot = f17;
+        this.field_217133_j.xRot = ((float) Math.PI / 6F) + limbSwingAmount * 0.75F;
+        this.field_217133_j.yRot = -5.0F + limbSwingAmount;
+        this.field_217133_j.zRot = 2.0F + limbSwingAmount * 2.0F;
         if (flag) {
-            this.field_217133_j.rotateAngleY = MathHelper.cos(f9 * 0.7F);
+            this.field_217133_j.yRot = MathHelper.cos(f9 * 0.7F);
         } else {
-            this.field_217133_j.rotateAngleY = 0.0F;
+            this.field_217133_j.yRot = 0.0F;
         }
 
-        this.field_228266_j_.rotationPointY = this.field_228262_f_.rotationPointY;
-        this.field_228266_j_.rotationPointZ = this.field_228262_f_.rotationPointZ;
-        this.field_228266_j_.rotateAngleX = this.field_228262_f_.rotateAngleX;
-        this.field_228267_k_.rotationPointY = this.field_228263_g_.rotationPointY;
-        this.field_228267_k_.rotationPointZ = this.field_228263_g_.rotationPointZ;
-        this.field_228267_k_.rotateAngleX = this.field_228263_g_.rotateAngleX;
-        this.field_228268_l_.rotationPointY = this.field_228264_h_.rotationPointY;
-        this.field_228268_l_.rotationPointZ = this.field_228264_h_.rotationPointZ;
-        this.field_228268_l_.rotateAngleX = this.field_228264_h_.rotateAngleX;
-        this.field_228269_m_.rotationPointY = this.field_228265_i_.rotationPointY;
-        this.field_228269_m_.rotationPointZ = this.field_228265_i_.rotationPointZ;
-        this.field_228269_m_.rotateAngleX = this.field_228265_i_.rotateAngleX;
-        boolean flag1 = entityIn.isChild();
-        this.field_228262_f_.showModel = !flag1;
-        this.field_228263_g_.showModel = !flag1;
-        this.field_228264_h_.showModel = !flag1;
-        this.field_228265_i_.showModel = !flag1;
-        this.field_228266_j_.showModel = flag1;
-        this.field_228267_k_.showModel = flag1;
-        this.field_228268_l_.showModel = flag1;
-        this.field_228269_m_.showModel = flag1;
-        this.body.rotationPointY = flag1 ? 10.8F : 0.0F;
+        this.field_228266_j_.yRot = this.field_228262_f_.yRot;
+        this.field_228266_j_.zRot = this.field_228262_f_.zRot;
+        this.field_228266_j_.xRot = this.field_228262_f_.xRot;
+        this.field_228267_k_.yRot = this.field_228263_g_.yRot;
+        this.field_228267_k_.zRot = this.field_228263_g_.zRot;
+        this.field_228267_k_.xRot = this.field_228263_g_.xRot;
+        this.field_228268_l_.yRot = this.field_228264_h_.yRot;
+        this.field_228268_l_.zRot = this.field_228264_h_.zRot;
+        this.field_228268_l_.xRot = this.field_228264_h_.xRot;
+        this.field_228269_m_.yRot = this.field_228265_i_.yRot;
+        this.field_228269_m_.zRot = this.field_228265_i_.zRot;
+        this.field_228269_m_.xRot = this.field_228265_i_.xRot;
+        boolean flag1 = entityIn.isBaby();
+        this.field_228262_f_.visible = !flag1;
+        this.field_228263_g_.visible = !flag1;
+        this.field_228264_h_.visible = !flag1;
+        this.field_228265_i_.visible = !flag1;
+        this.field_228266_j_.visible = flag1;
+        this.field_228267_k_.visible = flag1;
+        this.field_228268_l_.visible = flag1;
+        this.field_228269_m_.visible = flag1;
+        this.body.yRot = flag1 ? 10.8F : 0.0F;
     }
 }

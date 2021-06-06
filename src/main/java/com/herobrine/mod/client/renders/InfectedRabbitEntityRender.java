@@ -32,12 +32,12 @@ public class InfectedRabbitEntityRender extends MobRenderer<InfectedRabbitEntity
     }
 
     @Override
-    public @NotNull ResourceLocation getEntityTexture(@NotNull InfectedRabbitEntity entity) {
-        String s = TextFormatting.getTextWithoutFormattingCodes(entity.getName().getString());
+    public @NotNull ResourceLocation getTextureLocation(@NotNull InfectedRabbitEntity entity) {
+        String s = TextFormatting.stripFormatting(entity.getName().getString());
         if ("Toast".equals(s)) {
             return TOAST;
         } else {
-            switch(entity.getRabbitType()) {
+            switch (entity.getRabbitType()) {
                 case 0:
                 default:
                     return BROWN;
@@ -52,7 +52,7 @@ public class InfectedRabbitEntityRender extends MobRenderer<InfectedRabbitEntity
                 case 5:
                     return SALT;
                 case 99:
-                    InfectedRabbitEyesLayer.RENDER_TYPE = RenderType.getEyes(HerobrineMod.location("textures/entity/eyes/infected_rabbit/caerbannog.png"));
+                    InfectedRabbitEyesLayer.RENDER_TYPE = RenderType.eyes(HerobrineMod.location("textures/entity/eyes/infected_rabbit/caerbannog.png"));
                     return CAERBANNOG;
             }
         }

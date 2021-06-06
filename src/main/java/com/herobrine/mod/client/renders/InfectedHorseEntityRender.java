@@ -38,14 +38,14 @@ public class InfectedHorseEntityRender extends MobRenderer<InfectedHorseEntity, 
     }
 
     @Override
-    protected void preRenderCallback(@NotNull InfectedHorseEntity entitylivingbaseIn, @NotNull MatrixStack matrixStackIn, float partialTickTime) {
+    protected void scale(@NotNull InfectedHorseEntity entitylivingbaseIn, @NotNull MatrixStack matrixStackIn, float partialTickTime) {
         matrixStackIn.scale(1.1F, 1.1F, 1.1F);
-        super.preRenderCallback(entitylivingbaseIn, matrixStackIn, partialTickTime);
+        super.scale(entitylivingbaseIn, matrixStackIn, partialTickTime);
     }
 
     @Override
-    public @NotNull ResourceLocation getEntityTexture(@NotNull InfectedHorseEntity entity) {
-        return (ResourceLocation)field_239383_a_.get(entity.func_234239_eK_());
+    public @NotNull ResourceLocation getTextureLocation(@NotNull InfectedHorseEntity entity) {
+        return (ResourceLocation) field_239383_a_.get(entity.func_234239_eK_());
     }
 
     @SuppressWarnings("rawtypes")

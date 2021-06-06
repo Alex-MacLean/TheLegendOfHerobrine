@@ -19,23 +19,23 @@ public class HerobrineSaveData extends WorldSavedData implements Supplier {
         super(dataFileName);
     }
 
+    //Suppresses unchecked assignment warning for HerobrineSaveData
+    @SuppressWarnings("unchecked")
+    public static HerobrineSaveData forWorld(ServerWorld world) {
+        DimensionSavedDataManager storage = world.getServer().overworld().getDataStorage();
+        HerobrineSaveData data = new HerobrineSaveData();
+        return (HerobrineSaveData) storage.get(data, dataFileName);
+    }
+
     @Override
-    public void read(CompoundNBT nbt) {
+    public void load(CompoundNBT nbt) {
         data = nbt.getCompound("Spawn");
     }
 
     @Override
-    public @NotNull CompoundNBT write(CompoundNBT nbt) {
+    public @NotNull CompoundNBT save(CompoundNBT nbt) {
         nbt.put("Spawn", data);
         return nbt;
-    }
-
-    //Suppresses unchecked assignment warning for HerobrineSaveData
-    @SuppressWarnings("unchecked")
-    public static HerobrineSaveData forWorld(ServerWorld world) {
-        DimensionSavedDataManager storage = world.getServer().func_241755_D_().getSavedData();
-        HerobrineSaveData data = new HerobrineSaveData();
-        return (HerobrineSaveData) storage.getOrCreate(data, dataFileName);
     }
 
     @Override

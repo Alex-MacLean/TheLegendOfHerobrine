@@ -8,7 +8,7 @@ import net.minecraft.world.server.ServerWorld;
 public class SaveDataUtil {
 
     public static Boolean readBoolean(IWorld world, String name) {
-        if(!world.isRemote()) {
+        if (!world.isClientSide()) {
             HerobrineSaveData saver = HerobrineSaveData.forWorld((ServerWorld) world);
             return saver.data.getBoolean(name);
         }
@@ -16,14 +16,14 @@ public class SaveDataUtil {
     }
 
     public static void writeBoolean(IWorld world, String name, Boolean data) {
-        if(!world.isRemote()) {
+        if (!world.isClientSide()) {
             HerobrineSaveData saver = HerobrineSaveData.forWorld((ServerWorld) world);
             saver.data.putBoolean(name, data);
         }
     }
 
     public static boolean canHerobrineSpawn(IWorld world) {
-        if(Config.COMMON.HerobrineAlwaysSpawns.get() && !world.isRemote()) {
+        if (Config.COMMON.HerobrineAlwaysSpawns.get() && !world.isClientSide()) {
             return true;
         }
         return readBoolean(world, "Spawn");

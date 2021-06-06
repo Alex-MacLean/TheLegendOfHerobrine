@@ -25,13 +25,14 @@ public class AbstractHerobrineEntityRender extends MobRenderer<AbstractHerobrine
 
     @NotNull
     @Override
-    public ResourceLocation getEntityTexture(@NotNull AbstractHerobrineEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull AbstractHerobrineEntity entity) {
         return HerobrineMod.location("textures/entity/herobrine.png");
     }
 
     @Override
-    protected void preRenderCallback(@NotNull AbstractHerobrineEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+    protected void scale(@NotNull AbstractHerobrineEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
         matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
+        super.scale(entitylivingbaseIn, matrixStackIn, partialTickTime);
     }
 
     @SuppressWarnings("rawtypes")
