@@ -1,12 +1,18 @@
 # TheLegendOfHerobrine
-A git hub page to host source code for The Legend of Herobrine Minecraft mod.
 https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine
+https://herobrinemod.com
 
-Warning! This mod is in early access, so it may not work as intended, and current features are not final, be prepared for many bugs!
+The Legend of Herobrine is a mod designed for modern versions of Minecraft that aims to add Herobrine to the game with many new gameplay features while also fitting in with vanilla gameplay and keeping the scary theme surrounding Herobrine while remaining relevant and fun in larger modpacks. Currently in beta. Major bugs may arise!
 
-This mod aims to add many features related to Herobrine to Minecraft with a large emphasis on adventure, exploration, and environmental aspects. Summon Herobrine in your world, and prepare for a whole new adventure. Herobrine is waiting.
+For a full description visit: https://www.herobrinemod.com/about
 
-View the curseforge page for an in depth desctiption of the mod.
+Screenshots: https://www.herobrinemod.com/screenshots
+
+FAQ: https://www.herobrinemod.com/faq
+
+Programmer Art Style Resource Pack: https://github.com/Alex-MacLean/TheLegendOfHerobrine/releases/download/0.6.0/Herobrine-Programmer-Art.zip
+
+Join the official Discord server for development updates and preview builds: https://discord.com/invite/hbxvDY4agm
 
 How to build this mod from the source code:
 
@@ -42,4 +48,4 @@ You are allowed to modify this code and use it for personal use, but not redistr
 You are allowed to use this code as a reference for implementing similar, but not identical features in another mod.
 You are not allowed to redistribute recompiled bianaries from this source code, no matter how much modifications are made.
 If you want to contribute to this project feel free to contact me with whatever modifications you have made, if your code makes it into the mod I will add you to the credits section of the mcmod.info and mods.toml files.
-If you have any questions about this mod or permissions feel free to DM me on curseforge.
+If you have any questions about this mod or permissions feel free to DM me on curseforge GitHub.
