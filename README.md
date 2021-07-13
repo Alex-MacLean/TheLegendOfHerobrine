@@ -26,7 +26,6 @@ JDK 1.8.0 (Requires Oracle accout to download): https://www.oracle.com/java/tech
 
 IDE with Java support. I use Intellij Idea: https://www.jetbrains.com/idea/download/
 
-
 Step 1: download the source code of the desired branch as a zip file.
 
 Step 2: extract the zip file.
