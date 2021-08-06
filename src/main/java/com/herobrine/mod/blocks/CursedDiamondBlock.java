@@ -38,6 +38,5 @@ public class CursedDiamondBlock extends Block {
                 world.addParticle(ParticleTypes.PORTAL, (double) pos.getX() + d1, (double) pos.getY() + d2, (double) pos.getZ() + d3, 0.0D, 0.0D, 0.0D);
             }
         }
-
     }
 }

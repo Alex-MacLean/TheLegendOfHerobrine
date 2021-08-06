@@ -9,7 +9,10 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.merchant.IMerchant;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.*;
+import net.minecraft.entity.monster.AbstractIllagerEntity;
+import net.minecraft.entity.monster.AbstractRaiderEntity;
+import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -34,7 +37,7 @@ import java.util.Set;
 public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant, INPC {
     protected AbstractSurvivorEntity(EntityType<? extends AbstractSurvivorEntity> type, World world) {
         super(type, world);
-        this.experienceValue = 5;
+        this.xpReward = 5;
     }
 
     @Nullable
@@ -49,21 +52,12 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
 
     WaterAvoidingRandomWalkingGoal wanderGoal = new WaterAvoidingRandomWalkingGoal(this, 0.8D);
 
-    protected static class LookAtCustomerGoal extends LookAtGoal {
-        private final AbstractSurvivorEntity survivorEntity;
-
-        public LookAtCustomerGoal(AbstractSurvivorEntity survivorIn) {
-            super(survivorIn, PlayerEntity.class, 8.0F);
-            this.survivorEntity = survivorIn;
-        }
-
-        @Override
-        public boolean shouldExecute() {
-            if (!this.survivorEntity.hasNoCustomer()) {
-                this.closestEntity = this.survivorEntity.getCustomer();
-            }
-            return !this.survivorEntity.hasNoCustomer();
-        }
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.ATTACK_DAMAGE, 1.0D)
+                .add(Attributes.FOLLOW_RANGE, 64.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.4D);
     }
 
     @Override
@@ -91,66 +85,59 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
         this.goalSelector.addGoal(16, new LookRandomlyGoal(this));
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 1.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 64.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.4D);
-    }
-
     @Override
-    public void updateAITasks() {
-        if(!this.hasNoCustomer()) {
+    public void customServerAiStep() {
+        if (!this.hasNoCustomer()) {
             this.goalSelector.removeGoal(this.wanderGoal);
         }
 
-        if(this.hasNoCustomer()) {
+        if (this.hasNoCustomer()) {
             this.goalSelector.addGoal(17, this.wanderGoal);
         }
     }
 
     @Override
-    protected boolean canDropLoot() {
+    protected boolean shouldDropLoot() {
         return true;
     }
 
-    protected boolean isDespawnPeaceful() {
+    @Override
+    protected boolean shouldDespawnInPeaceful() {
         return false;
     }
 
     @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        return !this.isInvulnerableTo(source) && super.attackEntityFrom(source, amount);
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        return !this.isInvulnerableTo(source) && super.hurt(source, amount);
     }
 
     @Override
-    public boolean attackEntityAsMob(@NotNull Entity entityIn) {
-        boolean flag = super.attackEntityAsMob(entityIn);
+    public boolean doHurtTarget(@NotNull Entity entityIn) {
+        boolean flag = super.doHurtTarget(entityIn);
         if (flag) {
-            float f = this.world.getDifficultyForLocation(this.getPosition()).getAdditionalDifficulty();
-            if (this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
-                entityIn.setFire(2 * (int)f);
+            float f = this.level.getCurrentDifficultyAt(this.getOnPos()).getEffectiveDifficulty();
+            if (this.isOnFire() && this.random.nextFloat() < f * 0.3F) {
+                entityIn.setSecondsOnFire(2 * (int) f);
             }
         }
         return flag;
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        this.enablePersistence();
-        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_SWORD));
-        this.setItemStackToSlot(EquipmentSlotType.OFFHAND, new ItemStack(Items.SHIELD));
-        this.setItemStackToSlot(EquipmentSlotType.HEAD, new ItemStack(Items.IRON_HELMET));
-        this.setItemStackToSlot(EquipmentSlotType.CHEST, new ItemStack(Items.IRON_CHESTPLATE));
-        this.setItemStackToSlot(EquipmentSlotType.LEGS, new ItemStack(Items.IRON_LEGGINGS));
-        this.setItemStackToSlot(EquipmentSlotType.FEET, new ItemStack(Items.IRON_BOOTS));
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public ILivingEntityData finalizeSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        this.setPersistenceRequired();
+        this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_SWORD));
+        this.setItemSlot(EquipmentSlotType.OFFHAND, new ItemStack(Items.SHIELD));
+        this.setItemSlot(EquipmentSlotType.HEAD, new ItemStack(Items.IRON_HELMET));
+        this.setItemSlot(EquipmentSlotType.CHEST, new ItemStack(Items.IRON_CHESTPLATE));
+        this.setItemSlot(EquipmentSlotType.LEGS, new ItemStack(Items.IRON_LEGGINGS));
+        this.setItemSlot(EquipmentSlotType.FEET, new ItemStack(Items.IRON_BOOTS));
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     @Override
-    public void writeAdditional(@NotNull CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
 
         //Registers writing the texture location string to nbt.
         compound.putString("textureLocation", textureLocation);
@@ -158,15 +145,15 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
         compound.putInt("RegenSpeed", this.healTimer);
         MerchantOffers merchantoffers = this.getOffers();
         if (!merchantoffers.isEmpty()) {
-            compound.put("Offers", merchantoffers.write());
+            compound.put("Offers", merchantoffers.createTag());
         }
 
         ListNBT listnbt = new ListNBT();
 
-        for(int i = 0; i < this.survivorInventory.getSizeInventory(); ++i) {
-            ItemStack itemstack = this.survivorInventory.getStackInSlot(i);
+        for (int i = 0; i < this.survivorInventory.getContainerSize(); ++i) {
+            ItemStack itemstack = this.survivorInventory.getItem(i);
             if (!itemstack.isEmpty()) {
-                listnbt.add(itemstack.write(new CompoundNBT()));
+                listnbt.add(itemstack.save(new CompoundNBT()));
             }
         }
 
@@ -174,8 +161,8 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     }
 
     @Override
-    public void readAdditional(@NotNull CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
 
         //Registers reading the texture location string from nbt.
         this.textureLocation = compound.getString("textureLocation");
@@ -187,12 +174,16 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
 
         ListNBT listnbt = compound.getList("Inventory", 10);
 
-        for(int i = 0; i < listnbt.size(); ++i) {
-            ItemStack itemstack = ItemStack.read(listnbt.getCompound(i));
+        for (int i = 0; i < listnbt.size(); ++i) {
+            ItemStack itemstack = ItemStack.of(listnbt.getCompound(i));
             if (!itemstack.isEmpty()) {
                 this.survivorInventory.addItem(itemstack);
             }
         }
+    }
+
+    protected void resetCustomer() {
+        this.setTradingPlayer(null);
     }
 
     //Placeholder to allow each renderer to properly reference the getSkin function. Overridden in the specific survivor's class file.
@@ -200,21 +191,16 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
         return null;
     }
 
-    protected void resetCustomer() {
-        this.setCustomer(null);
-    }
-
-    public void onDeath(@NotNull DamageSource cause) {
-        super.onDeath(cause);
+    public void die(@NotNull DamageSource cause) {
+        super.die(cause);
         this.resetCustomer();
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
-        this.updateArmSwingProgress();
-        //Regeneration code, regens 1 (half a heart) every 80 tick.
-        if(this.isAlive() && this.getHealth() < this.getMaxHealth()) {
+    public void aiStep() {
+        super.aiStep();
+        this.updateSwingTime();
+        if (this.isAlive() && this.getHealth() < this.getMaxHealth()) {
             if (this.healTimer < 1 && this.getHealth() < this.getMaxHealth()) {
                 this.healTimer = 80;
                 this.heal(1.0F);
@@ -223,22 +209,28 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
                 this.healTimer = 80;
             }
             --this.healTimer;
-            this.updateAITasks();
+            this.customServerAiStep();
         }
 
-        //Code that makes every entity that extends MonsterEntity attack Survivors. This is to allow any vanilla or modded monster to properly recognise the survivor as an enemy before being attacked. There is an exception for endermen because of how they interact with players.
-        AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(64.0D, 64.0D, 64.0D);
-        List<LivingEntity> list = this.world.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
+        //Makes every entity that extends MonsterEntity attack Survivors. This is to allow any vanilla or modded monster to properly recognise the survivor as an enemy before being attacked. There is an exception for endermen because of how they interact with players.
+        AxisAlignedBB axisalignedbb = this.getBoundingBox().inflate(64.0D, 64.0D, 64.0D);
+        List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, axisalignedbb);
         if (!list.isEmpty()) {
             for (LivingEntity entity : list) {
-                if (entity instanceof MonsterEntity && ((MonsterEntity) entity).getAttackTarget() == null && !(entity instanceof EndermanEntity) && this.canEntityBeSeen(entity)) {
-                    ((MonsterEntity) entity).setAttackTarget(this);
+                if (entity instanceof MonsterEntity && ((MonsterEntity) entity).getTarget() == null && !(entity instanceof IAngerable) && this.canSee(entity)) {
+                    ((MonsterEntity) entity).setTarget(this);
                 }
-                if (entity instanceof SlimeEntity && ((SlimeEntity) entity).getAttackTarget() == null && this.canEntityBeSeen(entity)) {
-                    ((SlimeEntity) entity).setAttackTarget(this);
+                if (entity instanceof SlimeEntity && ((SlimeEntity) entity).getTarget() == null && this.canSee(entity)) {
+                    ((SlimeEntity) entity).setTarget(this);
                 }
             }
         }
+    }
+
+    @Nullable
+    @Override
+    public PlayerEntity getTradingPlayer() {
+        return this.customer;
     }
 
     public boolean hasNoCustomer() {
@@ -246,32 +238,30 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     }
 
     @Override
-    public void setCustomer(@Nullable PlayerEntity player) {
+    public void setTradingPlayer(@Nullable PlayerEntity player) {
         this.customer = player;
     }
 
-    @Nullable
     @Override
-    public PlayerEntity getCustomer() {
-        return this.customer;
-    }
-
-    @Override
-    public @NotNull ActionResultType getEntityInteractionResult(@NotNull PlayerEntity player, @NotNull Hand hand) {
+    public @NotNull ActionResultType mobInteract(@NotNull PlayerEntity player, @NotNull Hand hand) {
         if (this.isAlive() && this.hasNoCustomer()) {
             if (this.getOffers().isEmpty()) {
-                return super.getEntityInteractionResult(player, hand);
+                return super.mobInteract(player, hand);
             } else {
-                if (!this.world.isRemote) {
-                    this.setCustomer(player);
-                    this.openMerchantContainer(player, this.getDisplayName(), -1);
+                if (!this.level.isClientSide) {
+                    this.setTradingPlayer(player);
+                    this.openTradingScreen(player, this.getDisplayName(), -1);
                 }
 
                 return ActionResultType.SUCCESS;
             }
         } else {
-            return super.getEntityInteractionResult(player, hand);
+            return super.mobInteract(player, hand);
         }
+    }
+
+    @Override
+    public void overrideOffers(@org.jetbrains.annotations.Nullable MerchantOffers p_213703_1_) {
     }
 
     protected void populateTradeData() {
@@ -294,16 +284,45 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     }
 
     @Override
-    public void onTrade(@NotNull MerchantOffer offer) {
+    public void notifyTrade(@NotNull MerchantOffer offer) {
         offer.resetUses();
-        this.livingSoundTime = -this.getTalkInterval();
+        this.ambientSoundTime = -this.getAmbientSoundInterval();
         this.onSurvivorTrade(offer);
     }
 
+    @Override
+    public void notifyTradeUpdated(@NotNull ItemStack p_110297_1_) {
+    }
+
+    @Override
+    public @NotNull World getLevel() {
+        return this.level;
+    }
+
+    @Override
+    public int getVillagerXp() {
+        return 0;
+    }
+
+    @Override
+    public void overrideXp(int p_213702_1_) {
+    }
+
+    @Override
+    public boolean showProgressBar() {
+        return false;
+    }
+
+    @Override
+    @SuppressWarnings("ConstantConditions")
+    public @NotNull SoundEvent getNotifyTradeSound() {
+        return null;
+    }
+
     protected void onSurvivorTrade(@NotNull MerchantOffer offer) {
-        if (offer.getDoesRewardExp()) {
-            int i = 3 + this.rand.nextInt(4);
-            this.world.addEntity(new ExperienceOrbEntity(this.world, this.getPosX(), this.getPosY() + 0.5D, this.getPosZ(), i));
+        if (offer.shouldRewardExp()) {
+            int i = 3 + this.random.nextInt(4);
+            this.level.addFreshEntity(new ExperienceOrbEntity(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), i));
         }
     }
 
@@ -311,53 +330,36 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
         Set<Integer> set = Sets.newHashSet();
         if (newTrades.length > 64) {
             while(set.size() < 64) {
-                set.add(this.rand.nextInt(newTrades.length));
+                set.add(this.random.nextInt(newTrades.length));
             }
         } else {
             for(int i = 0; i < newTrades.length; ++i) {
                 set.add(i);
             }
         }
-        for(Integer integer : set) {
+        for (Integer integer : set) {
             SurvivorTrades.ITrade survivortrades$itrade = newTrades[integer];
-            MerchantOffer merchantoffer = survivortrades$itrade.getOffer(this, this.rand);
+            MerchantOffer merchantoffer = survivortrades$itrade.getOffer(this, this.random);
             if (merchantoffer != null) {
                 givenMerchantOffers.add(merchantoffer);
             }
         }
     }
 
-    @Override
-    public void setClientSideOffers(@Nullable MerchantOffers offers) {
-    }
+    protected static class LookAtCustomerGoal extends LookAtGoal {
+        private final AbstractSurvivorEntity survivorEntity;
 
-    @Override
-    public void verifySellingItem(@NotNull ItemStack stack) {
-    }
+        public LookAtCustomerGoal(AbstractSurvivorEntity survivorIn) {
+            super(survivorIn, PlayerEntity.class, 8.0F);
+            this.survivorEntity = survivorIn;
+        }
 
-    @Override
-    public @NotNull World getWorld() {
-        return this.world;
-    }
-
-    @Override
-    public int getXp() {
-        return 0;
-    }
-
-    @Override
-    public void setXP(int xpIn) {
-    }
-
-    @Override
-    public boolean hasXPBar() {
-        return false;
-    }
-
-    @Override
-    @NotNull
-    @SuppressWarnings("ConstantConditions")
-    public SoundEvent getYesSound() {
-        return null;
+        @Override
+        public boolean canUse() {
+            if (!this.survivorEntity.hasNoCustomer()) {
+                this.lookAt = this.survivorEntity.getTradingPlayer();
+            }
+            return !this.survivorEntity.hasNoCustomer();
+        }
     }
 }

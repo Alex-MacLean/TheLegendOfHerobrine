@@ -40,20 +40,20 @@ public class UnholyWaterEntity extends SnowballEntity {
     }
 
     @Override
-    protected void onImpact(@NotNull RayTraceResult result) {
-        if (!this.world.isRemote) {
-            AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(1.0D, 1.0D, 1.0D);
-            List<LivingEntity> list = this.world.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
+    protected void onHit(@NotNull RayTraceResult result) {
+        if (!this.level.isClientSide) {
+            AxisAlignedBB axisalignedbb = this.getBoundingBox().inflate(1.0D, 1.0D, 1.0D);
+            List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, axisalignedbb);
             if (!list.isEmpty()) {
                 for (LivingEntity entity : list) {
-                    entity.addPotionEffect(new EffectInstance(Effects.WITHER, 300, 1));
-                    entity.addPotionEffect(new EffectInstance(Effects.HUNGER, 300, 1));
-                    entity.setFire(15);
-                    entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getShooter()), 4.0F);
+                    entity.addEffect(new EffectInstance(Effects.WITHER, 300, 1));
+                    entity.addEffect(new EffectInstance(Effects.HUNGER, 300, 1));
+                    entity.setSecondsOnFire(15);
+                    entity.hurt(DamageSource.thrown(this, this.getOwner()), 4.0F);
                 }
             }
-            this.playSound(SoundEvents.BLOCK_GLASS_BREAK, 0.8F,  0.9F / (rand.nextFloat() * 0.4F + 0.8F));
-            this.world.setEntityState(this, (byte)3);
+            this.playSound(SoundEvents.GLASS_BREAK, 0.8F, 0.9F / (random.nextFloat() * 0.4F + 0.8F));
+            this.level.broadcastEntityEvent(this, (byte) 3);
             this.remove();
         }
     }

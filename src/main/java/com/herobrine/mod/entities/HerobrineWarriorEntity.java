@@ -35,7 +35,7 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
 
     public HerobrineWarriorEntity(EntityType<? extends HerobrineWarriorEntity> type, World worldIn) {
         super(type, worldIn);
-        experienceValue = 5;
+        xpReward = 5;
     }
 
     public HerobrineWarriorEntity(World worldIn) {
@@ -60,75 +60,69 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 50.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D)
-                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
-                .createMutableAttribute(Attributes.ARMOR, 2.0D)
-                .createMutableAttribute(Attributes.ARMOR_TOUGHNESS, 2.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 64.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.6D);
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 50.0D)
+                .add(Attributes.ATTACK_DAMAGE, 5.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
+                .add(Attributes.ARMOR, 2.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 2.0D)
+                .add(Attributes.FOLLOW_RANGE, 64.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.6D);
     }
 
     @Override
-    public void writeAdditional(@NotNull CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("DestroyCooldown", this.blockBreakCounter);
     }
 
     @Override
-    public void readAdditional(@NotNull CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         this.blockBreakCounter = compound.getInt("DestroyCooldown");
     }
 
     private boolean unableToAttackTarget() {
-        return this.getNavigator().noPath() && !this.canAttack(Objects.requireNonNull(this.getAttackTarget()), EntityPredicate.DEFAULT.setCustomPredicate(LivingEntity::attackable));
+        return this.getNavigation().isDone() && !this.canAttack(Objects.requireNonNull(this.getTarget()), EntityPredicate.DEFAULT.selector(LivingEntity::attackable));
     }
 
     @Override
-    protected void updateAITasks() {
-        if (this.blockBreakCounter > 0) {
-            --this.blockBreakCounter;
-            if (Config.COMMON.WarriorBreaksBlocks.get() && this.blockBreakCounter == 0 && this.isAggressive() && this.unableToAttackTarget() && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
-                int i1 = MathHelper.floor(this.getPosY());
-                int l1 = MathHelper.floor(this.getPosX());
-                int i2 = MathHelper.floor(this.getPosZ());
-                boolean flag1 = false;
-                for(int k2 = -1; k2 <= 1; ++k2) {
-                    for(int l2 = -1; l2 <= 1; ++l2) {
-                        for(int j = 0; j <= 2; ++j) {
-                            int i3 = l1 + k2;
-                            int k = i1 + j;
-                            int l = i2 + l2;
-                            BlockPos blockpos = new BlockPos(i3, k, l);
-                            BlockState blockstate = this.world.getBlockState(blockpos);
-                            IForgeBlockState state = this.world.getBlockState(blockpos);
-                            if (blockstate.getMaterial() != Material.FIRE && !state.isAir(world, blockpos) && !blockstate.isReplaceable(Fluids.EMPTY) && !blockstate.isReplaceable(Fluids.WATER) && !blockstate.isReplaceable(Fluids.LAVA) && !blockstate.isReplaceable(Fluids.FLOWING_LAVA) && !blockstate.isReplaceable(Fluids.FLOWING_WATER) && !BlockTags.WITHER_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.DRAGON_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.BEDS.contains(blockstate.getBlock()) && !BlockTags.CROPS.contains(blockstate.getBlock()) && !BlockTags.CARPETS.contains(blockstate.getBlock()) && !BlockTags.BUTTONS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_BUTTONS.contains(blockstate.getBlock()) && !BlockTags.CORAL_PLANTS.contains(blockstate.getBlock()) && !BlockTags.CORALS.contains(blockstate.getBlock()) && !BlockTags.FLOWER_POTS.contains(blockstate.getBlock()) && !BlockTags.PORTALS.contains(blockstate.getBlock()) && !BlockTags.RAILS.contains(blockstate.getBlock()) && !BlockTags.SAPLINGS.contains(blockstate.getBlock()) && !BlockTags.SMALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.SIGNS.contains(blockstate.getBlock()) && !BlockTags.STANDING_SIGNS.contains(blockstate.getBlock()) && !BlockTags.UNDERWATER_BONEMEALS.contains(blockstate.getBlock()) && !BlockTags.WALL_CORALS.contains(blockstate.getBlock()) && !BlockTags.WALL_SIGNS.contains(blockstate.getBlock()) && !BlockTags.TALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_PRESSURE_PLATES.contains(blockstate.getBlock()) && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, blockstate)) {
-                                flag1 = this.world.destroyBlock(blockpos, true, this) || flag1;
-                                this.swingArm(Hand.MAIN_HAND);
-                            }
+    public void aiStep() {
+        if (this.blockBreakCounter < 1 || this.blockBreakCounter > 500) {
+            this.blockBreakCounter = 500;
+        }
+        --this.blockBreakCounter;
+        if (this.blockBreakCounter < 1 && Config.COMMON.WarriorBreaksBlocks.get() && this.isAggressive() && this.unableToAttackTarget() && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
+            int l1 = MathHelper.floor(this.getX());
+            int i1 = MathHelper.floor(this.getY());
+            int i2 = MathHelper.floor(this.getZ());
+            boolean flag1 = false;
+            for (int k2 = -1; k2 <= 1; ++k2) {
+                for (int l2 = -1; l2 <= 1; ++l2) {
+                    for (int j = 0; j <= 2; ++j) {
+                        int i3 = l1 + k2;
+                        int k = i1 + j;
+                        int l = i2 + l2;
+                        BlockPos blockpos = new BlockPos(i3, k, l);
+                        BlockState blockstate = this.level.getBlockState(blockpos);
+                        IForgeBlockState state = this.level.getBlockState(blockpos);
+                        if (blockstate.getMaterial() != Material.FIRE && !state.isAir(level, blockpos) && !blockstate.canBeReplaced(Fluids.EMPTY) && !blockstate.canBeReplaced(Fluids.WATER) && !blockstate.canBeReplaced(Fluids.LAVA) && !blockstate.canBeReplaced(Fluids.FLOWING_LAVA) && !blockstate.canBeReplaced(Fluids.FLOWING_WATER) && !BlockTags.WITHER_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.DRAGON_IMMUNE.contains(blockstate.getBlock()) && !BlockTags.BEDS.contains(blockstate.getBlock()) && !BlockTags.CROPS.contains(blockstate.getBlock()) && !BlockTags.CARPETS.contains(blockstate.getBlock()) && !BlockTags.BUTTONS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_BUTTONS.contains(blockstate.getBlock()) && !BlockTags.CORAL_PLANTS.contains(blockstate.getBlock()) && !BlockTags.CORALS.contains(blockstate.getBlock()) && !BlockTags.FLOWER_POTS.contains(blockstate.getBlock()) && !BlockTags.PORTALS.contains(blockstate.getBlock()) && !BlockTags.RAILS.contains(blockstate.getBlock()) && !BlockTags.SAPLINGS.contains(blockstate.getBlock()) && !BlockTags.SMALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.SIGNS.contains(blockstate.getBlock()) && !BlockTags.STANDING_SIGNS.contains(blockstate.getBlock()) && !BlockTags.UNDERWATER_BONEMEALS.contains(blockstate.getBlock()) && !BlockTags.WALL_CORALS.contains(blockstate.getBlock()) && !BlockTags.WALL_SIGNS.contains(blockstate.getBlock()) && !BlockTags.TALL_FLOWERS.contains(blockstate.getBlock()) && !BlockTags.WOODEN_PRESSURE_PLATES.contains(blockstate.getBlock()) && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, blockstate)) {
+                            flag1 = this.level.destroyBlock(blockpos, true, this) || flag1;
+                            this.swing(Hand.MAIN_HAND);
                         }
                     }
                 }
             }
         }
+        super.aiStep();
     }
 
     @Override
-    public void livingTick() {
-        if (this.blockBreakCounter < 1 || this.blockBreakCounter > 500) {
-            this.blockBreakCounter = 500;
+    public ILivingEntityData finalizeSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemList.bedrock_sword));
+        if (!Config.COMMON.BedrockSwordDrops.get()) {
+            this.handDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.0F;
         }
-        super.livingTick();
-    }
-
-    @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemList.bedrock_sword));
-        if(!Config.COMMON.BedrockSwordDrops.get()) {
-            this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.0F;
-        }
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 }

@@ -8,7 +8,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,12 +30,13 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class InfectedBatEntity extends AbstractInfectedEntity implements IFlyingAnimal {
-    private static final DataParameter<Byte> HANGING = EntityDataManager.createKey(InfectedBatEntity.class, DataSerializers.BYTE);
-    private static final EntityPredicate field_213813_c = (new EntityPredicate()).setDistance(4.0D).allowFriendlyFire();
+    private static final DataParameter<Byte> HANGING = EntityDataManager.defineId(InfectedBatEntity.class, DataSerializers.BYTE);
+    private static final EntityPredicate BAT_RESTING_TARGETING = (new EntityPredicate()).range(4.0D).allowSameTeam();
     private BlockPos spawnPosition;
+
     public InfectedBatEntity(EntityType<InfectedBatEntity> type, World worldIn) {
         super(type, worldIn);
-        experienceValue = 3;
+        xpReward = 3;
         this.setIsBatHanging(true);
     }
 
@@ -44,31 +44,11 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
         this(EntityRegistry.INFECTED_BAT_ENTITY, worldIn);
     }
 
-    @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        if (source.getImmediateSource() instanceof HolyWaterEntity) {
-            BatEntity batEntity = EntityType.BAT.create(this.world);
-            assert batEntity != null;
-            batEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            batEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
-            batEntity.setNoAI(this.isAIDisabled());
-            if (this.hasCustomName()) {
-                batEntity.setCustomName(this.getCustomName());
-                batEntity.setCustomNameVisible(this.isCustomNameVisible());
-            }
-            batEntity.enablePersistence();
-            this.world.setEntityState(this, (byte)16);
-            this.world.addEntity(batEntity);
-            this.remove();
-        }
-        if (this.isInvulnerableTo(source)) {
-            return false;
-        } else {
-            if (!this.world.isRemote && this.getIsBatHanging()) {
-                this.setIsBatHanging(false);
-            }
-        }
-        return super.attackEntityFrom(source, amount);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 6.0D)
+                .add(Attributes.ATTACK_DAMAGE, 1.0D)
+                .add(Attributes.FOLLOW_RANGE, 16.0D);
     }
 
     @Override
@@ -86,16 +66,31 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 6.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 1.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D);
+    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> batIn, @NotNull IServerWorld worldIn, SpawnReason reason, @NotNull BlockPos pos, Random randomIn) {
+        if (pos.getY() >= worldIn.getSeaLevel() || !SaveDataUtil.canHerobrineSpawn(worldIn)) {
+            return false;
+        } else {
+            int i = worldIn.getMaxLocalRawBrightness(pos);
+            int j = 4;
+            if (randomIn.nextBoolean()) {
+                return false;
+            }
+            return i <= randomIn.nextInt(j) && checkMobSpawnRules(batIn, worldIn, reason, pos, randomIn);
+        }
     }
 
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(HANGING, (byte)0);
+    @Override
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        if (source.getDirectEntity() instanceof HolyWaterEntity) {
+            MobEntity entity = this.convertTo(EntityType.BAT, false);
+            assert entity != null;
+            entity.finalizeSpawn((IServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.CONVERSION, null, null);
+            this.level.broadcastEntityEvent(this, (byte) 16);
+        }
+        if (!this.level.isClientSide && this.getIsBatHanging() && !this.isInvulnerableTo(source)) {
+            this.setIsBatHanging(false);
+        }
+        return super.hurt(source, amount);
     }
 
     @Override
@@ -103,147 +98,145 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
         return 0.1F;
     }
 
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(HANGING, (byte) 0);
+    }
+
     @Override
-    protected float getSoundPitch() {
-        return super.getSoundPitch() * 0.95F;
+    protected float getVoicePitch() {
+        return super.getVoicePitch() * 0.95F;
     }
 
     @Nullable
     @Override
     public SoundEvent getAmbientSound() {
-        return this.getIsBatHanging() && this.rand.nextInt(4) != 0 ? null : SoundEvents.ENTITY_BAT_AMBIENT;
+        return this.getIsBatHanging() && this.random.nextInt(4) != 0 ? null : SoundEvents.BAT_AMBIENT;
     }
 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_BAT_HURT;
+        return SoundEvents.BAT_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_BAT_DEATH;
+        return SoundEvents.BAT_DEATH;
     }
 
     @Override
-    public boolean canBePushed() {
+    public boolean isPushable() {
         return false;
     }
 
     @Override
-    protected void collideWithEntity(@NotNull Entity entityIn) {
+    protected void doPush(@NotNull Entity entity) {
     }
 
     @Override
-    protected void collideWithNearbyEntities() {
+    protected void pushEntities() {
     }
 
     public boolean getIsBatHanging() {
-        return (this.dataManager.get(HANGING) & 1) != 0;
+        return (this.entityData.get(HANGING) & 1) != 0;
     }
 
     public void setIsBatHanging(boolean isHanging) {
-        byte b0 = this.dataManager.get(HANGING);
+        byte b0 = this.entityData.get(HANGING);
         if (isHanging) {
-            this.dataManager.set(HANGING, (byte)(b0 | 1));
+            this.entityData.set(HANGING, (byte) (b0 | 1));
         } else {
-            this.dataManager.set(HANGING, (byte)(b0 & -2));
+            this.entityData.set(HANGING, (byte) (b0 & -2));
         }
 
     }
 
-    public void tick() {
-        super.tick();
+    public void aiStep() {
+        super.aiStep();
         if (this.getIsBatHanging()) {
-            this.setMotion(Vector3d.ZERO);
-            this.setRawPosition(this.getPosX(), (double) MathHelper.floor(this.getPosY()) + 1.0D - (double)this.getHeight(), this.getPosZ());
+            this.setDeltaMovement(Vector3d.ZERO);
+            this.setPosRaw(this.getX(), (double) MathHelper.floor(this.getY()) + 1.0D - (double) this.getBbHeight(), this.getZ());
         } else {
-            this.setMotion(this.getMotion().mul(1.0D, 0.6D, 1.0D));
+            this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, 0.6D, 1.0D));
         }
 
     }
 
-    @Override
-    protected void updateAITasks() {
-        super.updateAITasks();
-        BlockPos blockpos = this.getPosition();
-        BlockPos blockpos1 = blockpos.up();
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        BlockPos blockpos = this.blockPosition();
+        BlockPos blockpos1 = blockpos.above();
         if (this.getIsBatHanging()) {
-            if (this.world.getBlockState(blockpos1).isNormalCube(this.world, blockpos)) {
-                if (this.rand.nextInt(200) == 0) {
-                    this.rotationYawHead = (float)this.rand.nextInt(360);
+            boolean flag = this.isSilent();
+            if (this.level.getBlockState(blockpos1).isRedstoneConductor(this.level, blockpos)) {
+                if (this.random.nextInt(200) == 0) {
+                    this.yHeadRot = (float) this.random.nextInt(360);
                 }
 
-                if (this.world.getClosestPlayer(field_213813_c, this) != null) {
+                if (this.level.getNearestPlayer(BAT_RESTING_TARGETING, this) != null) {
                     this.setIsBatHanging(false);
-                    this.world.playEvent(null, 1025, blockpos, 0);
+                    if (!flag) {
+                        this.level.levelEvent(null, 1025, blockpos, 0);
+                    }
                 }
             } else {
                 this.setIsBatHanging(false);
-                this.world.playEvent(null, 1025, blockpos, 0);
+                if (!flag) {
+                    this.level.levelEvent(null, 1025, blockpos, 0);
+                }
             }
         } else {
-            if (this.spawnPosition != null && (!this.world.isAirBlock(this.spawnPosition) || this.spawnPosition.getY() < 1)) {
+            if (this.spawnPosition != null && (!this.level.isEmptyBlock(this.spawnPosition) || this.spawnPosition.getY() < 1)) {
                 this.spawnPosition = null;
             }
 
-            if (this.spawnPosition == null || this.rand.nextInt(30) == 0 || this.spawnPosition.withinDistance(this.getPositionVec(), 2.0D)) {
-                this.spawnPosition = new BlockPos(this.getPosX() + (double)this.rand.nextInt(7) - (double)this.rand.nextInt(7), this.getPosY() + (double)this.rand.nextInt(6) - 2.0D, this.getPosZ() + (double)this.rand.nextInt(7) - (double)this.rand.nextInt(7));
+            if (this.spawnPosition == null || this.random.nextInt(30) == 0 || this.spawnPosition.closerThan(this.position(), 2.0D)) {
+                this.spawnPosition = new BlockPos(this.getX() + (double) this.random.nextInt(7) - (double) this.random.nextInt(7), this.getY() + (double) this.random.nextInt(6) - 2.0D, this.getZ() + (double) this.random.nextInt(7) - (double) this.random.nextInt(7));
             }
 
-            double d0 = (double)this.spawnPosition.getX() + 0.5D - this.getPosX();
-            double d1 = (double)this.spawnPosition.getY() + 0.1D - this.getPosY();
-            double d2 = (double)this.spawnPosition.getZ() + 0.5D - this.getPosZ();
-            Vector3d vec3d = this.getMotion();
-            Vector3d vec3d1 = vec3d.add((Math.signum(d0) * 0.5D - vec3d.x) * (double)0.1F, (Math.signum(d1) * (double)0.7F - vec3d.y) * (double)0.1F, (Math.signum(d2) * 0.5D - vec3d.z) * (double)0.1F);
-            this.setMotion(vec3d1);
-            float f = (float)(MathHelper.atan2(vec3d1.z, vec3d1.x) * (double)(180F / (float)Math.PI)) - 90.0F;
-            float f1 = MathHelper.wrapDegrees(f - this.rotationYaw);
-            if(this.getAttackTarget() != null) {
-                this.moveToEntity(this.getAttackTarget());
+            double d2 = (double) this.spawnPosition.getX() + 0.5D - this.getX();
+            double d0 = (double) this.spawnPosition.getY() + 0.1D - this.getY();
+            double d1 = (double) this.spawnPosition.getZ() + 0.5D - this.getZ();
+            Vector3d vector3d = this.getDeltaMovement();
+            Vector3d vector3d1 = vector3d.add((Math.signum(d2) * 0.5D - vector3d.x) * (double) 0.1F, (Math.signum(d0) * (double) 0.7F - vector3d.y) * (double) 0.1F, (Math.signum(d1) * 0.5D - vector3d.z) * (double) 0.1F);
+            this.setDeltaMovement(vector3d1);
+            float f = (float) (MathHelper.atan2(vector3d1.z, vector3d1.x) * (double) (180F / (float) Math.PI)) - 90.0F;
+            float f1 = MathHelper.wrapDegrees(f - this.yRot);
+            if (this.getTarget() != null) {
+                this.moveToEntity(this.getTarget());
             } else {
-                this.moveForward = 0.5F;
+                this.zza = 0.5F;
             }
-            this.rotationYaw += f1;
-            if (this.rand.nextInt(100) == 0 && this.world.getBlockState(blockpos1).isNormalCube(this.world, blockpos1)) {
+            this.yRot += f1;
+            if (this.random.nextInt(100) == 0 && this.level.getBlockState(blockpos1).isRedstoneConductor(this.level, blockpos1)) {
                 this.setIsBatHanging(true);
             }
         }
     }
 
     public void moveToEntity(@NotNull Entity entity) {
-        Vector3d motion = new Vector3d((entity.getPosX() - this.getPosX()) / 10, ((entity.getPosY() + 1) - this.getPosY()) / 10,(entity.getPosZ() - this.getPosZ()) / 10);
-        this.setMotion(motion);
+        Vector3d motion = new Vector3d((entity.getX() - this.getX()) / 10, ((entity.getY() + 1) - this.getY()) / 10, (entity.getZ() - this.getZ()) / 10);
+        this.setDeltaMovement(motion);
     }
 
-    @Override
-    protected boolean canTriggerWalking() {
+    protected boolean isMovementNoisy() {
         return false;
     }
 
-    @Override
-    public boolean onLivingFall(float distance, float damageMultiplier) {
+    public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
         return false;
     }
 
-    @Override
-    protected void updateFallState(double y, boolean onGroundIn, @NotNull BlockState state, @NotNull BlockPos pos) {
+    protected void checkFallDamage(double p_184231_1_, boolean p_184231_3_, @NotNull BlockState p_184231_4_, @NotNull BlockPos p_184231_5_) {
     }
 
-    @Override
-    public boolean doesEntityNotTriggerPressurePlate() {
+    public boolean isIgnoringBlockTriggers() {
         return true;
     }
 
-    @Override
-    public void readAdditional(@NotNull CompoundNBT compound) {
-        super.readAdditional(compound);
-        this.dataManager.set(HANGING, compound.getByte("BatFlags"));
-    }
-
-    @Override
-    public void writeAdditional(@NotNull CompoundNBT compound) {
-        super.writeAdditional(compound);
-        compound.putByte("BatFlags", this.dataManager.get(HANGING));
+    public void readAdditionalSaveData(@NotNull CompoundNBT p_70037_1_) {
+        super.readAdditionalSaveData(p_70037_1_);
+        this.entityData.set(HANGING, p_70037_1_.getByte("BatFlags"));
     }
 
     @Override
@@ -251,21 +244,13 @@ public class InfectedBatEntity extends AbstractInfectedEntity implements IFlying
         return sizeIn.height / 2.0F;
     }
 
-    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> batIn, @NotNull IServerWorld worldIn, SpawnReason reason, @NotNull BlockPos pos, Random randomIn) {
-        if (pos.getY() >= worldIn.getSeaLevel() || !SaveDataUtil.canHerobrineSpawn(worldIn)) {
-            return false;
-        } else {
-            int i = worldIn.getLight(pos);
-            int j = 4;
-            if (randomIn.nextBoolean()) {
-                return false;
-            }
-            return i <= randomIn.nextInt(j) && canSpawnOn(batIn, worldIn, reason, pos, randomIn);
-        }
+    public void addAdditionalSaveData(@NotNull CompoundNBT p_213281_1_) {
+        super.addAdditionalSaveData(p_213281_1_);
+        p_213281_1_.putByte("BatFlags", this.entityData.get(HANGING));
     }
 
     @Override
-    public @NotNull ResourceLocation getLootTable() {
-        return EntityType.BAT.getLootTable();
+    public @NotNull ResourceLocation getDefaultLootTable() {
+        return EntityType.BAT.getDefaultLootTable();
     }
 }

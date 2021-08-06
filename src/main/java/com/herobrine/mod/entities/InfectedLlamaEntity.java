@@ -32,49 +32,35 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class InfectedLlamaEntity extends LlamaEntity implements IMob {
-    private static final DataParameter<Integer> DATA_VARIANT_ID = EntityDataManager.createKey(InfectedLlamaEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> DATA_VARIANT_ID = EntityDataManager.defineId(InfectedLlamaEntity.class, DataSerializers.INT);
+
     public InfectedLlamaEntity(EntityType<? extends InfectedLlamaEntity> type, World worldIn) {
         super(type, worldIn);
-        experienceValue = 3;
+        xpReward = 3;
     }
 
     public InfectedLlamaEntity(World worldIn) {
         this(EntityRegistry.INFECTED_LLAMA_ENTITY, worldIn);
     }
 
-    @Override
-    public boolean isDespawnPeaceful() {
-        return true;
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 25.0D)
+                .add(Attributes.FOLLOW_RANGE, 16.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.4D);
     }
 
-    @Override
-    public @NotNull SoundCategory getSoundCategory() {
-        return SoundCategory.HOSTILE;
-    }
-
-    @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        if (source.getImmediateSource() instanceof HolyWaterEntity) {
-            LlamaEntity llamaEntity = EntityType.LLAMA.create(this.world);
-            assert llamaEntity != null;
-            llamaEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            llamaEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
-            llamaEntity.setNoAI(this.isAIDisabled());
-            if (this.hasCustomName()) {
-                llamaEntity.setCustomName(this.getCustomName());
-                llamaEntity.setCustomNameVisible(this.isCustomNameVisible());
-            }
-            llamaEntity.enablePersistence();
-            llamaEntity.setVariant(this.getVariant());
-            llamaEntity.setGrowingAge(0);
-            this.world.setEntityState(this, (byte)16);
-            this.world.addEntity(llamaEntity);
-            this.remove();
-        }
-
-        if (source.getImmediateSource() instanceof UnholyWaterEntity)
+    public static boolean isValidLightLevel(@NotNull IServerWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
+        if (worldIn.getBrightness(LightType.SKY, pos) > randomIn.nextInt(32)) {
             return false;
-        return super.attackEntityFrom(source, amount);
+        } else {
+            int i = worldIn.getLevel().isThundering() ? worldIn.getMaxLocalRawBrightness(pos, 10) : worldIn.getLightEmission(pos);
+            return i <= randomIn.nextInt(8);
+        }
+    }
+
+    public static boolean canSpawn(EntityType<? extends InfectedLlamaEntity> type, @NotNull IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && checkMobSpawnRules(type, worldIn, reason, pos, randomIn) && SaveDataUtil.canHerobrineSpawn(worldIn);
     }
 
     @Override
@@ -92,28 +78,26 @@ public class InfectedLlamaEntity extends LlamaEntity implements IMob {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 25.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.4D);
+    @Override
+    public boolean shouldDespawnInPeaceful() {
+        return true;
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(DATA_VARIANT_ID, 0);
+    public @NotNull SoundCategory getSoundSource() {
+        return SoundCategory.HOSTILE;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void handleStatusUpdate(byte id) {
-        if (id == 16) {
-            if (!this.isSilent()) {
-                this.world.playSound(this.getPosX(), this.getPosYEye(), this.getPosZ(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED, SoundCategory.NEUTRAL, 2.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F, false);
-            }
-        } else {
-            super.handleStatusUpdate(id);
+    @Override
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        if (source.getDirectEntity() instanceof HolyWaterEntity) {
+            LlamaEntity entity = this.convertTo(EntityType.LLAMA, false);
+            assert entity != null;
+            entity.setVariant(this.getVariant());
+            entity.finalizeSpawn((IServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.CONVERSION, null, null);
+            this.level.broadcastEntityEvent(this, (byte) 16);
         }
+        return super.hurt(source, amount);
     }
 
     @Override
@@ -132,125 +116,118 @@ public class InfectedLlamaEntity extends LlamaEntity implements IMob {
     }
 
     @Override
-    protected boolean isMovementBlocked() {
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_VARIANT_ID, 0);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void handleEntityEvent(byte id) {
+        if (id == 16) {
+            if (!this.isSilent()) {
+                this.level.playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundCategory.NEUTRAL, 2.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F, false);
+            }
+        } else {
+            super.handleEntityEvent(id);
+        }
+    }
+
+    @Override
+    protected boolean isImmobile() {
         return this.getHealth() <= 0.0F;
     }
 
     @Override
-    public boolean canMateWith(@NotNull AnimalEntity otherAnimal) {
+    public boolean canMate(@NotNull AnimalEntity otherAnimal) {
         return false;
     }
 
     @Override
     @SuppressWarnings("ConstantConditions")
-    protected @NotNull LlamaEntity createChild() {
+    protected @NotNull LlamaEntity makeBabyLlama() {
         return null;
     }
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_LLAMA_AMBIENT;
+        return SoundEvents.LLAMA_AMBIENT;
     }
 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_LLAMA_HURT;
+        return SoundEvents.LLAMA_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_LLAMA_DEATH;
+        return SoundEvents.LLAMA_DEATH;
     }
 
     @Override
     protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
-        this.playSound(SoundEvents.ENTITY_LLAMA_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.LLAMA_STEP, 0.15F, 1.0F);
     }
 
     @Override
-    public void writeAdditional(@NotNull CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("Variant", this.getVariant());
 
     }
 
     @Override
-    public void readAdditional(@NotNull CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         this.setVariant(compound.getInt("Variant"));
     }
 
     @Override
-    public boolean isChild() {
+    public boolean isBaby() {
         return false;
     }
 
     public int getVariant() {
-        return MathHelper.clamp(this.dataManager.get(DATA_VARIANT_ID), 0, 3);
+        return MathHelper.clamp(this.entityData.get(DATA_VARIANT_ID), 0, 3);
     }
 
     public void setVariant(int variantIn) {
-        this.dataManager.set(DATA_VARIANT_ID, variantIn);
+        this.entityData.set(DATA_VARIANT_ID, variantIn);
     }
 
     @Override
-    public void attackEntityWithRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
+    public void performRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
         this.spit(target);
     }
 
     private void spit(@NotNull LivingEntity target) {
-        LlamaSpitEntity llamaSpitEntity = new LlamaSpitEntity(this.world, this);
-        double d0 = target.getPosX() - this.getPosX();
-        double d1 = target.getPosYHeight(0.3333333333333333D) - llamaSpitEntity.getPosY();
-        double d2 = target.getPosZ() - this.getPosZ();
+        LlamaSpitEntity llamaSpitEntity = new LlamaSpitEntity(this.level, this);
+        double d0 = target.getX() - this.getX();
+        double d1 = target.getY(0.3333333333333333D) - llamaSpitEntity.getY();
+        double d2 = target.getZ() - this.getZ();
         float f = MathHelper.sqrt(d0 * d0 + d2 * d2) * 0.2F;
-        llamaSpitEntity.shoot(d0, d1 + (double)f, d2, 1.5F, 10.0F);
-        this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_LLAMA_SPIT, this.getSoundCategory(), 1.0F, 1.0F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-        this.world.addEntity(llamaSpitEntity);
+        llamaSpitEntity.shoot(d0, d1 + (double) f, d2, 1.5F, 10.0F);
+        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LLAMA_SPIT, this.getSoundSource(), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+        this.level.addFreshEntity(llamaSpitEntity);
     }
 
     @Override
-    public boolean onLivingFall(float distance, float damageMultiplier) {
+    public boolean causeFallDamage(float distance, float damageMultiplier) {
         int i = this.calculateFallDamage(distance, damageMultiplier);
         if (i <= 0) {
             return false;
         } else {
             if (distance >= 6.0F) {
-                this.attackEntityFrom(DamageSource.FALL, (float)i);
-                if (this.isBeingRidden()) {
-                    for(Entity entity : this.getRecursivePassengers()) {
-                        entity.attackEntityFrom(DamageSource.FALL, (float)i);
+                this.hurt(DamageSource.FALL, (float) i);
+                if (this.isVehicle()) {
+                    for (Entity entity : this.getIndirectPassengers()) {
+                        entity.hurt(DamageSource.FALL, (float) i);
                     }
                 }
             }
 
-            this.playFallSound();
+            this.playBlockFallSound();
             return true;
         }
-    }
-
-    @Override
-    public void baseTick() {
-        if(!world.isRemote) {
-            if (!SaveDataUtil.canHerobrineSpawn(world)) {
-                this.remove();
-            }
-        }
-        super.baseTick();
-    }
-
-    @Nullable
-    @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        int i;
-        if (spawnDataIn instanceof InfectedLlamaEntity.LlamaData) {
-            i = ((InfectedLlamaEntity.LlamaData)spawnDataIn).variant;
-        } else {
-            i = this.rand.nextInt(4);
-            spawnDataIn = new InfectedLlamaEntity.LlamaData(i);
-        }
-        this.setVariant(i);
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     static class LlamaData extends AgeableEntity.AgeableData {
@@ -262,28 +239,34 @@ public class InfectedLlamaEntity extends LlamaEntity implements IMob {
         }
     }
 
-    static class HurtByTargetGoal extends net.minecraft.entity.ai.goal.HurtByTargetGoal {
-        public HurtByTargetGoal(InfectedLlamaEntity llama) {
-            super(llama);
-        }
-        @Override
-        public boolean shouldContinueExecuting() {
-            if (this.goalOwner instanceof InfectedLlamaEntity) {
-                return true;
+    @Override
+    public void baseTick() {
+        if (!level.isClientSide) {
+            if (!SaveDataUtil.canHerobrineSpawn(level)) {
+                this.remove();
             }
-            return super.shouldContinueExecuting();
         }
+        super.baseTick();
+    }
+
+    @Nullable
+    @Override
+    public ILivingEntityData finalizeSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        int i;
+        if (spawnDataIn instanceof InfectedLlamaEntity.LlamaData) {
+            i = ((InfectedLlamaEntity.LlamaData) spawnDataIn).variant;
+        } else {
+            i = this.random.nextInt(4);
+            spawnDataIn = new InfectedLlamaEntity.LlamaData(i);
+        }
+        this.setVariant(i);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     @Override
     public void tick() {
         super.tick();
-        this.setChested(false);
-    }
-
-    @Override
-    public @NotNull ActionResultType getEntityInteractionResult(@NotNull PlayerEntity player, @NotNull Hand hand) {
-        return ActionResultType.FAIL;
+        this.setChest(false);
     }
 
     @Override
@@ -292,38 +275,41 @@ public class InfectedLlamaEntity extends LlamaEntity implements IMob {
     }
 
     @Override
-    public boolean isTame() {
-        return false;
+    public @NotNull ActionResultType mobInteract(@NotNull PlayerEntity player, @NotNull Hand hand) {
+        return ActionResultType.FAIL;
     }
 
-    public static boolean isValidLightLevel(@NotNull IServerWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
-        if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
-            return false;
-        } else {
-            int i = worldIn.getWorld().isThundering() ? worldIn.getNeighborAwareLightSubtracted(pos, 10) : worldIn.getLight(pos);
-            return i <= randomIn.nextInt(8);
-        }
+    @Override
+    public boolean isTamed() {
+        return false;
     }
 
     public static boolean hasViewOfSky(@NotNull IWorld worldIn, @NotNull BlockPos pos) {
         return worldIn.canSeeSky(pos);
     }
 
-    public static boolean canSpawn(EntityType<? extends InfectedLlamaEntity> type, @NotNull IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
-        return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && SaveDataUtil.canHerobrineSpawn(worldIn);
-    }
-
     @Override
-    protected void dropSpecialItems(@NotNull DamageSource source, int looting, boolean recentlyHitIn) {
-        super.dropSpecialItems(source, looting, recentlyHitIn);
+    protected void dropCustomDeathLoot(@NotNull DamageSource source, int looting, boolean recentlyHitIn) {
+        super.dropCustomDeathLoot(source, looting, recentlyHitIn);
         Random rand = new Random();
-        if(rand.nextInt(100) <= 20 * (looting + 1)) {
-            this.entityDropItem(new ItemStack(ItemList.cursed_dust, 1));
+        if (rand.nextInt(100) <= 20 * (looting + 1)) {
+            this.spawnAtLocation(new ItemStack(ItemList.cursed_dust, 1));
         }
     }
 
     @Override
-    public @NotNull ResourceLocation getLootTable() {
-        return EntityType.LLAMA.getLootTable();
+    public @NotNull ResourceLocation getDefaultLootTable() {
+        return EntityType.LLAMA.getDefaultLootTable();
+    }
+
+    static class HurtByTargetGoal extends net.minecraft.entity.ai.goal.HurtByTargetGoal {
+        public HurtByTargetGoal(InfectedLlamaEntity llama) {
+            super(llama);
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return true;
+        }
     }
 }

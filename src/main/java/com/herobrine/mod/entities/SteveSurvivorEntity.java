@@ -33,18 +33,18 @@ public class SteveSurvivorEntity extends AbstractSurvivorEntity {
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData finalizeSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         //Chooses random resource location from an ArrayList and converts to a string value.
         textureLocation = SurvivorSkinRegistry.chooseClassicArmsSkinFromList().toString();
 
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
+    public void aiStep() {
+        super.aiStep();
         //This is here so when updating from 0.5 any survivor that is already spawned can choose a skin.
-        if(textureLocation == null) {
+        if (textureLocation == null) {
             //Chooses random resource location from an ArrayList and converts to a string value.
             textureLocation = SurvivorSkinRegistry.chooseClassicArmsSkinFromList().toString();
         }

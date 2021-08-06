@@ -23,52 +23,46 @@ public class AbstractInfectedEntity extends MonsterEntity {
         super(type, worldIn);
     }
 
-    @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        if (source.getImmediateSource() instanceof UnholyWaterEntity)
+    public static boolean isValidLightLevel(@NotNull IServerWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
+        if (worldIn.getBrightness(LightType.SKY, pos) > randomIn.nextInt(32)) {
             return false;
-        return super.attackEntityFrom(source, amount);
+        } else {
+            int i = worldIn.getLevel().isThundering() ? worldIn.getMaxLocalRawBrightness(pos, 10) : worldIn.getLightEmission(pos);
+            return i <= randomIn.nextInt(8);
+        }
+    }
+
+    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> type, @NotNull IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && checkMobSpawnRules(type, worldIn, reason, pos, randomIn) && SaveDataUtil.canHerobrineSpawn(worldIn);
     }
 
     @Override
-    public boolean attackEntityAsMob(@NotNull Entity entityIn) {
-        boolean flag = super.attackEntityAsMob(entityIn);
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        if (source.getDirectEntity() instanceof UnholyWaterEntity)
+            return false;
+        return super.hurt(source, amount);
+    }
+
+    @Override
+    public boolean doHurtTarget(@NotNull Entity entityIn) {
+        boolean flag = super.doHurtTarget(entityIn);
         if (flag) {
-            float f = this.world.getDifficultyForLocation(this.getPosition()).getAdditionalDifficulty();
-            if (this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
-                entityIn.setFire(2 * (int)f);
+            float f = this.level.getCurrentDifficultyAt(this.getOnPos()).getEffectiveDifficulty();
+            if (this.isOnFire() && this.random.nextFloat() < f * 0.3F) {
+                entityIn.setSecondsOnFire(2 * (int) f);
             }
         }
         return flag;
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void handleStatusUpdate(byte id) {
+    public void handleEntityEvent(byte id) {
         if (id == 16) {
             if (!this.isSilent()) {
-                this.world.playSound(this.getPosX(), this.getPosYEye(), this.getPosZ(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED, SoundCategory.NEUTRAL, 2.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F, false);
+                this.level.playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundCategory.NEUTRAL, 2.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F, false);
             }
         } else {
-            super.handleStatusUpdate(id);
-        }
-    }
-
-    @Override
-    public void baseTick() {
-        if(!world.isRemote) {
-            if (!SaveDataUtil.canHerobrineSpawn(world)) {
-                this.remove();
-            }
-        }
-        super.baseTick();
-    }
-
-    public static boolean isValidLightLevel(@NotNull IServerWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
-        if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
-            return false;
-        } else {
-            int i = worldIn.getWorld().isThundering() ? worldIn.getNeighborAwareLightSubtracted(pos, 10) : worldIn.getLight(pos);
-            return i <= randomIn.nextInt(8);
+            super.handleEntityEvent(id);
         }
     }
 
@@ -76,16 +70,22 @@ public class AbstractInfectedEntity extends MonsterEntity {
         return worldIn.canSeeSky(pos);
     }
 
-    public static boolean canSpawn(EntityType<? extends AbstractInfectedEntity> type, @NotNull IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
-        return worldIn.getDifficulty() != Difficulty.PEACEFUL && hasViewOfSky(worldIn, pos) && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && SaveDataUtil.canHerobrineSpawn(worldIn);
+    @Override
+    public void baseTick() {
+        if (!level.isClientSide) {
+            if (!SaveDataUtil.canHerobrineSpawn(level)) {
+                this.remove();
+            }
+        }
+        super.baseTick();
     }
 
     @Override
-    protected void dropSpecialItems(@NotNull DamageSource source, int looting, boolean recentlyHitIn) {
-        super.dropSpecialItems(source, looting, recentlyHitIn);
+    protected void dropCustomDeathLoot(@NotNull DamageSource source, int looting, boolean recentlyHitIn) {
+        super.dropCustomDeathLoot(source, looting, recentlyHitIn);
         Random rand = new Random();
-        if(rand.nextInt(100) <= 20 * (looting + 1)) {
-            this.entityDropItem(new ItemStack(ItemList.cursed_dust, 1));
+        if (rand.nextInt(100) <= 20 * (looting + 1)) {
+            this.spawnAtLocation(new ItemStack(ItemList.cursed_dust, 1));
         }
     }
 }

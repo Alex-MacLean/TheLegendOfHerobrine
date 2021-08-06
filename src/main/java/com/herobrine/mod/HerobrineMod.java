@@ -69,11 +69,11 @@ public class HerobrineMod {
     public static void registerItems(@NotNull final RegistryEvent.Register<Item> event) {
         assert false;
         event.getRegistry().registerAll(
-                ItemList.herobrine_altar = new BlockItem(BlockList.herobrine_altar, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)).setRegistryName(location("herobrine_altar")),
+                ItemList.herobrine_altar = new BlockItem(BlockList.herobrine_altar, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS).rarity(Rarity.UNCOMMON)).setRegistryName(location("herobrine_altar")),
                 ItemList.cursed_diamond_block = new BlockItem(BlockList.cursed_diamond_block, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)).setRegistryName(location("cursed_diamond_block")),
                 ItemList.herobrine_statue = new HerobrineStatueItem(BlockList.herobrine_statue, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)).setRegistryName(location("herobrine_statue")),
                 ItemList.purified_diamond_block = new BlockItem(BlockList.purified_diamond_block, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)).setRegistryName(location("purified_diamond_block")),
-                ItemList.bedrock_sword = new SwordItem(ItemTierList.bedrock_item_tier, 0, -2.4f, new Item.Properties().tab(ItemGroup.TAB_COMBAT)).setRegistryName(location("bedrock_sword")),
+                ItemList.bedrock_sword = new SwordItem(ItemTierList.bedrock_item_tier, 0, -2.4f, new Item.Properties().tab(ItemGroup.TAB_COMBAT).rarity(Rarity.EPIC)).setRegistryName(location("bedrock_sword")),
                 ItemList.cursed_diamond = new Item(new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(location("cursed_diamond")),
                 ItemList.cursed_diamond_sword = new SwordItem(ItemTierList.cursed_diamond_item_tier, 3, -2.4f, new Item.Properties().tab(ItemGroup.TAB_COMBAT)).setRegistryName(location("cursed_diamond_sword")),
                 ItemList.cursed_diamond_axe = new AxeItem(ItemTierList.cursed_diamond_item_tier, 5, -3.0f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)).setRegistryName(location("cursed_diamond_axe")),

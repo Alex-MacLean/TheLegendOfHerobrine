@@ -34,43 +34,29 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class InfectedRabbitEntity extends AbstractInfectedEntity {
-    private static final DataParameter<Integer> RABBIT_TYPE = EntityDataManager.createKey(InfectedRabbitEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> RABBIT_TYPE = EntityDataManager.defineId(InfectedRabbitEntity.class, DataSerializers.INT);
     private int jumpTicks;
     private int jumpDuration;
     private boolean wasOnGround;
     private int currentMoveTypeDuration;
     public InfectedRabbitEntity(EntityType<? extends InfectedRabbitEntity> type, World worldIn) {
         super(type, worldIn);
-        this.jumpController = new JumpHelperController(this);
-        this.moveController = new InfectedRabbitEntity.MoveHelperController(this);
-        this.setMovementSpeed(0.0D);
-        experienceValue = 3;
+        this.jumpControl = new JumpHelperController(this);
+        this.moveControl = new InfectedRabbitEntity.MoveHelperController(this);
+        this.setSpeedModifier(0.0D);
+        xpReward = 3;
     }
 
     public InfectedRabbitEntity(World worldIn) {
         this(EntityRegistry.INFECTED_RABBIT_ENTITY, worldIn);
     }
 
-    @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        if (source.getImmediateSource() instanceof HolyWaterEntity) {
-            RabbitEntity rabbitEntity = EntityType.RABBIT.create(this.world);
-            assert rabbitEntity != null;
-            rabbitEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            rabbitEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
-            rabbitEntity.setNoAI(this.isAIDisabled());
-            if (this.hasCustomName()) {
-                rabbitEntity.setCustomName(this.getCustomName());
-                rabbitEntity.setCustomNameVisible(this.isCustomNameVisible());
-            }
-            rabbitEntity.setRabbitType(this.getRabbitType());
-            rabbitEntity.enablePersistence();
-            rabbitEntity.setGrowingAge(0);
-            this.world.setEntityState(this, (byte)16);
-            this.world.addEntity(rabbitEntity);
-            this.remove();
-        }
-        return super.attackEntityFrom(source, amount);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 3.0D)
+                .add(Attributes.ATTACK_DAMAGE, 1.0D)
+                .add(Attributes.FOLLOW_RANGE, 16.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.3D);
     }
 
     @Override
@@ -88,64 +74,64 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 3.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 1.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D);
+    @Override
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        if (source.getDirectEntity() instanceof HolyWaterEntity) {
+            RabbitEntity entity = this.convertTo(EntityType.RABBIT, false);
+            assert entity != null;
+            entity.setRabbitType(this.getRabbitType());
+            entity.finalizeSpawn((IServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.CONVERSION, null, null);
+            this.level.broadcastEntityEvent(this, (byte) 16);
+        }
+        return super.hurt(source, amount);
     }
 
-    @Override
-    protected float getJumpUpwardsMotion() {
-        if (!this.collidedHorizontally && (!this.moveController.isUpdating() || !(this.moveController.getY() > this.getPosY() + 0.5D))) {
-            Path path = this.navigator.getPath();
-            if (path != null && path.getCurrentPathIndex() < path.getCurrentPathLength()) {
-                Vector3d vec3d = path.getPosition(this);
-                if (vec3d.y > this.getPosY() + 0.5D) {
+    protected float getJumpPower() {
+        if (!this.horizontalCollision && (!this.moveControl.hasWanted() || !(this.moveControl.getWantedY() > this.getY() + 0.5D))) {
+            Path path = this.navigation.getPath();
+            if (path != null && !path.isDone()) {
+                Vector3d vector3d = path.getNextEntityPos(this);
+                if (vector3d.y > this.getY() + 0.5D) {
                     return 0.5F;
                 }
             }
 
-            return this.moveController.getSpeed() <= 0.6D ? 0.2F : 0.3F;
+            return this.moveControl.getSpeedModifier() <= 0.6D ? 0.2F : 0.3F;
         } else {
             return 0.5F;
         }
     }
 
-    @Override
-    protected void jump() {
-        super.jump();
-        double d0 = this.moveController.getSpeed();
+    protected void jumpFromGround() {
+        super.jumpFromGround();
+        double d0 = this.moveControl.getSpeedModifier();
         if (d0 > 0.0D) {
-            double d1 = horizontalMag(this.getMotion());
+            double d1 = getHorizontalDistanceSqr(this.getDeltaMovement());
             if (d1 < 0.01D) {
                 this.moveRelative(0.1F, new Vector3d(0.0D, 0.0D, 1.0D));
             }
         }
-
-        if (!this.world.isRemote) {
-            this.world.setEntityState(this, (byte)1);
+        if (!this.level.isClientSide) {
+            this.level.broadcastEntityEvent(this, (byte) 1);
         }
-
     }
 
     @OnlyIn(Dist.CLIENT)
     public float getJumpCompletion(float p_175521_1_) {
-        return this.jumpDuration == 0 ? 0.0F : ((float)this.jumpTicks + p_175521_1_) / (float)this.jumpDuration;
+        return this.jumpDuration == 0 ? 0.0F : ((float) this.jumpTicks + p_175521_1_) / (float) this.jumpDuration;
     }
 
 
-    public void setMovementSpeed(double newSpeed) {
-        this.getNavigator().setSpeed(newSpeed);
-        this.moveController.setMoveTo(this.moveController.getX(), this.moveController.getY(), this.moveController.getZ(), newSpeed);
+    public void setSpeedModifier(double p_175515_1_) {
+        this.getNavigation().setSpeedModifier(p_175515_1_);
+        this.moveControl.setWantedPosition(this.moveControl.getWantedX(), this.moveControl.getWantedY(), this.moveControl.getWantedZ(), p_175515_1_);
     }
 
     @Override
     public void setJumping(boolean jumping) {
         super.setJumping(jumping);
         if (jumping) {
-            this.playSound(this.getJumpSound(), this.getSoundVolume(), ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F) * 0.8F);
+            this.playSound(this.getJumpSound(), this.getSoundVolume(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 0.8F);
         }
 
     }
@@ -157,17 +143,21 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(RABBIT_TYPE, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(RABBIT_TYPE, 0);
     }
 
     public int getRabbitType() {
-        return this.dataManager.get(RABBIT_TYPE);
+        return this.entityData.get(RABBIT_TYPE);
+    }
+
+    public void setRabbitType(int rabbitTypeId) {
+        this.entityData.set(RABBIT_TYPE, rabbitTypeId);
     }
 
     @Override
-    public void updateAITasks() {
+    public void customServerAiStep() {
         if (this.currentMoveTypeDuration > 0) {
             --this.currentMoveTypeDuration;
         }
@@ -179,22 +169,22 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
             }
 
             if (this.getRabbitType() == 99 && this.currentMoveTypeDuration == 0) {
-                LivingEntity livingentity = this.getAttackTarget();
-                if (livingentity != null && this.getDistanceSq(livingentity) < 16.0D) {
-                    this.calculateRotationYaw(livingentity.getPosX(), livingentity.getPosZ());
-                    this.moveController.setMoveTo(livingentity.getPosX(), livingentity.getPosY(), livingentity.getPosZ(), this.moveController.getSpeed());
+                LivingEntity livingentity = this.getTarget();
+                if (livingentity != null && this.distanceToSqr(livingentity) < 16.0D) {
+                    this.calculateRotationYaw(livingentity.getX(), livingentity.getZ());
+                    this.moveControl.setWantedPosition(livingentity.getX(), livingentity.getY(), livingentity.getZ(), this.moveControl.getSpeedModifier());
                     this.startJumping();
                     this.wasOnGround = true;
                 }
             }
 
-            InfectedRabbitEntity.JumpHelperController infectedrabbitentity$jumphelpercontroller = (InfectedRabbitEntity.JumpHelperController)this.jumpController;
+            InfectedRabbitEntity.JumpHelperController infectedrabbitentity$jumphelpercontroller = (InfectedRabbitEntity.JumpHelperController) this.jumpControl;
             if (infectedrabbitentity$jumphelpercontroller.getIsNotJumping()) {
-                if (this.moveController.isUpdating() && this.currentMoveTypeDuration == 0) {
-                    Path path = this.navigator.getPath();
-                    Vector3d vec3d = new Vector3d(this.moveController.getX(), this.moveController.getY(), this.moveController.getZ());
-                    if (path != null && path.getCurrentPathIndex() < path.getCurrentPathLength()) {
-                        vec3d = path.getPosition(this);
+                if (this.moveControl.hasWanted() && this.currentMoveTypeDuration == 0) {
+                    Path path = this.navigation.getPath();
+                    Vector3d vec3d = new Vector3d(this.moveControl.getWantedX(), this.moveControl.getWantedY(), this.moveControl.getWantedZ());
+                    if (path != null && path.isDone()) {
+                        vec3d = path.getNextEntityPos(this);
                     }
 
                     this.calculateRotationYaw(vec3d.x, vec3d.z);
@@ -209,8 +199,8 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
+    public void aiStep() {
+        super.aiStep();
         if (this.jumpTicks != this.jumpDuration) {
             ++this.jumpTicks;
         } else if (this.jumpDuration != 0) {
@@ -222,24 +212,15 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
     }
 
     private void calculateRotationYaw(double x, double z) {
-        this.rotationYaw = (float)(MathHelper.atan2(z - this.getPosZ(), x - this.getPosX()) * (double)(180F / (float)Math.PI)) - 90.0F;
+        this.yRot = (float) (MathHelper.atan2(z - this.getZ(), x - this.getX()) * (double) (180F / (float) Math.PI)) - 90.0F;
     }
 
     private void enableJumpControl() {
-        ((InfectedRabbitEntity.JumpHelperController)this.jumpController).setCanJump(true);
+        ((InfectedRabbitEntity.JumpHelperController) this.jumpControl).setCanJump(true);
     }
 
     private void disableJumpControl() {
-        ((InfectedRabbitEntity.JumpHelperController)this.jumpController).setCanJump(false);
-    }
-
-    private void updateMoveTypeDuration() {
-        if (this.moveController.getSpeed() < 2.2D) {
-            this.currentMoveTypeDuration = 10;
-        } else {
-            this.currentMoveTypeDuration = 1;
-        }
-
+        ((InfectedRabbitEntity.JumpHelperController) this.jumpControl).setCanJump(false);
     }
 
     private void checkLandingDelay() {
@@ -247,65 +228,70 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         this.disableJumpControl();
     }
 
+    private void updateMoveTypeDuration() {
+        if (this.moveControl.getSpeedModifier() < 2.2D) {
+            this.currentMoveTypeDuration = 10;
+        } else {
+            this.currentMoveTypeDuration = 1;
+        }
+
+    }
+
     @Override
-    public void writeAdditional(@NotNull CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("RabbitType", this.getRabbitType());
     }
 
     @Override
-    public void readAdditional(@NotNull CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         this.setRabbitType(compound.getInt("RabbitType"));
     }
 
     @Override
-    public boolean attackEntityAsMob(@NotNull Entity entityIn) {
+    public boolean doHurtTarget(@NotNull Entity entityIn) {
         if (this.getRabbitType() == 99) {
-            this.playSound(SoundEvents.ENTITY_RABBIT_ATTACK, 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
-            return entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), 8.0F);
+            this.playSound(SoundEvents.RABBIT_ATTACK, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+            return entityIn.hurt(DamageSource.mobAttack(this), 8.0F);
         } else {
-            return entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), 3.0F);
+            return entityIn.hurt(DamageSource.mobAttack(this), 3.0F);
         }
-    }
-
-    public void setRabbitType(int rabbitTypeId) {
-        this.dataManager.set(RABBIT_TYPE, rabbitTypeId);
     }
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData finalizeSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         int i = this.getRandomRabbitType(worldIn);
         if (spawnDataIn instanceof InfectedRabbitEntity.RabbitData) {
-            i = ((InfectedRabbitEntity.RabbitData)spawnDataIn).typeData;
+            i = ((InfectedRabbitEntity.RabbitData) spawnDataIn).typeData;
         } else {
             spawnDataIn = new InfectedRabbitEntity.RabbitData(i);
         }
 
         this.setRabbitType(i);
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void handleStatusUpdate(byte id) {
+    public void handleEntityEvent(byte id) {
         if (id == 1) {
-            this.handleRunningEffect();
+            this.spawnSprintParticle();
             this.jumpDuration = 10;
             this.jumpTicks = 0;
         } else {
-            super.handleStatusUpdate(id);
+            super.handleEntityEvent(id);
         }
 
     }
 
     private int getRandomRabbitType(@NotNull IWorld p_213610_1_) {
-        Biome biome = p_213610_1_.getBiome(this.getPosition());
-        int i = this.rand.nextInt(100);
+        Biome biome = p_213610_1_.getBiome(this.blockPosition());
+        int i = this.random.nextInt(100);
         if (biome.getPrecipitation() == Biome.RainType.SNOW) {
             return i < 80 ? 1 : 3;
-        } else if (biome.getCategory() == Biome.Category.DESERT) {
+        } else if (biome.getBiomeCategory() == Biome.Category.DESERT) {
             return 4;
         } else {
             return i < 50 ? 0 : (i < 90 ? 5 : 2);
@@ -314,21 +300,26 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_RABBIT_AMBIENT;
+        return SoundEvents.RABBIT_AMBIENT;
     }
 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_RABBIT_HURT;
+        return SoundEvents.RABBIT_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_RABBIT_DEATH;
+        return SoundEvents.RABBIT_DEATH;
     }
 
     protected SoundEvent getJumpSound() {
-        return SoundEvents.ENTITY_RABBIT_JUMP;
+        return SoundEvents.RABBIT_JUMP;
+    }
+
+    @Override
+    public @NotNull ResourceLocation getDefaultLootTable() {
+        return EntityType.RABBIT.getDefaultLootTable();
     }
 
     public static class JumpHelperController extends JumpController {
@@ -341,7 +332,7 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         }
 
         public boolean getIsNotJumping() {
-            return !this.isJumping;
+            return !this.jump;
         }
 
         public boolean canJump() {
@@ -354,43 +345,9 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
 
         @Override
         public void tick() {
-            if (this.isJumping) {
+            if (this.jump) {
                 this.rabbit.startJumping();
-                this.isJumping = false;
-            }
-
-        }
-    }
-
-    static class MoveHelperController extends MovementController {
-        private final InfectedRabbitEntity rabbit;
-        private double nextJumpSpeed;
-
-        public MoveHelperController(InfectedRabbitEntity rabbit) {
-            super(rabbit);
-            this.rabbit = rabbit;
-        }
-
-        @Override
-        public void tick() {
-            if (this.rabbit.onGround && !this.rabbit.isJumping && ((JumpHelperController) this.rabbit.jumpController).getIsNotJumping()) {
-                this.rabbit.setMovementSpeed(0.0D);
-            } else if (this.isUpdating()) {
-                this.rabbit.setMovementSpeed(this.nextJumpSpeed);
-            }
-
-            super.tick();
-        }
-
-        @Override
-        public void setMoveTo(double x, double y, double z, double speedIn) {
-            if (this.rabbit.isInWater()) {
-                speedIn = 1.5D;
-            }
-
-            super.setMoveTo(x, y, z, speedIn);
-            if (speedIn > 0.0D) {
-                this.nextJumpSpeed = speedIn;
+                this.jump = false;
             }
 
         }
@@ -405,8 +362,37 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         }
     }
 
-    @Override
-    public @NotNull ResourceLocation getLootTable() {
-        return EntityType.RABBIT.getLootTable();
+    static class MoveHelperController extends MovementController {
+        private final InfectedRabbitEntity rabbit;
+        private double nextJumpSpeed;
+
+        public MoveHelperController(InfectedRabbitEntity rabbit) {
+            super(rabbit);
+            this.rabbit = rabbit;
+        }
+
+        @Override
+        public void tick() {
+            if (this.rabbit.onGround && !this.rabbit.jumping && !((RabbitEntity.JumpHelperController) this.rabbit.jumpControl).wantJump()) {
+                this.rabbit.setSpeedModifier(0.0D);
+            } else if (this.hasWanted()) {
+                this.rabbit.setSpeedModifier(this.nextJumpSpeed);
+            }
+
+            super.tick();
+        }
+
+        @Override
+        public void setWantedPosition(double p_75642_1_, double p_75642_3_, double p_75642_5_, double p_75642_7_) {
+            if (this.rabbit.isInWater()) {
+                p_75642_7_ = 1.5D;
+            }
+
+            super.setWantedPosition(p_75642_1_, p_75642_3_, p_75642_5_, p_75642_7_);
+            if (p_75642_7_ > 0.0D) {
+                this.nextJumpSpeed = p_75642_7_;
+            }
+
+        }
     }
 }

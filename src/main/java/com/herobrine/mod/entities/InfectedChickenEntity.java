@@ -3,12 +3,12 @@ package com.herobrine.mod.entities;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
@@ -31,28 +31,15 @@ public class InfectedChickenEntity extends AbstractInfectedEntity {
 
     public InfectedChickenEntity(EntityType<? extends InfectedChickenEntity> type, World worldIn) {
         super(type, worldIn);
-        experienceValue = 3;
+        xpReward = 3;
     }
 
-    @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        if (source.getImmediateSource() instanceof HolyWaterEntity) {
-            ChickenEntity chickenEntity = EntityType.CHICKEN.create(this.world);
-            assert chickenEntity != null;
-            chickenEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            chickenEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
-            chickenEntity.setNoAI(this.isAIDisabled());
-            if (this.hasCustomName()) {
-                chickenEntity.setCustomName(this.getCustomName());
-                chickenEntity.setCustomNameVisible(this.isCustomNameVisible());
-            }
-            chickenEntity.enablePersistence();
-            chickenEntity.setGrowingAge(0);
-            this.world.setEntityState(this, (byte)16);
-            this.world.addEntity(chickenEntity);
-            this.remove();
-        }
-        return super.attackEntityFrom(source, amount);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 4.0D)
+                .add(Attributes.ATTACK_DAMAGE, 1.0D)
+                .add(Attributes.FOLLOW_RANGE, 16.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.25D);
     }
 
     public InfectedChickenEntity(World worldIn) {
@@ -74,29 +61,32 @@ public class InfectedChickenEntity extends AbstractInfectedEntity {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 4.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 1.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D);
+    @Override
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        if (source.getDirectEntity() instanceof HolyWaterEntity) {
+            MobEntity entity = this.convertTo(EntityType.CHICKEN, false);
+            assert entity != null;
+            entity.finalizeSpawn((IServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.CONVERSION, null, null);
+            this.level.broadcastEntityEvent(this, (byte) 16);
+        }
+        return super.hurt(source, amount);
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
+    public void aiStep() {
+        super.aiStep();
         this.oFlap = this.wingRotation;
         this.oFlapSpeed = this.destPos;
-        this.destPos = (float)((double)this.destPos + (double)(this.onGround ? -1 : 4) * 0.3D);
+        this.destPos = (float) ((double) this.destPos + (double) (this.onGround ? -1 : 4) * 0.3D);
         this.destPos = MathHelper.clamp(this.destPos, 0.0F, 1.0F);
         if (!this.onGround && this.wingRotDelta < 1.0F) {
             this.wingRotDelta = 1.0F;
         }
 
-        this.wingRotDelta = (float)((double)this.wingRotDelta * 0.9D);
-        Vector3d vec3d = this.getMotion();
+        this.wingRotDelta = (float) ((double) this.wingRotDelta * 0.9D);
+        Vector3d vec3d = this.getDeltaMovement();
         if (!this.onGround && vec3d.y < 0.0D) {
-            this.setMotion(vec3d.mul(1.0D, 0.6D, 1.0D));
+            this.setDeltaMovement(vec3d.multiply(1.0D, 0.6D, 1.0D));
         }
 
         this.wingRotation += this.wingRotDelta * 2.0F;
@@ -104,31 +94,31 @@ public class InfectedChickenEntity extends AbstractInfectedEntity {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_CHICKEN_AMBIENT;
+        return SoundEvents.CHICKEN_AMBIENT;
     }
 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_CHICKEN_HURT;
+        return SoundEvents.CHICKEN_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_CHICKEN_DEATH;
+        return SoundEvents.CHICKEN_DEATH;
     }
 
     @Override
     protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
-        this.playSound(SoundEvents.ENTITY_CHICKEN_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.CHICKEN_STEP, 0.15F, 1.0F);
     }
 
     @Override
-    public boolean onLivingFall(float distance, float damageMultiplier) {
+    public boolean causeFallDamage(float distance, float damageMultiplier) {
         return false;
     }
 
     @Override
-    public @NotNull ResourceLocation getLootTable() {
-        return EntityType.CHICKEN.getLootTable();
+    public @NotNull ResourceLocation getDefaultLootTable() {
+        return EntityType.CHICKEN.getDefaultLootTable();
     }
 }

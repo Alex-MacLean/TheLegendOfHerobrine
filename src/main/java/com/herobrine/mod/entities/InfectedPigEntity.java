@@ -3,13 +3,13 @@ package com.herobrine.mod.entities;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
-import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -23,32 +23,19 @@ import org.jetbrains.annotations.NotNull;
 public class InfectedPigEntity extends AbstractInfectedEntity {
     public InfectedPigEntity(EntityType<? extends InfectedPigEntity> type, World worldIn) {
         super(type, worldIn);
-        experienceValue = 3;
+        xpReward = 3;
     }
 
     public InfectedPigEntity(World worldIn) {
         this(EntityRegistry.INFECTED_PIG_ENTITY, worldIn);
     }
 
-    @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        if (source.getImmediateSource() instanceof HolyWaterEntity) {
-            PigEntity pigEntity = EntityType.PIG.create(this.world);
-            assert pigEntity != null;
-            pigEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            pigEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
-            pigEntity.setNoAI(this.isAIDisabled());
-            if (this.hasCustomName()) {
-                pigEntity.setCustomName(this.getCustomName());
-                pigEntity.setCustomNameVisible(this.isCustomNameVisible());
-            }
-            pigEntity.enablePersistence();
-            pigEntity.setGrowingAge(0);
-            this.world.setEntityState(this, (byte)16);
-            this.world.addEntity(pigEntity);
-            this.remove();
-        }
-        return super.attackEntityFrom(source, amount);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 10.0D)
+                .add(Attributes.ATTACK_DAMAGE, 2.0D)
+                .add(Attributes.FOLLOW_RANGE, 16.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.25D);
     }
 
     @Override
@@ -66,36 +53,39 @@ public class InfectedPigEntity extends AbstractInfectedEntity {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 10.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D);
+    @Override
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        if (source.getDirectEntity() instanceof HolyWaterEntity) {
+            MobEntity entity = this.convertTo(EntityType.PIG, false);
+            assert entity != null;
+            entity.finalizeSpawn((IServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.CONVERSION, null, null);
+            this.level.broadcastEntityEvent(this, (byte) 16);
+        }
+        return super.hurt(source, amount);
     }
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_PIG_AMBIENT;
+        return SoundEvents.PIG_AMBIENT;
     }
 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_PIG_HURT;
+        return SoundEvents.PIG_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_PIG_DEATH;
+        return SoundEvents.PIG_DEATH;
     }
 
     @Override
     protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
-        this.playSound(SoundEvents.ENTITY_PIG_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.PIG_STEP, 0.15F, 1.0F);
     }
 
     @Override
-    public @NotNull ResourceLocation getLootTable() {
-        return EntityType.PIG.getLootTable();
+    public @NotNull ResourceLocation getDefaultLootTable() {
+        return EntityType.PIG.getDefaultLootTable();
     }
 }
