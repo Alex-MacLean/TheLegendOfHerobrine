@@ -85,7 +85,7 @@ public class InfectedWolfEntityModel extends TintedAgeableModel<InfectedWolfEnti
     @Override
     public void setupAnim(@NotNull InfectedWolfEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.head.xRot = headPitch * ((float) Math.PI / 180F);
-        this.head.xRot = netHeadYaw * ((float) Math.PI / 180F);
+        this.head.yRot = netHeadYaw * ((float) Math.PI / 180F);
         this.tail.xRot = ageInTicks;
     }
 }

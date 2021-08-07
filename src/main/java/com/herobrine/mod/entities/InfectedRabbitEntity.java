@@ -79,8 +79,8 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
         if (source.getDirectEntity() instanceof HolyWaterEntity) {
             RabbitEntity entity = this.convertTo(EntityType.RABBIT, false);
             assert entity != null;
-            entity.setRabbitType(this.getRabbitType());
             entity.finalizeSpawn((IServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.CONVERSION, null, null);
+            entity.setRabbitType(this.getRabbitType());
             this.level.broadcastEntityEvent(this, (byte) 16);
         }
         return super.hurt(source, amount);
@@ -373,7 +373,7 @@ public class InfectedRabbitEntity extends AbstractInfectedEntity {
 
         @Override
         public void tick() {
-            if (this.rabbit.onGround && !this.rabbit.jumping && !((RabbitEntity.JumpHelperController) this.rabbit.jumpControl).wantJump()) {
+            if (this.rabbit.onGround && !this.rabbit.jumping && !((JumpHelperController) this.rabbit.jumpControl).canJump) {
                 this.rabbit.setSpeedModifier(0.0D);
             } else if (this.hasWanted()) {
                 this.rabbit.setSpeedModifier(this.nextJumpSpeed);

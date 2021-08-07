@@ -32,11 +32,12 @@ import java.util.Random;
 @Mod.EventBusSubscriber(modid = HerobrineMod.MODID)
 public class GlowstonePillar {
     @SubscribeEvent
-    public static void onBiomeLoad(BiomeLoadingEvent event) {
+    public static void onBiomeLoad(@NotNull BiomeLoadingEvent event) {
         Feature<NoFeatureConfig> feature = new Feature<NoFeatureConfig>(NoFeatureConfig.CODEC) {
             @Override
-            @SuppressWarnings("ConstantConditions") //suppresses passing null to argument annotated as NotNull for PlacementSettings.setChunk()
-            public boolean generate(@NotNull ISeedReader world, @NotNull ChunkGenerator generator, @NotNull Random random, BlockPos pos, @NotNull NoFeatureConfig config) {
+            @SuppressWarnings("ConstantConditions")
+            //suppresses passing null to argument annotated as NotNull for PlacementSettings.setChunk()
+            public boolean place(@NotNull ISeedReader world, @NotNull ChunkGenerator generator, @NotNull Random random, @NotNull BlockPos pos, @NotNull NoFeatureConfig config) {
                 int ci = (pos.getX() >> 4) << 4;
                 int ck = (pos.getZ() >> 4) << 4;
                 if ((random.nextInt(1000000) + 1) <= Config.COMMON.GlowstonePillarWeight.get()) {
@@ -47,21 +48,19 @@ public class GlowstonePillar {
                         int j = world.getHeight(Heightmap.Type.OCEAN_FLOOR_WG, i, k);
                         j -= 1;
                         BlockState blockAt = world.getBlockState(new BlockPos(i, j, k));
-                        boolean blockCriteria = false;
-                        if (!blockAt.isAir() && !BlockTags.FLOWERS.contains(blockAt.getBlock()) && !BlockTags.TALL_FLOWERS.contains(blockAt.getBlock()) && !BlockTags.SMALL_FLOWERS.contains(blockAt.getBlock()) && !BlockTags.LEAVES.contains(blockAt.getBlock()) && !blockAt.isReplaceable(Fluids.WATER) && !blockAt.isReplaceable(Fluids.LAVA) && !blockAt.isReplaceable(Fluids.FLOWING_LAVA) && !blockAt.isReplaceable(Fluids.FLOWING_WATER))
-                            blockCriteria = true;
+                        boolean blockCriteria = !blockAt.isAir() && !BlockTags.FLOWERS.contains(blockAt.getBlock()) && !BlockTags.TALL_FLOWERS.contains(blockAt.getBlock()) && !BlockTags.SMALL_FLOWERS.contains(blockAt.getBlock()) && !BlockTags.LEAVES.contains(blockAt.getBlock()) && !blockAt.canBeReplaced(Fluids.WATER) && !blockAt.canBeReplaced(Fluids.LAVA) && !blockAt.canBeReplaced(Fluids.FLOWING_LAVA) && !blockAt.canBeReplaced(Fluids.FLOWING_WATER);
                         if (!blockCriteria)
                             continue;
-                        BlockPos spawnTo = new BlockPos(i, j , k);
-                        Template template = world.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "glowstone_pillar"));
-                        if(SaveDataUtil.canHerobrineSpawn(world.getWorld())) {
-                            template.func_237144_a_(world, spawnTo, new PlacementSettings().setRotation(Rotation.NONE).setRandom(random).setMirror(Mirror.NONE).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunk(null).setIgnoreEntities(false), random);
+                        BlockPos spawnTo = new BlockPos(i, j, k);
+                        Template template = world.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "glowstone_pillar"));
+                        if (SaveDataUtil.canHerobrineSpawn(world.getLevel())) {
+                            template.placeInWorld(world, spawnTo, new PlacementSettings().setRotation(Rotation.NONE).setRandom(random).setMirror(Mirror.NONE).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunkPos(null).setIgnoreEntities(false), random);
                         }
                     }
                 }
                 return true;
             }
         };
-        event.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).add(() -> feature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
+        event.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).add(() -> feature.configured(IFeatureConfig.NONE).decorated(Placement.NOPE.configured(IPlacementConfig.NONE)));
     }
 }

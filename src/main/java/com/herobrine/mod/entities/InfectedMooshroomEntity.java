@@ -93,8 +93,8 @@ public class InfectedMooshroomEntity extends AbstractInfectedEntity implements I
         if (source.getDirectEntity() instanceof HolyWaterEntity) {
             MooshroomEntity entity = this.convertTo(EntityType.MOOSHROOM, false);
             assert entity != null;
-            entity.setMushroomType(MooshroomEntity.Type.valueOf(this.getMooshroomType().toString()));
             entity.finalizeSpawn((IServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.CONVERSION, null, null);
+            entity.setMushroomType(MooshroomEntity.Type.valueOf(this.getMooshroomType().toString()));
             this.level.broadcastEntityEvent(this, (byte) 16);
         }
         return super.hurt(source, amount);

@@ -139,7 +139,7 @@ public class HerobrineMod {
         BiomeInit.registerBiomes();
     }
 
-    public void onWorldLoaded(WorldEvent.Load event) {
+    public void onWorldLoaded(WorldEvent.@NotNull Load event) {
         if (!event.getWorld().isClientSide() && event.getWorld() instanceof ServerWorld) {
             HerobrineSaveData saver = HerobrineSaveData.forWorld((ServerWorld) event.getWorld());
             if (!saver.data.contains("Spawn")) {
@@ -149,7 +149,7 @@ public class HerobrineMod {
         }
     }
 
-    public void onWorldSaved(WorldEvent.Save event) {
+    public void onWorldSaved(WorldEvent.@NotNull Save event) {
         if (!event.getWorld().isClientSide() && event.getWorld() instanceof ServerWorld) {
             HerobrineSaveData saver = HerobrineSaveData.forWorld((ServerWorld) event.getWorld());
             if (!saver.data.contains("Spawn")) {

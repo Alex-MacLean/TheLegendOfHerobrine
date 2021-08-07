@@ -75,7 +75,7 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
     }
 
     @Contract(value = "_ -> new", pure = true)
-    private static float[] createSheepColor(DyeColor dyeColorIn) {
+    private static float @NotNull [] createSheepColor(DyeColor dyeColorIn) {
         if (dyeColorIn == DyeColor.WHITE) {
             return new float[]{0.9019608F, 0.9019608F, 0.9019608F};
         } else {
@@ -118,8 +118,9 @@ public class InfectedSheepEntity extends AbstractInfectedEntity implements IShea
         if (source.getDirectEntity() instanceof HolyWaterEntity) {
             SheepEntity entity = this.convertTo(EntityType.SHEEP, false);
             assert entity != null;
-            entity.setColor(this.getFleeceColor());
             entity.finalizeSpawn((IServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.CONVERSION, null, null);
+            entity.setColor(this.getFleeceColor());
+            entity.setSheared(this.getSheared());
             this.level.broadcastEntityEvent(this, (byte) 16);
         }
         return super.hurt(source, amount);

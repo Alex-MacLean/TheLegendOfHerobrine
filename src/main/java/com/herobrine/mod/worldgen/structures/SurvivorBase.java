@@ -3,7 +3,7 @@ package com.herobrine.mod.worldgen.structures;
 import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.config.Config;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
@@ -35,11 +35,12 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = HerobrineMod.MODID)
 public class SurvivorBase {
     @SubscribeEvent
-    public static void onBiomeLoad(BiomeLoadingEvent event) {
+    public static void onBiomeLoad(@NotNull BiomeLoadingEvent event) {
         Feature<NoFeatureConfig> feature = new Feature<NoFeatureConfig>(NoFeatureConfig.CODEC) {
             @Override
-            @SuppressWarnings("ConstantConditions") //suppresses passing null to argument annotated as NotNull for PlacementSettings.setChunk()
-            public boolean generate(@NotNull ISeedReader world, @NotNull ChunkGenerator generator, @NotNull Random random, BlockPos pos, @NotNull NoFeatureConfig config) {
+            @SuppressWarnings("ConstantConditions")
+            //suppresses passing null to argument annotated as NotNull for PlacementSettings.setChunk()
+            public boolean place(@NotNull ISeedReader world, @NotNull ChunkGenerator generator, @NotNull Random random, @NotNull BlockPos pos, @NotNull NoFeatureConfig config) {
                 int ci = (pos.getX() >> 4) << 4;
                 int ck = (pos.getZ() >> 4) << 4;
                 if ((random.nextInt(1000000) + 1) <= Config.COMMON.SurvivorBaseWeight.get()) {
@@ -50,21 +51,21 @@ public class SurvivorBase {
                         int j = world.getHeight(Heightmap.Type.OCEAN_FLOOR_WG, i, k);
                         j -= 1;
                         BlockState blockAt = world.getBlockState(new BlockPos(i, j, k));
-                        boolean blockCriteria = false;
-                        if (blockAt.getBlock() == Blocks.GRASS_BLOCK.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.DIRT.getDefaultState().getBlock())
-                            blockCriteria = true;
+                        boolean blockCriteria = blockAt.getMaterial() == Material.GRASS;
                         if (!blockCriteria)
                             continue;
                         Rotation rotation = Rotation.values()[random.nextInt(3)];
                         Mirror mirror = Mirror.values()[random.nextInt(2)];
                         BlockPos spawnTo = new BlockPos(i, j, k);
                         Template template;
-                        if(random.nextInt(10) >= 1) {
-                            if(random.nextBoolean()) {
-                                template = world.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "survivor_base_steve"));
-                            } else template = world.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "survivor_base_alex"));
-                        } else template = world.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "survivor_base_abandoned"));
-                        template.func_237144_a_(world, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunk(null).setIgnoreEntities(false), random);
+                        if (random.nextInt(10) >= 1) {
+                            if (random.nextBoolean()) {
+                                template = world.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "survivor_base_steve"));
+                            } else
+                                template = world.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "survivor_base_alex"));
+                        } else
+                            template = world.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "survivor_base_abandoned"));
+                        template.placeInWorld(world, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunkPos(null).setIgnoreEntities(false), random);
                     }
                 }
                 return true;
@@ -73,11 +74,11 @@ public class SurvivorBase {
         BiomeDictionary.Type[] Biome = {
                 BiomeDictionary.Type.PLAINS
         };
-        RegistryKey<net.minecraft.world.biome.Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, Objects.requireNonNull(event.getName()));
+        RegistryKey<net.minecraft.world.biome.Biome> key = RegistryKey.create(Registry.BIOME_REGISTRY, Objects.requireNonNull(event.getName()));
         Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
         for (BiomeDictionary.Type t : Biome) {
             if (types.contains(t)) {
-                event.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).add(() -> feature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
+                event.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).add(() -> feature.configured(IFeatureConfig.NONE).decorated(Placement.NOPE.configured(IPlacementConfig.NONE)));
             }
         }
     }

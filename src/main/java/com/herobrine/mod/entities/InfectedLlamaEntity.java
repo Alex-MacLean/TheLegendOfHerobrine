@@ -71,7 +71,7 @@ public class InfectedLlamaEntity extends LlamaEntity implements IMob {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractSurvivorEntity.class, true));
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, GolemEntity.class, true));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 0.7D));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookAtGoal(this, AbstractSurvivorEntity.class, 8.0F));
         this.goalSelector.addGoal(9, new LookAtGoal(this, GolemEntity.class, 8.0F));
@@ -93,8 +93,8 @@ public class InfectedLlamaEntity extends LlamaEntity implements IMob {
         if (source.getDirectEntity() instanceof HolyWaterEntity) {
             LlamaEntity entity = this.convertTo(EntityType.LLAMA, false);
             assert entity != null;
-            entity.setVariant(this.getVariant());
             entity.finalizeSpawn((IServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.CONVERSION, null, null);
+            entity.setVariant(this.getVariant());
             this.level.broadcastEntityEvent(this, (byte) 16);
         }
         return super.hurt(source, amount);

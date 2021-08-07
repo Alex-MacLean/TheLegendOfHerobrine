@@ -2,7 +2,6 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
@@ -12,16 +11,14 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.horse.CoatColors;
+import net.minecraft.entity.passive.horse.CoatTypes;
 import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
@@ -80,8 +77,8 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
         if (source.getDirectEntity() instanceof HolyWaterEntity) {
             HorseEntity entity = this.convertTo(EntityType.HORSE, false);
             assert entity != null;
-            entity.setTypeVariant(this.func_234239_eK_().getId());
             entity.finalizeSpawn((IServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.CONVERSION, null, null);
+            entity.setTypeVariant(this.func_234239_eK_().getId());
             this.level.broadcastEntityEvent(this, (byte) 16);
         }
         return super.hurt(source, amount);
@@ -192,8 +189,8 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
         return MathHelper.lerp(p_110258_1_, this.prevHeadLean, this.headLean);
     }
 
-    public boolean isHorseSaddled() {
-        return false;
+    private void setVariantAndMarkings(@NotNull CoatColors coatColors, @NotNull CoatTypes coatTypes) {
+        this.setHorseVariant(coatColors.getId() & 255 | coatTypes.getId() << 8 & '\uff00');
     }
 
     public boolean isRearing() {
@@ -202,26 +199,17 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
 
     @Nullable
     @Override
-    public ILivingEntityData finalizeSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        int i;
-        if (spawnDataIn instanceof InfectedHorseEntity.HorseData) {
-            i = ((InfectedHorseEntity.HorseData) spawnDataIn).variant;
+    public ILivingEntityData finalizeSpawn(@NotNull IServerWorld world, @NotNull DifficultyInstance difficultyInstance, @NotNull SpawnReason reason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT compoundNBT) {
+        CoatColors coatcolors;
+        if (entityData instanceof HorseEntity.HorseData) {
+            coatcolors = ((HorseEntity.HorseData) entityData).variant;
         } else {
-            i = this.random.nextInt(7);
-            spawnDataIn = new InfectedHorseEntity.HorseData(i);
+            coatcolors = Util.getRandom(CoatColors.values(), this.random);
+            entityData = new HorseEntity.HorseData(coatcolors);
         }
 
-        this.setHorseVariant(i | this.random.nextInt(5) << 8);
-        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-    }
-
-    public static class HorseData extends AgeableEntity.AgeableData {
-        public final int variant;
-
-        public HorseData(int variantIn) {
-            super(false);
-            this.variant = variantIn;
-        }
+        this.setVariantAndMarkings(coatcolors, Util.getRandom(CoatTypes.values(), this.random));
+        return super.finalizeSpawn(world, difficultyInstance, reason, entityData, compoundNBT);
     }
 
     private void moveTail() {
