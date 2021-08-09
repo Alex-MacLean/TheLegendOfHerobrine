@@ -23,7 +23,7 @@ public class InfectedLlamaEntityRender extends MobRenderer<InfectedLlamaEntity, 
     }
 
     @Override
-    public @NotNull ResourceLocation getEntityTexture(@NotNull InfectedLlamaEntity entity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull InfectedLlamaEntity entity) {
         return TEXTURES[entity.getVariant()];
     }
 

@@ -4,7 +4,7 @@ import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.config.Config;
 import com.herobrine.mod.util.savedata.SaveDataUtil;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
@@ -36,11 +36,12 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = HerobrineMod.MODID)
 public class Statue {
     @SubscribeEvent
-    public static void onBiomeLoad(BiomeLoadingEvent event) {
+    public static void onBiomeLoad(@NotNull BiomeLoadingEvent event) {
         Feature<NoFeatureConfig> feature = new Feature<NoFeatureConfig>(NoFeatureConfig.CODEC) {
             @Override
-            @SuppressWarnings("ConstantConditions") //suppresses passing null to argument annotated as NotNull for PlacementSettings.setChunk()
-            public boolean generate(@NotNull ISeedReader world, @NotNull ChunkGenerator generator, @NotNull Random random, BlockPos pos, @NotNull NoFeatureConfig config) {
+            @SuppressWarnings("ConstantConditions")
+            //suppresses passing null to argument annotated as NotNull for PlacementSettings.setChunk()
+            public boolean place(@NotNull ISeedReader world, @NotNull ChunkGenerator generator, @NotNull Random random, @NotNull BlockPos pos, @NotNull NoFeatureConfig config) {
                 int ci = (pos.getX() >> 4) << 4;
                 int ck = (pos.getZ() >> 4) << 4;
                 if ((random.nextInt(1000000) + 1) <= Config.COMMON.HerobrineStatueWeight.get()) {
@@ -51,17 +52,15 @@ public class Statue {
                         int j = world.getHeight(Heightmap.Type.OCEAN_FLOOR_WG, i, k);
                         j -= 1;
                         BlockState blockAt = world.getBlockState(new BlockPos(i, j, k));
-                        boolean blockCriteria = false;
-                        if (blockAt.getBlock() == Blocks.STONE.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.DIORITE.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.ANDESITE.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.GRANITE.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.GRAVEL.getDefaultState().getBlock())
-                            blockCriteria = true;
+                        boolean blockCriteria = blockAt.getMaterial() == Material.STONE;
                         if (!blockCriteria)
                             continue;
                         Rotation rotation = Rotation.values()[random.nextInt(3)];
                         Mirror mirror = Mirror.values()[random.nextInt(2)];
                         BlockPos spawnTo = new BlockPos(i, j + 1, k);
-                        Template template = world.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "herobrine_statue"));
-                        if(SaveDataUtil.canHerobrineSpawn(world.getWorld())) {
-                            template.func_237144_a_(world, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunk(null).setIgnoreEntities(false), random);
+                        Template template = world.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "herobrine_statue"));
+                        if (SaveDataUtil.canHerobrineSpawn(world.getLevel())) {
+                            template.placeInWorld(world, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunkPos(null).setIgnoreEntities(false), random);
                         }
                     }
                 }
@@ -69,14 +68,13 @@ public class Statue {
             }
         };
         BiomeDictionary.Type[] Biome = {
-                BiomeDictionary.Type.MOUNTAIN,
-                BiomeDictionary.Type.HILLS
+                BiomeDictionary.Type.MOUNTAIN
         };
-        RegistryKey<net.minecraft.world.biome.Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, Objects.requireNonNull(event.getName()));
+        RegistryKey<net.minecraft.world.biome.Biome> key = RegistryKey.create(Registry.BIOME_REGISTRY, Objects.requireNonNull(event.getName()));
         Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
         for (BiomeDictionary.Type t : Biome) {
             if (types.contains(t)) {
-                event.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).add(() -> feature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
+                event.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).add(() -> feature.configured(IFeatureConfig.NONE).decorated(Placement.NOPE.configured(IPlacementConfig.NONE)));
             }
         }
     }

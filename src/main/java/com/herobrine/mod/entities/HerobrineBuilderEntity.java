@@ -38,7 +38,7 @@ import java.util.Random;
 public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
     protected HerobrineBuilderEntity(EntityType<? extends HerobrineBuilderEntity> type, World worldIn) {
         super(type, worldIn);
-        experienceValue = 5;
+        xpReward = 5;
     }
 
     public HerobrineBuilderEntity(World worldIn) {
@@ -66,66 +66,66 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D)
-                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
-                .createMutableAttribute(Attributes.ARMOR, 2.0D)
-                .createMutableAttribute(Attributes.ARMOR_TOUGHNESS, 2.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 32.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.45D);
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.ATTACK_DAMAGE, 5.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
+                .add(Attributes.ARMOR, 2.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 2.0D)
+                .add(Attributes.FOLLOW_RANGE, 32.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.45D);
     }
 
     @Override
-    public void writeAdditional(@NotNull CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("LifeTime", this.lifeTimer);
         compound.putInt("BuildingInterval", this.placeTimer);
     }
 
     @Override
-    public void readAdditional(@NotNull CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         this.lifeTimer = compound.getInt("LifeTime");
         this.placeTimer = compound.getInt("BuildingInterval");
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.GOLDEN_PICKAXE));
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public ILivingEntityData finalizeSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.GOLDEN_PICKAXE));
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void handleStatusUpdate(byte id) {
-        super.handleStatusUpdate(id);
+    public void handleEntityEvent(byte id) {
+        super.handleEntityEvent(id);
         if (id == 4) {
             for (int i = 0; i < 20; ++i) {
-                double d0 = this.rand.nextGaussian() * 0.02D;
-                double d1 = this.rand.nextGaussian() * 0.02D;
-                double d2 = this.rand.nextGaussian() * 0.02D;
-                this.world.addParticle(ParticleTypes.POOF, this.getPosXWidth(1.0D) - d0 * 10.0D, this.getPosYRandom() - d1 * 10.0D, this.getPosZRandom(1.0D) - d2 * 10.0D, d0, d1, d2);
+                double d0 = this.random.nextGaussian() * 0.02D;
+                double d1 = this.random.nextGaussian() * 0.02D;
+                double d2 = this.random.nextGaussian() * 0.02D;
+                this.level.addParticle(ParticleTypes.POOF, this.getRandomX(1.0D) - d0 * 10.0D, this.getRandomY() - d1 * 10.0D, this.getRandomZ(1.0D) - d2 * 10.0D, d0, d1, d2);
             }
             if (!this.isSilent()) {
-                this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+                this.level.playLocalSound(this.getX() + 0.5D, this.getY() + 0.5D, this.getZ() + 0.5D, SoundEvents.FIRECHARGE_USE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
             }
         }
         if(id == 5) {
             if(!this.isSilent()) {
-                this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.AMBIENT_CAVE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+                this.level.playLocalSound(this.getX() + 0.5D, this.getY() + 0.5D, this.getZ() + 0.5D, SoundEvents.AMBIENT_CAVE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
             }
         }
     }
 
     @Override
-    public void livingTick() {
-        if(this.lifeTimer > 6000) {
+    public void aiStep() {
+        if (this.lifeTimer > 6000) {
             this.lifeTimer = 6000;
         }
         if (this.lifeTimer < 1) {
-            if (!this.world.isRemote) {
-                this.world.setEntityState(this, (byte)4);
+            if (!this.level.isClientSide) {
+                this.level.broadcastEntityEvent(this, (byte) 4);
             }
             this.remove();
         }
@@ -136,109 +136,108 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
             this.placeTimer = 1000;
         }
         --this.placeTimer;
-        if (this.placeTimer == 0 && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
-            int x = (int) this.getPosX();
-            int y = (int) this.getPosY();
-            int z = (int) this.getPosZ();
-            ServerWorld serverWorld = this.getCommandSource().getWorld();
-            Rotation rotation = Rotation.values()[rand.nextInt(3)];
-            Mirror mirror = Mirror.values()[rand.nextInt(2)];
+        if (this.placeTimer == 0 && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
+            int x = (int) this.getX();
+            int y = (int) this.getY();
+            int z = (int) this.getZ();
+            ServerWorld serverWorld = this.createCommandSourceStack().getLevel();
+            Rotation rotation = Rotation.values()[random.nextInt(3)];
+            Mirror mirror = Mirror.values()[random.nextInt(2)];
             Random rand = new Random();
-            BlockState blockAt = world.getBlockState(new BlockPos(x, y - 1, z));
-            //Checks that the world is not remote and that the builder builds config is true. This code determines what structure the builder places. There is likely a better way to do this
-            if (!world.isRemote && Config.COMMON.BuilderBuilds.get()) {
+            BlockState blockAt = level.getBlockState(new BlockPos(x, y - 1, z));
+            //Checks that the world is not remote and that the builder builds config is true. This code determines what structure the builder places
+            if (!level.isClientSide && Config.COMMON.BuilderBuilds.get()) {
                 if (rand.nextInt(10) >= 1) {
-                    if (blockAt.getBlock() == Blocks.GRASS_BLOCK.getDefaultState().getBlock() && y >= 62 || blockAt.getBlock() == Blocks.DIRT.getDefaultState().getBlock() && y >= 62) {
-                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "dirt_structure"));
-                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                        this.swingArm(Hand.MAIN_HAND);
-                        this.world.setEntityState(this, (byte)5);
+                    if (blockAt.getBlock() == Blocks.GRASS_BLOCK.defaultBlockState().getBlock() && y >= 62 || blockAt.getBlock() == Blocks.DIRT.defaultBlockState().getBlock() && y >= 62) {
+                        Template template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "dirt_structure"));
+                        template.placeInWorld(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swing(Hand.MAIN_HAND);
+                        this.level.broadcastEntityEvent(this, (byte) 5);
                     }
-                    if (blockAt.getBlock() == Blocks.STONE.getDefaultState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.ANDESITE.getDefaultState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.DIORITE.getDefaultState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.GRANITE.getDefaultState().getBlock() && y <= 61) {
-                        if(!(rand.nextInt(10) >= 1)) {
-                            Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ominous_mineshaft"));
-                            template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(rotation).setMirror(mirror).setIgnoreEntities(false), rand);
-                            this.swingArm(Hand.MAIN_HAND);
-                            this.world.setEntityState(this, (byte) 5);
+                    if (blockAt.getBlock() == Blocks.STONE.defaultBlockState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.ANDESITE.defaultBlockState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.DIORITE.defaultBlockState().getBlock() && y <= 61 || blockAt.getBlock() == Blocks.GRANITE.defaultBlockState().getBlock() && y <= 61) {
+                        if (!(rand.nextInt(10) >= 1)) {
+                            Template template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "ominous_mineshaft"));
+                            template.placeInWorld(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(rotation).setMirror(mirror).setIgnoreEntities(false), rand);
+                            this.swing(Hand.MAIN_HAND);
+                            this.level.broadcastEntityEvent(this, (byte) 5);
                         }
                     }
-                    if (blockAt.getBlock() == Blocks.SAND.getDefaultState().getBlock() && y >= 62) {
-                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "sand_structure"));
-                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                        this.swingArm(Hand.MAIN_HAND);
-                        this.world.setEntityState(this, (byte)5);
+                    if (blockAt.getBlock() == Blocks.SAND.defaultBlockState().getBlock() && y >= 62) {
+                        Template template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "sand_structure"));
+                        template.placeInWorld(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swing(Hand.MAIN_HAND);
+                        this.level.broadcastEntityEvent(this, (byte) 5);
                     }
-                    if (blockAt.getBlock() == Blocks.RED_SAND.getDefaultState().getBlock() && y >= 62) {
-                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "red_sand_structure"));
-                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                        this.swingArm(Hand.MAIN_HAND);
-                        this.world.setEntityState(this, (byte)5);
+                    if (blockAt.getBlock() == Blocks.RED_SAND.defaultBlockState().getBlock() && y >= 62) {
+                        Template template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "red_sand_structure"));
+                        template.placeInWorld(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swing(Hand.MAIN_HAND);
+                        this.level.broadcastEntityEvent(this, (byte) 5);
                     }
-                    if (blockAt.getBlock() == Blocks.TERRACOTTA.getDefaultState().getBlock() && y >= 62) {
-                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "terracotta_structure"));
-                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                        this.swingArm(Hand.MAIN_HAND);
-                        this.world.setEntityState(this, (byte)5);
+                    if (blockAt.getBlock() == Blocks.TERRACOTTA.defaultBlockState().getBlock() && y >= 62) {
+                        Template template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "terracotta_structure"));
+                        template.placeInWorld(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swing(Hand.MAIN_HAND);
+                        this.level.broadcastEntityEvent(this, (byte) 5);
                     }
-                    if (blockAt.getBlock() == Blocks.STONE.getDefaultState().getBlock() && y >= 62) {
-                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "stone_structure"));
-                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                        this.swingArm(Hand.MAIN_HAND);
-                        this.world.setEntityState(this, (byte)5);
+                    if (blockAt.getBlock() == Blocks.STONE.defaultBlockState().getBlock() && y >= 62) {
+                        Template template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "stone_structure"));
+                        template.placeInWorld(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swing(Hand.MAIN_HAND);
+                        this.level.broadcastEntityEvent(this, (byte) 5);
                     }
-                    if (blockAt.getBlock() == Blocks.NETHERRACK.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.WARPED_NYLIUM.getDefaultState().getBlock() || blockAt.getBlock() == Blocks.CRIMSON_NYLIUM.getDefaultState().getBlock()) {
-                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "netherrack_structure"));
-                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                        this.swingArm(Hand.MAIN_HAND);
-                        this.world.setEntityState(this, (byte)5);
+                    if (blockAt.getBlock() == Blocks.NETHERRACK.defaultBlockState().getBlock() || blockAt.getBlock() == Blocks.WARPED_NYLIUM.defaultBlockState().getBlock() || blockAt.getBlock() == Blocks.CRIMSON_NYLIUM.defaultBlockState().getBlock()) {
+                        Template template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "netherrack_structure"));
+                        template.placeInWorld(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swing(Hand.MAIN_HAND);
+                        this.level.broadcastEntityEvent(this, (byte) 5);
                     }
-                    if (blockAt.getBlock() == Blocks.END_STONE.getDefaultState().getBlock()) {
-                        Template template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "end_stone_structure"));
-                        template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                        this.swingArm(Hand.MAIN_HAND);
-                        this.world.setEntityState(this, (byte)5);
+                    if (blockAt.getBlock() == Blocks.END_STONE.defaultBlockState().getBlock()) {
+                        Template template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "end_stone_structure"));
+                        template.placeInWorld(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(Rotation.NONE).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                        this.swing(Hand.MAIN_HAND);
+                        this.level.broadcastEntityEvent(this, (byte) 5);
                     }
                 } else {
                     int type = rand.nextInt(8);
                     Template template;
                     switch (type) {
                         case 0:
-                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/normal1"));
+                            template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "signs/normal1"));
                             break;
                         case 1:
-                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/normal2"));
+                            template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "signs/normal2"));
                             break;
                         case 2:
-                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/normal3"));
+                            template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "signs/normal3"));
                             break;
                         case 3:
-                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/lore1"));
+                            template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "signs/lore1"));
                             break;
                         case 4:
-                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/lore2"));
+                            template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "signs/lore2"));
                             break;
                         case 5:
-                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/lore3"));
+                            template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "signs/lore3"));
                             break;
                         case 6:
-                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/lore4"));
+                            template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "signs/lore4"));
                             break;
                         case 7:
-                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/lore5"));
+                            template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "signs/lore5"));
                             break;
                         case 8:
-                            template = serverWorld.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "signs/lore6"));
+                            template = serverWorld.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "signs/lore6"));
                             break;
                         default:
-                            //I don't know how a value below zero or above eight would happen with the bound of 8, but the IDE would error if a default state is not set.
                             throw new IllegalStateException("[The Legend of Herobrine] Illegal type for Herobrine Builder Signs: " + type + ". Please report this to the issue tracker.");
                     }
-                    template.func_237144_a_(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(rotation).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
-                    this.swingArm(Hand.MAIN_HAND);
-                    this.world.setEntityState(this, (byte)5);
+                    template.placeInWorld(serverWorld, new BlockPos(x, y, z), new PlacementSettings().setRotation(rotation).setMirror(Mirror.NONE).setIgnoreEntities(false), rand);
+                    this.swing(Hand.MAIN_HAND);
+                    this.level.broadcastEntityEvent(this, (byte) 5);
                 }
             }
         }
-        super.livingTick();
+        super.aiStep();
     }
 }

@@ -4,7 +4,6 @@ import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.client.models.InfectedRabbitEntityModel;
 import com.herobrine.mod.client.renders.layers.InfectedRabbitEyesLayer;
 import com.herobrine.mod.entities.InfectedRabbitEntity;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -32,12 +31,12 @@ public class InfectedRabbitEntityRender extends MobRenderer<InfectedRabbitEntity
     }
 
     @Override
-    public @NotNull ResourceLocation getEntityTexture(@NotNull InfectedRabbitEntity entity) {
-        String s = TextFormatting.getTextWithoutFormattingCodes(entity.getName().getString());
+    public @NotNull ResourceLocation getTextureLocation(@NotNull InfectedRabbitEntity entity) {
+        String s = TextFormatting.stripFormatting(entity.getName().getString());
         if ("Toast".equals(s)) {
             return TOAST;
         } else {
-            switch(entity.getRabbitType()) {
+            switch (entity.getRabbitType()) {
                 case 0:
                 default:
                     return BROWN;
@@ -52,7 +51,7 @@ public class InfectedRabbitEntityRender extends MobRenderer<InfectedRabbitEntity
                 case 5:
                     return SALT;
                 case 99:
-                    InfectedRabbitEyesLayer.RENDER_TYPE = RenderType.getEyes(HerobrineMod.location("textures/entity/eyes/infected_rabbit/caerbannog.png"));
+                    InfectedRabbitEyesLayer.EyesTextureLocation = "textures/entity/eyes/infected_rabbit/caerbannog.png";
                     return CAERBANNOG;
             }
         }

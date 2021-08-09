@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 public class HerobrineMageEntity extends AbstractHerobrineEntity {
     protected HerobrineMageEntity(EntityType<? extends HerobrineMageEntity> type, World worldIn) {
         super(type, worldIn);
-        experienceValue = 5;
+        xpReward = 5;
     }
 
     public HerobrineMageEntity(World worldIn) {
@@ -55,27 +55,27 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
     }
 
     public static AttributeModifierMap.@NotNull MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 40.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D)
-                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
-                .createMutableAttribute(Attributes.ARMOR, 1.0D)
-                .createMutableAttribute(Attributes.ARMOR_TOUGHNESS, 1.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 64.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.6D);
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 40.0D)
+                .add(Attributes.ATTACK_DAMAGE, 4.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
+                .add(Attributes.ARMOR, 1.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 1.0D)
+                .add(Attributes.FOLLOW_RANGE, 64.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.6D);
     }
 
     @Override
-    public void writeAdditional(@NotNull CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("IllusionCastingInterval", this.illusionCastingTime);
         compound.putInt("WeakenCastingInterval", this.effectsCastingTime);
         compound.putInt("WarpCastingInterval", this.teleportCastingTime);
     }
 
     @Override
-    public void readAdditional(@NotNull CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         this.illusionCastingTime = compound.getInt("IllusionCastingInterval");
         this.effectsCastingTime = compound.getInt("WeakenCastingInterval");
         this.teleportCastingTime = compound.getInt("WarpCastingInterval");
@@ -83,25 +83,25 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void handleStatusUpdate(byte id) {
-        super.handleStatusUpdate(id);
+    public void handleEntityEvent(byte id) {
+        super.handleEntityEvent(id);
         if (id == 4) {
             if (!this.isSilent()) {
-                this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+                this.level.playLocalSound(this.getX() + 0.5D, this.getY() + 0.5D, this.getZ() + 0.5D, SoundEvents.ILLUSIONER_CAST_SPELL, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
             }
             for (int i = 0; i < 20; ++i) {
-                double d0 = this.rand.nextGaussian() * 0.02D;
-                double d1 = this.rand.nextGaussian() * 0.02D;
-                double d2 = this.rand.nextGaussian() * 0.02D;
-                this.world.addParticle(ParticleTypes.EFFECT, this.getPosXWidth(1.0D) - d0 * 10.0D, this.getPosYRandom() - d1 * 10.0D, this.getPosZRandom(1.0D) - d2 * 10.0D, d0, d1, d2);
+                double d0 = this.random.nextGaussian() * 0.02D;
+                double d1 = this.random.nextGaussian() * 0.02D;
+                double d2 = this.random.nextGaussian() * 0.02D;
+                this.level.addParticle(ParticleTypes.EFFECT, this.getRandomX(1.0D) - d0 * 10.0D, this.getRandomY() - d1 * 10.0D, this.getRandomZ(1.0D) - d2 * 10.0D, d0, d1, d2);
             }
         }
     }
 
 
     @Override
-    public void livingTick() {
-        if(this.isAlive()) {
+    public void aiStep() {
+        if (this.isAlive()) {
             if (this.illusionCastingTime < 1 || this.illusionCastingTime > 400) {
                 this.illusionCastingTime = 400;
             }
@@ -117,62 +117,62 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
             }
             --this.teleportCastingTime;
 
-            if (this.illusionCastingTime == 0 && this.isAggressive() && this.getAttackTarget() != null) {
-                int x = (int) this.getPosX();
-                int y = (int) this.getPosY();
-                int z = (int) this.getPosZ();
-                if (!world.isRemote) {
-                    Entity entity1 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
-                    Entity entity2 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
-                    Entity entity3 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
-                    Entity entity4 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, world);
-                    entity1.setLocationAndAngles(x, y, z, world.rand.nextFloat() * 360F, 0);
-                    entity2.setLocationAndAngles(x, y, z, world.rand.nextFloat() * 360F, 0);
-                    entity3.setLocationAndAngles(x, y, z, world.rand.nextFloat() * 360F, 0);
-                    entity4.setLocationAndAngles(x, y, z, world.rand.nextFloat() * 360F, 0);
-                    world.addEntity(entity1);
-                    world.addEntity(entity2);
-                    world.addEntity(entity3);
-                    world.addEntity(entity4);
+            if (this.illusionCastingTime == 0 && this.isAggressive() && this.getTarget() != null) {
+                int x = (int) this.getX();
+                int y = (int) this.getY();
+                int z = (int) this.getZ();
+                if (!level.isClientSide) {
+                    Entity entity1 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, level);
+                    Entity entity2 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, level);
+                    Entity entity3 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, level);
+                    Entity entity4 = new FakeHerobrineMageEntity(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, level);
+                    entity1.moveTo(x, y, z, level.random.nextFloat() * 360F, 0);
+                    entity2.moveTo(x, y, z, level.random.nextFloat() * 360F, 0);
+                    entity3.moveTo(x, y, z, level.random.nextFloat() * 360F, 0);
+                    entity4.moveTo(x, y, z, level.random.nextFloat() * 360F, 0);
+                    level.addFreshEntity(entity1);
+                    level.addFreshEntity(entity2);
+                    level.addFreshEntity(entity3);
+                    level.addFreshEntity(entity4);
                 }
 
-                if (!this.world.isRemote) {
-                    this.world.setEntityState(this, (byte)4);
-                }
-            }
-
-            if (this.effectsCastingTime == 0 && this.isAggressive() && this.getAttackTarget() != null) {
-                LivingEntity entity = HerobrineMageEntity.this.getAttackTarget();
-                if (entity != null) {
-                    entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 400, 1));
-                    entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 400));
-                }
-
-                if (!this.world.isRemote) {
-                    this.world.setEntityState(this, (byte)4);
+                if (!this.level.isClientSide) {
+                    this.level.broadcastEntityEvent(this, (byte) 4);
                 }
             }
 
-            if (this.teleportCastingTime == 0 && this.isAggressive() && this.getAttackTarget() != null) {
-                LivingEntity entity = HerobrineMageEntity.this.getAttackTarget();
+            if (this.effectsCastingTime == 0 && this.isAggressive() && this.getTarget() != null) {
+                LivingEntity entity = HerobrineMageEntity.this.getTarget();
                 if (entity != null) {
-                    int x = (int) entity.getPosX();
-                    int y = (int) entity.getPosY();
-                    int z = (int) entity.getPosZ();
-                    BlockState block = world.getBlockState(new BlockPos(x, y + 3, z));
-                    BlockState blockAt = world.getBlockState(new BlockPos(x, y + 4, z));
+                    entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 400, 1));
+                    entity.addEffect(new EffectInstance(Effects.WEAKNESS, 400));
+                }
+
+                if (!this.level.isClientSide) {
+                    this.level.broadcastEntityEvent(this, (byte) 4);
+                }
+            }
+
+            if (this.teleportCastingTime == 0 && this.isAggressive() && this.getTarget() != null) {
+                LivingEntity entity = HerobrineMageEntity.this.getTarget();
+                if (entity != null) {
+                    int x = (int) entity.getX();
+                    int y = (int) entity.getY();
+                    int z = (int) entity.getZ();
+                    BlockState block = level.getBlockState(new BlockPos(x, y + 3, z));
+                    BlockState blockAt = level.getBlockState(new BlockPos(x, y + 4, z));
                     if (blockAt.getBlockState().isAir() && block.getBlockState().isAir()) {
-                        if(entity.getRidingEntity() != null) {
+                        if (entity.getVehicle() != null) {
                             entity.stopRiding();
                         }
-                        entity.setPositionAndUpdate(x, y + 4, z);
-                        if (!this.world.isRemote) {
-                            this.world.setEntityState(this, (byte) 4);
+                        entity.moveTo(x, y + 4, z);
+                        if (!this.level.isClientSide) {
+                            this.level.broadcastEntityEvent(this, (byte) 4);
                         }
                     }
                 }
             }
         }
-        super.livingTick();
+        super.aiStep();
     }
 }

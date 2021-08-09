@@ -12,14 +12,12 @@ import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class InfectedDonkeyEyesLayer extends AbstractEyesLayer<InfectedDonkeyEntity, InfectedDonkeyEntityModel> {
-    private static final RenderType RENDER_TYPE = RenderType.getEyes(HerobrineMod.location("textures/entity/eyes/infected_donkey.png"));
-
     public InfectedDonkeyEyesLayer(IEntityRenderer<InfectedDonkeyEntity, InfectedDonkeyEntityModel> renderer) {
         super(renderer);
     }
 
     @Override
-    public @NotNull RenderType getRenderType() {
-        return RENDER_TYPE;
+    public @NotNull RenderType renderType() {
+        return RenderType.eyes(HerobrineMod.location("textures/entity/eyes/infected_donkey.png"));
     }
 }

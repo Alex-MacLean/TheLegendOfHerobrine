@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 public class FakeHerobrineMageEntity extends AbstractHerobrineEntity {
     protected FakeHerobrineMageEntity(EntityType<? extends FakeHerobrineMageEntity> type, World worldIn) {
         super(type, worldIn);
-        experienceValue = 0;
+        xpReward = 0;
     }
     public FakeHerobrineMageEntity(World worldIn) {
         this(EntityRegistry.FAKE_HEROBRINE_MAGE_ENTITY, worldIn);
@@ -49,37 +49,37 @@ public class FakeHerobrineMageEntity extends AbstractHerobrineEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 25.0D)
-                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 0.0D)
-                .createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 0.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 64.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.4D);
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 25.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
+                .add(Attributes.ATTACK_DAMAGE, 0.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
+                .add(Attributes.FOLLOW_RANGE, 64.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.4D);
     }
 
     @Override
-    public void writeAdditional(@NotNull CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("LifeTime", this.lifeTimer);
     }
 
     @Override
-    public void readAdditional(@NotNull CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         this.lifeTimer = compound.getInt("LifeTime");
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        this.enablePersistence();
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public ILivingEntityData finalizeSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        this.setPersistenceRequired();
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
-        if(this.lifeTimer > 200) {
+    public void aiStep() {
+        super.aiStep();
+        if (this.lifeTimer > 200) {
             this.lifeTimer = 200;
         }
         if (this.lifeTimer < 1) {
@@ -90,7 +90,7 @@ public class FakeHerobrineMageEntity extends AbstractHerobrineEntity {
 
     @Override
     @SuppressWarnings("ConstantConditions")
-    public @NotNull ResourceLocation getLootTable() {
+    public @NotNull ResourceLocation getDefaultLootTable() {
         return null;
     }
 }

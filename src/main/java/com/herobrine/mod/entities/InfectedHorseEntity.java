@@ -2,7 +2,6 @@ package com.herobrine.mod.entities;
 
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
@@ -12,16 +11,14 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.horse.CoatColors;
+import net.minecraft.entity.passive.horse.CoatTypes;
 import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
@@ -34,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class InfectedHorseEntity extends AbstractInfectedEntity {
-    private static final DataParameter<Integer> HORSE_VARIANT = EntityDataManager.createKey(InfectedHorseEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> HORSE_VARIANT = EntityDataManager.defineId(InfectedHorseEntity.class, DataSerializers.INT);
     public int tailCounter;
     private float prevHeadLean;
     private float headLean;
@@ -42,35 +39,22 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
     private float prevRearingAmount;
     public float mouthOpenness;
     public float prevMouthOpenness;
+
     public InfectedHorseEntity(EntityType<? extends InfectedHorseEntity> type, World worldIn) {
         super(type, worldIn);
-        experienceValue = 3;
+        xpReward = 3;
     }
 
     public InfectedHorseEntity(World worldIn) {
         this(EntityRegistry.INFECTED_HORSE_ENTITY, worldIn);
     }
 
-    @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        if (source.getImmediateSource() instanceof HolyWaterEntity) {
-            HorseEntity horseEntity = EntityType.HORSE.create(this.world);
-            assert horseEntity != null;
-            horseEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            horseEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
-            horseEntity.setNoAI(this.isAIDisabled());
-            if (this.hasCustomName()) {
-                horseEntity.setCustomName(this.getCustomName());
-                horseEntity.setCustomNameVisible(this.isCustomNameVisible());
-            }
-            horseEntity.enablePersistence();
-            horseEntity.func_234242_w_(this.func_234239_eK_().getId());
-            horseEntity.setGrowingAge(0);
-            this.world.setEntityState(this, (byte)16);
-            this.world.addEntity(horseEntity);
-            this.remove();
-        }
-        return super.attackEntityFrom(source, amount);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 25.0D)
+                .add(Attributes.ATTACK_DAMAGE, 4.0D)
+                .add(Attributes.FOLLOW_RANGE, 16.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.35D);
     }
 
     @Override
@@ -88,66 +72,70 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 25.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.35D);
+    @Override
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        if (source.getDirectEntity() instanceof HolyWaterEntity) {
+            HorseEntity entity = this.convertTo(EntityType.HORSE, false);
+            assert entity != null;
+            entity.finalizeSpawn((IServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.CONVERSION, null, null);
+            entity.setTypeVariant(this.func_234239_eK_().getId());
+            this.level.broadcastEntityEvent(this, (byte) 16);
+        }
+        return super.hurt(source, amount);
     }
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_HORSE_AMBIENT;
+        return SoundEvents.HORSE_AMBIENT;
     }
 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_HORSE_HURT;
+        return SoundEvents.HORSE_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_HORSE_DEATH;
+        return SoundEvents.HORSE_DEATH;
     }
 
     @Override
     protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
-        this.playSound(SoundEvents.ENTITY_HORSE_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.HORSE_STEP, 0.15F, 1.0F);
     }
 
     public CoatColors func_234239_eK_() {
-        return CoatColors.func_234254_a_(this.func_234241_eS_() & 255);
+        return CoatColors.byId(this.func_234241_eS_() & 255);
     }
 
     private int func_234241_eS_() {
-        return this.dataManager.get(HORSE_VARIANT);
+        return this.entityData.get(HORSE_VARIANT);
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(HORSE_VARIANT, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(HORSE_VARIANT, 0);
     }
 
     @Override
-    public void writeAdditional(@NotNull CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("Variant", this.getHorseVariant());
     }
 
     @Override
-    public void readAdditional(@NotNull CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         this.setHorseVariant(compound.getInt("Variant"));
     }
 
-    public void setHorseVariant(int variant) {
-        this.dataManager.set(HORSE_VARIANT, variant);
+    public int getHorseVariant() {
+        return this.entityData.get(HORSE_VARIANT);
     }
 
-    public int getHorseVariant() {
-        return this.dataManager.get(HORSE_VARIANT);
+    public void setHorseVariant(int variant) {
+        this.entityData.set(HORSE_VARIANT, variant);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -163,11 +151,11 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
     @Override
     public void tick() {
         super.tick();
-        if (this.rand.nextInt(200) == 0) {
+        if (this.random.nextInt(200) == 0) {
             this.moveTail();
         }
-        if (this.world.isRemote && this.dataManager.isDirty()) {
-            this.dataManager.setClean();
+        if (this.level.isClientSide && this.entityData.isDirty()) {
+            this.entityData.clearDirty();
         }
 
         if (this.tailCounter > 0 && ++this.tailCounter > 8) {
@@ -201,8 +189,8 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
         return MathHelper.lerp(p_110258_1_, this.prevHeadLean, this.headLean);
     }
 
-    public boolean isHorseSaddled() {
-        return false;
+    private void setVariantAndMarkings(@NotNull CoatColors coatColors, @NotNull CoatTypes coatTypes) {
+        this.setHorseVariant(coatColors.getId() & 255 | coatTypes.getId() << 8 & '\uff00');
     }
 
     public boolean isRearing() {
@@ -211,26 +199,17 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        int i;
-        if (spawnDataIn instanceof InfectedHorseEntity.HorseData) {
-            i = ((InfectedHorseEntity.HorseData)spawnDataIn).variant;
+    public ILivingEntityData finalizeSpawn(@NotNull IServerWorld world, @NotNull DifficultyInstance difficultyInstance, @NotNull SpawnReason reason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT compoundNBT) {
+        CoatColors coatcolors;
+        if (entityData instanceof HorseEntity.HorseData) {
+            coatcolors = ((HorseEntity.HorseData) entityData).variant;
         } else {
-            i = this.rand.nextInt(7);
-            spawnDataIn = new InfectedHorseEntity.HorseData(i);
+            coatcolors = Util.getRandom(CoatColors.values(), this.random);
+            entityData = new HorseEntity.HorseData(coatcolors);
         }
 
-        this.setHorseVariant(i | this.rand.nextInt(5) << 8);
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-    }
-
-    public static class HorseData extends AgeableEntity.AgeableData {
-        public final int variant;
-
-        public HorseData(int variantIn) {
-            super(false);
-            this.variant = variantIn;
-        }
+        this.setVariantAndMarkings(coatcolors, Util.getRandom(CoatTypes.values(), this.random));
+        return super.finalizeSpawn(world, difficultyInstance, reason, entityData, compoundNBT);
     }
 
     private void moveTail() {
@@ -238,7 +217,7 @@ public class InfectedHorseEntity extends AbstractInfectedEntity {
     }
 
     @Override
-    public @NotNull ResourceLocation getLootTable() {
-        return EntityType.HORSE.getLootTable();
+    public @NotNull ResourceLocation getDefaultLootTable() {
+        return EntityType.HORSE.getDefaultLootTable();
     }
 }

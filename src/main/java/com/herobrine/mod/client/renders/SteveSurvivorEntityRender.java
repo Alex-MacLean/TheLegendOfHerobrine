@@ -29,13 +29,14 @@ public class SteveSurvivorEntityRender extends MobRenderer<AbstractSurvivorEntit
 
     @NotNull
     @Override
-    public ResourceLocation getEntityTexture(@NotNull AbstractSurvivorEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull AbstractSurvivorEntity entity) {
         return entity.getSkin();
     }
 
     @Override
-    protected void preRenderCallback(@NotNull AbstractSurvivorEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+    protected void scale(@NotNull AbstractSurvivorEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
         matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
+        super.scale(entitylivingbaseIn, matrixStackIn, partialTickTime);
     }
 
     @SuppressWarnings("rawtypes")

@@ -3,13 +3,13 @@ package com.herobrine.mod.entities;
 import com.herobrine.mod.util.entities.EntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.GolemEntity;
-import net.minecraft.entity.passive.horse.DonkeyEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -33,7 +33,7 @@ public class InfectedDonkeyEntity extends AbstractInfectedEntity {
     public float prevMouthOpenness;
     public InfectedDonkeyEntity(EntityType<? extends InfectedDonkeyEntity> type, World worldIn) {
         super(type, worldIn);
-        experienceValue = 3;
+        xpReward = 3;
     }
 
     public InfectedDonkeyEntity(World worldIn) {
@@ -56,52 +56,42 @@ public class InfectedDonkeyEntity extends AbstractInfectedEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 25.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 3.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.35D);
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 25.0D)
+                .add(Attributes.ATTACK_DAMAGE, 3.0D)
+                .add(Attributes.FOLLOW_RANGE, 16.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.35D);
     }
 
     @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        if (source.getImmediateSource() instanceof HolyWaterEntity) {
-            DonkeyEntity donkeyEntity = EntityType.DONKEY.create(this.world);
-            assert donkeyEntity != null;
-            donkeyEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-            donkeyEntity.onInitialSpawn((IServerWorld) this.world, this.world.getDifficultyForLocation(this.getPosition()), SpawnReason.CONVERSION, null, null);
-            donkeyEntity.setNoAI(this.isAIDisabled());
-            if (this.hasCustomName()) {
-                donkeyEntity.setCustomName(this.getCustomName());
-                donkeyEntity.setCustomNameVisible(this.isCustomNameVisible());
-            }
-            donkeyEntity.enablePersistence();
-            donkeyEntity.setGrowingAge(0);
-            this.world.setEntityState(this, (byte)16);
-            this.world.addEntity(donkeyEntity);
-            this.remove();
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        if (source.getDirectEntity() instanceof HolyWaterEntity) {
+            MobEntity entity = this.convertTo(EntityType.DONKEY, false);
+            assert entity != null;
+            entity.finalizeSpawn((IServerWorld) this.level, this.level.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.CONVERSION, null, null);
+            this.level.broadcastEntityEvent(this, (byte) 16);
         }
-        return super.attackEntityFrom(source, amount);
+        return super.hurt(source, amount);
     }
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_DONKEY_AMBIENT;
+        return SoundEvents.DONKEY_AMBIENT;
     }
 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_DONKEY_HURT;
+        return SoundEvents.DONKEY_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_DONKEY_DEATH;
+        return SoundEvents.DONKEY_DEATH;
     }
 
     @Override
     protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
-        this.playSound(SoundEvents.ENTITY_HORSE_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.HORSE_STEP, 0.15F, 1.0F);
     }
 
     public boolean isHorseSaddled() {
@@ -111,7 +101,7 @@ public class InfectedDonkeyEntity extends AbstractInfectedEntity {
     @Override
     public void tick() {
         super.tick();
-        if (this.rand.nextInt(200) == 0) {
+        if (this.random.nextInt(200) == 0) {
             this.moveTail();
         }
 
@@ -165,7 +155,7 @@ public class InfectedDonkeyEntity extends AbstractInfectedEntity {
     }
 
     @Override
-    public @NotNull ResourceLocation getLootTable() {
-        return EntityType.DONKEY.getLootTable();
+    public @NotNull ResourceLocation getDefaultLootTable() {
+        return EntityType.DONKEY.getDefaultLootTable();
     }
 }

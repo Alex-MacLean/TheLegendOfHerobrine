@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 public class HerobrineSpyEntity extends AbstractHerobrineEntity {
     protected HerobrineSpyEntity(EntityType<? extends HerobrineSpyEntity> type, World worldIn) {
         super(type, worldIn);
-        experienceValue = 5;
+        xpReward = 5;
     }
 
     private int lifeTimer = 6000;
@@ -36,9 +36,14 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
         this(EntityRegistry.HEROBRINE_SPY_ENTITY, worldIn);
     }
 
-    @Override
-    protected boolean isDespawnPeaceful() {
-        return false;
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
+                .add(Attributes.ARMOR, 2.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 2.0D)
+                .add(Attributes.FOLLOW_RANGE, 128.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.6D);
     }
 
     @Override
@@ -50,54 +55,49 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
         this.goalSelector.addGoal(4, new AvoidEntityGoal<>(this, AbstractSurvivorEntity.class, Config.COMMON.HerobrineSpyObservationDistance.get(), 0.7D, 1.0D));
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
-                .createMutableAttribute(Attributes.ARMOR, 2.0D)
-                .createMutableAttribute(Attributes.ARMOR_TOUGHNESS, 2.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 128.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.6D);
+    @Override
+    protected boolean shouldDespawnInPeaceful() {
+        return false;
     }
 
     @Override
-    public void writeAdditional(@NotNull CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("LifeTime", this.lifeTimer);
     }
 
     @Override
-    public void readAdditional(@NotNull CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(@NotNull CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         this.lifeTimer = compound.getInt("LifeTime");
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void handleStatusUpdate(byte id) {
-        super.handleStatusUpdate(id);
+    public void handleEntityEvent(byte id) {
+        super.handleEntityEvent(id);
         if (id == 4) {
             for (int i = 0; i < 20; ++i) {
-                double d0 = this.rand.nextGaussian() * 0.02D;
-                double d1 = this.rand.nextGaussian() * 0.02D;
-                double d2 = this.rand.nextGaussian() * 0.02D;
-                this.world.addParticle(ParticleTypes.POOF, this.getPosXWidth(1.0D) - d0 * 10.0D, this.getPosYRandom() - d1 * 10.0D, this.getPosZRandom(1.0D) - d2 * 10.0D, d0, d1, d2);
+                double d0 = this.random.nextGaussian() * 0.02D;
+                double d1 = this.random.nextGaussian() * 0.02D;
+                double d2 = this.random.nextGaussian() * 0.02D;
+                this.level.addParticle(ParticleTypes.POOF, this.getRandomX(1.0D) - d0 * 10.0D, this.getRandomY() - d1 * 10.0D, this.getRandomZ(1.0D) - d2 * 10.0D, d0, d1, d2);
             }
             if (!this.isSilent()) {
-                this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+                this.level.playLocalSound(this.getX() + 0.5D, this.getZ() + 0.5D, this.getZ() + 0.5D, SoundEvents.FIRECHARGE_USE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
             }
         }
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
-        if(this.lifeTimer > 6000) {
+    public void aiStep() {
+        super.aiStep();
+        if (this.lifeTimer > 6000) {
             this.lifeTimer = 6000;
         }
         if (this.lifeTimer < 1) {
-            if (!this.world.isRemote) {
-                this.world.setEntityState(this, (byte)4);
+            if (!this.level.isClientSide) {
+                this.level.broadcastEntityEvent(this, (byte) 4);
             }
             this.remove();
         }
@@ -105,8 +105,8 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        this.enablePersistence();
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public ILivingEntityData finalizeSpawn(@NotNull IServerWorld worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        this.setPersistenceRequired();
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 }

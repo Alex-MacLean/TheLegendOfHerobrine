@@ -22,70 +22,70 @@ public class InfectedWolfEntityModel extends TintedAgeableModel<InfectedWolfEnti
 
     public InfectedWolfEntityModel() {
         this.head = new ModelRenderer(this, 0, 0);
-        this.head.setRotationPoint(-1.0F, 13.5F, -7.0F);
+        this.head.setPos(-1.0F, 13.5F, -7.0F);
         ModelRenderer headChild = new ModelRenderer(this, 0, 0);
         headChild.addBox(-2.0F, -3.0F, -2.0F, 6.0F, 6.0F, 4.0F, 0.0F);
         this.head.addChild(headChild);
         this.body = new ModelRenderer(this, 18, 14);
         this.body.addBox(-3.0F, -2.0F, -3.0F, 6.0F, 9.0F, 6.0F, 0.0F);
-        this.body.setRotationPoint(0.0F, 14.0F, 2.0F);
+        this.body.setPos(0.0F, 14.0F, 2.0F);
         this.mane = new ModelRenderer(this, 21, 0);
         this.mane.addBox(-3.0F, -3.0F, -3.0F, 8.0F, 6.0F, 7.0F, 0.0F);
-        this.mane.setRotationPoint(-1.0F, 14.0F, 2.0F);
+        this.mane.setPos(-1.0F, 14.0F, 2.0F);
         this.legBackRight = new ModelRenderer(this, 0, 18);
         this.legBackRight.addBox(0.0F, 0.0F, -1.0F, 2.0F, 8.0F, 2.0F, 0.0F);
-        this.legBackRight.setRotationPoint(-2.5F, 16.0F, 7.0F);
+        this.legBackRight.setPos(-2.5F, 16.0F, 7.0F);
         this.legBackLeft = new ModelRenderer(this, 0, 18);
         this.legBackLeft.addBox(0.0F, 0.0F, -1.0F, 2.0F, 8.0F, 2.0F, 0.0F);
-        this.legBackLeft.setRotationPoint(0.5F, 16.0F, 7.0F);
+        this.legBackLeft.setPos(0.5F, 16.0F, 7.0F);
         this.legFrontRight = new ModelRenderer(this, 0, 18);
         this.legFrontRight.addBox(0.0F, 0.0F, -1.0F, 2.0F, 8.0F, 2.0F, 0.0F);
-        this.legFrontRight.setRotationPoint(-2.5F, 16.0F, -4.0F);
+        this.legFrontRight.setPos(-2.5F, 16.0F, -4.0F);
         this.legFrontLeft = new ModelRenderer(this, 0, 18);
         this.legFrontLeft.addBox(0.0F, 0.0F, -1.0F, 2.0F, 8.0F, 2.0F, 0.0F);
-        this.legFrontLeft.setRotationPoint(0.5F, 16.0F, -4.0F);
+        this.legFrontLeft.setPos(0.5F, 16.0F, -4.0F);
         this.tail = new ModelRenderer(this, 9, 18);
-        this.tail.setRotationPoint(-1.0F, 12.0F, 8.0F);
+        this.tail.setPos(-1.0F, 12.0F, 8.0F);
         ModelRenderer tailChild = new ModelRenderer(this, 9, 18);
         tailChild.addBox(0.0F, 0.0F, -1.0F, 2.0F, 8.0F, 2.0F, 0.0F);
         this.tail.addChild(tailChild);
-        headChild.setTextureOffset(16, 14).addBox(-2.0F, -5.0F, 0.0F, 2.0F, 2.0F, 1.0F, 0.0F);
-        headChild.setTextureOffset(16, 14).addBox(2.0F, -5.0F, 0.0F, 2.0F, 2.0F, 1.0F, 0.0F);
-        headChild.setTextureOffset(0, 10).addBox(-0.5F, 0.0F, -5.0F, 3.0F, 3.0F, 4.0F, 0.0F);
+        headChild.texOffs(16, 14).addBox(-2.0F, -5.0F, 0.0F, 2.0F, 2.0F, 1.0F, 0.0F);
+        headChild.texOffs(16, 14).addBox(2.0F, -5.0F, 0.0F, 2.0F, 2.0F, 1.0F, 0.0F);
+        headChild.texOffs(0, 10).addBox(-0.5F, 0.0F, -5.0F, 3.0F, 3.0F, 4.0F, 0.0F);
     }
 
     @Override
-    protected @NotNull Iterable<ModelRenderer> getHeadParts() {
+    protected @NotNull Iterable<ModelRenderer> headParts() {
         return ImmutableList.of(this.head);
     }
 
     @Override
-    protected @NotNull Iterable<ModelRenderer> getBodyParts() {
+    protected @NotNull Iterable<ModelRenderer> bodyParts() {
         return ImmutableList.of(this.body, this.legBackRight, this.legBackLeft, this.legFrontRight, this.legFrontLeft, this.tail, this.mane);
     }
 
     @Override
-    public void setLivingAnimations(@NotNull InfectedWolfEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
-        this.tail.rotateAngleY = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        this.body.setRotationPoint(0.0F, 14.0F, 2.0F);
-        this.body.rotateAngleX = ((float)Math.PI / 2F);
-        this.mane.setRotationPoint(-1.0F, 14.0F, -3.0F);
-        this.mane.rotateAngleX = this.body.rotateAngleX;
-        this.tail.setRotationPoint(-1.0F, 12.0F, 8.0F);
-        this.legBackRight.setRotationPoint(-2.5F, 16.0F, 7.0F);
-        this.legBackLeft.setRotationPoint(0.5F, 16.0F, 7.0F);
-        this.legFrontRight.setRotationPoint(-2.5F, 16.0F, -4.0F);
-        this.legFrontLeft.setRotationPoint(0.5F, 16.0F, -4.0F);
-        this.legBackRight.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        this.legBackLeft.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-        this.legFrontRight.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-        this.legFrontLeft.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+    public void prepareMobModel(@NotNull InfectedWolfEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+        this.tail.yRot = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+        this.body.setPos(0.0F, 14.0F, 2.0F);
+        this.body.xRot = ((float) Math.PI / 2F);
+        this.mane.setPos(-1.0F, 14.0F, -3.0F);
+        this.mane.xRot = this.body.xRot;
+        this.tail.setPos(-1.0F, 12.0F, 8.0F);
+        this.legBackRight.setPos(-2.5F, 16.0F, 7.0F);
+        this.legBackLeft.setPos(0.5F, 16.0F, 7.0F);
+        this.legFrontRight.setPos(-2.5F, 16.0F, -4.0F);
+        this.legFrontLeft.setPos(0.5F, 16.0F, -4.0F);
+        this.legBackRight.xRot = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+        this.legBackLeft.xRot = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
+        this.legFrontRight.xRot = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
+        this.legFrontLeft.xRot = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
     }
 
     @Override
-    public void setRotationAngles(@NotNull InfectedWolfEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
-        this.head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
-        this.tail.rotateAngleX = ageInTicks;
+    public void setupAnim(@NotNull InfectedWolfEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        this.head.xRot = headPitch * ((float) Math.PI / 180F);
+        this.head.yRot = netHeadYaw * ((float) Math.PI / 180F);
+        this.tail.xRot = ageInTicks;
     }
 }

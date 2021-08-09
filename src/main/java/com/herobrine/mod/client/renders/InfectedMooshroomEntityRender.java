@@ -32,7 +32,7 @@ public class InfectedMooshroomEntityRender extends MobRenderer<InfectedMooshroom
     }
 
     @NotNull
-    public ResourceLocation getEntityTexture(@NotNull InfectedMooshroomEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull InfectedMooshroomEntity entity) {
         return field_217774_a.get(entity.getMooshroomType());
     }
 

@@ -23,12 +23,12 @@ public class InfectedChickenEntityRender extends MobRenderer<InfectedChickenEnti
 
     @NotNull
     @Override
-    public ResourceLocation getEntityTexture(@NotNull InfectedChickenEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull InfectedChickenEntity entity) {
         return HerobrineMod.location("textures/entity/infected_chicken.png");
     }
 
     @Override
-    protected float handleRotationFloat(@NotNull InfectedChickenEntity livingBase, float partialTicks) {
+    protected float getBob(@NotNull InfectedChickenEntity livingBase, float partialTicks) {
         float f = MathHelper.lerp(partialTicks, livingBase.oFlap, livingBase.wingRotation);
         float f1 = MathHelper.lerp(partialTicks, livingBase.oFlapSpeed, livingBase.destPos);
         return (MathHelper.sin(f) + 1.0F) * f1;

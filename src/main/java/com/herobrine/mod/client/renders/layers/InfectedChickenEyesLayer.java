@@ -12,14 +12,12 @@ import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class InfectedChickenEyesLayer extends AbstractEyesLayer<InfectedChickenEntity, InfectedChickenEntityModel> {
-    private static final RenderType RENDER_TYPE = RenderType.getEyes(HerobrineMod.location("textures/entity/eyes/infected_chicken.png"));
-
     public InfectedChickenEyesLayer(IEntityRenderer<InfectedChickenEntity, InfectedChickenEntityModel> renderer) {
         super(renderer);
     }
 
     @Override
-    public @NotNull RenderType getRenderType() {
-        return RENDER_TYPE;
+    public @NotNull RenderType renderType() {
+        return RenderType.eyes(HerobrineMod.location("textures/entity/eyes/infected_chicken.png"));
     }
 }

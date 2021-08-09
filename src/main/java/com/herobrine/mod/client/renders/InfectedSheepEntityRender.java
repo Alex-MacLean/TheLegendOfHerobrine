@@ -24,7 +24,7 @@ public class InfectedSheepEntityRender extends MobRenderer<InfectedSheepEntity, 
     }
 
     @NotNull
-    public ResourceLocation getEntityTexture(@NotNull InfectedSheepEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull InfectedSheepEntity entity) {
         return HerobrineMod.location("textures/entity/infected_sheep/infected_sheep.png");
     }
 

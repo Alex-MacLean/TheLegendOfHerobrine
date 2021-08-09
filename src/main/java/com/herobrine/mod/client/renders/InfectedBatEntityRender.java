@@ -24,23 +24,23 @@ public class InfectedBatEntityRender extends MobRenderer<InfectedBatEntity, Infe
 
     @NotNull
     @Override
-    public ResourceLocation getEntityTexture(@NotNull InfectedBatEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull InfectedBatEntity entity) {
         return HerobrineMod.location("textures/entity/infected_bat.png");
     }
 
     @Override
-    protected void preRenderCallback(@NotNull InfectedBatEntity entitylivingbaseIn, @NotNull MatrixStack matrixStackIn, float partialTickTime) {
+    protected void scale(@NotNull InfectedBatEntity entitylivingbaseIn, @NotNull MatrixStack matrixStackIn, float partialTickTime) {
         matrixStackIn.scale(0.35F, 0.35F, 0.35F);
     }
 
     @Override
-    protected void applyRotations(@NotNull InfectedBatEntity entityLiving, @NotNull MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+    protected void setupRotations(@NotNull InfectedBatEntity entityLiving, @NotNull MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
         if (entityLiving.getIsBatHanging()) {
             matrixStackIn.translate(0.0D, -0.1F, 0.0D);
         } else {
             matrixStackIn.translate(0.0D, MathHelper.cos(ageInTicks * 0.3F) * 0.1F, 0.0D);
         }
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
+        super.setupRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
     }
 
     @SuppressWarnings("rawtypes")

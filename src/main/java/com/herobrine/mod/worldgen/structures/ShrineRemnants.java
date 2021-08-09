@@ -39,8 +39,9 @@ public class ShrineRemnants {
     public static void onBiomeLoad(BiomeLoadingEvent event) {
         Feature<NoFeatureConfig> feature = new Feature<NoFeatureConfig>(NoFeatureConfig.CODEC) {
             @Override
-            @SuppressWarnings("ConstantConditions") //suppresses passing null to argument annotated as NotNull for PlacementSettings.setChunk()
-            public boolean generate(@NotNull ISeedReader world, @NotNull ChunkGenerator generator, @NotNull Random random, BlockPos pos, @NotNull NoFeatureConfig config) {
+            @SuppressWarnings("ConstantConditions")
+            //suppresses passing null to argument annotated as NotNull for PlacementSettings.setChunk()
+            public boolean place(@NotNull ISeedReader world, @NotNull ChunkGenerator generator, @NotNull Random random, BlockPos pos, @NotNull NoFeatureConfig config) {
                 int ci = (pos.getX() >> 4) << 4;
                 int ck = (pos.getZ() >> 4) << 4;
                 if ((random.nextInt(1000000) + 1) <= Config.COMMON.ShrineRemnantWeight.get()) {
@@ -51,9 +52,7 @@ public class ShrineRemnants {
                         int j = world.getHeight(Heightmap.Type.OCEAN_FLOOR_WG, i, k);
                         j -= 1;
                         BlockState blockAt = world.getBlockState(new BlockPos(i, j, k));
-                        boolean blockCriteria = false;
-                        if (blockAt.getMaterial() == Material.EARTH || blockAt.getMaterial() == Material.ORGANIC || blockAt.getMaterial() == Material.ROCK)
-                            blockCriteria = true;
+                        boolean blockCriteria = blockAt.getMaterial() == Material.DIRT || blockAt.getMaterial() == Material.GRASS || blockAt.getMaterial() == Material.STONE;
                         if (!blockCriteria)
                             continue;
                         Rotation rotation = Rotation.values()[random.nextInt(3)];
@@ -63,25 +62,24 @@ public class ShrineRemnants {
                         Template template;
                         switch (type) {
                             case 0:
-                                template = world.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine"));
+                                template = world.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine"));
                                 break;
                             case 1:
-                                template = world.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt"));
+                                template = world.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt"));
                                 break;
                             case 2:
-                                template = world.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_1"));
+                                template = world.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_1"));
                                 break;
                             case 3:
-                                template = world.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_2"));
+                                template = world.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_2"));
                                 break;
                             case 4:
-                                template = world.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_3"));
+                                template = world.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "ruined_shrine_alt_3"));
                                 break;
                             default:
-                                //I don't know how a value below zero or above four would happen with the bound of 4, but the IDE would error if a default state is not set.
                                 throw new IllegalStateException("[The Legend of Herobrine] Illegal type for Shrine Remnants: " + type + ". Please report this to the issue tracker.");
                         }
-                        template.func_237144_a_(world, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunk(null).setIgnoreEntities(false), random);
+                        template.placeInWorld(world, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunkPos(null).setIgnoreEntities(false), random);
                     }
                 }
                 return true;
@@ -90,11 +88,11 @@ public class ShrineRemnants {
         BiomeDictionary.Type[] Biome = {
                 BiomeDictionary.Type.SPOOKY
         };
-        RegistryKey<Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, Objects.requireNonNull(event.getName()));
+        RegistryKey<Biome> key = RegistryKey.create(Registry.BIOME_REGISTRY, Objects.requireNonNull(event.getName()));
         Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
         for (BiomeDictionary.Type t : Biome) {
             if (types.contains(t)) {
-                event.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).add(() -> feature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
+                event.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).add(() -> feature.configured(IFeatureConfig.NONE).decorated(Placement.NOPE.configured(IPlacementConfig.NONE)));
             }
         }
     }

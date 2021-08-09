@@ -11,17 +11,17 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public enum ArmorMaterialList implements IArmorMaterial {
-    cursed_diamond_armor_material("cursed_diamond",35, new int[]{4, 7, 9, 4}, 25, ItemList.cursed_diamond, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.0F, 0.0F);
+    cursed_diamond_armor_material("cursed_diamond", 35, new int[]{4, 7, 9, 4}, 25, ItemList.cursed_diamond, SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0F, 0.0F);
 
-        public static final int[] max_damage_array = new int[]{13, 15, 16, 11};
-        private final String name;
-        private final SoundEvent equipSound;
-        private final int durability;
-        private final int enchantability;
-        private final Item repairItem;
-        private final int[] damageReductionAmounts;
-        private final float toughness;
-        private final float knockbackResistance;
+    public static final int[] max_damage_array = new int[]{13, 15, 16, 11};
+    private final String name;
+    private final SoundEvent equipSound;
+    private final int durability;
+    private final int enchantability;
+    private final Item repairItem;
+    private final int[] damageReductionAmounts;
+    private final float toughness;
+    private final float knockbackResistance;
 
     ArmorMaterialList(String name, int durability, int[] damageReductionAmounts, int enchantability, Item repairItem, SoundEvent equipSound, float toughness, float knockbackResistance) {
         this.name = name;
@@ -36,33 +36,33 @@ public enum ArmorMaterialList implements IArmorMaterial {
 
     @Contract(pure = true)
     @Override
-    public int getDurability(@NotNull EquipmentSlotType slotIn) {
+    public int getDurabilityForSlot(@NotNull EquipmentSlotType slotIn) {
         return max_damage_array[slotIn.getIndex()] * this.durability;
     }
 
     @Contract(pure = true)
     @Override
-    public int getDamageReductionAmount(@NotNull EquipmentSlotType slotIn) {
-        return  this.damageReductionAmounts[slotIn.getIndex()];
+    public int getDefenseForSlot(@NotNull EquipmentSlotType slotIn) {
+        return this.damageReductionAmounts[slotIn.getIndex()];
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return this.enchantability;
     }
 
     @NotNull
     @Contract(pure = true)
     @Override
-    public SoundEvent getSoundEvent() {
+    public SoundEvent getEquipSound() {
         return this.equipSound;
     }
 
     @NotNull
     @Contract(pure = true)
     @Override
-    public Ingredient getRepairMaterial() {
-        return Ingredient.fromItems(this.repairItem);
+    public Ingredient getRepairIngredient() {
+        return Ingredient.of(this.repairItem);
     }
 
     @NotNull

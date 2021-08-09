@@ -24,12 +24,13 @@ public class InfectedVillagerEntityRenderer extends MobRenderer<InfectedVillager
 
     @NotNull
     @Override
-    public ResourceLocation getEntityTexture(@NotNull InfectedVillagerEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull InfectedVillagerEntity entity) {
         return HerobrineMod.location("textures/entity/infected_villager.png");
     }
 
-    protected void preRenderCallback(@NotNull InfectedVillagerEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+    protected void scale(@NotNull InfectedVillagerEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
         matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
+        super.scale(entitylivingbaseIn, matrixStackIn, partialTickTime);
     }
 
     @SuppressWarnings("rawtypes")

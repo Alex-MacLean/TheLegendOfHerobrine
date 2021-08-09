@@ -37,8 +37,9 @@ public class SandPyramid {
     public static void onBiomeLoad(BiomeLoadingEvent event) {
         Feature<NoFeatureConfig> feature = new Feature<NoFeatureConfig>(NoFeatureConfig.CODEC) {
             @Override
-            @SuppressWarnings("ConstantConditions") //suppresses passing null to argument annotated as NotNull for PlacementSettings.setChunk()
-            public boolean generate(@NotNull ISeedReader world, @NotNull ChunkGenerator generator, @NotNull Random random, BlockPos pos, @NotNull NoFeatureConfig config) {
+            @SuppressWarnings("ConstantConditions")
+            //suppresses passing null to argument annotated as NotNull for PlacementSettings.setChunk()
+            public boolean place(@NotNull ISeedReader world, @NotNull ChunkGenerator generator, @NotNull Random random, BlockPos pos, @NotNull NoFeatureConfig config) {
                 int ci = (pos.getX() >> 4) << 4;
                 int ck = (pos.getZ() >> 4) << 4;
                 if ((random.nextInt(1000000) + 1) <= Config.COMMON.SandPyramidWeight.get()) {
@@ -48,10 +49,10 @@ public class SandPyramid {
                         int k = ck + random.nextInt(16);
                         int j = world.getHeight(Heightmap.Type.OCEAN_FLOOR_WG, i, k);
                         j -= 1;
-                        BlockPos spawnTo = new BlockPos(i, j , k);
-                        Template template = world.getWorld().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(HerobrineMod.MODID, "sand_pyramid"));
-                        if(SaveDataUtil.canHerobrineSpawn(world.getWorld())) {
-                            template.func_237144_a_(world, spawnTo, new PlacementSettings().setRotation(Rotation.NONE).setRandom(random).setMirror(Mirror.NONE).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunk(null).setIgnoreEntities(false), random);
+                        BlockPos spawnTo = new BlockPos(i, j, k);
+                        Template template = world.getLevel().getStructureManager().getOrCreate(new ResourceLocation(HerobrineMod.MODID, "sand_pyramid"));
+                        if (SaveDataUtil.canHerobrineSpawn(world.getLevel())) {
+                            template.placeInWorld(world, spawnTo, new PlacementSettings().setRotation(Rotation.NONE).setRandom(random).setMirror(Mirror.NONE).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunkPos(null).setIgnoreEntities(false), random);
                         }
                     }
                 }
@@ -61,11 +62,11 @@ public class SandPyramid {
         BiomeDictionary.Type[] Biome = {
                 BiomeDictionary.Type.OCEAN
         };
-        RegistryKey<net.minecraft.world.biome.Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, Objects.requireNonNull(event.getName()));
+        RegistryKey<net.minecraft.world.biome.Biome> key = RegistryKey.create(Registry.BIOME_REGISTRY, Objects.requireNonNull(event.getName()));
         Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
         for (BiomeDictionary.Type t : Biome) {
             if (types.contains(t)) {
-                event.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).add(() -> feature.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
+                event.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).add(() -> feature.configured(IFeatureConfig.NONE).decorated(Placement.NOPE.configured(IPlacementConfig.NONE)));
             }
         }
     }

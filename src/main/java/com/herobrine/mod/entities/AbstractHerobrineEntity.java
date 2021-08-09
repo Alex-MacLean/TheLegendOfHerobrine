@@ -9,7 +9,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.projectile.PotionEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -44,7 +43,7 @@ public class AbstractHerobrineEntity extends MonsterEntity {
                         DamageSource.ANVIL,
                         DamageSource.CRAMMING,
                         DamageSource.DRAGON_BREATH,
-                        DamageSource.DRYOUT,
+                        DamageSource.DRY_OUT,
                         DamageSource.FALLING_BLOCK,
                         DamageSource.FLY_INTO_WALL,
                         DamageSource.HOT_FLOOR,
@@ -56,69 +55,73 @@ public class AbstractHerobrineEntity extends MonsterEntity {
                         DamageSource.WITHER,
                 };
         //This piece right here adds all 'possibilities' to the hash set.
-        for (DamageSource damageSource : damageSources) add(damageSource.getDamageType());
+        for (DamageSource damageSource : damageSources) add(damageSource.getMsgId());
     }};
 
-    @Override
-    public boolean attackEntityFrom(@NotNull DamageSource source, float amount) {
-        if (source.getImmediateSource() instanceof AreaEffectCloudEntity)
-            return false;
-        if (source.getImmediateSource() instanceof PotionEntity)
-            return false;
-        if (source.getImmediateSource() instanceof UnholyWaterEntity)
-            return false;
-        if (aef_conditions.contains( source.getDamageType() ))
-            return false;
-        return super.attackEntityFrom(source, amount);
-    }
-
-    @Override
-    public void baseTick() {
-        if(!world.isRemote) {
-            if (!SaveDataUtil.canHerobrineSpawn(world)) {
-                this.remove();
-            }
-        }
-        this.clearActivePotions();
-        super.baseTick();
-    }
-
-    @Override
-    public boolean attackEntityAsMob(@NotNull Entity entityIn) {
-        boolean flag = super.attackEntityAsMob(entityIn);
-        if (flag) {
-            float f = this.world.getDifficultyForLocation(this.getPosition()).getAdditionalDifficulty();
-            if (this.isBurning() && this.rand.nextFloat() < f * 0.3F) {
-                entityIn.setFire(2 * (int)f);
-            }
-        }
-        return flag;
-    }
-
     public static boolean isValidLightLevel(@NotNull IServerWorld worldIn, @NotNull BlockPos pos, @NotNull Random randomIn) {
-        if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
+        if (worldIn.getBrightness(LightType.SKY, pos) > randomIn.nextInt(32)) {
             return false;
         } else {
-            int i = worldIn.getWorld().isThundering() ? worldIn.getNeighborAwareLightSubtracted(pos, 10) : worldIn.getLight(pos);
+            int i = worldIn.getLevel().isThundering() ? worldIn.getMaxLocalRawBrightness(pos, 10) : worldIn.getLightEmission(pos);
             return i <= randomIn.nextInt(8);
         }
     }
 
     public static boolean canSpawn(EntityType<? extends AbstractHerobrineEntity> type, @NotNull IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
-        return worldIn.getDifficulty() != Difficulty.PEACEFUL && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn) && SaveDataUtil.canHerobrineSpawn(worldIn);
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && isValidLightLevel(worldIn, pos, randomIn) && checkMobSpawnRules(type, worldIn, reason, pos, randomIn) && SaveDataUtil.canHerobrineSpawn(worldIn);
+    }
+
+    public static boolean canSpawnPeacefulMode(EntityType<? extends AbstractHerobrineEntity> type, @NotNull IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+        return isValidLightLevel(worldIn, pos, randomIn) && checkMobSpawnRules(type, worldIn, reason, pos, randomIn) && SaveDataUtil.canHerobrineSpawn(worldIn);
     }
 
     @Override
-    public @NotNull ResourceLocation getLootTable() {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        if (source.getDirectEntity() instanceof AreaEffectCloudEntity)
+            return false;
+        if (source.getDirectEntity() instanceof PotionEntity)
+            return false;
+        if (source.getDirectEntity() instanceof UnholyWaterEntity)
+            return false;
+        if (aef_conditions.contains(source.getMsgId()))
+            return false;
+        return super.hurt(source, amount);
+    }
+
+    @Override
+    public void baseTick() {
+        if (!level.isClientSide) {
+            if (!SaveDataUtil.canHerobrineSpawn(level)) {
+                this.remove();
+            }
+        }
+        this.removeAllEffects();
+        super.baseTick();
+    }
+
+    @Override
+    public boolean doHurtTarget(@NotNull Entity entityIn) {
+        boolean flag = super.doHurtTarget(entityIn);
+        if (flag) {
+            float f = this.level.getCurrentDifficultyAt(this.getOnPos()).getEffectiveDifficulty();
+            if (this.isOnFire() && this.random.nextFloat() < f * 0.3F) {
+                entityIn.setSecondsOnFire(2 * (int) f);
+            }
+        }
+        return flag;
+    }
+
+    @Override
+    public @NotNull ResourceLocation getDefaultLootTable() {
         return LootTableInit.HEROBRINE;
     }
 
     @Override
-    protected void dropSpecialItems(@NotNull DamageSource source, int looting, boolean recentlyHitIn) {
-        super.dropSpecialItems(source, looting, recentlyHitIn);
+    protected void dropCustomDeathLoot(@NotNull DamageSource source, int looting, boolean recentlyHitIn) {
+        super.dropCustomDeathLoot(source, looting, recentlyHitIn);
         Random rand = new Random();
-        if(rand.nextInt(100) <= 20 * (looting + 1) && !(this instanceof FakeHerobrineMageEntity)) {
-            this.entityDropItem(new ItemStack(ItemList.cursed_dust, 1));
+        if (rand.nextInt(100) <= 20 * (looting + 1) && !(this instanceof FakeHerobrineMageEntity)) {
+            this.spawnAtLocation(ItemList.cursed_dust);
         }
     }
 }
