@@ -13,7 +13,6 @@ import com.herobrine.mod.util.entities.EntityRegistry;
 import com.herobrine.mod.util.items.ArmorMaterialList;
 import com.herobrine.mod.util.items.ItemList;
 import com.herobrine.mod.util.items.ItemTierList;
-import com.herobrine.mod.util.savedata.SaveDataUtil;
 import com.herobrine.mod.util.worldgen.BiomeInit;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -23,10 +22,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -46,7 +43,6 @@ public class HerobrineMod {
     public HerobrineMod() {
         MinecraftForge.EVENT_BUS.addListener(this::onWorldLoaded);
         MinecraftForge.EVENT_BUS.addListener(this::onWorldSaved);
-        MinecraftForge.EVENT_BUS.addListener(this::onChunkLoaded);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientRegistries);
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
@@ -160,12 +156,6 @@ public class HerobrineMod {
                 saver.data.putBoolean("Spawn", false);
             }
             saver.setDirty();
-        }
-    }
-
-    public void onChunkLoaded(ChunkEvent.@NotNull Load event) {
-        if (!SaveDataUtil.canHerobrineSpawn(event.getWorld())) {
-            BiomeManager.removeBiome(BiomeInit.CursedForestBiomeType, BiomeInit.CursedForestBiome);
         }
     }
 }

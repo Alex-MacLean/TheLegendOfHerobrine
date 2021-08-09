@@ -11,13 +11,11 @@ import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BiomeInit {
-    public static final RegistryKey<Biome> CURSED_FOREST = RegistryKey.create(Registry.BIOME_REGISTRY, HerobrineMod.location("cursed_forest"));
-    public static final BiomeManager.BiomeEntry CursedForestBiome = new BiomeManager.BiomeEntry(CURSED_FOREST, Config.COMMON.CursedForestWeight.get());
-    public static final BiomeManager.BiomeType CursedForestBiomeType = BiomeManager.BiomeType.WARM;
+    private static final RegistryKey<Biome> CURSED_FOREST = RegistryKey.create(Registry.BIOME_REGISTRY, HerobrineMod.location("cursed_forest"));
 
     public static void registerBiomes() {
         ForgeRegistries.BIOMES.register(ModdedBiomeMaker.makeCursedForestBiome(0.1F, 0.2F).setRegistryName(HerobrineMod.MODID, "cursed_forest"));
-        BiomeManager.addBiome(CursedForestBiomeType, CursedForestBiome);
+        BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(CURSED_FOREST, Config.COMMON.CursedForestWeight.get()));
         BiomeDictionary.addTypes(CURSED_FOREST, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.DEAD, BiomeDictionary.Type.WASTELAND, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.RARE);
     }
 }
