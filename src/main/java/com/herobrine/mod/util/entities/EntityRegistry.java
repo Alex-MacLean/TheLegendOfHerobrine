@@ -113,7 +113,7 @@ public class EntityRegistry {
 
     public static void registerSpawnPlacement() {
         EntitySpawnPlacementRegistry.register(EntityRegistry.INFECTED_BAT_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedBatEntity::canSpawn);
-        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_SPY_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractHerobrineEntity::canSpawn);
+        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_SPY_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractHerobrineEntity::canSpawnPeacefulMode);
         EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_WARRIOR_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractHerobrineEntity::canSpawn);
         EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_BUILDER_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractHerobrineEntity::canSpawn);
         EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_MAGE_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractHerobrineEntity::canSpawn);
@@ -128,7 +128,7 @@ public class EntityRegistry {
         EntitySpawnPlacementRegistry.register(EntityRegistry.INFECTED_COW_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractInfectedEntity::canSpawn);
         EntitySpawnPlacementRegistry.register(EntityRegistry.INFECTED_PIG_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractInfectedEntity::canSpawn);
         EntitySpawnPlacementRegistry.register(EntityRegistry.INFECTED_VILLAGER_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedVillagerEntity::canSpawn);
-        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_STALKER_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractHerobrineEntity::canSpawn);
+        EntitySpawnPlacementRegistry.register(EntityRegistry.HEROBRINE_STALKER_ENTITY, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractHerobrineEntity::canSpawnPeacefulMode);
     }
 
     @SubscribeEvent

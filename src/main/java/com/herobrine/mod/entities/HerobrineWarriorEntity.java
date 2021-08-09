@@ -28,7 +28,6 @@ import net.minecraftforge.common.extensions.IForgeBlockState;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
     private int blockBreakCounter = 100;
@@ -83,7 +82,10 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
     }
 
     private boolean unableToAttackTarget() {
-        return this.getNavigation().isDone() && !this.canAttack(Objects.requireNonNull(this.getTarget()), EntityPredicate.DEFAULT.selector(LivingEntity::attackable));
+        if (this.getTarget() != null) {
+            return this.getNavigation().isDone() && !this.canAttack(this.getTarget(), EntityPredicate.DEFAULT.selector(LivingEntity::attackable));
+        }
+        return false;
     }
 
     @Override

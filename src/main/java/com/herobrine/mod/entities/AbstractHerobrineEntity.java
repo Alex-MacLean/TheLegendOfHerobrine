@@ -71,6 +71,10 @@ public class AbstractHerobrineEntity extends MonsterEntity {
         return worldIn.getDifficulty() != Difficulty.PEACEFUL && isValidLightLevel(worldIn, pos, randomIn) && checkMobSpawnRules(type, worldIn, reason, pos, randomIn) && SaveDataUtil.canHerobrineSpawn(worldIn);
     }
 
+    public static boolean canSpawnPeacefulMode(EntityType<? extends AbstractHerobrineEntity> type, @NotNull IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+        return isValidLightLevel(worldIn, pos, randomIn) && checkMobSpawnRules(type, worldIn, reason, pos, randomIn) && SaveDataUtil.canHerobrineSpawn(worldIn);
+    }
+
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
         if (source.getDirectEntity() instanceof AreaEffectCloudEntity)
