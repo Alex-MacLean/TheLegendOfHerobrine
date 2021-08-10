@@ -140,6 +140,7 @@ public class HerobrineStalkerEntity extends AbstractHerobrineEntity {
 
         if (this.runAtTargetDelay >= 1 && this.isRunningAtTarget) {
             this.runAtTargetDelay = 500;
+            this.runAtTargetTime = 1000;
         }
 
         AxisAlignedBB axisalignedbb = this.getBoundingBox().inflate(1.0D);
