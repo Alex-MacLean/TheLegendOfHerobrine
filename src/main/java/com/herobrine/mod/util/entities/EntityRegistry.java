@@ -4,6 +4,7 @@ import com.herobrine.mod.HerobrineMod;
 import com.herobrine.mod.config.Config;
 import com.herobrine.mod.entities.*;
 import com.herobrine.mod.util.items.ItemList;
+import com.herobrine.mod.util.worldgen.BiomeInit;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
@@ -233,13 +234,21 @@ public class EntityRegistry {
         for (BiomeDictionary.Type t : HerobrineTypes) {
             List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
             if (types.contains(t)) {
-                if(event.getCategory() != Biome.Category.NETHER) {
+                if (event.getCategory() != Biome.Category.NETHER && event.getName() != BiomeInit.CURSED_FOREST.getRegistryName()) {
                     spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_WARRIOR_ENTITY, Config.COMMON.HerobrineWarriorWeight.get(), 1, 1));
                     spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_BUILDER_ENTITY, Config.COMMON.HerobrineBuilderWeight.get(), 1, 1));
                     spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_MAGE_ENTITY, Config.COMMON.HerobrineMageWeight.get(), 1, 1));
                     spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_SPY_ENTITY, Config.COMMON.HerobrineSpyWeight.get(), 1, 1));
                     spawns.add(new MobSpawnInfo.Spawners(INFECTED_BAT_ENTITY, (int) (Config.COMMON.InfectedMobWeight.get() * 2.5), 1, 1));
                     spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_STALKER_ENTITY, Config.COMMON.HerobrineStalkerWeight.get(), 1, 1));
+                }
+                if (event.getName() == BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_WARRIOR_ENTITY, (Config.COMMON.HerobrineWarriorWeight.get() + (Config.COMMON.HerobrineWarriorWeight.get() / 2)), 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_BUILDER_ENTITY, (Config.COMMON.HerobrineBuilderWeight.get() + (Config.COMMON.HerobrineBuilderWeight.get() / 2)), 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_MAGE_ENTITY, (Config.COMMON.HerobrineMageWeight.get() + (Config.COMMON.HerobrineMageWeight.get() / 2)), 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_SPY_ENTITY, (Config.COMMON.HerobrineSpyWeight.get() + (Config.COMMON.HerobrineSpyWeight.get() / 2)), 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_BAT_ENTITY, (int) (Config.COMMON.InfectedMobWeight.get() * 3.25), 1, 1));
+                    spawns.add(new MobSpawnInfo.Spawners(HEROBRINE_STALKER_ENTITY, (Config.COMMON.HerobrineStalkerWeight.get() + (Config.COMMON.HerobrineStalkerWeight.get() / 2)), 1, 1));
                 }
             }
         }
@@ -282,60 +291,104 @@ public class EntityRegistry {
         for (BiomeDictionary.Type t : InfectedAnimalTypes) {
             List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
             if (types.contains(t)) {
-                spawns.add(new MobSpawnInfo.Spawners(INFECTED_PIG_ENTITY, Config.COMMON.InfectedMobWeight.get(), 3, 6));
-                spawns.add(new MobSpawnInfo.Spawners(INFECTED_COW_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 4));
-                spawns.add(new MobSpawnInfo.Spawners(INFECTED_CHICKEN_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 8));
-                spawns.add(new MobSpawnInfo.Spawners(INFECTED_SHEEP_ENTITY, Config.COMMON.InfectedMobWeight.get(), 3, 6));
+                if (event.getName() != BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_PIG_ENTITY, Config.COMMON.InfectedMobWeight.get(), 3, 6));
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_COW_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 4));
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_CHICKEN_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 8));
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_SHEEP_ENTITY, Config.COMMON.InfectedMobWeight.get(), 3, 6));
+                }
+                if (event.getName() == BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_PIG_ENTITY, (Config.COMMON.InfectedMobWeight.get() + (Config.COMMON.InfectedMobWeight.get() / 2)), 3, 6));
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_COW_ENTITY, (Config.COMMON.InfectedMobWeight.get() + (Config.COMMON.InfectedMobWeight.get() / 2)), 2, 4));
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_CHICKEN_ENTITY, (Config.COMMON.InfectedMobWeight.get() + (Config.COMMON.InfectedMobWeight.get() / 2)), 4, 8));
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_SHEEP_ENTITY, (Config.COMMON.InfectedMobWeight.get() + (Config.COMMON.InfectedMobWeight.get() / 2)), 3, 6));
+                }
             }
         }
 
         for (BiomeDictionary.Type t : InfectedWolfTypes) {
             List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
             if (types.contains(t)) {
-                spawns.add(new MobSpawnInfo.Spawners(INFECTED_WOLF_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 4));
+                if (event.getName() != BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_WOLF_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 4));
+                }
+                if (event.getName() == BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_WOLF_ENTITY, (Config.COMMON.InfectedMobWeight.get() + (Config.COMMON.InfectedMobWeight.get() / 2)), 4, 4));
+                }
             }
         }
 
         for (BiomeDictionary.Type t : MountainTypes) {
             List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
             if (types.contains(t)) {
-                spawns.add(new MobSpawnInfo.Spawners(INFECTED_LLAMA_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 6));
+                if (event.getName() != BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_LLAMA_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 6));
+                }
+                if (event.getName() == BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_LLAMA_ENTITY, (Config.COMMON.InfectedMobWeight.get() + (Config.COMMON.InfectedMobWeight.get() / 2)), 4, 6));
+                }
             }
         }
 
         for (BiomeDictionary.Type t : SavannaTypes) {
             List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
             if (types.contains(t)) {
-                spawns.add(new MobSpawnInfo.Spawners(INFECTED_LLAMA_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 4));
-                spawns.add(new MobSpawnInfo.Spawners(INFECTED_DONKEY_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 1));
+                if (event.getName() != BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_LLAMA_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 4));
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_DONKEY_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 1));
+                }
+                if (event.getName() == BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_LLAMA_ENTITY, (Config.COMMON.InfectedMobWeight.get() + (Config.COMMON.InfectedMobWeight.get() / 2)), 4, 4));
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_DONKEY_ENTITY, (Config.COMMON.InfectedMobWeight.get() + (Config.COMMON.InfectedMobWeight.get() / 2)), 1, 1));
+                }
             }
         }
 
         for (BiomeDictionary.Type t : PlainsTypes) {
             List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
             if (types.contains(t)) {
-                spawns.add(new MobSpawnInfo.Spawners(INFECTED_DONKEY_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 3));
+                if (event.getName() != BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_DONKEY_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 3));
+                }
+                if (event.getName() == BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_DONKEY_ENTITY, (Config.COMMON.InfectedMobWeight.get() + (Config.COMMON.InfectedMobWeight.get() / 2)), 1, 3));
+                }
             }
         }
 
         for (BiomeDictionary.Type t : InfectedHorseTypes) {
             List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
             if (types.contains(t)) {
-                spawns.add(new MobSpawnInfo.Spawners(INFECTED_HORSE_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 6));
+                if (event.getName() != BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_HORSE_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 6));
+                }
+                if (event.getName() == BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_HORSE_ENTITY, (Config.COMMON.InfectedMobWeight.get() + (Config.COMMON.InfectedMobWeight.get() / 2)), 2, 6));
+                }
             }
         }
 
         for (BiomeDictionary.Type t : InfectedVillagerTypes) {
             List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
             if (types.contains(t)) {
-                spawns.add(new MobSpawnInfo.Spawners(INFECTED_VILLAGER_ENTITY, Config.COMMON.InfectedMobWeight.get(), 1, 4));
+                if (event.getName() != BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_VILLAGER_ENTITY, Config.COMMON.InfectedMobWeight.get(), 4, 6));
+                }
+                if (event.getName() == BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_VILLAGER_ENTITY, (Config.COMMON.InfectedMobWeight.get() + (Config.COMMON.InfectedMobWeight.get() / 2)), 1, 4));
+                }
             }
         }
 
         for (BiomeDictionary.Type t : InfectedRabbitTypes) {
             List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
             if (types.contains(t)) {
-                spawns.add(new MobSpawnInfo.Spawners(INFECTED_RABBIT_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 3));
+                if (event.getName() != BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_RABBIT_ENTITY, Config.COMMON.InfectedMobWeight.get(), 2, 3));
+                }
+                if (event.getName() == BiomeInit.CURSED_FOREST.getRegistryName()) {
+                    spawns.add(new MobSpawnInfo.Spawners(INFECTED_RABBIT_ENTITY, (Config.COMMON.InfectedMobWeight.get() + (Config.COMMON.InfectedMobWeight.get() / 2)), 2, 3));
+                }
             }
         }
     }

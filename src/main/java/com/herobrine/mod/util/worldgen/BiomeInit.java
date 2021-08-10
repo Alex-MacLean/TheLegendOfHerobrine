@@ -11,7 +11,7 @@ import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BiomeInit {
-    private static final RegistryKey<Biome> CURSED_FOREST = RegistryKey.create(Registry.BIOME_REGISTRY, HerobrineMod.location("cursed_forest"));
+    public static final RegistryKey<Biome> CURSED_FOREST = RegistryKey.create(Registry.BIOME_REGISTRY, HerobrineMod.location("cursed_forest"));
 
     public static void registerBiomes() {
         ForgeRegistries.BIOMES.register(ModdedBiomeMaker.makeCursedForestBiome(0.1F, 0.2F).setRegistryName(HerobrineMod.MODID, "cursed_forest"));
