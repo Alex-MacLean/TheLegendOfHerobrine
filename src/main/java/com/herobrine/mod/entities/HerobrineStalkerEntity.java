@@ -119,18 +119,6 @@ public class HerobrineStalkerEntity extends AbstractHerobrineEntity {
     public void aiStep() {
         super.aiStep();
         --this.lifeTimer;
-        if (this.lifeTimer > 6000) {
-            this.lifeTimer = 6000;
-        }
-
-        if (this.runAtTargetDelay > 500) {
-            this.runAtTargetDelay = 500;
-        }
-
-        --this.runAtTargetTime;
-        if(this.runAtTargetTime > 1000) {
-            this.runAtTargetTime = 1000;
-        }
 
         if(this.isRunningAtTarget) {
             --this.runAtTargetTime;
@@ -140,14 +128,18 @@ public class HerobrineStalkerEntity extends AbstractHerobrineEntity {
 
         if(this.runAtTargetDelay < 1) {
             this.goalSelector.addGoal(2, this.runAtTargetGoal);
-            this.runAtTargetDelay = 500;
             this.isRunningAtTarget = true;
+            this.runAtTargetDelay = 500;
         }
 
         if (this.runAtTargetTime < 1) {
             this.goalSelector.removeGoal(this.runAtTargetGoal);
             this.runAtTargetTime = 1000;
             this.isRunningAtTarget = false;
+        }
+
+        if (this.runAtTargetDelay >= 1 && this.isRunningAtTarget) {
+            this.runAtTargetDelay = 500;
         }
 
         AxisAlignedBB axisalignedbb = this.getBoundingBox().inflate(1.0D);

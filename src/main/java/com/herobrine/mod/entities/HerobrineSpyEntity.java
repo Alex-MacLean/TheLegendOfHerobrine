@@ -92,9 +92,6 @@ public class HerobrineSpyEntity extends AbstractHerobrineEntity {
     @Override
     public void aiStep() {
         super.aiStep();
-        if (this.lifeTimer > 6000) {
-            this.lifeTimer = 6000;
-        }
         if (this.lifeTimer < 1) {
             if (!this.level.isClientSide) {
                 this.level.broadcastEntityEvent(this, (byte) 4);

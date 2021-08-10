@@ -4,7 +4,7 @@ license="GNU General Public License version 3 (GPLv3)"
 issueTrackerURL="https://github.com/Alex-MacLean/TheLegendOfHerobrine/issues" #optional
 [[mods]] #mandatory
 modId = "herobrine" #mandatory
-version = "0.6.3-RC2" #mandatory
+version = "0.6.3-RC3" #mandatory
 displayName = "The Legend of Herobrine" #mandatory
 updateJSONURL = "https://raw.githubusercontent.com/Alex-MacLean/TheLegendOfHerobrine/master/update.json" #optional
 displayURL = "https://www.herobrinemod.com" #optional

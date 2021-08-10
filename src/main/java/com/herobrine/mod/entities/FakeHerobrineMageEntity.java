@@ -79,9 +79,6 @@ public class FakeHerobrineMageEntity extends AbstractHerobrineEntity {
     @Override
     public void aiStep() {
         super.aiStep();
-        if (this.lifeTimer > 200) {
-            this.lifeTimer = 200;
-        }
         if (this.lifeTimer < 1) {
             this.remove();
         }

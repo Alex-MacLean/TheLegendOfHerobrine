@@ -90,7 +90,7 @@ public class HerobrineWarriorEntity extends AbstractHerobrineEntity{
 
     @Override
     public void aiStep() {
-        if (this.blockBreakCounter < 1 || this.blockBreakCounter > 500) {
+        if (this.blockBreakCounter < 1) {
             this.blockBreakCounter = 500;
         }
         --this.blockBreakCounter;

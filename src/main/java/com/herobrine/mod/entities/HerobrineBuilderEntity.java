@@ -120,9 +120,6 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
 
     @Override
     public void aiStep() {
-        if (this.lifeTimer > 6000) {
-            this.lifeTimer = 6000;
-        }
         if (this.lifeTimer < 1) {
             if (!this.level.isClientSide) {
                 this.level.broadcastEntityEvent(this, (byte) 4);
@@ -131,8 +128,7 @@ public class HerobrineBuilderEntity extends AbstractHerobrineEntity {
         }
         --this.lifeTimer;
 
-        //This was 2 if statements with the same result (GJ said)
-        if (this.placeTimer < 1 || this.placeTimer > 1000) {
+        if (this.placeTimer < 1) {
             this.placeTimer = 1000;
         }
         --this.placeTimer;

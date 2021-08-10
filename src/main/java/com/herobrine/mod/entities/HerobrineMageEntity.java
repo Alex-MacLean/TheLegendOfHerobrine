@@ -102,7 +102,7 @@ public class HerobrineMageEntity extends AbstractHerobrineEntity {
     @Override
     public void aiStep() {
         if (this.isAlive()) {
-            if (this.illusionCastingTime < 1 || this.illusionCastingTime > 400) {
+            if (this.illusionCastingTime < 1) {
                 this.illusionCastingTime = 400;
             }
             --this.illusionCastingTime;
