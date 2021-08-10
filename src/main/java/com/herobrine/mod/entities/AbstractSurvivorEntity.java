@@ -200,6 +200,9 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
     public void aiStep() {
         super.aiStep();
         this.updateSwingTime();
+        if (this.getTarget() != null && !this.hasNoCustomer()) {
+            this.resetCustomer();
+        }
         if (this.isAlive() && this.getHealth() < this.getMaxHealth()) {
             if (this.healTimer < 1 && this.getHealth() < this.getMaxHealth()) {
                 this.healTimer = 80;
@@ -212,12 +215,12 @@ public class AbstractSurvivorEntity extends CreatureEntity implements IMerchant,
             this.customServerAiStep();
         }
 
-        //Makes every entity that extends MonsterEntity attack Survivors. This is to allow any vanilla or modded monster to properly recognise the survivor as an enemy before being attacked. There is an exception for endermen because of how they interact with players.
+        //Makes every entity that extends MonsterEntity attack Survivors. This is to allow any vanilla or modded monster to properly recognise the survivor as an enemy before being attacked. There is an exception for neutral mobs and Herobrine Stalkers because of how they interact with players.
         AxisAlignedBB axisalignedbb = this.getBoundingBox().inflate(64.0D, 64.0D, 64.0D);
         List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, axisalignedbb);
         if (!list.isEmpty()) {
             for (LivingEntity entity : list) {
-                if (entity instanceof MonsterEntity && ((MonsterEntity) entity).getTarget() == null && !(entity instanceof IAngerable) && this.canSee(entity)) {
+                if (entity instanceof MonsterEntity && ((MonsterEntity) entity).getTarget() == null && !(entity instanceof IAngerable) && !(entity instanceof HerobrineStalkerEntity) && this.canSee(entity)) {
                     ((MonsterEntity) entity).setTarget(this);
                 }
                 if (entity instanceof SlimeEntity && ((SlimeEntity) entity).getTarget() == null && this.canSee(entity)) {
