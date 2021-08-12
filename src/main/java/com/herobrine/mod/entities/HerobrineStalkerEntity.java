@@ -34,13 +34,14 @@ public class HerobrineStalkerEntity extends AbstractHerobrineEntity {
 
     private int lifeTimer = 6000;
     private int runAtTargetDelay = 500;
-    MeleeAttackGoal runAtTargetGoal = new MeleeAttackGoal(this, 0.8D, true);
+    private int runAtTargetTime = 250;
     private boolean isRunningAtTarget = false;
 
     public HerobrineStalkerEntity(World worldIn) {
         this(EntityRegistry.HEROBRINE_STALKER_ENTITY, worldIn);
     }
-    private int runAtTargetTime = 250;
+
+    MeleeAttackGoal runAtTargetGoal = new MeleeAttackGoal(this, 0.8D, true);
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
         return MonsterEntity.createMonsterAttributes()
