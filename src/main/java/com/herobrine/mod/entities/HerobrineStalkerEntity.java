@@ -133,14 +133,11 @@ public class HerobrineStalkerEntity extends AbstractHerobrineEntity {
 
         if (this.runAtTargetTime < 1) {
             this.goalSelector.removeGoal(this.runAtTargetGoal);
-            this.runAtTargetTime = 1000;
-            this.runAtTargetDelay = 500;
-            this.isRunningAtTarget = false;
+            this.resetAIState();
         }
 
         if (this.runAtTargetDelay >= 1 && this.isRunningAtTarget) {
-            this.runAtTargetDelay = 500;
-            this.runAtTargetTime = 1000;
+            this.resetAIState();
         }
 
         AxisAlignedBB axisalignedbb = this.getBoundingBox().inflate(1.0D);
@@ -158,12 +155,18 @@ public class HerobrineStalkerEntity extends AbstractHerobrineEntity {
             }
         }
 
-        if(this.lifeTimer < 1) {
+        if (this.lifeTimer < 1) {
             if (!this.level.isClientSide) {
                 this.level.broadcastEntityEvent(this, (byte) 4);
             }
             this.remove();
         }
+    }
+
+    public void resetAIState() {
+        this.isRunningAtTarget = false;
+        this.runAtTargetDelay = 500;
+        this.runAtTargetTime = 1000;
     }
 
     @Override
