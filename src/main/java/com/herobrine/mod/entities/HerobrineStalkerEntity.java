@@ -129,12 +129,12 @@ public class HerobrineStalkerEntity extends AbstractHerobrineEntity {
         if(this.runAtTargetDelay < 1) {
             this.goalSelector.addGoal(2, this.runAtTargetGoal);
             this.isRunningAtTarget = true;
-            this.runAtTargetDelay = 500;
         }
 
         if (this.runAtTargetTime < 1) {
             this.goalSelector.removeGoal(this.runAtTargetGoal);
             this.runAtTargetTime = 1000;
+            this.runAtTargetDelay = 500;
             this.isRunningAtTarget = false;
         }
 
