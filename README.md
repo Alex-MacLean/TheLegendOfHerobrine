@@ -3,6 +3,8 @@
 
 **CurseForge**: https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine
 
+**Modrinth**: https://modrinth.com/mod/the-legend-of-herobrine
+
 The Legend of Herobrine is a mod designed for modern versions of Minecraft that aims to add Herobrine to the game with many new gameplay features while also fitting in with vanilla gameplay and keeping the scary theme surrounding Herobrine while remaining relevant and fun in larger modpacks. Currently in beta. Major bugs may arise!
 
 For a full description and access to preview builds visit: https://www.herobrinemod.com/about
