@@ -3,17 +3,17 @@
 
 **CurseForge**: https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine
 
+**Modrinth**: https://modrinth.com/mod/the-legend-of-herobrine
+
 The Legend of Herobrine is a mod designed for modern versions of Minecraft that aims to add Herobrine to the game with many new gameplay features while also fitting in with vanilla gameplay and keeping the scary theme surrounding Herobrine while remaining relevant and fun in larger modpacks. Currently in beta. Major bugs may arise!
 
-For a full description visit: https://www.herobrinemod.com/about
+For a full description and access to preview builds visit: https://www.herobrinemod.com/about
 
 Screenshots: https://www.herobrinemod.com/screenshots
 
 FAQ: https://www.herobrinemod.com/faq
 
 Programmer Art Style Resource Pack: https://github.com/Alex-MacLean/TheLegendOfHerobrine/releases/download/0.6.0/Herobrine-Programmer-Art.zip
-
-Join the official Discord server for development updates and preview builds: https://discord.com/invite/hbxvDY4agm
 
 **How to build this mod from the source code:**
 
@@ -35,7 +35,7 @@ IDE with Java support. I use Intellij Idea: https://www.jetbrains.com/idea/downl
 
 **Setp 4:** In the gradle processes window sync/reload the project if your IDE doesn't do it automatically. In Intellij Idea it is the arrow circle button in the top left corner.
 
-**Setp 5:** The gradle processes window should now be populated with directories and processes. Go to Tasks -> fg_runs and run gen*name of your ide*Runs (For intellij idea run genIntellijRuns). This should download the rest of the required files to begin building the mod.
+**Setp 5:** The gradle processes window should now be populated with directories and processes. Go to Tasks -> forgegradle runs and run gen*name of your ide*Runs (For intellij idea run genIntellijRuns). This should download the rest of the required files to begin building the mod.
 
 **Setp 6:** In the gradle window go to Tasks -> build and run build. If everything is set up properly it should build the mod file.
 
