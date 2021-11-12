@@ -1,6 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "herobrine:block/cursed_diamond_block"
-  }
-}
