@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "herobrine",
+  "version": "0.6.4",
+  "name": "The Legend of Herobrine",
+  "description": "Adds Herobrine to Minecraft, and other herobrine related things.",
+  "authors": [
+    "AlexMacLean"
+  ],
+  "contact": {
+    "website": "https://www.herobrinemod.com/",
+    "repo": "https://github.com/Alex-MacLean/TheLegendOfHerobrine"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/herobrine/logo.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.github.alexmaclean.herobrine.client.HerobrineClient"
+    ],
+    "main": [
+      "com.github.alexmaclean.herobrine.HerobrineMod"
+    ]
+  },
+  "mixins": [
+    "herobrine.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.5",
+    "fabric": "*",
+    "minecraft": "1.17.1"
+  }
+}

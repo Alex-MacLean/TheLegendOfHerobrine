@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "herobrine:cursed_diamond"
+    },
+    {
+      "item": "herobrine:holy_water"
+    }
+  ],
+  "result": {
+    "item": "herobrine:purified_diamond"
+  }
+}

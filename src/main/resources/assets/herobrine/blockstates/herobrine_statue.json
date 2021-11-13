@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,half=lower": { "model": "herobrine:block/herobrine_statue/bottom/north" },
+    "facing=east,half=lower": { "model": "herobrine:block/herobrine_statue/bottom/east" },
+    "facing=south,half=lower": { "model": "herobrine:block/herobrine_statue/bottom/south" },
+    "facing=west,half=lower": { "model": "herobrine:block/herobrine_statue/bottom/west" },
+    "facing=north,half=upper": { "model": "herobrine:block/herobrine_statue/top/north" },
+    "facing=east,half=upper": { "model": "herobrine:block/herobrine_statue/top/east" },
+    "facing=south,half=upper": { "model": "herobrine:block/herobrine_statue/top/south" },
+    "facing=west,half=upper": { "model": "herobrine:block/herobrine_statue/top/west" }
+  }
+}

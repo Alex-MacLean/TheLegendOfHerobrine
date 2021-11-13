@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "herobrine:purified_diamond_block",
+    "herobrine:cursed_diamond_block",
+    "herobrine:herobrine_altar",
+    "herobrine:herobrine_statue"
+  ]
+}
