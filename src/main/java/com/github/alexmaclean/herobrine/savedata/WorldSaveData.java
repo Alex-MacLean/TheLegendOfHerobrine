@@ -12,7 +12,7 @@ import java.util.Objects;
 public class WorldSaveData {
     private final String fileName;
     private final String name;
-    JsonObject json = new JsonObject();
+    private final JsonObject json = new JsonObject();
 
     public WorldSaveData(String fileName, String name) {
         this.fileName = fileName;
