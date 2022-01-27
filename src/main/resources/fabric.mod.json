@@ -11,7 +11,7 @@
     "website": "https://www.herobrinemod.com/",
     "repo": "https://github.com/Alex-MacLean/TheLegendOfHerobrine"
   },
-  "license": "GPL-3.0",
+  "license": "GNU General Public License Version 3 (GPLv3)",
   "icon": "assets/herobrine/logo.png",
   "environment": "*",
   "entrypoints": {
@@ -28,6 +28,6 @@
   "depends": {
     "fabricloader": ">=0.12.5",
     "fabric": "*",
-    "minecraft": "1.17.1"
+    "minecraft": ">=1.18.1"
   }
 }

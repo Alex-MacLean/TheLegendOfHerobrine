@@ -1,6 +1,7 @@
 package com.github.alexmaclean.herobrine.blocks;
 
 import com.github.alexmaclean.herobrine.items.ItemList;
+import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
@@ -87,7 +88,7 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
     @Override
     public BlockState getStateForNeighborUpdate(@NotNull BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
@@ -125,12 +126,18 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
             if (!world.isClient) {
                 if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
+                    WorldSaveData data = new WorldSaveData("test.json", "test");
+                    if (world instanceof ServerWorld) {
+                        data.writeInt(world, "testInt", 1);
+                    }
+                    System.out.println("saves/" +  "Test" + "/" + "test.json");
+                    System.out.println(data.readInt("test"));
                 } else {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
                 }
 
                 if (state.get(WATERLOGGED)) {
-                    world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+                    world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
                 }
 
                 if (world instanceof ServerWorld) {
