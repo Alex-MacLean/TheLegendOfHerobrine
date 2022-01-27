@@ -11,16 +11,10 @@ import java.util.Objects;
 
 public class WorldSaveData {
     private final String fileName;
-    private final String name;
     private final JsonObject json = new JsonObject();
 
-    public WorldSaveData(String fileName, String name) {
+    public WorldSaveData(String fileName) {
         this.fileName = fileName;
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void writeInt(@NotNull World world, String name, int value) {
@@ -53,15 +47,15 @@ public class WorldSaveData {
         }
     }
 
-    public int readInt(/*World world, */String name) {
-        return 0;
+    public int readInt(String name) {
+        return json.get(name).getAsInt();
     }
 
     public double readDouble(String name) {
-        return 0.0;
+        return json.get(name).getAsDouble();
     }
 
     public boolean readBoolean(String name) {
-        return false;
+        return json.get(name).getAsBoolean();
     }
 }

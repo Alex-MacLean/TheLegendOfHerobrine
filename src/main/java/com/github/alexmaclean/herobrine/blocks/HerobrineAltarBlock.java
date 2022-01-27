@@ -120,17 +120,20 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public ActionResult onUse(@NotNull BlockState state, World world, BlockPos pos, @NotNull PlayerEntity player2, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack = player2.getStackInHand(hand);
+    public ActionResult onUse(@NotNull BlockState state, World world, BlockPos pos, @NotNull PlayerEntity player, Hand hand, BlockHitResult hit) {
+        ItemStack itemStack = player.getStackInHand(hand);
         if (canActivate(world, pos) && state.get(TYPE) == 0 && itemStack.isOf(ItemList.CURSED_DIAMOND) || canActivate(world, pos) && state.get(TYPE) == 0 &&  itemStack.isOf(ItemList.PURIFIED_DIAMOND)) {
             if (!world.isClient) {
                 if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
-                    WorldSaveData data = new WorldSaveData("test.json", "test");
+                    WorldSaveData data = new WorldSaveData("test.json");
                     if (world instanceof ServerWorld) {
                         data.writeInt(world, "testInt", 1);
                         data.writeBoolean(world, "testBoolean", true);
                         data.writeDouble(world, "testDouble", 1.0);
+                        System.out.println("Test int: " + data.readInt("testInt"));
+                        System.out.println("Test double: " + data.readDouble("testDouble"));
+                        System.out.println("Test boolean: " + data.readBoolean("testBoolean"));
                     }
                 } else {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
@@ -151,6 +154,6 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
             return ActionResult.success(world.isClient);
         }
 
-        return super.onUse(state, world, pos, player2, hand, hit);
+        return super.onUse(state, world, pos, player, hand, hit);
     }
 }

@@ -2,7 +2,6 @@ package com.github.alexmaclean.herobrine;
 
 import com.github.alexmaclean.herobrine.blocks.BlockList;
 import com.github.alexmaclean.herobrine.items.ItemList;
-import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
