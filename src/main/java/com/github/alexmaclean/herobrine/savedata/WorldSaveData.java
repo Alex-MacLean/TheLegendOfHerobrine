@@ -1,7 +1,9 @@
 package com.github.alexmaclean.herobrine.savedata;
 
 import com.google.gson.JsonObject;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -18,32 +20,39 @@ public class WorldSaveData {
     }
 
     public void writeInt(@NotNull World world, String name, int value) {
-        json.addProperty(name, value);
-        try {
-            // I am not at all proud of this segment of code. Even I barely understand what I have done to make it work. It is a combination of black magic and poor programming practices. Minecraft does not have a method to get the root directory of a world, so I had to improvise
-            Files.write(Paths.get(Objects.requireNonNull(world.getServer()).getFile("saves/" + world.getServer().getOverworld().toString().substring(12, world.getServer().getOverworld().toString().length() - 7) + "/" + fileName).getPath()), json.toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(world instanceof ServerWorld) {
+            json.addProperty(name, value);
+            try {
+                // THREE times now. Jesus, Alex
+                Files.write(Paths.get(Objects.requireNonNull(world.getServer()).getFile("saves/" + world.getServer().getOverworld().toString().substring(12, world.getServer().getOverworld().toString().length() - 7) + "/" + fileName).getPath()), json.toString().getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void writeDouble(@NotNull World world, String name, double value) {
-        json.addProperty(name, value);
-        try {
-            // Oh boy, here it is again :)
-            Files.write(Paths.get(Objects.requireNonNull(world.getServer()).getFile("saves/" + world.getServer().getOverworld().toString().substring(12, world.getServer().getOverworld().toString().length() - 7) + "/" + fileName).getPath()), json.toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(world instanceof ServerWorld) {
+            json.addProperty(name, value);
+            try {
+                // THREE times now. Jesus, Alex
+                Files.write(Paths.get(Objects.requireNonNull(world.getServer()).getFile("saves/" + world.getServer().getOverworld().toString().substring(12, world.getServer().getOverworld().toString().length() - 7) + "/" + fileName).getPath()), json.toString().getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void writeBoolean(@NotNull World world, String name, Boolean value) {
-        json.addProperty(name, value);
-        try {
-            // THREE times now. Jesus, Alex
-            Files.write(Paths.get(Objects.requireNonNull(world.getServer()).getFile("saves/" + world.getServer().getOverworld().toString().substring(12, world.getServer().getOverworld().toString().length() - 7) + "/" + fileName).getPath()), json.toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(world instanceof ServerWorld) {
+            json.addProperty(name, value);
+            try {
+                // THREE times now. Jesus, Alex
+                System.out.println("Testing file at: " + Objects.requireNonNull(world.getServer()).getFile("saves/" + world.getServer().getOverworld().toString().substring(12, world.getServer().getOverworld().toString().length() - 7) + "/" + fileName).getPath());
+                Files.write(Paths.get(Objects.requireNonNull(world.getServer()).getFile("saves/" + world.getServer().getOverworld().toString().substring(12, world.getServer().getOverworld().toString().length() - 7) + "/" + fileName).getPath()), json.toString().getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -61,5 +61,7 @@
   "item.herobrine.herobrine_stalker_spawn_egg": "Herobrine Stalker Spawn Egg",
   "entity.herobrine.herobrine_stalker": "Herobrine",
   "item.herobrine.music_disc_dog": "Music Disc",
-  "item.herobrine.music_disc_dog.desc": "C418 - dog"
+  "item.herobrine.music_disc_dog.desc": "C418 - dog",
+  "herobrine.summon": "<Herobrine> You have no idea what you have done!",
+  "herobrine.unsummon": "<Herobrine> I shall return!"
 }
