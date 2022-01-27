@@ -129,6 +129,8 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                     WorldSaveData data = new WorldSaveData("test.json", "test");
                     if (world instanceof ServerWorld) {
                         data.writeInt(world, "testInt", 1);
+                        data.writeBoolean(world, "testBoolean", true);
+                        data.writeDouble(world, "testDouble", 1.0);
                     }
                 } else {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));

@@ -12,6 +12,7 @@ import java.util.Objects;
 public class WorldSaveData {
     private final String fileName;
     private final String name;
+    JsonObject json = new JsonObject();
 
     public WorldSaveData(String fileName, String name) {
         this.fileName = fileName;
@@ -23,7 +24,6 @@ public class WorldSaveData {
     }
 
     public void writeInt(@NotNull World world, String name, int value) {
-        JsonObject json = new JsonObject();
         json.addProperty(name, value);
         try {
             // I am not at all proud of this segment of code. Even I barely understand what I have done to make it work. It is a combination of black magic and poor programming practices. Minecraft does not have a method to get the root directory of a world, so I had to improvise
@@ -33,8 +33,7 @@ public class WorldSaveData {
         }
     }
 
-    public void writeDouble(@NotNull World world, String name, int value) {
-        JsonObject json = new JsonObject();
+    public void writeDouble(@NotNull World world, String name, double value) {
         json.addProperty(name, value);
         try {
             // Oh boy, here it is again :)
@@ -44,8 +43,7 @@ public class WorldSaveData {
         }
     }
 
-    public void writeBoolean(@NotNull World world, String name, int value) {
-        JsonObject json = new JsonObject();
+    public void writeBoolean(@NotNull World world, String name, Boolean value) {
         json.addProperty(name, value);
         try {
             // THREE times now. Jesus, Alex
