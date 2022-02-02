@@ -130,14 +130,14 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
                     if(!data.readBoolean("herobrineSummoned")) {
                         player.sendMessage(new TranslatableText("herobrine.summon"), false);
+                        data.writeBoolean("herobrineSummoned", true);
                     }
-                    data.writeBoolean("herobrineSummoned", true);
                 } else {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
                     if(data.readBoolean("herobrineSummoned")) {
                         player.sendMessage(new TranslatableText("herobrine.unsummon"), false);
+                        data.writeBoolean("herobrineSummoned", false);
                     }
-                    data.writeBoolean("herobrineSummoned", false);
                 }
 
                 if (state.get(WATERLOGGED)) {
