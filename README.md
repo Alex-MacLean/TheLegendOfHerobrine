@@ -23,6 +23,8 @@ Programmer Art Style Resource Pack: https://github.com/Alex-MacLean/TheLegendOf
 
 JDK 17.0.1 or newer: (Oracle JDK) https://www.oracle.com/java/technologies/downloads/ (OpenJDK) https://openjdk.java.net/
 
+JavaFX 17 or newer: https://gluonhq.com/products/javafx/
+
 (Windows Only) Add Java to path environment variable: https://www.javatpoint.com/how-to-set-path-in-java (Use second, permanent method)
 
 IDE with Java support. I use Intellij Idea: https://www.jetbrains.com/idea/download/
@@ -44,9 +46,15 @@ IDE with Java support. I use Intellij Idea: https://www.jetbrains.com/idea/downl
 **Permissions:**
 
 You are allowed to use this mod in your modpack. This is the only way you can redistribute the bianaries of this mod on your own.
+
 You are allowed to modify this code and use it for personal use, but not redistribute this code in any way.
+
 You are allowed to use this code as a reference for implementing similar, but not identical features in another mod.
+
 You are not allowed to redistribute recompiled bianaries from this source code, no matter how much modifications are made.
+
 If you want to contribute to this project feel free to contact me with whatever modifications you have made, if your code makes it into the mod I will add you to the credits section of the mcmod.info and mods.toml files.
+
 For questions about any other restrictions or permissions not stated here, please refer to the license (GPLv3).
+
 If you have any questions about this mod or your permissions feel free to DM me on CurseForge or GitHub.
