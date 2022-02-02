@@ -33,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
-import java.util.UUID;
 
 public class HerobrineAltarBlock extends Block implements Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -126,15 +125,19 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
         ItemStack itemStack = player.getStackInHand(hand);
         if (canActivate(world, pos) && state.get(TYPE) == 0 && itemStack.isOf(ItemList.CURSED_DIAMOND) || canActivate(world, pos) && state.get(TYPE) == 0 &&  itemStack.isOf(ItemList.PURIFIED_DIAMOND)) {
             if (!world.isClient) {
-                WorldSaveData data = new WorldSaveData("herobrine.json");
+                WorldSaveData data = new WorldSaveData(world, "herobrine.json");
                 if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
-                    data.writeBoolean(world, "herobrineSummoned", true);
-                    player.sendMessage(new TranslatableText("herobrine.summon"), false);
+                    if(!data.readBoolean("herobrineSummoned")) {
+                        player.sendMessage(new TranslatableText("herobrine.summon"), false);
+                    }
+                    data.writeBoolean("herobrineSummoned", true);
                 } else {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
-                    data.writeBoolean(world, "herobrineSummoned", false);
-                    player.sendMessage(new TranslatableText("herobrine.unsummon"), false);
+                    if(data.readBoolean("herobrineSummoned")) {
+                        player.sendMessage(new TranslatableText("herobrine.unsummon"), false);
+                    }
+                    data.writeBoolean("herobrineSummoned", false);
                 }
 
                 if (state.get(WATERLOGGED)) {
