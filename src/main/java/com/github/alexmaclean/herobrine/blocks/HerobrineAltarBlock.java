@@ -2,6 +2,7 @@ package com.github.alexmaclean.herobrine.blocks;
 
 import com.github.alexmaclean.herobrine.items.ItemList;
 import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
+import com.github.alexmaclean.herobrine.util.savedata.SaveDataUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
@@ -128,13 +129,13 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                 WorldSaveData data = new WorldSaveData(world, "herobrine.json");
                 if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
-                    if(!data.readBoolean("herobrineSummoned")) {
+                    if(!SaveDataUtil.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
                         player.sendMessage(new TranslatableText("herobrine.summon"), false);
                         data.writeBoolean("herobrineSummoned", true);
                     }
                 } else {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
-                    if(data.readBoolean("herobrineSummoned")) {
+                    if(SaveDataUtil.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
                         player.sendMessage(new TranslatableText("herobrine.unsummon"), false);
                         data.writeBoolean("herobrineSummoned", false);
                     }

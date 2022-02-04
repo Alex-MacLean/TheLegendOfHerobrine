@@ -7,13 +7,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class HerobrineMod implements ModInitializer {
-    // Public string reference for mod id
+    // Public String reference for mod id
     public static final String MODID = "herobrine";
 
     @Override
     public void onInitialize() {
         registerBlocks();
         registerItems();
+        registerEntities();
     }
 
     // Register blocks
@@ -46,5 +47,10 @@ public class HerobrineMod implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "cursed_diamond"), ItemList.CURSED_DIAMOND);
         Registry.register(Registry.ITEM, new Identifier(MODID, "purified_diamond"), ItemList.PURIFIED_DIAMOND);
         Registry.register(Registry.ITEM, new Identifier(MODID, "music_disc_dog"), ItemList.MUSIC_DISC_DOG);
+    }
+
+    // Register entities
+    private void registerEntities() {
+
     }
 }

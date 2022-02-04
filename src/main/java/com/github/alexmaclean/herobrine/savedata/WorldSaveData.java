@@ -32,7 +32,6 @@ public class WorldSaveData {
     public void writeInt(String name, int value) {
         if(world instanceof ServerWorld) {
             json.addProperty(name, value);
-
             try {
                 Files.write(Paths.get(path.substring(0, path.length() - 1) + fileName), json.toString().getBytes());
             } catch (IOException e) {
@@ -45,7 +44,6 @@ public class WorldSaveData {
     public void writeDouble(String name, double value) {
         if(world instanceof ServerWorld) {
             json.addProperty(name, value);
-
             try {
                 Files.write(Paths.get(path.substring(0, path.length() - 1) + fileName), json.toString().getBytes());
             } catch (IOException e) {
@@ -58,45 +56,11 @@ public class WorldSaveData {
     public void writeBoolean(String name, Boolean value) {
         if(world instanceof ServerWorld) {
             json.addProperty(name, value);
-
             try {
                 Files.write(Paths.get(path.substring(0, path.length() - 1) + fileName), json.toString().getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    // Read integer from Json file
-    public int readInt(String name) {
-        try {
-            JsonObject jsonObject = (JsonObject) JsonParser.parseReader(new FileReader(path.substring(0, path.length() - 1) + fileName));
-
-            return jsonObject.get(name).getAsInt();
-        } catch (FileNotFoundException e) {
-            return 0;
-        }
-    }
-
-    // Read double from Json file
-    public double readDouble(String name) {
-        try {
-            JsonObject jsonObject = (JsonObject) JsonParser.parseReader(new FileReader(path.substring(0, path.length() - 1) + fileName));
-
-            return jsonObject.get(name).getAsDouble();
-        } catch (FileNotFoundException e) {
-            return 0.0;
-        }
-    }
-
-    // Read boolean from Json file
-    public boolean readBoolean(String name) {
-        try {
-            JsonObject jsonObject = (JsonObject) JsonParser.parseReader(new FileReader(path.substring(0, path.length() - 1) + fileName));
-
-            return jsonObject.get(name).getAsBoolean();
-        } catch (FileNotFoundException e) {
-            return false;
         }
     }
 }
