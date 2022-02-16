@@ -1,8 +1,11 @@
 package com.github.alexmaclean.herobrine;
 
 import com.github.alexmaclean.herobrine.blocks.BlockList;
+import com.github.alexmaclean.herobrine.entities.HerobrineWarriorEntity;
 import com.github.alexmaclean.herobrine.items.ItemList;
+import com.github.alexmaclean.herobrine.util.entities.EntityTypeList;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -47,10 +50,11 @@ public class HerobrineMod implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "cursed_diamond"), ItemList.CURSED_DIAMOND);
         Registry.register(Registry.ITEM, new Identifier(MODID, "purified_diamond"), ItemList.PURIFIED_DIAMOND);
         Registry.register(Registry.ITEM, new Identifier(MODID, "music_disc_dog"), ItemList.MUSIC_DISC_DOG);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "herobrine_warrior_spawn_egg"), ItemList.HEROBRINE_WARRIOR_SPAWN_EGG);
     }
 
     // Register entities
     private void registerEntities() {
-
+        FabricDefaultAttributeRegistry.register(EntityTypeList.HEROBRINE_WARRIOR, HerobrineWarriorEntity.registerAttributes());
     }
 }
