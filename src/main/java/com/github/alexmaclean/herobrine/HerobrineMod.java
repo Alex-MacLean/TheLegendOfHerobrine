@@ -3,8 +3,10 @@ package com.github.alexmaclean.herobrine;
 import com.github.alexmaclean.herobrine.blocks.BlockList;
 import com.github.alexmaclean.herobrine.entities.HerobrineWarriorEntity;
 import com.github.alexmaclean.herobrine.items.ItemList;
+import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
 import com.github.alexmaclean.herobrine.util.entities.EntityTypeList;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -15,6 +17,7 @@ public class HerobrineMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        registerCallbacks();
         registerBlocks();
         registerItems();
         registerEntities();
@@ -56,5 +59,9 @@ public class HerobrineMod implements ModInitializer {
     // Register entities
     private void registerEntities() {
         FabricDefaultAttributeRegistry.register(EntityTypeList.HEROBRINE_WARRIOR, HerobrineWarriorEntity.registerAttributes());
+    }
+
+    private void registerCallbacks() {
+        ServerLifecycleEvents.SERVER_STARTED.register(WorldSaveData::handleServerStart);
     }
 }

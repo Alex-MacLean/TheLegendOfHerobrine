@@ -1,6 +1,8 @@
 package com.github.alexmaclean.herobrine.savedata;
 
+import com.github.alexmaclean.herobrine.util.savedata.SaveDataUtil;
 import com.google.gson.JsonObject;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.world.World;
@@ -31,6 +33,7 @@ public class WorldSaveData {
             json.addProperty(name, value);
             try {
                 Files.write(Paths.get(path.substring(0, path.length() - 1) + fileName), json.toString().getBytes());
+                SaveDataUtil.updateData = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -43,6 +46,7 @@ public class WorldSaveData {
             json.addProperty(name, value);
             try {
                 Files.write(Paths.get(path.substring(0, path.length() - 1) + fileName), json.toString().getBytes());
+                SaveDataUtil.updateData = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -55,9 +59,15 @@ public class WorldSaveData {
             json.addProperty(name, value);
             try {
                 Files.write(Paths.get(path.substring(0, path.length() - 1) + fileName), json.toString().getBytes());
+                SaveDataUtil.updateData = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static void handleServerStart(MinecraftServer server) {
+        SaveDataUtil.updateData = true;
     }
 }
