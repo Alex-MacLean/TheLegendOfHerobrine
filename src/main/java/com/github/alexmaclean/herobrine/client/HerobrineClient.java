@@ -1,7 +1,7 @@
 package com.github.alexmaclean.herobrine.client;
 
 import com.github.alexmaclean.herobrine.client.entities.models.HerobrineEntityModel;
-import com.github.alexmaclean.herobrine.client.entities.models.HerobrineEntityModelLayers;
+import com.github.alexmaclean.herobrine.client.entities.models.HerobrineModelLayers;
 import com.github.alexmaclean.herobrine.client.entities.renderers.HerobrineEntityRenderer;
 import com.github.alexmaclean.herobrine.util.entities.EntityTypeList;
 import net.fabricmc.api.ClientModInitializer;
@@ -14,7 +14,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 public class HerobrineClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.HEROBRINE_MODEL_LAYER, HerobrineEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_WARRIOR, HerobrineEntityRenderer::new);
-        EntityModelLayerRegistry.registerModelLayer(HerobrineEntityModelLayers.HEROBRINE_MODEL_LAYER, HerobrineEntityModel::getTexturedModelData);
+        EntityRendererRegistry.register(EntityTypeList.HEROBRINE_SPY, HerobrineEntityRenderer::new);
     }
 }

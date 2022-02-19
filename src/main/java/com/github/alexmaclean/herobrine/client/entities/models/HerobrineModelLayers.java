@@ -7,6 +7,6 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class HerobrineEntityModelLayers {
+public class HerobrineModelLayers {
     public static final EntityModelLayer HEROBRINE_MODEL_LAYER = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "herobrine"), "main");
 }

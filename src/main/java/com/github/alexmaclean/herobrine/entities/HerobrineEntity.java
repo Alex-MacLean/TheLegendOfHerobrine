@@ -25,7 +25,7 @@ public abstract class HerobrineEntity extends HostileEntity {
     }
 
     public static boolean canSpawn(EntityType<? extends InfectedEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && world.isSkyVisible(pos) && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && SaveDataUtil.readBoolean(world.toServerWorld(), "test.json", "herobrineSummoned");
+        return world.getDifficulty() != Difficulty.PEACEFUL && world.isSkyVisible(pos) && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && SaveDataUtil.readBoolean(world.toServerWorld(), "herobrine.json", "herobrineSummoned");
     }
 
     @Override

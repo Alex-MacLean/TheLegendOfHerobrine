@@ -38,6 +38,7 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
 
     @Override
     protected void initGoals() {
+        super.initGoals();
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6, true));
         this.goalSelector.add(2, new ActiveTargetGoal<>(this, IllagerEntity.class, false));
@@ -81,6 +82,7 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
 
     @Override
     public void mobTick() {
+        super.mobTick();
         if(this.destroyCooldown < 1) {
             this.destroyCooldown = 500;
         }

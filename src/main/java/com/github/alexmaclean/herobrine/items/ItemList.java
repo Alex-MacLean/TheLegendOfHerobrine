@@ -39,4 +39,5 @@ public class ItemList {
     public static final Item HEROBRINE_ALTAR = new BlockItem(BlockList.HEROBRINE_ALTAR_BLOCK, new FabricItemSettings().group(ItemGroup.DECORATIONS).rarity(Rarity.UNCOMMON));
     public static final Item HEROBRINE_STATUE = new BlockItem(BlockList.HEROBRINE_STATUE_BLOCK, new FabricItemSettings().group(ItemGroup.DECORATIONS));
     public static final SpawnEggItem HEROBRINE_WARRIOR_SPAWN_EGG = new SpawnEggItem(EntityTypeList.HEROBRINE_WARRIOR, 0x000000, 0xFF0000, new Item.Settings().group(ItemGroup.MISC));
+    public static final SpawnEggItem HEROBRINE_SPY_SPAWN_EGG = new SpawnEggItem(EntityTypeList.HEROBRINE_SPY, 0x000000, 0x00FF00, new Item.Settings().group(ItemGroup.MISC));
 }

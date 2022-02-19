@@ -1,6 +1,7 @@
 package com.github.alexmaclean.herobrine;
 
 import com.github.alexmaclean.herobrine.blocks.BlockList;
+import com.github.alexmaclean.herobrine.entities.HerobrineSpyEntity;
 import com.github.alexmaclean.herobrine.entities.HerobrineWarriorEntity;
 import com.github.alexmaclean.herobrine.items.ItemList;
 import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
@@ -20,7 +21,7 @@ public class HerobrineMod implements ModInitializer {
         registerCallbacks();
         registerBlocks();
         registerItems();
-        registerEntities();
+        registerEntityAttributes();
     }
 
     // Register blocks
@@ -54,13 +55,16 @@ public class HerobrineMod implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "purified_diamond"), ItemList.PURIFIED_DIAMOND);
         Registry.register(Registry.ITEM, new Identifier(MODID, "music_disc_dog"), ItemList.MUSIC_DISC_DOG);
         Registry.register(Registry.ITEM, new Identifier(MODID, "herobrine_warrior_spawn_egg"), ItemList.HEROBRINE_WARRIOR_SPAWN_EGG);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "herobrine_spy_spawn_egg"), ItemList.HEROBRINE_SPY_SPAWN_EGG);
     }
 
-    // Register entities
-    private void registerEntities() {
+    // Register entity attributes
+    private void registerEntityAttributes() {
         FabricDefaultAttributeRegistry.register(EntityTypeList.HEROBRINE_WARRIOR, HerobrineWarriorEntity.registerAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypeList.HEROBRINE_SPY, HerobrineSpyEntity.registerAttributes());
     }
 
+    // Register callbacks
     private void registerCallbacks() {
         ServerLifecycleEvents.SERVER_STARTED.register(WorldSaveData::handleServerStart);
     }
