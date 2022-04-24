@@ -2,12 +2,14 @@ package com.github.alexmaclean.herobrine.savedata;
 
 import com.github.alexmaclean.herobrine.util.savedata.SaveDataUtil;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,7 +17,7 @@ import java.util.Objects;
 
 public class WorldSaveData {
     private final String fileName;
-    private final JsonObject json = new JsonObject();
+    private JsonObject json = new JsonObject();
     private final World world;
     private final String path;
 
@@ -30,9 +32,11 @@ public class WorldSaveData {
     // Write integer value to Json file
     public void writeInt(String name, int value) {
         if(world instanceof ServerWorld) {
-            json.addProperty(name, value);
             try {
-                Files.write(Paths.get(path.substring(0, path.length() - 1) + fileName), json.toString().getBytes());
+                String jsonPath = path.substring(0, path.length() - 1) + fileName;
+                json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
+                json.addProperty(name, value);
+                Files.write(Paths.get(jsonPath), json.toString().getBytes());
                 SaveDataUtil.updateData = true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -43,9 +47,11 @@ public class WorldSaveData {
     // Write double value to Json file
     public void writeDouble(String name, double value) {
         if(world instanceof ServerWorld) {
-            json.addProperty(name, value);
             try {
-                Files.write(Paths.get(path.substring(0, path.length() - 1) + fileName), json.toString().getBytes());
+                String jsonPath = path.substring(0, path.length() - 1) + fileName;
+                json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
+                json.addProperty(name, value);
+                Files.write(Paths.get(jsonPath), json.toString().getBytes());
                 SaveDataUtil.updateData = true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -56,9 +62,11 @@ public class WorldSaveData {
     // Write boolean value to Json file
     public void writeBoolean(String name, Boolean value) {
         if(world instanceof ServerWorld) {
-            json.addProperty(name, value);
             try {
-                Files.write(Paths.get(path.substring(0, path.length() - 1) + fileName), json.toString().getBytes());
+                String jsonPath = path.substring(0, path.length() - 1) + fileName;
+                json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
+                json.addProperty(name, value);
+                Files.write(Paths.get(jsonPath), json.toString().getBytes());
                 SaveDataUtil.updateData = true;
             } catch (IOException e) {
                 e.printStackTrace();
