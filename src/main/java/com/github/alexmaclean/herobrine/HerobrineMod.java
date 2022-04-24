@@ -1,6 +1,8 @@
 package com.github.alexmaclean.herobrine;
 
 import com.github.alexmaclean.herobrine.blocks.BlockList;
+import com.github.alexmaclean.herobrine.entities.FakeHerobrineMageEntity;
+import com.github.alexmaclean.herobrine.entities.HerobrineMageEntity;
 import com.github.alexmaclean.herobrine.entities.HerobrineSpyEntity;
 import com.github.alexmaclean.herobrine.entities.HerobrineWarriorEntity;
 import com.github.alexmaclean.herobrine.items.ItemList;
@@ -56,12 +58,15 @@ public class HerobrineMod implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "music_disc_dog"), ItemList.MUSIC_DISC_DOG);
         Registry.register(Registry.ITEM, new Identifier(MODID, "herobrine_warrior_spawn_egg"), ItemList.HEROBRINE_WARRIOR_SPAWN_EGG);
         Registry.register(Registry.ITEM, new Identifier(MODID, "herobrine_spy_spawn_egg"), ItemList.HEROBRINE_SPY_SPAWN_EGG);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "herobrine_mage_spawn_egg"), ItemList.HEROBRINE_MAGE_SPAWN_EGG);
     }
 
     // Register entity attributes
     private void registerEntityAttributes() {
         FabricDefaultAttributeRegistry.register(EntityTypeList.HEROBRINE_WARRIOR, HerobrineWarriorEntity.registerAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypeList.HEROBRINE_SPY, HerobrineSpyEntity.registerAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypeList.HEROBRINE_MAGE, HerobrineMageEntity.registerAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypeList.FAKE_HEROBRINE_MAGE, FakeHerobrineMageEntity.registerAttributes());
     }
 
     // Register callbacks

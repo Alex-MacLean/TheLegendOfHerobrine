@@ -1,64 +1,56 @@
 package com.github.alexmaclean.herobrine.entities;
 
-import com.github.alexmaclean.herobrine.util.savedata.SaveDataUtil;
+import com.github.alexmaclean.herobrine.HerobrineMod;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.FleeEntityGoal;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.IllagerEntity;
+import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
-
-public class HerobrineSpyEntity extends HerobrineEntity {
+public class FakeHerobrineMageEntity extends HerobrineEntity {
     private int lifeTimer;
-
-    public HerobrineSpyEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public FakeHerobrineMageEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
-        this.experiencePoints = 5;
-        this.lifeTimer = 6000;
+        this.experiencePoints = 0;
+        this.lifeTimer = 200;
     }
 
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 1024.0f));
-        this.goalSelector.add(2, new FleeEntityGoal<>(this, PlayerEntity.class, 32.0f, 0.7, 1.0));
-        //this.goalSelector.add(3, new LookAtEntityGoal(this, SurvivorEntity.class, 1024.0f));
-        //this.goalSelector.add(4, new FleeEntityGoal<>(this, SurvivorEntity.class, 32.0f, 0.7, 1.0));
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6, false));
+        this.goalSelector.add(2, new ActiveTargetGoal<>(this, IllagerEntity.class, false));
+        this.goalSelector.add(3, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
+        //this.goalSelector.add(4, new ActiveTargetGoal<>(this, SurvivorEntity.class, false));
+        this.goalSelector.add(5, new ActiveTargetGoal<>(this, GolemEntity.class, false));
+        this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.4));
+        this.goalSelector.add(7, new LookAtEntityGoal(this, IllagerEntity.class, 0.8f));
+        this.goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 0.8f));
+        //this.goalSelector.add(9, new LookAtEntityGoal(this, SurvivorEntity.class, 0.8f));
+        this.goalSelector.add(10, new LookAtEntityGoal(this, GolemEntity.class, 0.8f));
+        this.goalSelector.add(11, new LookAroundGoal(this));
     }
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
         return HerobrineEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 15.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0.0)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0)
-                .add(EntityAttributes.GENERIC_ARMOR, 2.0)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, 2.0)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 64.0)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.6);
-    }
-
-    @Override
-    protected boolean isDisallowedInPeaceful() {
-        return false;
-    }
-
-    public static boolean canSpawn(EntityType<? extends InfectedEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.isSkyVisible(pos) && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && SaveDataUtil.readBoolean(world.toServerWorld(), "herobrine.json", "herobrineSummoned");
     }
 
     @Override
@@ -107,5 +99,10 @@ public class HerobrineSpyEntity extends HerobrineEntity {
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         this.setPersistent();
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+    }
+
+    @Override
+    public Identifier getLootTableId() {
+        return null;
     }
 }

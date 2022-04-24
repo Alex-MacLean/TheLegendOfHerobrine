@@ -40,7 +40,7 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
     protected void initGoals() {
         super.initGoals();
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6, true));
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6, false));
         this.goalSelector.add(2, new ActiveTargetGoal<>(this, IllagerEntity.class, false));
         this.goalSelector.add(3, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
         //this.goalSelector.add(4, new ActiveTargetGoal<>(this, SurvivorEntity.class, false));

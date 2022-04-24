@@ -65,7 +65,7 @@ public abstract class HerobrineEntity extends HostileEntity {
     @Override
     protected void dropEquipment(DamageSource source, int lootingMultiplier, boolean allowDrops) {
         super.dropEquipment(source, lootingMultiplier, allowDrops);
-        if (random.nextInt(100) <= 20 * (lootingMultiplier + 1)/* && !(this instanceof FakeHerobrineMageEntity)*/) {
+        if (random.nextInt(100) <= 20 * (lootingMultiplier + 1) && !(this instanceof FakeHerobrineMageEntity)) {
             this.dropItem(ItemList.CURSED_DUST);
         }
     }
