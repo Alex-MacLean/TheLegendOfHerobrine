@@ -18,7 +18,7 @@ public class HerobrineMod implements ModInitializer {
     // Public String reference for mod id
     public static final String MODID = "herobrine";
 
-    @Override
+    @Override // "Main" method
     public void onInitialize() {
         registerCallbacks();
         registerBlocks();

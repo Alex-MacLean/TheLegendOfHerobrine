@@ -1,6 +1,5 @@
 package com.github.alexmaclean.herobrine.entities;
 
-import com.github.alexmaclean.herobrine.HerobrineMod;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;

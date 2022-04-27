@@ -1,14 +1,11 @@
 package com.github.alexmaclean.herobrine.entities;
 
 import com.github.alexmaclean.herobrine.util.entities.EntityTypeList;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
@@ -22,16 +19,21 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class HerobrineMageEntity extends HerobrineEntity {
-    private int illusionCastingInterval;
-    private int weakenCastingInterval;
-    private int warpCastingInterval;
+    private int illusionCastingCounter;
+    private int weakenCastingCounter;
+    private int warpCastingCounter;
+    private int holdCastingCounter;
+    private int holdTicks;
+    private boolean startedHold;
 
     public HerobrineMageEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
         this.experiencePoints = 5;
-        this.illusionCastingInterval = 400;
-        this.weakenCastingInterval = 250;
-        this.warpCastingInterval = 500;
+        this.illusionCastingCounter = random.nextInt(125, 500);
+        this.weakenCastingCounter = random.nextInt(100, 400);
+        this.warpCastingCounter = random.nextInt(90, 550);
+        this.holdCastingCounter = random.nextInt(150, 600);
+        this.holdTicks = random.nextInt(35, 65);
     }
 
     @Override
@@ -64,22 +66,25 @@ public class HerobrineMageEntity extends HerobrineEntity {
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putInt("IllusionCastingInterval", this.illusionCastingInterval);
-        nbt.putInt("WarpCastingInterval", this.warpCastingInterval);
-        nbt.putInt("WeakenCastingInterval", this.weakenCastingInterval);
+        nbt.putInt("IllusionCastingInterval", this.illusionCastingCounter);
+        nbt.putInt("WarpCastingInterval", this.warpCastingCounter);
+        nbt.putInt("WeakenCastingInterval", this.weakenCastingCounter);
+        nbt.putInt("HoldCastingInterval", this.holdCastingCounter);
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.illusionCastingInterval = nbt.getInt("IllusionCastingInterval");
-        this.warpCastingInterval = nbt.getInt("WarpCastingInterval");
-        this.weakenCastingInterval = nbt.getInt("WeakenCastingInterval");
+        this.illusionCastingCounter = nbt.getInt("IllusionCastingInterval");
+        this.warpCastingCounter = nbt.getInt("WarpCastingInterval");
+        this.weakenCastingCounter = nbt.getInt("WeakenCastingInterval");
+        this.holdCastingCounter = nbt.getInt("HoldCastingInterval");
     }
 
     @Override
     public void mobTick() {
-        if (this.illusionCastingInterval < 1) {
+        super.mobTick();
+        if (this.illusionCastingCounter < 1) {
             if(this.getTarget() != null) {
                 for (int i = 0; i < 4; i++) {
                     FakeHerobrineMageEntity entity = new FakeHerobrineMageEntity(EntityTypeList.FAKE_HEROBRINE_MAGE, this.world);
@@ -88,41 +93,59 @@ public class HerobrineMageEntity extends HerobrineEntity {
                 }
                 this.world.sendEntityStatus(this, (byte) 4);
             }
-            this.illusionCastingInterval = 400;
+            this.illusionCastingCounter = random.nextInt(125, 500);
         }
-        --this.illusionCastingInterval;
+        --this.illusionCastingCounter;
 
-        if (this.weakenCastingInterval < 1) {
+        if (this.weakenCastingCounter < 1) {
             if(this.getTarget() != null) {
                 this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 400, 1));
                 this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 400));
                 this.world.sendEntityStatus(this, (byte) 4);
             }
-            this.weakenCastingInterval = 250;
+            this.weakenCastingCounter = random.nextInt(100, 400);
         }
-        --this.weakenCastingInterval;
+        --this.weakenCastingCounter;
 
-        if (this.warpCastingInterval < 1) {
-            LivingEntity entity = HerobrineMageEntity.this.getTarget();
-            if (entity != null) {
-                double x = entity.getX();
-                double y = entity.getY();
-                double z = entity.getZ();
-                BlockState block = world.getBlockState(new BlockPos(x, y + 3, z));
-                BlockState blockAt = world.getBlockState(new BlockPos(x, y + 4, z));
-                if (blockAt.isAir() && block.isAir()) {
-                    if (entity.getVehicle() != null) {
-                        entity.stopRiding();
-                    }
-                    entity.setPosition(x, y + 3, z);
+        if (this.warpCastingCounter < 1) {
+            if(this.getTarget() != null && this.world.getBlockState(new BlockPos(this.getTarget().getX(), this.getTarget().getY() + 4.0, this.getTarget().getZ())).isAir() && this.world.getBlockState(new BlockPos(this.getTarget().getX(), this.getTarget().getY() + 5.0, this.getTarget().getZ())).isAir()) {
+                if(this.getTarget().hasVehicle()) {
+                    this.getTarget().dismountVehicle();
                 }
+                this.getTarget().requestTeleport(this.getTarget().getX(), this.getTarget().getY() + 4.0, this.getTarget().getZ());
+                this.world.sendEntityStatus(this, (byte) 4);
             }
-            this.world.sendEntityStatus(this, (byte) 4);
-            this.warpCastingInterval = 500;
+            this.warpCastingCounter = random.nextInt(90, 550);
         }
-        --this.warpCastingInterval;
+        --this.warpCastingCounter;
 
-        super.mobTick();
+        if (this.holdCastingCounter < 1) {
+            if(this.getTarget() != null) {
+                if(this.getTarget().hasVehicle()) {
+                    this.getTarget().dismountVehicle();
+                }
+                if (this.holdTicks > 0) {
+                    if(this.world.getBlockState(new BlockPos(this.getTarget().getX(), this.getTarget().getY() + 1.0, this.getTarget().getZ())).isAir() && !this.startedHold) {
+                        this.getTarget().requestTeleport(this.getTarget().getX(), this.getTarget().getY() + 1.0, this.getTarget().getZ());
+                        this.getTarget().damage(DamageSource.MAGIC, 1);
+                        this.startedHold = true;
+                    } else {
+                        this.getTarget().requestTeleport(this.getTarget().getX(),this.getTarget().getY(),this.getTarget().getZ());
+                        this.getTarget().damage(DamageSource.MAGIC, 1);
+                    }
+                    holdTicks --;
+                }
+                this.world.sendEntityStatus(this, (byte) 4);
+            } else {
+                this.holdCastingCounter = random.nextInt(150, 600);
+            }
+            if(holdTicks <= 0) {
+                this.holdCastingCounter = random.nextInt(150, 600);
+                this.holdTicks = random.nextInt(35, 65);
+                this.startedHold = false;
+            }
+        }
+        --this.holdCastingCounter;
     }
 
     @Override
