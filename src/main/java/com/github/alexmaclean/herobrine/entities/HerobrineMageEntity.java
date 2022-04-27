@@ -157,10 +157,7 @@ public class HerobrineMageEntity extends HerobrineEntity {
                 }
 
                 for (int i = 0; i < 20; ++i) {
-                    double vX = this.random.nextGaussian() * 0.02;
-                    double vY = this.random.nextGaussian() * 0.02;
-                    double vZ = this.random.nextGaussian() * 0.02;
-                    this.world.addParticle(ParticleTypes.EFFECT, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), vX, vY, vZ);
+                    this.world.addParticle(ParticleTypes.EFFECT, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
                 }
             }
         }
