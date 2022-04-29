@@ -28,8 +28,8 @@ public class HerobrineSpyEntity extends HerobrineEntity {
 
     public HerobrineSpyEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
-        this.experiencePoints = 5;
         this.lifeTimer = 6000;
+        this.experiencePoints = 5;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class HerobrineSpyEntity extends HerobrineEntity {
         return false;
     }
 
-    public static boolean canSpawn(EntityType<? extends InfectedEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
+    public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
         return world.isSkyVisible(pos) && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && SaveDataUtil.readBoolean(world.toServerWorld(), "herobrine.json", "herobrineSummoned");
     }
 

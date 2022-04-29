@@ -28,12 +28,12 @@ public class HerobrineMageEntity extends HerobrineEntity {
 
     public HerobrineMageEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
-        this.experiencePoints = 5;
         this.illusionCastingCounter = random.nextInt(125, 500);
         this.weakenCastingCounter = random.nextInt(100, 400);
         this.warpCastingCounter = random.nextInt(90, 550);
         this.holdCastingCounter = random.nextInt(150, 600);
         this.holdTicks = random.nextInt(35, 65);
+        this.experiencePoints = 5;
     }
 
     @Override
@@ -45,10 +45,10 @@ public class HerobrineMageEntity extends HerobrineEntity {
         //this.goalSelector.add(4, new ActiveTargetGoal<>(this, SurvivorEntity.class, false));
         this.goalSelector.add(5, new ActiveTargetGoal<>(this, GolemEntity.class, false));
         this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.4));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, IllagerEntity.class, 0.8f));
-        this.goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 0.8f));
-        //this.goalSelector.add(9, new LookAtEntityGoal(this, SurvivorEntity.class, 0.8f));
-        this.goalSelector.add(10, new LookAtEntityGoal(this, GolemEntity.class, 0.8f));
+        this.goalSelector.add(7, new LookAtEntityGoal(this, IllagerEntity.class, 64.0f));
+        this.goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 64.0f));
+        //this.goalSelector.add(9, new LookAtEntityGoal(this, SurvivorEntity.class, 64.0f));
+        this.goalSelector.add(10, new LookAtEntityGoal(this, GolemEntity.class, 64.0f));
         this.goalSelector.add(11, new LookAroundGoal(this));
     }
 
@@ -86,8 +86,10 @@ public class HerobrineMageEntity extends HerobrineEntity {
         super.mobTick();
         if (this.illusionCastingCounter < 1) {
             if(this.getTarget() != null) {
+                int duration = random.nextInt(150, 400);
                 for (int i = 0; i < 4; i++) {
                     FakeHerobrineMageEntity entity = new FakeHerobrineMageEntity(EntityTypeList.FAKE_HEROBRINE_MAGE, this.world);
+                    entity.setLifeTimer(duration);
                     entity.updatePositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
                     this.world.spawnEntity(entity);
                 }

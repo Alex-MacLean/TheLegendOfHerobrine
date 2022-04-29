@@ -32,8 +32,9 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
 
     public HerobrineWarriorEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
-        this.experiencePoints = 5;
         this.destroyCooldown = 500;
+        this.experiencePoints = 5;
+
     }
 
     @Override
@@ -46,10 +47,10 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
         //this.goalSelector.add(4, new ActiveTargetGoal<>(this, SurvivorEntity.class, false));
         this.goalSelector.add(5, new ActiveTargetGoal<>(this, GolemEntity.class, false));
         this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.4));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, IllagerEntity.class, 8.0f));
-        this.goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
+        this.goalSelector.add(7, new LookAtEntityGoal(this, IllagerEntity.class, 64.0f));
+        this.goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 64.0f));
         //this.goalSelector.add(9, new LookAtEntityGoal(this, SurvivorEntity.class, 8.0f));
-        this.goalSelector.add(10, new LookAtEntityGoal(this, GolemEntity.class, 8.0f));
+        this.goalSelector.add(10, new LookAtEntityGoal(this, GolemEntity.class, 64.0f));
         this.goalSelector.add(11, new LookAroundGoal(this));
     }
 
@@ -85,30 +86,22 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
         super.mobTick();
         if(this.destroyCooldown < 1) {
             this.destroyCooldown = 500;
-        }
-
-        this.destroyCooldown --;
-        if(this.destroyCooldown < 1 && this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
-            int x = MathHelper.floor(this.getY());
-            int y = MathHelper.floor(this.getX());
-            int z = MathHelper.floor(this.getZ());
-            boolean b = false;
-            for (int i = -1; i <= 1; ++i) {
-                for (int j = -1; j <= 1; ++j) {
-                    for (int k = 0; k <= 3; ++k) {
-                        int l = y + i;
-                        int m = x + k;
-                        int n = z + j;
-                        BlockPos blockPos = new BlockPos(l, m, n);
-                        BlockState blockState = this.world.getBlockState(blockPos);
-                        if (this.canDestroy(blockState)) {
-                            b = this.world.breakBlock(blockPos, true, this) || b;
-                            this.swingHand(Hand.MAIN_HAND);
+            if(this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
+                for (int x = -1; x <= 1; x++) {
+                    for (int z = -1; z <= 1; z++) {
+                        for (int y = 0; y <= 3; y++) {
+                            BlockPos blockPos = new BlockPos(MathHelper.floor(this.getX()) + x, MathHelper.floor(this.getY()) + y, MathHelper.floor(this.getZ()) + z);
+                            BlockState blockState = this.world.getBlockState(blockPos);
+                            if (this.canDestroy(blockState)) {
+                                this.swingHand(Hand.MAIN_HAND);
+                            }
                         }
                     }
                 }
             }
         }
+
+        this.destroyCooldown --;
     }
 
     @Override

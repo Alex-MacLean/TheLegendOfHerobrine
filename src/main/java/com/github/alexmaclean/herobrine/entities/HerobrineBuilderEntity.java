@@ -1,6 +1,5 @@
 package com.github.alexmaclean.herobrine.entities;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -14,60 +13,62 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class FakeHerobrineMageEntity extends HerobrineEntity {
+public class HerobrineBuilderEntity extends HerobrineEntity {
     private int lifeTimer;
+    private int buildTimer;
 
-    public FakeHerobrineMageEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public HerobrineBuilderEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
-        this.lifeTimer = 200;
-        this.experiencePoints = 0;
+        this.lifeTimer = 5100;
+        this.buildTimer = 1000;
+        this.experiencePoints = 5;
     }
 
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6, false));
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6 ,false));
         this.goalSelector.add(2, new ActiveTargetGoal<>(this, IllagerEntity.class, false));
         this.goalSelector.add(3, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
-        //this.goalSelector.add(4, new ActiveTargetGoal<>(this, SurvivorEntity.class, false));
-        this.goalSelector.add(5, new ActiveTargetGoal<>(this, GolemEntity.class, false));
+        this.goalSelector.add(4, new ActiveTargetGoal<>(this, GolemEntity.class, false));
+        //this.goalSelector.add(5, new ActiveTargetGoal<>(this, SurvivorEntity.class, false));
         this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.4));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, IllagerEntity.class, 0.8f));
-        this.goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 0.8f));
-        //this.goalSelector.add(9, new LookAtEntityGoal(this, SurvivorEntity.class, 0.8f));
-        this.goalSelector.add(10, new LookAtEntityGoal(this, GolemEntity.class, 0.8f));
+        this.goalSelector.add(7, new LookAtEntityGoal(this, IllagerEntity.class, 32.0f));
+        this.goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 32.0f));
+        //this.goalSelector.add(9, new LookAtEntityGoal(this, SurvivorEntity.class, 32.0f));
+        this.goalSelector.add(10, new LookAtEntityGoal(this, GolemEntity.class, 32.0f));
         this.goalSelector.add(11, new LookAroundGoal(this));
+
     }
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
         return HerobrineEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 15.0)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0.0)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 5.0)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 64.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.6);
-    }
-
-    public void setLifeTimer(int time) {
-        this.lifeTimer = time;
+                .add(EntityAttributes.GENERIC_ARMOR, 0.0)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, 0.0)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.45);
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putInt("LifeTimer", this.lifeTimer);
+        nbt.putInt("BuildingInterval", this.buildTimer);
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         this.lifeTimer = nbt.getInt("LifeTimer");
+        this.buildTimer = nbt.getInt("BuildingInterval");
     }
 
     @Override
@@ -78,12 +79,24 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
         }
 
         this.lifeTimer --;
+
+        if(this.buildTimer < 1) {
+            this.buildTimer = 1000;
+
+            if (!world.isClient) {
+
+            }
+        }
         super.mobTick();
     }
 
     @Override
     public void handleStatus(byte status) {
-        if(status == 4) {
+        if(status == 5) {
+            if(this.world.isClient && !this.isSilent()) {
+                this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.AMBIENT_CAVE, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
+            }
+        } else if(status == 4) {
             if(this.world.isClient) {
                 if (!this.isSilent()) {
                     this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
@@ -101,10 +114,5 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         this.setPersistent();
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
-    }
-
-    @Override
-    public Identifier getLootTableId() {
-        return null;
     }
 }

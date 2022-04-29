@@ -41,4 +41,5 @@ public class ItemList {
     public static final SpawnEggItem HEROBRINE_WARRIOR_SPAWN_EGG = new SpawnEggItem(EntityTypeList.HEROBRINE_WARRIOR, 0x000000, 0xFF0000, new Item.Settings().group(ItemGroup.MISC));
     public static final SpawnEggItem HEROBRINE_SPY_SPAWN_EGG = new SpawnEggItem(EntityTypeList.HEROBRINE_SPY, 0x000000, 0x00FF00, new Item.Settings().group(ItemGroup.MISC));
     public static final SpawnEggItem HEROBRINE_MAGE_SPAWN_EGG = new SpawnEggItem(EntityTypeList.HEROBRINE_MAGE, 0x000000, 0x0000FF, new Item.Settings().group(ItemGroup.MISC));
+    public static final SpawnEggItem HEROBRINE_BUILDER_SPAWN_EGG = new SpawnEggItem(EntityTypeList.HEROBRINE_BUILDER, 0x000000, 0xFFFF00, new Item.Settings().group(ItemGroup.MISC));
 }
