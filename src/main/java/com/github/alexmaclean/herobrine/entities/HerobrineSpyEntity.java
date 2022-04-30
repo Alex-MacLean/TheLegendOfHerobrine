@@ -79,13 +79,13 @@ public class HerobrineSpyEntity extends HerobrineEntity {
             this.world.sendEntityStatus(this, (byte) 4);
             this.remove(RemovalReason.DISCARDED);
         }
-
         this.lifeTimer --;
         super.mobTick();
     }
 
     @Override
     public void handleStatus(byte status) {
+        super.handleStatus(status);
         if(status == 4) {
             if(this.world.isClient) {
                 if (!this.isSilent()) {
@@ -97,7 +97,6 @@ public class HerobrineSpyEntity extends HerobrineEntity {
                 }
             }
         }
-        super.handleStatus(status);
     }
 
     @Override

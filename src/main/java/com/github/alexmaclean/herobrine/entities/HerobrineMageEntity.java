@@ -152,6 +152,7 @@ public class HerobrineMageEntity extends HerobrineEntity {
 
     @Override
     public void handleStatus(byte status) {
+        super.handleStatus(status);
         if(status == 4) {
             if(this.world.isClient) {
                 if (!this.isSilent()) {
@@ -163,6 +164,5 @@ public class HerobrineMageEntity extends HerobrineEntity {
                 }
             }
         }
-        super.handleStatus(status);
     }
 }

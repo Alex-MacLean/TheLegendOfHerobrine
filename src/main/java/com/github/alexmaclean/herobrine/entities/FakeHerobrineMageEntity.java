@@ -1,6 +1,5 @@
 package com.github.alexmaclean.herobrine.entities;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -76,13 +75,13 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
             this.world.sendEntityStatus(this, (byte) 4);
             this.remove(RemovalReason.DISCARDED);
         }
-
         this.lifeTimer --;
         super.mobTick();
     }
 
     @Override
     public void handleStatus(byte status) {
+        super.handleStatus(status);
         if(status == 4) {
             if(this.world.isClient) {
                 if (!this.isSilent()) {
@@ -94,7 +93,7 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
                 }
             }
         }
-        super.handleStatus(status);
+
     }
 
     @Override

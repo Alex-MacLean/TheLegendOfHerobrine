@@ -100,7 +100,6 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
                 }
             }
         }
-
         this.destroyCooldown --;
     }
 
