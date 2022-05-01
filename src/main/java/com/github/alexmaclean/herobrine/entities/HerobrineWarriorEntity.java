@@ -93,6 +93,7 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
                             BlockPos blockPos = new BlockPos(MathHelper.floor(this.getX()) + x, MathHelper.floor(this.getY()) + y, MathHelper.floor(this.getZ()) + z);
                             BlockState blockState = this.world.getBlockState(blockPos);
                             if (this.canDestroy(blockState)) {
+                                this.world.breakBlock(blockPos, true, this);
                                 this.swingHand(Hand.MAIN_HAND);
                             }
                         }
