@@ -2,7 +2,7 @@ package com.github.alexmaclean.herobrine.entities;
 
 import com.github.alexmaclean.herobrine.HerobrineMod;
 import com.github.alexmaclean.herobrine.items.ItemList;
-import com.github.alexmaclean.herobrine.util.savedata.SaveDataUtil;
+import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -25,7 +25,7 @@ public abstract class HerobrineEntity extends HostileEntity {
     }
 
     public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && world.isSkyVisible(pos) && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && SaveDataUtil.readBoolean(world.toServerWorld(), "herobrine.json", "herobrineSummoned");
+        return world.getDifficulty() != Difficulty.PEACEFUL && world.isSkyVisible(pos) && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && WorldSaveData.readBoolean(world.toServerWorld(), "herobrine.json", "herobrineSummoned");
     }
 
     @Override
@@ -38,7 +38,7 @@ public abstract class HerobrineEntity extends HostileEntity {
 
     @Override
     public void tick() {
-        if(!world.isClient() && !SaveDataUtil.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
+        if(!world.isClient() && !WorldSaveData.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
             this.remove(RemovalReason.DISCARDED);
         }
         this.clearStatusEffects();

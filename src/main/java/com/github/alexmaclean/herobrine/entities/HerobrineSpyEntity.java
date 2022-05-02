@@ -1,6 +1,6 @@
 package com.github.alexmaclean.herobrine.entities;
 
-import com.github.alexmaclean.herobrine.util.savedata.SaveDataUtil;
+import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -58,7 +58,7 @@ public class HerobrineSpyEntity extends HerobrineEntity {
     }
 
     public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.isSkyVisible(pos) && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && SaveDataUtil.readBoolean(world.toServerWorld(), "herobrine.json", "herobrineSummoned");
+        return world.isSkyVisible(pos) && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && WorldSaveData.readBoolean(world.toServerWorld(), "herobrine.json", "herobrineSummoned");
     }
 
     @Override

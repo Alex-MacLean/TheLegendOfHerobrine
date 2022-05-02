@@ -2,7 +2,6 @@ package com.github.alexmaclean.herobrine.blocks;
 
 import com.github.alexmaclean.herobrine.items.ItemList;
 import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
-import com.github.alexmaclean.herobrine.util.savedata.SaveDataUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
@@ -126,18 +125,17 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
         ItemStack itemStack = player.getStackInHand(hand);
         if (canActivate(world, pos) && state.get(TYPE) == 0 && itemStack.isOf(ItemList.CURSED_DIAMOND) || canActivate(world, pos) && state.get(TYPE) == 0 &&  itemStack.isOf(ItemList.PURIFIED_DIAMOND)) {
             if (!world.isClient) {
-                WorldSaveData data = new WorldSaveData(world, "herobrine.json");
                 if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
-                    if(!SaveDataUtil.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
+                    if(!WorldSaveData.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
                         player.sendMessage(new TranslatableText("herobrine.summon"), false);
-                        data.writeBoolean("herobrineSummoned", true);
+                        WorldSaveData.writeBoolean(world,"herobrine.json", "herobrineSummoned", true);
                     }
                 } else {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
-                    if(SaveDataUtil.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
+                    if(WorldSaveData.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
                         player.sendMessage(new TranslatableText("herobrine.unsummon"), false);
-                        data.writeBoolean("herobrineSummoned", false);
+                        WorldSaveData.writeBoolean(world,"herobrine.json", "herobrineSummoned", false);
                     }
                 }
 
