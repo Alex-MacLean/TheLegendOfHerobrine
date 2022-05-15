@@ -6,6 +6,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.IllagerEntity;
 import net.minecraft.entity.passive.GolemEntity;
@@ -70,6 +71,15 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
     }
 
     @Override
+    public boolean damage(DamageSource source, float amount) {
+        /*if(source.getSource() instanceof HolyWaterEntity) {
+            this.world.sendEntityStatus(this, (byte) 4);
+            this.remove(RemovalReason.DISCARDED);
+        }*/
+        return super.damage(source, amount);
+    }
+
+    @Override
     public void mobTick() {
         if(this.lifeTimer < 1) {
             this.world.sendEntityStatus(this, (byte) 4);
@@ -88,7 +98,7 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
                     this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
                 }
 
-                for (int i = 0; i < 20; ++i) {
+                for (int i = 0; i < 20; i ++) {
                     this.world.addParticle(ParticleTypes.POOF, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
                 }
             }

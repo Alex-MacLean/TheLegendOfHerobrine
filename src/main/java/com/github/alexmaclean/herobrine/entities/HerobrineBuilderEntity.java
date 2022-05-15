@@ -185,7 +185,7 @@ public class HerobrineBuilderEntity extends HerobrineEntity {
                         this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
                     }
 
-                    for (int i = 0; i < 20; ++i) {
+                    for (int i = 0; i < 20; i ++) {
                         this.world.addParticle(ParticleTypes.POOF, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
                     }
                 }

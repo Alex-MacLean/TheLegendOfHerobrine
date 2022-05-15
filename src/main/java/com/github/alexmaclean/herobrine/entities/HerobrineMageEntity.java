@@ -70,6 +70,8 @@ public class HerobrineMageEntity extends HerobrineEntity {
         nbt.putInt("WarpCastingInterval", this.warpCastingCounter);
         nbt.putInt("WeakenCastingInterval", this.weakenCastingCounter);
         nbt.putInt("HoldCastingInterval", this.holdCastingCounter);
+        nbt.putInt("HoldTicks", this.holdTicks);
+        nbt.putBoolean("StartedHold", this.startedHold);
     }
 
     @Override
@@ -79,50 +81,48 @@ public class HerobrineMageEntity extends HerobrineEntity {
         this.warpCastingCounter = nbt.getInt("WarpCastingInterval");
         this.weakenCastingCounter = nbt.getInt("WeakenCastingInterval");
         this.holdCastingCounter = nbt.getInt("HoldCastingInterval");
+        this.holdTicks = nbt.getInt("HoldTicks");
+        this.startedHold =  nbt.getBoolean("StartedHold");
     }
 
     @Override
     public void mobTick() {
         super.mobTick();
-        if (this.illusionCastingCounter < 1) {
-            if(this.getTarget() != null) {
+        if(this.getTarget() != null) {
+            if (this.illusionCastingCounter < 1) {
                 int duration = random.nextInt(150, 400);
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 4; i ++) {
                     FakeHerobrineMageEntity entity = new FakeHerobrineMageEntity(EntityTypeList.FAKE_HEROBRINE_MAGE, this.world);
                     entity.setLifeTimer(duration);
                     entity.updatePositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
                     this.world.spawnEntity(entity);
                 }
                 this.world.sendEntityStatus(this, (byte) 4);
+                this.illusionCastingCounter = random.nextInt(125, 500);
             }
-            this.illusionCastingCounter = random.nextInt(125, 500);
-        }
-        --this.illusionCastingCounter;
+            --this.illusionCastingCounter;
 
-        if (this.weakenCastingCounter < 1) {
-            if(this.getTarget() != null) {
+            if (this.weakenCastingCounter < 1) {
                 this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 400, 1));
                 this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 400));
                 this.world.sendEntityStatus(this, (byte) 4);
+                this.weakenCastingCounter = random.nextInt(100, 400);
             }
-            this.weakenCastingCounter = random.nextInt(100, 400);
-        }
-        --this.weakenCastingCounter;
+            --this.weakenCastingCounter;
 
-        if (this.warpCastingCounter < 1) {
-            if(this.getTarget() != null && this.world.getBlockState(new BlockPos(this.getTarget().getX(), this.getTarget().getY() + 4.0, this.getTarget().getZ())).isAir() && this.world.getBlockState(new BlockPos(this.getTarget().getX(), this.getTarget().getY() + 5.0, this.getTarget().getZ())).isAir()) {
-                if(this.getTarget().hasVehicle()) {
-                    this.getTarget().dismountVehicle();
+            if (this.warpCastingCounter < 1) {
+                if(this.world.getBlockState(new BlockPos(this.getTarget().getX(), this.getTarget().getY() + 4.0, this.getTarget().getZ())).isAir() && this.world.getBlockState(new BlockPos(this.getTarget().getX(), this.getTarget().getY() + 5.0, this.getTarget().getZ())).isAir()) {
+                    if(this.getTarget().hasVehicle()) {
+                        this.getTarget().dismountVehicle();
+                    }
+                    this.getTarget().requestTeleport(this.getTarget().getX(), this.getTarget().getY() + 4.0, this.getTarget().getZ());
+                    this.world.sendEntityStatus(this, (byte) 4);
                 }
-                this.getTarget().requestTeleport(this.getTarget().getX(), this.getTarget().getY() + 4.0, this.getTarget().getZ());
-                this.world.sendEntityStatus(this, (byte) 4);
+                this.warpCastingCounter = random.nextInt(90, 550);
             }
-            this.warpCastingCounter = random.nextInt(90, 550);
-        }
-        --this.warpCastingCounter;
+            --this.warpCastingCounter;
 
-        if (this.holdCastingCounter < 1) {
-            if(this.getTarget() != null) {
+            if (this.holdCastingCounter < 1) {
                 if(this.getTarget().hasVehicle()) {
                     this.getTarget().dismountVehicle();
                 }
@@ -135,19 +135,17 @@ public class HerobrineMageEntity extends HerobrineEntity {
                         this.getTarget().requestTeleport(this.getTarget().getX(),this.getTarget().getY(),this.getTarget().getZ());
                         this.getTarget().damage(DamageSource.MAGIC, 1);
                     }
-                    holdTicks --;
+                    this.holdTicks --;
                 }
                 this.world.sendEntityStatus(this, (byte) 4);
-            } else {
-                this.holdCastingCounter = random.nextInt(150, 600);
+                if(this.holdTicks <= 0) {
+                    this.holdCastingCounter = random.nextInt(150, 600);
+                    this.holdTicks = random.nextInt(35, 65);
+                    this.startedHold = false;
+                }
             }
-            if(holdTicks <= 0) {
-                this.holdCastingCounter = random.nextInt(150, 600);
-                this.holdTicks = random.nextInt(35, 65);
-                this.startedHold = false;
-            }
+            --this.holdCastingCounter;
         }
-        --this.holdCastingCounter;
     }
 
     @Override
@@ -159,7 +157,7 @@ public class HerobrineMageEntity extends HerobrineEntity {
                     this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
                 }
 
-                for (int i = 0; i < 20; ++i) {
+                for (int i = 0; i < 20; i ++) {
                     this.world.addParticle(ParticleTypes.EFFECT, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
                 }
             }

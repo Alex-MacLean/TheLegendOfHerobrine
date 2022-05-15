@@ -23,10 +23,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class HerobrineSpyEntity extends HerobrineEntity {
-    private int lifeTimer;
+public class HerobrineStalkerEntity extends HerobrineEntity {
+    private int lifeTimer = 6000;
+    private int runAtTargetDelay = 500;
+    private int runAtTargetTime = 250;
+    private boolean isRunningAtTarget = false;
 
-    public HerobrineSpyEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public HerobrineStalkerEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
         this.lifeTimer = 6000;
         this.experiencePoints = 5;
@@ -48,7 +51,7 @@ public class HerobrineSpyEntity extends HerobrineEntity {
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0)
                 .add(EntityAttributes.GENERIC_ARMOR, 0.0)
                 .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, 0.0)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 64.0)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.6);
     }
 
@@ -65,12 +68,18 @@ public class HerobrineSpyEntity extends HerobrineEntity {
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putInt("LifeTimer", this.lifeTimer);
+        nbt.putInt("RunAtTargetDelay", this.runAtTargetDelay);
+        nbt.putInt("RunAtTargetTime", this.runAtTargetTime);
+        nbt.putBoolean("RunningAtTarget", this.isRunningAtTarget);
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         this.lifeTimer = nbt.getInt("LifeTimer");
+        this.runAtTargetDelay = nbt.getInt("RunAtTargetDelay");
+        this.runAtTargetTime = nbt.getInt("RunAtTargetTime");
+        this.isRunningAtTarget = nbt.getBoolean("RunningAtTarget");
     }
 
     @Override
@@ -86,16 +95,29 @@ public class HerobrineSpyEntity extends HerobrineEntity {
     @Override
     public void handleStatus(byte status) {
         super.handleStatus(status);
-        if(status == 4) {
-            if(this.world.isClient) {
-                if (!this.isSilent()) {
-                    this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
-                }
+        switch(status) {
+            case 4:
+                if(this.world.isClient) {
+                    if (!this.isSilent()) {
+                        this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
+                    }
 
-                for (int i = 0; i < 20; i ++) {
-                    this.world.addParticle(ParticleTypes.POOF, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
+                    for (int i = 0; i < 20; i ++) {
+                        this.world.addParticle(ParticleTypes.POOF, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
+                    }
                 }
-            }
+                break;
+            case 5:
+                if(this.world.isClient) {
+                    if (!this.isSilent()) {
+                        this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.AMBIENT_CAVE, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
+                    }
+
+                    for (int i = 0; i < 20; i ++) {
+                        this.world.addParticle(ParticleTypes.POOF, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
+                    }
+                }
+                break;
         }
     }
 

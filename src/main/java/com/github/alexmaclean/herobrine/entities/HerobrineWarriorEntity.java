@@ -87,9 +87,9 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
         if(this.destroyCooldown < 1) {
             this.destroyCooldown = 500;
             if(this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
-                for (int x = -1; x <= 1; x++) {
-                    for (int z = -1; z <= 1; z++) {
-                        for (int y = 0; y <= 3; y++) {
+                for (int x = -1; x <= 1; x ++) {
+                    for (int z = -1; z <= 1; z ++) {
+                        for (int y = 0; y <= 3; y ++) {
                             BlockPos blockPos = new BlockPos(MathHelper.floor(this.getX()) + x, MathHelper.floor(this.getY()) + y, MathHelper.floor(this.getZ()) + z);
                             BlockState blockState = this.world.getBlockState(blockPos);
                             if (this.canDestroy(blockState)) {
