@@ -68,7 +68,11 @@ public class WorldSaveData {
                 String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
                 String jsonPath = path.substring(0, path.length() - 1) + fileName;
                 if(json == null || updateData) {
-                    json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
+                    try {
+                        json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
+                    } catch(java.io.FileNotFoundException e) {
+                        json =  new JsonObject();
+                    }
                 }
                 json.addProperty(dataName, dataValue);
                 Files.write(Paths.get(jsonPath), json.toString().getBytes());
@@ -85,7 +89,11 @@ public class WorldSaveData {
                 String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
                 String jsonPath = path.substring(0, path.length() - 1) + fileName;
                 if(json == null || updateData) {
-                    json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
+                    try {
+                        json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
+                    } catch(java.io.FileNotFoundException e) {
+                        json =  new JsonObject();
+                    }
                 }
                 json.addProperty(dataName, dataValue);
                 Files.write(Paths.get(jsonPath), json.toString().getBytes());
@@ -102,10 +110,16 @@ public class WorldSaveData {
                 String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
                 String jsonPath = path.substring(0, path.length() - 1) + fileName;
                 if(json == null || updateData) {
-                    json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
+                    try {
+                        json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
+                    } catch(java.io.FileNotFoundException e) {
+                        json =  new JsonObject();
+                    }
                 }
                 json.addProperty(dataName, dataValue);
                 Files.write(Paths.get(jsonPath), json.toString().getBytes());
+                System.out.println(jsonPath);
+                System.out.println(readBoolean(world, fileName, dataName));
             } catch (IOException e) {
                 e.printStackTrace();
             }
