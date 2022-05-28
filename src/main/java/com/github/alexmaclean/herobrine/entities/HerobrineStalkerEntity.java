@@ -27,15 +27,18 @@ import java.util.List;
 import java.util.Random;
 
 public class HerobrineStalkerEntity extends HerobrineEntity {
-    private int lifeTimer = 6000;
-    private int runAtTargetDelay = 500;
-    private int runAtTargetTime = 250;
-    private boolean isRunningAtTarget = false;
-    private MeleeAttackGoal runAtTargetGoal = new MeleeAttackGoal(this, 0.8, true);
+    private int lifeTimer;
+    private int runAtTargetDelay;
+    private int runAtTargetTime;
+    private boolean isRunningAtTarget;
+    private final MeleeAttackGoal runAtTargetGoal = new MeleeAttackGoal(this, 0.8, true);
 
     public HerobrineStalkerEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
         this.lifeTimer = 6000;
+        this.runAtTargetDelay = 500;
+        this.runAtTargetTime = 250;
+        this.isRunningAtTarget = false;
         this.experiencePoints = 5;
     }
 

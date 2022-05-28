@@ -4,7 +4,7 @@ import com.github.alexmaclean.herobrine.client.entities.models.HerobrineEntityMo
 import com.github.alexmaclean.herobrine.client.entities.models.HerobrineModelLayers;
 import com.github.alexmaclean.herobrine.client.entities.renderers.HerobrineEntityRenderer;
 import com.github.alexmaclean.herobrine.client.entities.renderers.HerobrineMageEntityRenderer;
-import com.github.alexmaclean.herobrine.util.entities.EntityTypeList;
+import com.github.alexmaclean.herobrine.entities.EntityTypeList;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -4,7 +4,7 @@ import com.github.alexmaclean.herobrine.HerobrineMod;
 import com.github.alexmaclean.herobrine.blocks.BlockList;
 import com.github.alexmaclean.herobrine.items.material.ArmorMaterialList;
 import com.github.alexmaclean.herobrine.items.material.ToolMaterialList;
-import com.github.alexmaclean.herobrine.util.entities.EntityTypeList;
+import com.github.alexmaclean.herobrine.entities.EntityTypeList;
 import com.github.alexmaclean.herobrine.util.items.ModdedAxeItem;
 import com.github.alexmaclean.herobrine.util.items.ModdedHoeItem;
 import com.github.alexmaclean.herobrine.util.items.ModdedMusicDiscItem;

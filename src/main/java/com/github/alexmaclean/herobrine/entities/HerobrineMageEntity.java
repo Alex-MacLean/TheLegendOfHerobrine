@@ -1,6 +1,5 @@
 package com.github.alexmaclean.herobrine.entities;
 
-import com.github.alexmaclean.herobrine.util.entities.EntityTypeList;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;

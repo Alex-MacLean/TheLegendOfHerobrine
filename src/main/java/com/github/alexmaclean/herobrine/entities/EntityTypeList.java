@@ -1,4 +1,4 @@
-package com.github.alexmaclean.herobrine.util.entities;
+package com.github.alexmaclean.herobrine.entities;
 
 import com.github.alexmaclean.herobrine.HerobrineMod;
 import com.github.alexmaclean.herobrine.entities.*;

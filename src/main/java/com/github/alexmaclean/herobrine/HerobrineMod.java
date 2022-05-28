@@ -4,7 +4,7 @@ import com.github.alexmaclean.herobrine.blocks.BlockList;
 import com.github.alexmaclean.herobrine.entities.*;
 import com.github.alexmaclean.herobrine.items.ItemList;
 import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
-import com.github.alexmaclean.herobrine.util.entities.EntityTypeList;
+import com.github.alexmaclean.herobrine.entities.EntityTypeList;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
