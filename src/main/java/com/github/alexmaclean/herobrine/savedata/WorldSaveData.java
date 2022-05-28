@@ -118,8 +118,6 @@ public class WorldSaveData {
                 }
                 json.addProperty(dataName, dataValue);
                 Files.write(Paths.get(jsonPath), json.toString().getBytes());
-                System.out.println(jsonPath);
-                System.out.println(readBoolean(world, fileName, dataName));
             } catch (IOException e) {
                 e.printStackTrace();
             }
