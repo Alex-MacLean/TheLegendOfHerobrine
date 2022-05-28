@@ -57,6 +57,7 @@ public class HerobrineMod implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "herobrine_spy_spawn_egg"), ItemList.HEROBRINE_SPY_SPAWN_EGG);
         Registry.register(Registry.ITEM, new Identifier(MODID, "herobrine_mage_spawn_egg"), ItemList.HEROBRINE_MAGE_SPAWN_EGG);
         Registry.register(Registry.ITEM, new Identifier(MODID, "herobrine_builder_spawn_egg"), ItemList.HEROBRINE_BUILDER_SPAWN_EGG);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "herobrine_stalker_spawn_egg"), ItemList.HEROBRINE_STALKER_SPAWN_EGG);
     }
 
     // Register entity attributes
@@ -66,6 +67,7 @@ public class HerobrineMod implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypeList.HEROBRINE_MAGE, HerobrineMageEntity.registerAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypeList.FAKE_HEROBRINE_MAGE, FakeHerobrineMageEntity.registerAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypeList.HEROBRINE_BUILDER, HerobrineBuilderEntity.registerAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypeList.HEROBRINE_STALKER, HerobrineStalkerEntity.registerAttributes());
     }
 
     // Register callbacks

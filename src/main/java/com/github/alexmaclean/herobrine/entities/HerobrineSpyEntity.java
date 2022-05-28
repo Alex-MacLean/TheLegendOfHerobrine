@@ -36,8 +36,8 @@ public class HerobrineSpyEntity extends HerobrineEntity {
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 1024.0f));
-        this.goalSelector.add(2, new FleeEntityGoal<>(this, PlayerEntity.class, 32.0f, 0.7, 1.0));
-        //this.goalSelector.add(3, new LookAtEntityGoal(this, SurvivorEntity.class, 1024.0f));
+        //this.goalSelector.add(2, new LookAtEntityGoal(this, SurvivorEntity.class, 1024.0f));
+        this.goalSelector.add(3, new FleeEntityGoal<>(this, PlayerEntity.class, 32.0f, 0.7, 1.0));
         //this.goalSelector.add(4, new FleeEntityGoal<>(this, SurvivorEntity.class, 32.0f, 0.7, 1.0));
     }
 

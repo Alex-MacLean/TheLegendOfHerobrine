@@ -3,24 +3,27 @@ package com.github.alexmaclean.herobrine.entities;
 import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.FleeEntityGoal;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Random;
 
 public class HerobrineStalkerEntity extends HerobrineEntity {
@@ -28,6 +31,7 @@ public class HerobrineStalkerEntity extends HerobrineEntity {
     private int runAtTargetDelay = 500;
     private int runAtTargetTime = 250;
     private boolean isRunningAtTarget = false;
+    private MeleeAttackGoal runAtTargetGoal = new MeleeAttackGoal(this, 0.8, true);
 
     public HerobrineStalkerEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -38,10 +42,11 @@ public class HerobrineStalkerEntity extends HerobrineEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 1024.0f));
-        this.goalSelector.add(2, new FleeEntityGoal<>(this, PlayerEntity.class, 32.0f, 0.7, 1.0));
-        //this.goalSelector.add(3, new LookAtEntityGoal(this, SurvivorEntity.class, 1024.0f));
-        //this.goalSelector.add(4, new FleeEntityGoal<>(this, SurvivorEntity.class, 32.0f, 0.7, 1.0));
+        this.goalSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
+        this.goalSelector.add(3, new WanderAroundFarGoal(this, 0.4));
+        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 64.0f));
+        //this.goalSelector.add(5, new LookAtEntityGoal(this, SurvivorEntity.class, 64.0f));
+        this.goalSelector.add(6, new LookAroundGoal(this));
     }
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
@@ -89,7 +94,41 @@ public class HerobrineStalkerEntity extends HerobrineEntity {
             this.remove(RemovalReason.DISCARDED);
         }
         this.lifeTimer --;
+
         super.mobTick();
+
+        if (this.runAtTargetDelay > 0 && this.isRunningAtTarget) {
+            this.resetAIState();
+        }
+
+        if(this.isRunningAtTarget) {
+            this.runAtTargetTime --;
+        } else {
+            this.runAtTargetDelay --;
+        }
+
+        if(this.runAtTargetDelay < 1) {
+            this.goalSelector.add(2, this.runAtTargetGoal);
+            this.isRunningAtTarget = true;
+        }
+
+        if (this.runAtTargetTime < 1) {
+            this.goalSelector.remove(this.runAtTargetGoal);
+            this.resetAIState();
+        }
+
+        Box nearBox = this.getBoundingBox().expand(1.0);
+        List<LivingEntity> list = this.world.getEntitiesByClass(LivingEntity.class, nearBox, LivingEntity::isAlive);
+        if (!list.isEmpty()) {
+            for (LivingEntity entity : list) {
+                if (entity instanceof PlayerEntity && this.getTarget() == entity && this.isRunningAtTarget) {
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 300, 0));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 600, 0));
+                    this.world.sendEntityStatus(this, (byte) 5);
+                    this.remove(RemovalReason.DISCARDED);
+                }
+            }
+        }
     }
 
     @Override
@@ -119,6 +158,12 @@ public class HerobrineStalkerEntity extends HerobrineEntity {
                 }
                 break;
         }
+    }
+
+    private void resetAIState() {
+        this.isRunningAtTarget = false;
+        this.runAtTargetDelay = 500;
+        this.runAtTargetTime = 250;
     }
 
     @Override
