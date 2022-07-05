@@ -1,7 +1,6 @@
 package com.github.alexmaclean.herobrine.entities;
 
 import com.github.alexmaclean.herobrine.HerobrineMod;
-import com.github.alexmaclean.herobrine.entities.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;

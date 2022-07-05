@@ -6,9 +6,6 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Random;
 
 public class CursedDiamondBlock extends Block {
     public CursedDiamondBlock(Settings settings) {
@@ -16,15 +13,9 @@ public class CursedDiamondBlock extends Block {
     }
 
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        spawnParticles(world, pos);
-    }
-
-    private static void spawnParticles(@NotNull World world, BlockPos pos) {
-        Random random = world.random;
-        Direction[] var5 = Direction.values();
-
-        for (Direction direction : var5) {
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, net.minecraft.util.math.random.Random random) {
+        Direction[] directions = Direction.values();
+        for (Direction direction : directions) {
             BlockPos blockPos = pos.offset(direction);
             if (!world.getBlockState(blockPos).isOpaqueFullCube(world, blockPos)) {
                 double d0 = pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 1.5;

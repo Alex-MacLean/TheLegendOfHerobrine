@@ -17,6 +17,8 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 public class HerobrineMageEntity extends HerobrineEntity {
     private int illusionCastingCounter;
     private int weakenCastingCounter;
@@ -24,14 +26,14 @@ public class HerobrineMageEntity extends HerobrineEntity {
     private int holdCastingCounter;
     private int holdTicks;
     private boolean startedHold;
-
+    private Random rand;
     public HerobrineMageEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
-        this.illusionCastingCounter = random.nextInt(125, 500);
-        this.weakenCastingCounter = random.nextInt(100, 400);
-        this.warpCastingCounter = random.nextInt(90, 550);
-        this.holdCastingCounter = random.nextInt(150, 600);
-        this.holdTicks = random.nextInt(35, 65);
+        this.illusionCastingCounter = rand.nextInt(125, 500);
+        this.weakenCastingCounter = rand.nextInt(100, 400);
+        this.warpCastingCounter = rand.nextInt(90, 550);
+        this.holdCastingCounter = rand.nextInt(150, 600);
+        this.holdTicks = rand.nextInt(35, 65);
         this.experiencePoints = 5;
     }
 
@@ -89,7 +91,7 @@ public class HerobrineMageEntity extends HerobrineEntity {
         super.mobTick();
         if(this.getTarget() != null) {
             if (this.illusionCastingCounter < 1) {
-                int duration = random.nextInt(150, 400);
+                int duration = rand.nextInt(150, 400);
                 for (int i = 0; i < 4; i ++) {
                     FakeHerobrineMageEntity entity = new FakeHerobrineMageEntity(EntityTypeList.FAKE_HEROBRINE_MAGE, this.world);
                     entity.setLifeTimer(duration);
@@ -97,7 +99,7 @@ public class HerobrineMageEntity extends HerobrineEntity {
                     this.world.spawnEntity(entity);
                 }
                 this.world.sendEntityStatus(this, (byte) 4);
-                this.illusionCastingCounter = random.nextInt(125, 500);
+                this.illusionCastingCounter = rand.nextInt(125, 500);
             }
             --this.illusionCastingCounter;
 
@@ -105,7 +107,7 @@ public class HerobrineMageEntity extends HerobrineEntity {
                 this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 400, 1));
                 this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 400));
                 this.world.sendEntityStatus(this, (byte) 4);
-                this.weakenCastingCounter = random.nextInt(100, 400);
+                this.weakenCastingCounter = rand.nextInt(100, 400);
             }
             --this.weakenCastingCounter;
 
@@ -117,7 +119,7 @@ public class HerobrineMageEntity extends HerobrineEntity {
                     this.getTarget().requestTeleport(this.getTarget().getX(), this.getTarget().getY() + 4.0, this.getTarget().getZ());
                     this.world.sendEntityStatus(this, (byte) 4);
                 }
-                this.warpCastingCounter = random.nextInt(90, 550);
+                this.warpCastingCounter = rand.nextInt(90, 550);
             }
             --this.warpCastingCounter;
 
@@ -138,8 +140,8 @@ public class HerobrineMageEntity extends HerobrineEntity {
                 }
                 this.world.sendEntityStatus(this, (byte) 4);
                 if(this.holdTicks <= 0) {
-                    this.holdCastingCounter = random.nextInt(150, 600);
-                    this.holdTicks = random.nextInt(35, 65);
+                    this.holdCastingCounter = rand.nextInt(150, 600);
+                    this.holdTicks = rand.nextInt(35, 65);
                     this.startedHold = false;
                 }
             }

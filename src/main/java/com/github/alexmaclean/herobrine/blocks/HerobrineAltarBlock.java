@@ -18,12 +18,13 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -31,8 +32,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Random;
 
 public class HerobrineAltarBlock extends Block implements Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -56,7 +55,7 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public void randomDisplayTick(@NotNull BlockState state, @NotNull World world, @NotNull BlockPos pos, @NotNull Random random) {
+    public void randomDisplayTick(@NotNull BlockState state, World world, BlockPos pos, Random random) {
         if(state.get(TYPE) == 1) {
             double d0 = pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.2;
             double d1 = pos.getY() + 0.25;
@@ -128,13 +127,13 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                 if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
                     if(!WorldSaveData.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
-                        player.sendMessage(new TranslatableText("herobrine.summon"), false);
+                        player.sendMessage(Text.translatable("herobrine.summon"), false);
                         WorldSaveData.writeBoolean(world, "herobrine.json", "herobrineSummoned", true);
                     }
                 } else {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
                     if(WorldSaveData.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
-                        player.sendMessage(new TranslatableText("herobrine.unsummon"), false);
+                        player.sendMessage(Text.translatable("herobrine.unsummon"), false);
                         WorldSaveData.writeBoolean(world, "herobrine.json", "herobrineSummoned", false);
                     }
                 }

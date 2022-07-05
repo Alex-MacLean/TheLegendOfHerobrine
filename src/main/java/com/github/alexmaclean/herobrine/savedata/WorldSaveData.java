@@ -18,13 +18,15 @@ import java.util.Objects;
 public class WorldSaveData {
     private static JsonObject json = null; // Allows loading the json data file to memory
     private static boolean updateData; // Pointer for whether the data in memory needs to be updated
+    private static String jsonFileName; //
 
     // Read integer from json file
     public static int readInt(@NotNull World world, String fileName, String dataName) {
         String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
         try {
-            if(json == null || updateData) { // Check if the json file is null or needs to be reloaded to memory
+            if(json == null || updateData || !jsonFileName.equals(fileName)) { // Check if the json file is null or needs to be reloaded to memory
                 json = (JsonObject) JsonParser.parseReader(new FileReader(path.substring(0, path.length() - 1) + fileName)); // Loads json file to memory so the game does not need to read from the disk every time
+                jsonFileName = fileName;
                 updateData = false;
             }
             return json.get(dataName).getAsInt();
@@ -37,8 +39,9 @@ public class WorldSaveData {
     public static double readDouble(@NotNull World world, String fileName, String dataName) {
         String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
         try {
-            if(json == null || updateData) {
+            if(json == null || updateData || !jsonFileName.equals(fileName)) {
                 json = (JsonObject) JsonParser.parseReader(new FileReader(path.substring(0, path.length() - 1) + fileName));
+                jsonFileName = fileName;
                 updateData = false;
             }
             return json.get(dataName).getAsDouble();
@@ -51,8 +54,9 @@ public class WorldSaveData {
     public static boolean readBoolean(@NotNull World world, String fileName, String dataName) {
         String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
         try {
-            if(json == null || updateData) {
+            if(json == null || updateData || !jsonFileName.equals(fileName)) {
                 json = (JsonObject) JsonParser.parseReader(new FileReader(path.substring(0, path.length() - 1) + fileName));
+                jsonFileName = fileName;
                 updateData = false;
             }
             return json.get(dataName).getAsBoolean();
@@ -67,12 +71,14 @@ public class WorldSaveData {
             try {
                 String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
                 String jsonPath = path.substring(0, path.length() - 1) + fileName;
-                if(json == null || updateData) {
+                if(json == null || updateData || !jsonFileName.equals(fileName)) {
                     try {
                         json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
                     } catch(java.io.FileNotFoundException e) {
                         json =  new JsonObject();
                     }
+                    jsonFileName = fileName;
+                    updateData = false;
                 }
                 json.addProperty(dataName, dataValue);
                 Files.write(Paths.get(jsonPath), json.toString().getBytes());
@@ -88,12 +94,14 @@ public class WorldSaveData {
             try {
                 String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
                 String jsonPath = path.substring(0, path.length() - 1) + fileName;
-                if(json == null || updateData) {
+                if(json == null || updateData || !jsonFileName.equals(fileName)) {
                     try {
                         json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
                     } catch(java.io.FileNotFoundException e) {
                         json =  new JsonObject();
                     }
+                    jsonFileName = fileName;
+                    updateData = false;
                 }
                 json.addProperty(dataName, dataValue);
                 Files.write(Paths.get(jsonPath), json.toString().getBytes());
@@ -109,12 +117,14 @@ public class WorldSaveData {
             try {
                 String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
                 String jsonPath = path.substring(0, path.length() - 1) + fileName;
-                if(json == null || updateData) {
+                if(json == null || updateData || !jsonFileName.equals(fileName)) {
                     try {
                         json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
                     } catch(java.io.FileNotFoundException e) {
                         json =  new JsonObject();
                     }
+                    jsonFileName = fileName;
+                    updateData = false;
                 }
                 json.addProperty(dataName, dataValue);
                 Files.write(Paths.get(jsonPath), json.toString().getBytes());
@@ -139,8 +149,15 @@ public class WorldSaveData {
         return json;
     }
 
-    @SuppressWarnings("unused")
     public static void handleServerStart(MinecraftServer server) {
+        jsonFileName = "";
+        json = null;
+        updateData = true;
+    }
+
+    public static void handleServerStop(MinecraftServer server) {
+        jsonFileName = "";
+        json = null;
         updateData = true;
     }
 }

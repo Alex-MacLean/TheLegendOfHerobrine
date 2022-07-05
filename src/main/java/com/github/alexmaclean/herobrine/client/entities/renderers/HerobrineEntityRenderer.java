@@ -15,7 +15,7 @@ import net.minecraft.util.Identifier;
 public class HerobrineEntityRenderer extends MobEntityRenderer<HerobrineEntity, HerobrineEntityModel> {
     public HerobrineEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new HerobrineEntityModel(context.getPart(HerobrineModelLayers.HEROBRINE_MODEL_LAYER), false), 0.5f);
-        this.addFeature(new HeldItemFeatureRenderer<>(this));
+        this.addFeature(new HeldItemFeatureRenderer<>(this, context.getHeldItemRenderer()));
     }
 
     @Override
