@@ -18,7 +18,7 @@ import java.util.Objects;
 public class WorldSaveData {
     private static JsonObject json = null; // Allows loading the json data file to memory
     private static boolean updateData; // Pointer for whether the data in memory needs to be updated
-    private static String jsonFileName; //
+    private static String jsonFileName; // Store Json file name to be checked when reading or writing data
 
     // Read integer from json file
     public static int readInt(@NotNull World world, String fileName, String dataName) {
