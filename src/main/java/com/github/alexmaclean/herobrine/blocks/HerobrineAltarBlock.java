@@ -1,7 +1,7 @@
 package com.github.alexmaclean.herobrine.blocks;
 
 import com.github.alexmaclean.herobrine.items.ItemList;
-import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
+import com.github.alexmaclean.herobrine.savedata.SaveDataHandler;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
@@ -123,18 +123,18 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
     public ActionResult onUse(@NotNull BlockState state, World world, BlockPos pos, @NotNull PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
         if (canActivate(world, pos) && state.get(TYPE) == 0 && itemStack.isOf(ItemList.CURSED_DIAMOND) || canActivate(world, pos) && state.get(TYPE) == 0 &&  itemStack.isOf(ItemList.PURIFIED_DIAMOND)) {
-            if (!world.isClient) {
+            if (world instanceof ServerWorld) {
                 if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
-                    if(!WorldSaveData.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
+                    if(!SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
                         player.sendMessage(Text.translatable("herobrine.summon"), false);
-                        WorldSaveData.writeBoolean(world, "herobrine.json", "herobrineSummoned", true);
+                        SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", true);
                     }
                 } else {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
-                    if(WorldSaveData.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
+                    if(SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
                         player.sendMessage(Text.translatable("herobrine.unsummon"), false);
-                        WorldSaveData.writeBoolean(world, "herobrine.json", "herobrineSummoned", false);
+                        SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", false);
                     }
                 }
 
@@ -142,12 +142,10 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                     world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
                 }
 
-                if (world instanceof ServerWorld) {
-                    LightningEntity lightningentity = EntityType.LIGHTNING_BOLT.create(world);
-                    assert lightningentity != null;
-                    lightningentity.setPos(pos.getX(), pos.getY(), pos.getZ());
-                    world.spawnEntity(lightningentity);
-                }
+                LightningEntity lightningentity = EntityType.LIGHTNING_BOLT.create(world);
+                assert lightningentity != null;
+                lightningentity.setPos(pos.getX(), pos.getY(), pos.getZ());
+                world.spawnEntity(lightningentity);
             }
 
             return ActionResult.success(world.isClient);

@@ -18,6 +18,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FakeHerobrineMageEntity extends HerobrineEntity {
@@ -71,7 +72,7 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
+    public boolean damage(@NotNull DamageSource source, float amount) {
         /*if(source.getSource() instanceof HolyWaterEntity) {
             this.world.sendEntityStatus(this, (byte) 4);
             this.remove(RemovalReason.DISCARDED);

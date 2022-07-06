@@ -1,6 +1,6 @@
 package com.github.alexmaclean.herobrine.entities;
 
-import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
+import com.github.alexmaclean.herobrine.savedata.SaveDataHandler;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -69,7 +69,7 @@ public class HerobrineStalkerEntity extends HerobrineEntity {
     }
 
     public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.isSkyVisible(pos) && isSpawnDark(world, pos, (net.minecraft.util.math.random.Random) random) && canMobSpawn(type, world, spawnReason, pos, (net.minecraft.util.math.random.Random) random) && WorldSaveData.readBoolean(world.toServerWorld(), "herobrine.json", "herobrineSummoned");
+        return world.isSkyVisible(pos) && isSpawnDark(world, pos, (net.minecraft.util.math.random.Random) random) && canMobSpawn(type, world, spawnReason, pos, (net.minecraft.util.math.random.Random) random) && SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned");
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.github.alexmaclean.herobrine.entities;
 
 import com.github.alexmaclean.herobrine.HerobrineMod;
 import com.github.alexmaclean.herobrine.items.ItemList;
-import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
+import com.github.alexmaclean.herobrine.savedata.SaveDataHandler;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -10,6 +10,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.projectile.thrown.PotionEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
@@ -25,7 +26,7 @@ public abstract class HerobrineEntity extends HostileEntity {
     }
 
     public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && world.isSkyVisible(pos) && isSpawnDark(world, pos, (net.minecraft.util.math.random.Random) random) && canMobSpawn(type, world, spawnReason, pos, (net.minecraft.util.math.random.Random) random) && WorldSaveData.readBoolean(world.toServerWorld(), "herobrine.json", "herobrineSummoned");
+        return world.getDifficulty() != Difficulty.PEACEFUL && world.isSkyVisible(pos) && isSpawnDark(world, pos, (net.minecraft.util.math.random.Random) random) && canMobSpawn(type, world, spawnReason, pos, (net.minecraft.util.math.random.Random) random) && SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned");
     }
 
     @Override
@@ -38,8 +39,10 @@ public abstract class HerobrineEntity extends HostileEntity {
 
     @Override
     public void tick() {
-        if(!world.isClient() && !WorldSaveData.readBoolean(world, "herobrine.json", "herobrineSummoned")) {
-            this.remove(RemovalReason.DISCARDED);
+        if(world instanceof ServerWorld) {
+            if(!SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
+                this.remove(RemovalReason.DISCARDED);
+            }
         }
         this.clearStatusEffects();
         super.tick();

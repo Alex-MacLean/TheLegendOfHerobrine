@@ -3,7 +3,7 @@ package com.github.alexmaclean.herobrine;
 import com.github.alexmaclean.herobrine.blocks.BlockList;
 import com.github.alexmaclean.herobrine.entities.*;
 import com.github.alexmaclean.herobrine.items.ItemList;
-import com.github.alexmaclean.herobrine.savedata.WorldSaveData;
+import com.github.alexmaclean.herobrine.savedata.SaveDataHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -69,9 +69,9 @@ public class HerobrineMod implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypeList.HEROBRINE_STALKER, HerobrineStalkerEntity.registerAttributes());
     }
 
-    // Register callbacks
+    // Register callbacks. Used to properly load and unload each instance of WorldSaveData
     private void registerCallbacks() {
-        ServerLifecycleEvents.SERVER_STARTED.register(WorldSaveData::handleServerStart);
-        ServerLifecycleEvents.SERVER_STOPPED.register(WorldSaveData::handleServerStop);
+        ServerLifecycleEvents.SERVER_STARTED.register(SaveDataHandler::handleServerStart);
+        ServerLifecycleEvents.SERVER_STOPPED.register(SaveDataHandler::handleServerStop);
     }
 }

@@ -3,9 +3,7 @@ package com.github.alexmaclean.herobrine.savedata;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.WorldSavePath;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
@@ -16,18 +14,21 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 public class WorldSaveData {
-    private static JsonObject json = null; // Allows loading the json data file to memory
-    private static boolean updateData; // Pointer for whether the data in memory needs to be updated
-    private static String jsonFileName; // Store Json file name to be checked when reading or writing data
+    private JsonObject json; // Allows loading the json data file to memory
+    private final String fileName; // Store the name of the Json file
+    private final String jsonPath;
+    public WorldSaveData(@NotNull MinecraftServer server, String fileName) {
+        this.json = null;
+        this.fileName = fileName;
+        String path = Objects.requireNonNull(server).getSavePath(WorldSavePath.ROOT).toString();
+        this.jsonPath = path.substring(0, path.length() - 1) + fileName;
+    }
 
     // Read integer from json file
-    public static int readInt(@NotNull World world, String fileName, String dataName) {
-        String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
+    public int readInt(String dataName) {
         try {
-            if(json == null || updateData || !jsonFileName.equals(fileName)) { // Check if the json file is null or needs to be reloaded to memory
-                json = (JsonObject) JsonParser.parseReader(new FileReader(path.substring(0, path.length() - 1) + fileName)); // Loads json file to memory so the game does not need to read from the disk every time
-                jsonFileName = fileName;
-                updateData = false;
+            if(json == null) { // Check if the json file is null or needs to be reloaded to memory
+                json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath)); // Loads json file to memory so the game does not need to read from the disk every time
             }
             return json.get(dataName).getAsInt();
         } catch (FileNotFoundException e) {
@@ -36,13 +37,10 @@ public class WorldSaveData {
     }
 
     // Read double from json file
-    public static double readDouble(@NotNull World world, String fileName, String dataName) {
-        String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
+    public double readDouble(String dataName) {
         try {
-            if(json == null || updateData || !jsonFileName.equals(fileName)) {
-                json = (JsonObject) JsonParser.parseReader(new FileReader(path.substring(0, path.length() - 1) + fileName));
-                jsonFileName = fileName;
-                updateData = false;
+            if(json == null) {
+                json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
             }
             return json.get(dataName).getAsDouble();
         } catch (FileNotFoundException e) {
@@ -51,13 +49,10 @@ public class WorldSaveData {
     }
 
     // Read boolean from json file
-    public static boolean readBoolean(@NotNull World world, String fileName, String dataName) {
-        String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
+    public boolean readBoolean(String dataName) {
         try {
-            if(json == null || updateData || !jsonFileName.equals(fileName)) {
-                json = (JsonObject) JsonParser.parseReader(new FileReader(path.substring(0, path.length() - 1) + fileName));
-                jsonFileName = fileName;
-                updateData = false;
+            if(json == null) {
+                json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
             }
             return json.get(dataName).getAsBoolean();
         } catch (FileNotFoundException e) {
@@ -66,98 +61,63 @@ public class WorldSaveData {
     }
 
     // Write integer value to json file
-    public static void writeInt(World world, String fileName, String dataName, int dataValue) {
-        if(world instanceof ServerWorld) {
-            try {
-                String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
-                String jsonPath = path.substring(0, path.length() - 1) + fileName;
-                if(json == null || updateData || !jsonFileName.equals(fileName)) {
-                    try {
-                        json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
-                    } catch(java.io.FileNotFoundException e) {
-                        json =  new JsonObject();
-                    }
-                    jsonFileName = fileName;
-                    updateData = false;
+    public void writeInt(String dataName, int dataValue) {
+        try {
+            if(json == null) {
+                try {
+                    json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
+                } catch(java.io.FileNotFoundException e) {
+                    json =  new JsonObject();
                 }
-                json.addProperty(dataName, dataValue);
-                Files.write(Paths.get(jsonPath), json.toString().getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            json.addProperty(dataName, dataValue);
+            Files.write(Paths.get(jsonPath), json.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     // Write double value to json file
-    public static void writeDouble(World world, String fileName, String dataName, double dataValue) {
-        if(world instanceof ServerWorld) {
-            try {
-                String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
-                String jsonPath = path.substring(0, path.length() - 1) + fileName;
-                if(json == null || updateData || !jsonFileName.equals(fileName)) {
-                    try {
-                        json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
-                    } catch(java.io.FileNotFoundException e) {
-                        json =  new JsonObject();
-                    }
-                    jsonFileName = fileName;
-                    updateData = false;
+    public void writeDouble(String dataName, double dataValue) {
+        try {
+            if(json == null) {
+                try {
+                    json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
+                } catch(java.io.FileNotFoundException e) {
+                    json =  new JsonObject();
                 }
-                json.addProperty(dataName, dataValue);
-                Files.write(Paths.get(jsonPath), json.toString().getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            json.addProperty(dataName, dataValue);
+            Files.write(Paths.get(jsonPath), json.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     // Write boolean value to json file
-    public static void writeBoolean(@NotNull World world, String fileName, String dataName, boolean dataValue) {
-        if(world instanceof ServerWorld) {
-            try {
-                String path = Objects.requireNonNull(world.getServer()).getSavePath(WorldSavePath.ROOT).toString();
-                String jsonPath = path.substring(0, path.length() - 1) + fileName;
-                if(json == null || updateData || !jsonFileName.equals(fileName)) {
-                    try {
-                        json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
-                    } catch(java.io.FileNotFoundException e) {
-                        json =  new JsonObject();
-                    }
-                    jsonFileName = fileName;
-                    updateData = false;
+    public void writeBoolean(String dataName, boolean dataValue) {
+        try {
+            if(json == null) {
+                try {
+                    json = (JsonObject) JsonParser.parseReader(new FileReader(jsonPath));
+                } catch(java.io.FileNotFoundException e) {
+                    json =  new JsonObject();
                 }
-                json.addProperty(dataName, dataValue);
-                Files.write(Paths.get(jsonPath), json.toString().getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            json.addProperty(dataName, dataValue);
+            Files.write(Paths.get(jsonPath), json.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    // Set whether json in memory needs to be updated
-    public static void setUpdateData(boolean b) {
-        updateData = b;
-    }
-
-    // Returns whether json in memory needs to be updated
-    public static boolean getUpdateData() {
-        return updateData;
-    }
-
-    // Get json in memory
-    public static JsonObject getJson() {
+    // Get Json file in memory
+    public JsonObject getJson() {
         return json;
     }
 
-    public static void handleServerStart(MinecraftServer server) {
-        jsonFileName = "";
-        json = null;
-        updateData = true;
-    }
-
-    public static void handleServerStop(MinecraftServer server) {
-        jsonFileName = "";
-        json = null;
-        updateData = true;
+    // Return name of the Json file in memory
+    public String getFileName() {
+        return fileName;
     }
 }
