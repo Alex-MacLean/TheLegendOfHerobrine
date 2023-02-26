@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "herobrine",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "name": "The Legend of Herobrine",
   "description": "Adds Herobrine to Minecraft, and other herobrine related things.",
   "authors": [
@@ -16,10 +16,10 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "com.github.alexmaclean.herobrine.client.HerobrineClient"
+      "com.herobrinemod.herobrine.client.HerobrineClient"
     ],
     "main": [
-      "com.github.alexmaclean.herobrine.HerobrineMod"
+      "com.herobrinemod.herobrine.HerobrineMod"
     ]
   },
   "mixins": [
@@ -27,7 +27,8 @@
   ],
   "depends": {
     "fabricloader": ">=0.12.0",
-    "fabric": "*",
-    "minecraft": ">=1.18"
+    "fabric": ">=0.68.1",
+    "fabric-api": ">=0.68.1",
+    "minecraft": ">=1.19.3"
   }
 }

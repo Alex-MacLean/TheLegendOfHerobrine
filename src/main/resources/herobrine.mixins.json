@@ -1,12 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.github.alexmaclean.herobrine.mixin",
+  "package": "com.herobrinemod.herobrine.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
-  "HerobrineMixin"
+    "HerobrineMixin"
   ],
   "injectors": {
     "defaultRequire": 1
