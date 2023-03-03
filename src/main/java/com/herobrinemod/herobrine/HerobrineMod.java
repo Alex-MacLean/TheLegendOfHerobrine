@@ -3,6 +3,7 @@ package com.herobrinemod.herobrine;
 import com.herobrinemod.herobrine.blocks.BlockList;
 import com.herobrinemod.herobrine.entities.*;
 import com.herobrinemod.herobrine.items.ItemList;
+import com.herobrinemod.herobrine.savedata.ConfigHandler;
 import com.herobrinemod.herobrine.savedata.SaveDataHandler;
 import com.herobrinemod.herobrine.sounds.SoundList;
 import net.fabricmc.api.ModInitializer;
@@ -22,6 +23,7 @@ public class HerobrineMod implements ModInitializer {
 
     @Override // "Main" method
     public void onInitialize() {
+        ConfigHandler.registerHerobrineConfig("herobrine.json");
         registerCallbacks();
         registerSounds();
         registerBlocks();

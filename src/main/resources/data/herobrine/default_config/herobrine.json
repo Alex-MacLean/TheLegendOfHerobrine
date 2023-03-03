@@ -1,0 +1,23 @@
+{
+    "WarriorBreaksBlocks": true,
+    "HerobrineAlwaysSpawns": false,
+    "CursedForestWeight": 3,
+    "TrappedHouseWeight": 450,
+    "BuilderBuilds": true,
+    "BedrockSwordDrops": false,
+    "AltarRequiresShrine": true,
+    "ShrineRemnantWeight": 5000,
+    "HerobrineStatueWeight": 10000,
+    "SurvivorBaseWeight": 1000,
+    "HerobrineWarriorWeight": 15,
+    "HerobrineSpyWeight": 25,
+    "HerobrineBuilderWeight": 15,
+    "HerobrineMageWeight": 15,
+    "HerobrineStalkerWeight": 20,
+    "InfectedMobWeight": 15,
+    "HerobrineSpyObservationDistance": 32,
+    "GlowstonePillarWeight": 500,
+    "SandPyramidWeight": 6000,
+    "HerobrineEndSpawnType": 0,
+    "GlobalHerobrineMessages": true
+}
