@@ -4,12 +4,15 @@ import com.herobrinemod.herobrine.HerobrineMod;
 import com.herobrinemod.herobrine.client.entities.models.HerobrineMageEntityModel;
 import com.herobrinemod.herobrine.client.entities.models.HerobrineModelLayers;
 import com.herobrinemod.herobrine.entities.HerobrineEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
+@Environment(EnvType.CLIENT)
 public class HerobrineMageEntityRenderer extends MobEntityRenderer<HerobrineEntity, HerobrineMageEntityModel> {
 
     public HerobrineMageEntityRenderer(EntityRendererFactory.Context context) {
