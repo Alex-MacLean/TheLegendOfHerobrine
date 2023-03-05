@@ -2,7 +2,6 @@ package com.herobrinemod.herobrine.entities;
 
 import com.herobrinemod.herobrine.HerobrineMod;
 import com.herobrinemod.herobrine.items.ItemList;
-import com.herobrinemod.herobrine.savedata.SaveDataHandler;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -16,17 +15,26 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Random;
 
 public abstract class HerobrineEntity extends HostileEntity {
     public HerobrineEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && world.isSkyVisible(pos) && isSpawnDark(world, pos, (net.minecraft.util.math.random.Random) random) && canMobSpawn(type, world, spawnReason, pos, (net.minecraft.util.math.random.Random) random) && SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned");
+    public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, net.minecraft.util.math.random.Random random) {
+        if(world.toServerWorld().getDimensionKey() != DimensionTypes.OVERWORLD && random.nextBetween(0, 15) > 1 || world.toServerWorld().getDimensionKey() == DimensionTypes.THE_END && pos.getX() < 1000 && pos.getZ() < 1000) {
+            return false;
+        }
+        return world.getDifficulty() != Difficulty.PEACEFUL && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && HerobrineSpawnHelper.canHerobrineSpawn();
+    }
+
+    public static boolean canSpawnPeacefulMode(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, net.minecraft.util.math.random.Random random) {
+        if(world.toServerWorld().getDimensionKey() != DimensionTypes.OVERWORLD && random.nextBetween(0, 15) > 1 || world.toServerWorld().getDimensionKey() == DimensionTypes.THE_END && pos.getX() < 1000 && pos.getZ() < 1000) {
+            return false;
+        }
+        return isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && HerobrineSpawnHelper.canHerobrineSpawn();
     }
 
     @Override
@@ -39,12 +47,12 @@ public abstract class HerobrineEntity extends HostileEntity {
 
     @Override
     public void tick() {
+        this.clearStatusEffects();
         if(world instanceof ServerWorld) {
-            if(!SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
+            if(!HerobrineSpawnHelper.canHerobrineSpawn()) {
                 this.remove(RemovalReason.DISCARDED);
             }
         }
-        this.clearStatusEffects();
         super.tick();
     }
 

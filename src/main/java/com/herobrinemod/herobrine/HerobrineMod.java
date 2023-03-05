@@ -7,13 +7,18 @@ import com.herobrinemod.herobrine.savedata.ConfigHandler;
 import com.herobrinemod.herobrine.savedata.SaveDataHandler;
 import com.herobrinemod.herobrine.sounds.SoundList;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.Heightmap;
 
 import static net.minecraft.registry.Registries.*;
 
@@ -30,6 +35,7 @@ public class HerobrineMod implements ModInitializer {
         registerItems();
         registerEntityAttributes();
         registerItemGroups();
+        registerEntitySpawns();
     }
 
     // Register sounds
@@ -112,6 +118,29 @@ public class HerobrineMod implements ModInitializer {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.HEROBRINE_SPY_SPAWN_EGG, ItemList.HEROBRINE_MAGE_SPAWN_EGG));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.HEROBRINE_MAGE_SPAWN_EGG, ItemList.HEROBRINE_BUILDER_SPAWN_EGG));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.HEROBRINE_BUILDER_SPAWN_EGG, ItemList.HEROBRINE_STALKER_SPAWN_EGG));
+    }
+
+    // Register entity spawning
+    private void registerEntitySpawns() {
+        BiomeModifications.addSpawn(BiomeSelectors.foundInOverworld().or(BiomeSelectors.foundInTheNether()), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_WARRIOR, ConfigHandler.herobrineConfig.readInt("HerobrineWarriorWeight"), 1, 1);
+        BiomeModifications.addSpawn(BiomeSelectors.foundInOverworld().or(BiomeSelectors.foundInTheNether()), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_BUILDER, ConfigHandler.herobrineConfig.readInt("HerobrineBuilderWeight"), 1, 1);
+        BiomeModifications.addSpawn(BiomeSelectors.foundInOverworld().or(BiomeSelectors.foundInTheNether()), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_MAGE, ConfigHandler.herobrineConfig.readInt("HerobrineMageWeight"), 1, 1);
+        BiomeModifications.addSpawn(BiomeSelectors.foundInOverworld().or(BiomeSelectors.foundInTheNether()), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_SPY, ConfigHandler.herobrineConfig.readInt("HerobrineSpyWeight"), 1, 1);
+        BiomeModifications.addSpawn(BiomeSelectors.foundInOverworld().or(BiomeSelectors.foundInTheNether()), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_STALKER, ConfigHandler.herobrineConfig.readInt("HerobrineStalkerWeight"), 1, 1);
+        if(ConfigHandler.herobrineConfig.readInt("HerobrineEndSpawnType") > 0 && ConfigHandler.herobrineConfig.readInt("HerobrineEndSpawnType") < 3) {
+            BiomeModifications.addSpawn(BiomeSelectors.foundInTheEnd(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_SPY, ConfigHandler.herobrineConfig.readInt("HerobrineSpyWeight"), 1, 1);
+            BiomeModifications.addSpawn(BiomeSelectors.foundInTheEnd(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_STALKER, ConfigHandler.herobrineConfig.readInt("HerobrineStalkerWeight"), 1, 1);
+            if(ConfigHandler.herobrineConfig.readInt("HerobrineEndSpawnType") == 2) {
+                BiomeModifications.addSpawn(BiomeSelectors.foundInTheEnd(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_WARRIOR, ConfigHandler.herobrineConfig.readInt("HerobrineWarriorWeight"), 1, 1);
+                BiomeModifications.addSpawn(BiomeSelectors.foundInTheEnd(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_MAGE, ConfigHandler.herobrineConfig.readInt("HerobrineMageWeight"), 1, 1);
+                BiomeModifications.addSpawn(BiomeSelectors.foundInTheEnd(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_BUILDER, ConfigHandler.herobrineConfig.readInt("HerobrineBuilderWeight"), 1, 1);
+            }
+        }
+        SpawnRestriction.register(EntityTypeList.HEROBRINE_WARRIOR, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.HEROBRINE_BUILDER, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.HEROBRINE_MAGE, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.HEROBRINE_SPY, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawnPeacefulMode);
+        SpawnRestriction.register(EntityTypeList.HEROBRINE_STALKER, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawnPeacefulMode);
     }
 
     // Register callbacks. Used to properly load and unload each instance of WorldSaveData

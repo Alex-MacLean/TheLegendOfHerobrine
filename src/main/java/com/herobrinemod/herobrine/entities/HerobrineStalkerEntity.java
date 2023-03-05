@@ -1,6 +1,5 @@
 package com.herobrinemod.herobrine.entities;
 
-import com.herobrinemod.herobrine.savedata.SaveDataHandler;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -15,16 +14,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Random;
 
 public class HerobrineStalkerEntity extends HerobrineEntity {
     private int lifeTimer;
@@ -66,10 +62,6 @@ public class HerobrineStalkerEntity extends HerobrineEntity {
     @Override
     protected boolean isDisallowedInPeaceful() {
         return false;
-    }
-
-    public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.isSkyVisible(pos) && isSpawnDark(world, pos, (net.minecraft.util.math.random.Random) random) && canMobSpawn(type, world, spawnReason, pos, (net.minecraft.util.math.random.Random) random) && SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned");
     }
 
     @Override

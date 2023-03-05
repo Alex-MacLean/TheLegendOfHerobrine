@@ -1,7 +1,6 @@
 package com.herobrinemod.herobrine.entities;
 
 import com.herobrinemod.herobrine.items.ItemList;
-import com.herobrinemod.herobrine.savedata.SaveDataHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -34,21 +33,18 @@ public abstract class InfectedEntity extends HostileEntity {
     }
 
     public static boolean canSpawn(EntityType<? extends InfectedEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && world.isSkyVisible(pos) && isSpawnDark(world, pos, (net.minecraft.util.math.random.Random) random) && canMobSpawn(type, world, spawnReason, pos, (net.minecraft.util.math.random.Random) random) && SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned");
+        return world.getDifficulty() != Difficulty.PEACEFUL && world.isSkyVisible(pos) && isSpawnDark(world, pos, (net.minecraft.util.math.random.Random) random) && canMobSpawn(type, world, spawnReason, pos, (net.minecraft.util.math.random.Random) random) && HerobrineSpawnHelper.canHerobrineSpawn();
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        /*if(source.getSource() instanceof UnholyWaterEntity) {
-            return false;
-        }*/
+    public boolean damage(@NotNull DamageSource source, float amount) {
         return super.damage(source, amount);
     }
 
     @Override
     public void tick() {
         if(world instanceof ServerWorld) {
-            if(!SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
+            if(!HerobrineSpawnHelper.canHerobrineSpawn()) {
                 this.remove(RemovalReason.DISCARDED);
             }
         }
