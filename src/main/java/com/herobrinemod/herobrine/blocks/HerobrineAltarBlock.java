@@ -1,6 +1,7 @@
 package com.herobrinemod.herobrine.blocks;
 
 import com.herobrinemod.herobrine.items.ItemList;
+import com.herobrinemod.herobrine.savedata.ConfigHandler;
 import com.herobrinemod.herobrine.savedata.SaveDataHandler;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
@@ -95,10 +96,13 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
     }
 
     private boolean canActivate(@NotNull World world, @NotNull BlockPos pos) {
+        if(!ConfigHandler.herobrineConfig.readBoolean("AltarRequiresShrine")) {
+            return true;
+        }
+
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-
         return world.getBlockState(new BlockPos(x, y - 1, z)) == Blocks.NETHERRACK.getDefaultState() && world.getBlockState(new BlockPos(x, y - 1, z + 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x, y - 1, z - 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y, z)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y, z)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x, y, z + 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x, y, z - 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z + 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z + 1)) == Blocks.LAVA.getDefaultState();
     }
 
@@ -107,7 +111,6 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
     public BlockState getPlacementState(@NotNull ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
         BlockState blockState = ctx.getWorld().getBlockState(blockPos);
-
         return this.getDefaultState().with(WATERLOGGED, blockState.getFluidState().getFluid() == Fluids.WATER);
     }
 
@@ -127,13 +130,25 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                 if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
                     if(!SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
-                        player.sendMessage(Text.translatable("herobrine.summon"), false);
+                        if(ConfigHandler.herobrineConfig.readBoolean("GlobalHerobrineMessages")) {
+                            for(PlayerEntity p: world.getPlayers()) {
+                                p.sendMessage(Text.translatable("herobrine.summon"), false);
+                            }
+                        } else {
+                            player.sendMessage(Text.translatable("herobrine.summon"), false);
+                        }
                         SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", true);
                     }
                 } else {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
                     if(SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
-                        player.sendMessage(Text.translatable("herobrine.unsummon"), false);
+                        if(ConfigHandler.herobrineConfig.readBoolean("GlobalHerobrineMessages")) {
+                            for(PlayerEntity p: world.getPlayers()) {
+                                p.sendMessage(Text.translatable("herobrine.unsummon"), false);
+                            }
+                        } else {
+                            player.sendMessage(Text.translatable("herobrine.unsummon"), false);
+                        }
                         SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", false);
                     }
                 }
@@ -150,7 +165,6 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
 
             return ActionResult.success(world.isClient);
         }
-
         return super.onUse(state, world, pos, player, hand, hit);
     }
 }

@@ -1,6 +1,7 @@
 package com.herobrinemod.herobrine.entities;
 
 import com.herobrinemod.herobrine.items.ItemList;
+import com.herobrinemod.herobrine.savedata.ConfigHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.entity.EntityData;
@@ -32,7 +33,7 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
 
     public HerobrineWarriorEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
-        this.destroyCooldown = 500;
+        this.destroyCooldown = this.getRandom().nextBetween(400, 600);
         this.experiencePoints = 5;
 
     }
@@ -84,9 +85,8 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
     @Override
     public void mobTick() {
         super.mobTick();
-        if(this.destroyCooldown < 1) {
-            this.destroyCooldown = 500;
-            if(this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
+            if(this.destroyCooldown < 1 && ConfigHandler.herobrineConfig.readBoolean("WarriorBreaksBlocks") && this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
+                this.destroyCooldown = random.nextBetween(400, 600);
                 for (int x = -1; x <= 1; x ++) {
                     for (int z = -1; z <= 1; z ++) {
                         for (int y = 0; y <= 3; y ++) {
@@ -100,14 +100,15 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
                     }
                 }
             }
-        }
         this.destroyCooldown --;
     }
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(ItemList.BEDROCK_SWORD));
-        this.handDropChances[EquipmentSlot.MAINHAND.getEntitySlotId()] = 0.0f;
+        if(!ConfigHandler.herobrineConfig.readBoolean("BedrockSwordDrops")) {
+            this.handDropChances[EquipmentSlot.MAINHAND.getEntitySlotId()] = 0.0f;
+        }
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 }

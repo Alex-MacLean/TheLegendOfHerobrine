@@ -1,6 +1,7 @@
 package com.herobrinemod.herobrine.entities;
 
 import com.herobrinemod.herobrine.HerobrineMod;
+import com.herobrinemod.herobrine.savedata.ConfigHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -42,7 +43,7 @@ public class HerobrineBuilderEntity extends HerobrineEntity {
     public HerobrineBuilderEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
         this.lifeTimer = 5100;
-        this.buildTimer = 1000;
+        this.buildTimer = this.getRandom().nextBetween(800, 1200);
         this.experiencePoints = 5;
     }
 
@@ -97,8 +98,8 @@ public class HerobrineBuilderEntity extends HerobrineEntity {
         this.lifeTimer --;
         super.mobTick();
 
-        if(this.buildTimer < 1) {
-            this.buildTimer = 1000;
+        if(this.buildTimer < 1 && ConfigHandler.herobrineConfig.readBoolean("BuilderBuilds")) {
+            this.buildTimer = random.nextBetween(800, 1200);
             if (world.getServer() != null) {
                 BlockState state = world.getBlockState(new BlockPos(this.getX(), this.getY() - 1.0, this.getZ()));
                 ServerWorldAccess serverWorldAccess = (ServerWorld) world;
@@ -174,22 +175,23 @@ public class HerobrineBuilderEntity extends HerobrineEntity {
     public void handleStatus(byte status) {
         super.handleStatus(status);
         switch (status) {
-            case 5:
-                if(this.world.isClient && !this.isSilent()) {
+            case 5 -> {
+                if (this.world.isClient && !this.isSilent()) {
                     this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.AMBIENT_CAVE.value(), this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
                 }
-                break;
-            case 4:
-                if(this.world.isClient) {
+            }
+
+            case 4 -> {
+                if (this.world.isClient) {
                     if (!this.isSilent()) {
                         this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
                     }
 
-                    for (int i = 0; i < 20; i ++) {
+                    for (int i = 0; i < 20; i++) {
                         this.world.addParticle(ParticleTypes.POOF, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
                     }
                 }
-                break;
+            }
         }
     }
 
