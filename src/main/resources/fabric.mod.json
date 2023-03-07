@@ -11,7 +11,7 @@
     "website": "https://www.herobrinemod.com/",
     "repo": "https://github.com/Alex-MacLean/TheLegendOfHerobrine"
   },
-  "license": "GNU General Public License Version 3 (GPLv3)",
+  "license": "GNU Lesser General Public License Version 3 (LGPLv3)",
   "icon": "assets/herobrine/logo.png",
   "environment": "*",
   "entrypoints": {
