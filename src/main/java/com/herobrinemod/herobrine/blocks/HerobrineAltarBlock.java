@@ -58,11 +58,7 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
     @Override
     public void randomDisplayTick(@NotNull BlockState state, World world, BlockPos pos, Random random) {
         if(state.get(TYPE) == 1) {
-            double d0 = pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.2;
-            double d1 = pos.getY() + 0.25;
-            double d2 = pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.2;
-
-            world.addParticle(ParticleTypes.PORTAL, d0, d1, d2, 0.0, 0.0, 0.0);
+            world.addParticle(ParticleTypes.PORTAL, pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.2, pos.getY() + 0.25, pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.2, 0.0, 0.0, 0.0);
         }
     }
 
@@ -96,14 +92,7 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
     }
 
     private boolean canActivate(@NotNull World world, @NotNull BlockPos pos) {
-        if(!ConfigHandler.herobrineConfig.readBoolean("AltarRequiresShrine")) {
-            return true;
-        }
-
-        int x = pos.getX();
-        int y = pos.getY();
-        int z = pos.getZ();
-        return world.getBlockState(new BlockPos(x, y - 1, z)) == Blocks.NETHERRACK.getDefaultState() && world.getBlockState(new BlockPos(x, y - 1, z + 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x, y - 1, z - 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y, z)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y, z)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x, y, z + 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x, y, z - 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z + 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x + 1, y - 1, z - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(x - 1, y - 1, z + 1)) == Blocks.LAVA.getDefaultState();
+        return !ConfigHandler.herobrineConfig.readBoolean("AltarRequiresShrine") || world.getBlockState(new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ())) == Blocks.NETHERRACK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ() + 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ() - 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() + 1, pos.getY() - 1, pos.getZ())) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() - 1, pos.getY() - 1, pos.getZ())) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() + 1, pos.getY(), pos.getZ())) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() - 1, pos.getY(), pos.getZ())) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(pos.getX(), pos.getY(), pos.getZ() + 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(pos.getX(), pos.getY(), pos.getZ() - 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() - 1, pos.getY() - 1, pos.getX() - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() + 1, pos.getY() - 1, pos.getZ() + 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() + 1, pos.getY() - 1, pos.getZ() - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() - 1, pos.getY() - 1, pos.getZ() + 1)) == Blocks.LAVA.getDefaultState();
     }
 
     @Nullable

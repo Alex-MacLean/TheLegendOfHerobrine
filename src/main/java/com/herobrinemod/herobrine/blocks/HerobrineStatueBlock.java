@@ -1,8 +1,9 @@
 package com.herobrinemod.herobrine.blocks;
 
+import com.herobrinemod.herobrine.items.ItemList;
 import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -86,12 +87,8 @@ public class HerobrineStatueBlock extends Block implements Waterloggable{
     @Nullable
     @Override
     public BlockState getPlacementState(@NotNull ItemPlacementContext ctx) {
-        BlockPos blockPos = ctx.getBlockPos();
-        BlockState blockState = ctx.getWorld().getBlockState(blockPos);
-        World world = ctx.getWorld();
-
-        if (blockPos.getY() < world.getTopY() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
-            return this.getDefaultState().with(WATERLOGGED, blockState.getFluidState().getFluid() == Fluids.WATER).with(FACING, ctx.getPlayerFacing().getOpposite());
+        if (ctx.getBlockPos().getY() < ctx.getWorld().getTopY() - 1 && ctx.getWorld().getBlockState(ctx.getBlockPos().up()).canReplace(ctx)) {
+            return this.getDefaultState().with(WATERLOGGED, ctx.getWorld().getBlockState(ctx.getBlockPos()).getFluidState().getFluid() == Fluids.WATER).with(FACING, ctx.getPlayerFacing().getOpposite());
         }
 
         return null;
@@ -103,11 +100,7 @@ public class HerobrineStatueBlock extends Block implements Waterloggable{
             world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
-        DoubleBlockHalf doubleBlockHalf = state.get(HALF);
-        if (!(direction.getAxis() != Direction.Axis.Y || doubleBlockHalf == DoubleBlockHalf.LOWER != (direction == Direction.UP) || neighborState.isOf(this) && neighborState.get(HALF) != doubleBlockHalf)) {
-            return Blocks.AIR.getDefaultState();
-        }
-        if (doubleBlockHalf == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canPlaceAt(world, pos)) {
+        if (!(direction.getAxis() != Direction.Axis.Y || state.get(HALF) == DoubleBlockHalf.LOWER != (direction == Direction.UP) || neighborState.isOf(this) && neighborState.get(HALF) != state.get(HALF))) {
             return Blocks.AIR.getDefaultState();
         }
 
@@ -139,28 +132,17 @@ public class HerobrineStatueBlock extends Block implements Waterloggable{
     }
 
     @Override
-    public void onBreak(@NotNull World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!world.isClient && player.isCreative()) {
-            onBreakInCreative(world, pos, state, player);
+    public void onBreak(@NotNull World world, BlockPos pos, @NotNull BlockState state, PlayerEntity player) {
+        if (!world.isClient && state.get(HALF) == DoubleBlockHalf.UPPER && (state = world.getBlockState(pos = pos.down())).isOf(state.getBlock()) && state.get(HALF) == DoubleBlockHalf.LOWER) {
+            BlockState blockState2 = state.contains(Properties.WATERLOGGED) && state.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
+            if (player.isCreative()) {
+                world.setBlockState(pos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
+            } else {
+                world.setBlockState(pos, blockState2, Block.NOTIFY_ALL);
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ItemList.HEROBRINE_STATUE, 1)));
+            }
+            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, pos, Block.getRawIdFromState(state));
         }
-
         super.onBreak(world, pos, state, player);
-    }
-
-    @Override
-    public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack stack) {
-        super.afterBreak(world, player, pos, Blocks.AIR.getDefaultState(), blockEntity, stack);
-    }
-
-    private static void onBreakInCreative(World world, BlockPos pos, @NotNull BlockState state, PlayerEntity player) {
-        BlockPos blockPos;
-        BlockState blockState;
-        DoubleBlockHalf doubleBlockHalf = state.get(HALF);
-
-        if (doubleBlockHalf == DoubleBlockHalf.UPPER && (blockState = world.getBlockState(blockPos = pos.down())).isOf(state.getBlock()) && blockState.get(HALF) == DoubleBlockHalf.LOWER) {
-            BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
-        }
     }
 }

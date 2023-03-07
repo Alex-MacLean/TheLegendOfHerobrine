@@ -48,7 +48,7 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
         return HerobrineEntity.createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 15.0)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0.0)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 64.0)
@@ -73,10 +73,10 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
 
     @Override
     public boolean damage(@NotNull DamageSource source, float amount) {
-        /*if(source.getSource() instanceof HolyWaterEntity) {
+        if(source.getSource() instanceof HolyWaterEntity) {
             this.world.sendEntityStatus(this, (byte) 4);
             this.remove(RemovalReason.DISCARDED);
-        }*/
+        }
         return super.damage(source, amount);
     }
 

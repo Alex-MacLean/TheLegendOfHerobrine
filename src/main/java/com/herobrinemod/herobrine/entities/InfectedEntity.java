@@ -14,8 +14,6 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Random;
-
 public abstract class InfectedEntity extends HostileEntity {
     public InfectedEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -32,13 +30,8 @@ public abstract class InfectedEntity extends HostileEntity {
         }
     }
 
-    public static boolean canSpawn(EntityType<? extends InfectedEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && world.isSkyVisible(pos) && isSpawnDark(world, pos, (net.minecraft.util.math.random.Random) random) && canMobSpawn(type, world, spawnReason, pos, (net.minecraft.util.math.random.Random) random) && HerobrineSpawnHelper.canHerobrineSpawn();
-    }
-
-    @Override
-    public boolean damage(@NotNull DamageSource source, float amount) {
-        return super.damage(source, amount);
+    public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, net.minecraft.util.math.random.Random random) {
+        return world.getDifficulty() != Difficulty.PEACEFUL && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && HerobrineSpawnHelper.canHerobrineSpawn();
     }
 
     @Override

@@ -39,7 +39,7 @@ public abstract class HerobrineEntity extends HostileEntity {
 
     @Override
     public boolean damage(@NotNull DamageSource source, float amount) {
-        if(source.equals(DamageSource.FALL) || source.equals(DamageSource.CACTUS) || source.equals(DamageSource.LIGHTNING_BOLT) || source.equals(DamageSource.IN_FIRE) || source.equals(DamageSource.ON_FIRE) || source.equals(DamageSource.anvil(getAttacker())) || source.equals(DamageSource.DRAGON_BREATH) || source.equals(DamageSource.fallingBlock(getAttacker())) || source.equals(DamageSource.MAGIC) || source.equals(DamageSource.SWEET_BERRY_BUSH) || source.equals(DamageSource.WITHER) || source.equals(DamageSource.STALAGMITE) || source.equals(DamageSource.FREEZE) || source.getSource() instanceof AreaEffectCloudEntity || source.getSource() instanceof PotionEntity/* || source.getSource() instanceof UnholyWaterEntity*/) {
+        if(source.equals(DamageSource.FALL) || source.equals(DamageSource.CACTUS) || source.equals(DamageSource.LIGHTNING_BOLT) || source.equals(DamageSource.IN_FIRE) || source.equals(DamageSource.ON_FIRE) || source.equals(DamageSource.anvil(getAttacker())) || source.equals(DamageSource.DRAGON_BREATH) || source.equals(DamageSource.fallingBlock(getAttacker())) || source.equals(DamageSource.MAGIC) || source.equals(DamageSource.SWEET_BERRY_BUSH) || source.equals(DamageSource.WITHER) || source.equals(DamageSource.STALAGMITE) || source.equals(DamageSource.FREEZE) || source.getSource() instanceof AreaEffectCloudEntity || source.getSource() instanceof PotionEntity) {
             return false;
         }
         return super.damage(source, amount);

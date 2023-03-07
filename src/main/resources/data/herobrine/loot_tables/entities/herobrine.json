@@ -7,31 +7,31 @@
       },
       "entries": [
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:gunpowder",
           "quality": 1
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:rotten_flesh",
           "quality": 1
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:bone",
           "quality": 1
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:spider_eye",
           "quality": 1
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:string",
           "quality": 1
@@ -49,43 +49,43 @@
       },
       "entries": [
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 3,
           "name": "minecraft:iron_ingot",
           "quality": 2
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 3,
           "name": "minecraft:gold_ingot",
           "quality": 2
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 8,
           "name": "minecraft:gold_nugget",
           "quality": 1
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 8,
           "name": "minecraft:iron_nugget",
           "quality": 1
         },
         {
-          "type": "item",
-          "weight": 4,
+          "type": "minecraft:item",
+          "weight": 1,
           "name": "herobrine:music_disc_dog",
           "quality": 3
         },
         {
-          "type": "item",
-          "weight": 2,
+          "type": "minecraft:item",
+          "weight": 1,
           "name": "minecraft:diamond",
           "quality": 3
         },
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 1,
           "name": "herobrine:cursed_diamond",
           "quality": 5
