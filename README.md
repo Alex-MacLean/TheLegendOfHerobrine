@@ -1,4 +1,4 @@
-# TheLegendOfHerobrine
+# The Legend of Herobrine
 **Homepage**: https://herobrinemod.com
 
 **CurseForge**: https://www.curseforge.com/minecraft/mc-mods/the-legend-of-herobrine
@@ -41,7 +41,7 @@ IDE with Java support. I use Intellij Idea: https://www.jetbrains.com/idea/downl
 
 **Setp 6:** In the gradle window go to Tasks -> build and run build. If everything is set up properly it should build the mod file.
 
-**Step 7:** The jar file is located in build/libs/LegendOfHerobrine-*VERSION*.jar. You can install this file like any other forge mod.
+**Step 7:** The jar file is located in build/libs/LegendOfHerobrine-*VERSION*.jar. You can install this file like any other mod.
 
 **Permissions:**
 
@@ -55,6 +55,6 @@ You are not allowed to redistribute recompiled bianaries from this source code, 
 
 If you want to contribute to this project feel free to contact me with whatever modifications you have made, if your code makes it into the mod I will add you to the credits section of the mcmod.info and mods.toml files.
 
-For questions about any other restrictions or permissions not stated here, please refer to the license (GPLv3).
+For questions about any other restrictions or permissions not stated here, please refer to the license (LGPLv3).
 
-If you have any questions about this mod or your permissions feel free to DM me on CurseForge or GitHub.
+If you have any questions about this mod or your permissions feel free to send me an email or DM me on CurseForge, Modrinth, or GitHub.
