@@ -62,11 +62,11 @@ public class UnholyWaterEntity extends ThrownItemEntity {
                         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 300, 1));
                         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 300, 1));
                         entity.setOnFireFor(15);
-                        entity.damage(DamageSource.magic(this, this.getOwner()), 4.0F);
+                        entity.damage(this.getDamageSources().thrown(this, getOwner()), 4.0f);
                     }
                 }
             }
-            this.playSound(SoundEvents.BLOCK_GLASS_BREAK, 0.8F, 0.9F / (random.nextFloat() * 0.4F + 0.8F));
+            this.playSound(SoundEvents.BLOCK_GLASS_BREAK, 0.8f, 0.9f / (random.nextFloat() * 0.4f + 0.8f));
             this.world.sendEntityStatus(this, (byte) 3);
             this.remove(RemovalReason.DISCARDED);
         }

@@ -5,6 +5,8 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
@@ -110,7 +112,7 @@ public class HerobrineMageEntity extends HerobrineEntity {
             --this.weakenCastingCounter;
 
             if (this.warpCastingCounter < 1) {
-                if(this.world.getBlockState(new BlockPos(this.getTarget().getX(), this.getTarget().getY() + 4.0, this.getTarget().getZ())).isAir() && this.world.getBlockState(new BlockPos(this.getTarget().getX(), this.getTarget().getY() + 5.0, this.getTarget().getZ())).isAir()) {
+                if(this.world.getBlockState(new BlockPos((int) this.getTarget().getX(), (int) this.getTarget().getY() + 4, (int) this.getTarget().getZ())).isAir() && this.world.getBlockState(new BlockPos((int) this.getTarget().getX(), (int) this.getTarget().getY() + 5, (int) this.getTarget().getZ())).isAir()) {
                     if(this.getTarget().hasVehicle()) {
                         this.getTarget().dismountVehicle();
                     }
@@ -126,13 +128,13 @@ public class HerobrineMageEntity extends HerobrineEntity {
                     this.getTarget().dismountVehicle();
                 }
                 if (this.holdTicks > 0) {
-                    if(this.world.getBlockState(new BlockPos(this.getTarget().getX(), this.getTarget().getY() + 1.0, this.getTarget().getZ())).isAir() && !this.startedHold) {
+                    if(this.world.getBlockState(new BlockPos((int) this.getTarget().getX(), (int) this.getTarget().getY() + 1, (int) this.getTarget().getZ())).isAir() && !this.startedHold) {
                         this.getTarget().requestTeleport(this.getTarget().getX(), this.getTarget().getY() + 1.0, this.getTarget().getZ());
-                        this.getTarget().damage(DamageSource.MAGIC, 1);
+                        this.getTarget().damage(this.getDamageSources().magic(), 1);
                         this.startedHold = true;
                     } else {
                         this.getTarget().requestTeleport(this.getTarget().getX(),this.getTarget().getY(),this.getTarget().getZ());
-                        this.getTarget().damage(DamageSource.MAGIC, 1);
+                        this.getTarget().damage(this.getDamageSources().magic(), 1);
                     }
                     this.holdTicks --;
                 }

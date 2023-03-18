@@ -101,7 +101,7 @@ public class HerobrineBuilderEntity extends HerobrineEntity {
         if(this.buildTimer < 1 && ConfigHandler.herobrineConfig.readBoolean("BuilderBuilds")) {
             this.buildTimer = random.nextBetween(800, 1200);
             if (world.getServer() != null) {
-                BlockState state = world.getBlockState(new BlockPos(this.getX(), this.getY() - 1.0, this.getZ()));
+                BlockState state = world.getBlockState(new BlockPos((int) this.getX(), (int) this.getY() - 1, (int) this.getZ()));
                 ServerWorldAccess serverWorldAccess = (ServerWorld) world;
                 if(random.nextInt(10) > 0) {
                     if(this.getY() < world.getSeaLevel()) {

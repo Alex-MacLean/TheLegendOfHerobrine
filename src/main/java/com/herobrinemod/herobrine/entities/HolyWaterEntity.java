@@ -63,18 +63,18 @@ public class HolyWaterEntity extends ThrownItemEntity {
                     }
 
                     if (entity instanceof InfectedEntity) {
-                        entity.damage(DamageSource.magic(this, this.getOwner()), 0.0F);
+                        entity.damage(this.getDamageSources().magic(), 0.0f);
                     }
 
                     if(!(entity instanceof HerobrineEntity)) {
                         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
                         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
                     } else {
-                        entity.damage(DamageSource.magic(this, this.getOwner()), 10.0f);
+                        entity.damage(this.getDamageSources().thrown(this, getOwner()), 10.0f);
                     }
                 }
             }
-            this.playSound(SoundEvents.BLOCK_GLASS_BREAK, 0.8F, 0.9F / (random.nextFloat() * 0.4F + 0.8F));
+            this.playSound(SoundEvents.BLOCK_GLASS_BREAK, 0.8f, 0.9f / (random.nextFloat() * 0.4f + 0.8f));
             this.world.sendEntityStatus(this, (byte) 3);
             this.remove(RemovalReason.DISCARDED);
         }

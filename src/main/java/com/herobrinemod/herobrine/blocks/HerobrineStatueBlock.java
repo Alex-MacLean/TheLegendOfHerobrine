@@ -88,7 +88,7 @@ public class HerobrineStatueBlock extends Block implements Waterloggable{
     @Override
     public BlockState getPlacementState(@NotNull ItemPlacementContext ctx) {
         if (ctx.getBlockPos().getY() < ctx.getWorld().getTopY() - 1 && ctx.getWorld().getBlockState(ctx.getBlockPos().up()).canReplace(ctx)) {
-            return this.getDefaultState().with(WATERLOGGED, ctx.getWorld().getBlockState(ctx.getBlockPos()).getFluidState().getFluid() == Fluids.WATER).with(FACING, ctx.getPlayerFacing().getOpposite());
+            return this.getDefaultState().with(WATERLOGGED, ctx.getWorld().getBlockState(ctx.getBlockPos()).getFluidState().getFluid() == Fluids.WATER).with(FACING, ctx.getPlayerLookDirection().getOpposite());
         }
 
         return null;

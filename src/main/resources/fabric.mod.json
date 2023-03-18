@@ -7,11 +7,12 @@
   "authors": [
     "AlexMacLean"
   ],
-  "contact": {
-    "website": "https://www.herobrinemod.com/",
-    "repo": "https://github.com/Alex-MacLean/TheLegendOfHerobrine"
+    "contact": {
+    "homepage": "https://herobrinemod.com",
+    "sources": "https://github.com/Alex-MacLean/TheLegendOfHerobrine",
+    "issues": "https://github.com/Alex-MacLean/TheLegendOfHerobrine/issues"
   },
-  "license": "GNU Lesser General Public License Version 3 (LGPLv3)",
+  "license": "LGPL-3.0-or-later",
   "icon": "assets/herobrine/logo.png",
   "environment": "*",
   "entrypoints": {
@@ -26,9 +27,9 @@
     "herobrine.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.12.0",
-    "fabric": ">=0.68.1",
-    "fabric-api": ">=0.68.1",
-    "minecraft": ">=1.19.3"
+    "fabricloader": ">=0.14.0",
+    "fabric": ">=0.75.3",
+    "fabric-api": ">=0.75.3",
+    "minecraft": ">=1.19.4"
   }
 }

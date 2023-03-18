@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.projectile.thrown.PotionEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -39,7 +40,7 @@ public abstract class HerobrineEntity extends HostileEntity {
 
     @Override
     public boolean damage(@NotNull DamageSource source, float amount) {
-        if(source.equals(DamageSource.FALL) || source.equals(DamageSource.CACTUS) || source.equals(DamageSource.LIGHTNING_BOLT) || source.equals(DamageSource.IN_FIRE) || source.equals(DamageSource.ON_FIRE) || source.equals(DamageSource.anvil(getAttacker())) || source.equals(DamageSource.DRAGON_BREATH) || source.equals(DamageSource.fallingBlock(getAttacker())) || source.equals(DamageSource.MAGIC) || source.equals(DamageSource.SWEET_BERRY_BUSH) || source.equals(DamageSource.WITHER) || source.equals(DamageSource.STALAGMITE) || source.equals(DamageSource.FREEZE) || source.getSource() instanceof AreaEffectCloudEntity || source.getSource() instanceof PotionEntity) {
+        if(source.isOf(DamageTypes.FALL) || source.isOf(DamageTypes.CACTUS) || source.isOf(DamageTypes.LIGHTNING_BOLT) || source.isOf(DamageTypes.IN_FIRE) || source.isOf(DamageTypes.ON_FIRE) || source.isOf(DamageTypes.FALLING_ANVIL) || source.isOf(DamageTypes.FALLING_STALACTITE) || source.isOf(DamageTypes.STALAGMITE) || source.isOf(DamageTypes.DRAGON_BREATH) || source.isOf(DamageTypes.FALLING_BLOCK) || source.isOf(DamageTypes.MAGIC) || source.isOf(DamageTypes.SWEET_BERRY_BUSH) || source.isOf(DamageTypes.WITHER) || source.isOf(DamageTypes.STALAGMITE) || source.isOf(DamageTypes.FREEZE) || source.getSource() instanceof AreaEffectCloudEntity || source.getSource() instanceof PotionEntity) {
             return false;
         }
         return super.damage(source, amount);

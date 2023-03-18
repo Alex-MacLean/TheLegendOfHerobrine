@@ -2,25 +2,24 @@ package com.herobrinemod.herobrine.items.material;
 
 import com.herobrinemod.herobrine.HerobrineMod;
 import com.herobrinemod.herobrine.items.ItemList;
-import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import org.jetbrains.annotations.NotNull;
 
 public class CursedDiamondArmorMaterial implements ArmorMaterial {
-    private static final int[] BASE_DURABILITY = new int[] {13, 15, 16, 11};
+    private static final int[] BASE_DURABILITY = new int[] {500, 570, 600, 430};
     private static final int[] PROTECTION_VALUES = new int[] {4, 7, 9, 4};
 
     @Override
-    public int getDurability(@NotNull EquipmentSlot slot) {
-        return BASE_DURABILITY[slot.getEntitySlotId()] * 35;
+    public int getDurability(ArmorItem.Type type) {
+        return BASE_DURABILITY[type.getEquipmentSlot().getArmorStandSlotId() - 1];
     }
 
     @Override
-    public int getProtectionAmount(@NotNull EquipmentSlot slot) {
-        return PROTECTION_VALUES[slot.getEntitySlotId()];
+    public int getProtection(ArmorItem.Type type) {
+        return PROTECTION_VALUES[type.getEquipmentSlot().getArmorStandSlotId() - 1];
     }
 
     @Override
