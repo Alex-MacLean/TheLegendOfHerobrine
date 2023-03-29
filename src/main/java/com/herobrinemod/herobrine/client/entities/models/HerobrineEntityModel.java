@@ -16,7 +16,6 @@ public class HerobrineEntityModel extends PlayerEntityModel<HerobrineEntity> {
         super(root, thinArms);
     }
 
-
     @Contract(" -> new")
     public static @NotNull TexturedModelData getTexturedModelData() {
         return TexturedModelData.of(PlayerEntityModel.getTexturedModelData(Dilation.NONE, false), 64, 64);

@@ -3,7 +3,6 @@ package com.herobrinemod.herobrine.entities;
 import com.herobrinemod.herobrine.items.ItemList;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
@@ -58,12 +57,14 @@ public class HolyWaterEntity extends ThrownItemEntity {
                 for(LivingEntity entity : affectedEntities) {
                     entity.setOnFire(false);
                     entity.clearStatusEffects();
-                    if (entity instanceof FakeHerobrineMageEntity) {
-                        entity.remove(RemovalReason.DISCARDED);
+                    if (entity instanceof InfectedEntity) {
+                        ((InfectedEntity) entity).convert();
+                        break;
                     }
 
-                    if (entity instanceof InfectedEntity) {
-                        entity.damage(this.getDamageSources().magic(), 0.0f);
+                    if (entity instanceof FakeHerobrineMageEntity) {
+                        entity.remove(RemovalReason.DISCARDED);
+                        break;
                     }
 
                     if(!(entity instanceof HerobrineEntity)) {

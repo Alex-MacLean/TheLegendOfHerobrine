@@ -25,16 +25,28 @@ public class Config {
 
     // Read integer from json file
     public int readInt(String dataName) {
+        if(json.get(dataName) == null) {
+            System.out.println("[The Legend of Herobrine/Config/ERROR]: Integer \" " + dataName + "\" Could not be found!");
+            return 0;
+        }
         return json.get(dataName).getAsInt();
     }
 
     // Read double from json file
     public double readDouble(String dataName) {
+        if(json.get(dataName) == null) {
+            System.out.println("[The Legend of Herobrine/Config/ERROR]: Double \" " + dataName + "\" Could not be found!");
+            return 0.0;
+        }
         return json.get(dataName).getAsDouble();
     }
 
     // Read boolean from json file
     public boolean readBoolean(String dataName) {
+        if(json.get(dataName) == null) {
+            System.out.println("[The Legend of Herobrine/Config/ERROR]: Boolean \" " + dataName + "\" Could not be found!");
+            return false;
+        }
         return json.get(dataName).getAsBoolean();
     }
 

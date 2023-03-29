@@ -5,9 +5,7 @@ import com.herobrinemod.herobrine.entities.EntityTypeList;
 import com.herobrinemod.herobrine.items.material.ArmorMaterialList;
 import com.herobrinemod.herobrine.items.material.ToolMaterialList;
 import com.herobrinemod.herobrine.sounds.SoundList;
-import net.fabricmc.fabric.api.item.v1.EquipmentSlotProvider;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.util.Rarity;
 
@@ -38,4 +36,5 @@ public class ItemList {
     public static final SpawnEggItem HEROBRINE_MAGE_SPAWN_EGG = new SpawnEggItem(EntityTypeList.HEROBRINE_MAGE, 0x000000, 0x0000FF, new Item.Settings());
     public static final SpawnEggItem HEROBRINE_BUILDER_SPAWN_EGG = new SpawnEggItem(EntityTypeList.HEROBRINE_BUILDER, 0x000000, 0xFFFF00, new Item.Settings());
     public static final SpawnEggItem HEROBRINE_STALKER_SPAWN_EGG = new SpawnEggItem(EntityTypeList.HEROBRINE_STALKER, 0x000000, 0xFFA500, new Item.Settings());
+    public static final SpawnEggItem INFECTED_PIG_SPAWN_EGG = new SpawnEggItem(EntityTypeList.INFECTED_PIG, 0xF0A5A2, 0xFFFFFF, new Item.Settings());
 }

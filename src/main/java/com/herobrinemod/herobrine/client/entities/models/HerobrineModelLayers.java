@@ -9,4 +9,5 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class HerobrineModelLayers {
     public static final EntityModelLayer HEROBRINE_MODEL_LAYER = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "herobrine"), "main");
+    public static final EntityModelLayer INFECTED_PIG_MODEL_LAYER = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "infected_pig"), "main");
 }
