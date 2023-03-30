@@ -37,4 +37,5 @@ public class ItemList {
     public static final SpawnEggItem HEROBRINE_BUILDER_SPAWN_EGG = new SpawnEggItem(EntityTypeList.HEROBRINE_BUILDER, 0x000000, 0xFFFF00, new Item.Settings());
     public static final SpawnEggItem HEROBRINE_STALKER_SPAWN_EGG = new SpawnEggItem(EntityTypeList.HEROBRINE_STALKER, 0x000000, 0xFFA500, new Item.Settings());
     public static final SpawnEggItem INFECTED_PIG_SPAWN_EGG = new SpawnEggItem(EntityTypeList.INFECTED_PIG, 0xF0A5A2, 0xFFFFFF, new Item.Settings());
+    public static final SpawnEggItem INFECTED_COW_SPAWN_EGG = new SpawnEggItem(EntityTypeList.INFECTED_COW, 0x443626, 0xFFFFFF, new Item.Settings());
 }

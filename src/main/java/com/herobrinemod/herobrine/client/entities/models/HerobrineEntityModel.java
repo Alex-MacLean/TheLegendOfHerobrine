@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class HerobrineEntityModel extends PlayerEntityModel<HerobrineEntity> {
-    public HerobrineEntityModel(ModelPart root, boolean thinArms) {
-        super(root, thinArms);
+    public HerobrineEntityModel(ModelPart root) {
+        super(root, false);
     }
 
     @Contract(" -> new")

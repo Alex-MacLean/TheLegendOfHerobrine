@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 @Environment(EnvType.CLIENT)
 public class HerobrineEntityRenderer extends MobEntityRenderer<HerobrineEntity, HerobrineEntityModel> {
     public HerobrineEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new HerobrineEntityModel(context.getPart(HerobrineModelLayers.HEROBRINE_MODEL_LAYER), false), 0.5f);
+        super(context, new HerobrineEntityModel(context.getPart(HerobrineModelLayers.HEROBRINE_MODEL_LAYER)), 0.5f);
         this.addFeature(new HeldItemFeatureRenderer<>(this, context.getHeldItemRenderer()));
         this.addFeature(new HerobrineEyesFeatureRenderer(this));
     }

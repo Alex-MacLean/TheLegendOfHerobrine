@@ -94,6 +94,7 @@ public class HerobrineMageEntity extends HerobrineEntity {
                     entity.setLifeTimer(duration);
                     entity.updatePositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
                     this.world.spawnEntity(entity);
+                    this.world.sendEntityStatus(entity, (byte) 4);
                 }
                 this.world.sendEntityStatus(this, (byte) 4);
                 this.illusionCastingCounter = random.nextBetween(125, 500);

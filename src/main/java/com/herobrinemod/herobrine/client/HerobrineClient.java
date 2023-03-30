@@ -1,10 +1,9 @@
 package com.herobrinemod.herobrine.client;
 
-import com.herobrinemod.herobrine.client.entities.models.HerobrineEntityModel;
-import com.herobrinemod.herobrine.client.entities.models.HerobrineModelLayers;
-import com.herobrinemod.herobrine.client.entities.models.InfectedPigEntityModel;
+import com.herobrinemod.herobrine.client.entities.models.*;
 import com.herobrinemod.herobrine.client.entities.renderers.HerobrineEntityRenderer;
 import com.herobrinemod.herobrine.client.entities.renderers.HerobrineMageEntityRenderer;
+import com.herobrinemod.herobrine.client.entities.renderers.InfectedCowEntityRenderer;
 import com.herobrinemod.herobrine.client.entities.renderers.InfectedPigEntityRenderer;
 import com.herobrinemod.herobrine.entities.EntityTypeList;
 import net.fabricmc.api.ClientModInitializer;
@@ -19,7 +18,9 @@ public class HerobrineClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.HEROBRINE_MODEL_LAYER, HerobrineEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.HEROBRINE_MAGE_MODEL_LAYER, HerobrineMageEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_PIG_MODEL_LAYER, InfectedPigEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_COW_MODEL_LAYER, InfectedCowEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_WARRIOR, HerobrineEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_SPY, HerobrineEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_MAGE, HerobrineMageEntityRenderer::new);
@@ -29,5 +30,6 @@ public class HerobrineClient implements ClientModInitializer {
         EntityRendererRegistry.register(EntityTypeList.HOLY_WATER, context -> new FlyingItemEntityRenderer(context, 1.0f, false));
         EntityRendererRegistry.register(EntityTypeList.UNHOLY_WATER, context -> new FlyingItemEntityRenderer(context, 1.0f, false));
         EntityRendererRegistry.register(EntityTypeList.INFECTED_PIG, InfectedPigEntityRenderer::new);
+        EntityRendererRegistry.register(EntityTypeList.INFECTED_COW, InfectedCowEntityRenderer::new);
     }
 }
