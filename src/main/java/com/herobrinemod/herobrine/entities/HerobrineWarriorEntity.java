@@ -85,7 +85,7 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
     @Override
     public void mobTick() {
         super.mobTick();
-            if(this.destroyCooldown < 1 && ConfigHandler.herobrineConfig.readBoolean("WarriorBreaksBlocks") && this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
+            if(this.destroyCooldown < 1 && ConfigHandler.getHerobrineConfig().readBoolean("WarriorBreaksBlocks") && this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
                 this.destroyCooldown = random.nextBetween(400, 600);
                 for (int x = -1; x <= 1; x ++) {
                     for (int z = -1; z <= 1; z ++) {
@@ -106,7 +106,7 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(ItemList.BEDROCK_SWORD));
-        if(!ConfigHandler.herobrineConfig.readBoolean("BedrockSwordDrops")) {
+        if(!ConfigHandler.getHerobrineConfig().readBoolean("BedrockSwordDrops")) {
             this.handDropChances[EquipmentSlot.MAINHAND.getEntitySlotId()] = 0.0f;
         }
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);

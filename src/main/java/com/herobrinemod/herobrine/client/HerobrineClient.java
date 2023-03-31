@@ -1,10 +1,7 @@
 package com.herobrinemod.herobrine.client;
 
 import com.herobrinemod.herobrine.client.entities.models.*;
-import com.herobrinemod.herobrine.client.entities.renderers.HerobrineEntityRenderer;
-import com.herobrinemod.herobrine.client.entities.renderers.HerobrineMageEntityRenderer;
-import com.herobrinemod.herobrine.client.entities.renderers.InfectedCowEntityRenderer;
-import com.herobrinemod.herobrine.client.entities.renderers.InfectedPigEntityRenderer;
+import com.herobrinemod.herobrine.client.entities.renderers.*;
 import com.herobrinemod.herobrine.entities.EntityTypeList;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -21,6 +18,7 @@ public class HerobrineClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.HEROBRINE_MAGE_MODEL_LAYER, HerobrineMageEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_PIG_MODEL_LAYER, InfectedPigEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_COW_MODEL_LAYER, InfectedCowEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_VILLAGER_MODEL_LAYER, InfectedVillagerEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_WARRIOR, HerobrineEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_SPY, HerobrineEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_MAGE, HerobrineMageEntityRenderer::new);
@@ -31,5 +29,6 @@ public class HerobrineClient implements ClientModInitializer {
         EntityRendererRegistry.register(EntityTypeList.UNHOLY_WATER, context -> new FlyingItemEntityRenderer(context, 1.0f, false));
         EntityRendererRegistry.register(EntityTypeList.INFECTED_PIG, InfectedPigEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_COW, InfectedCowEntityRenderer::new);
+        EntityRendererRegistry.register(EntityTypeList.INFECTED_VILLAGER, InfectedVillagerEntityRenderer::new);
     }
 }

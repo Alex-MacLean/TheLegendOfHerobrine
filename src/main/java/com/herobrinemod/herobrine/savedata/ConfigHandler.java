@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Objects;
 
 public class ConfigHandler {
-    public static Config herobrineConfig;
+    private static Config herobrineConfig;
     public static void registerHerobrineConfig(String fileName) {
         herobrineConfig = new Config(fileName);
         byte[] defaultJson = new byte[0];
@@ -35,5 +35,9 @@ public class ConfigHandler {
             }
             keys.next();
         }
+    }
+
+    public static Config getHerobrineConfig() {
+        return herobrineConfig;
     }
 }

@@ -98,7 +98,7 @@ public class HerobrineBuilderEntity extends HerobrineEntity {
         this.lifeTimer --;
         super.mobTick();
 
-        if(this.buildTimer < 1 && ConfigHandler.herobrineConfig.readBoolean("BuilderBuilds")) {
+        if(this.buildTimer < 1 && ConfigHandler.getHerobrineConfig().readBoolean("BuilderBuilds")) {
             this.buildTimer = random.nextBetween(800, 1200);
             if (world.getServer() != null) {
                 BlockState state = world.getBlockState(new BlockPos((int) this.getX(), (int) this.getY() - 1, (int) this.getZ()));
