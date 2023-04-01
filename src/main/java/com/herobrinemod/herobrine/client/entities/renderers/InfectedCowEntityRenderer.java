@@ -13,7 +13,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class InfectedCowEntityRenderer extends MobEntityRenderer<InfectedCowEntity, InfectedCowEntityModel> {
     public InfectedCowEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new InfectedCowEntityModel((context.getPart(HerobrineModelLayers.INFECTED_COW_MODEL_LAYER))), 0.7f);
+        super(context, new InfectedCowEntityModel(context.getPart(HerobrineModelLayers.INFECTED_COW_MODEL_LAYER)), 0.7f);
         this.addFeature(new InfectedCowEyesFeatureRenderer(this));
     }
 

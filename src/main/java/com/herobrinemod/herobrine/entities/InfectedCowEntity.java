@@ -84,9 +84,4 @@ public class InfectedCowEntity extends InfectedEntity {
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(SoundEvents.ENTITY_COW_STEP, 0.15f, 1.0f);
     }
-
-    @Override
-    public Identifier getLootTableId() {
-        return EntityType.COW.getLootTableId();
-    }
 }

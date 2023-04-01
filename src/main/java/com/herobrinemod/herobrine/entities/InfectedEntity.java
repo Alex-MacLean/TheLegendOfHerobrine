@@ -12,6 +12,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.ServerWorldAccess;
@@ -80,9 +81,14 @@ public abstract class InfectedEntity extends HostileEntity {
     }
 
     @Override
+    public Identifier getLootTableId() {
+        return conversionEntity.getLootTableId();
+    }
+
+    @Override
     protected void dropEquipment(DamageSource source, int lootingMultiplier, boolean allowDrops) {
         super.dropEquipment(source, lootingMultiplier, allowDrops);
-        if (random.nextInt(100) <= 20 * (lootingMultiplier + 1)) {
+        if (random.nextInt(100) <= 20 * (lootingMultiplier + 1) && allowDrops) {
             this.dropItem(ItemList.CURSED_DUST);
         }
     }
