@@ -4,7 +4,6 @@ import com.herobrinemod.herobrine.entities.InfectedSheepEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.render.entity.model.QuadrupedEntityModel;
-import net.minecraft.entity.passive.SheepEntity;
 
 public class InfectedSheepWoolEntityModel extends QuadrupedEntityModel<InfectedSheepEntity> {
     private float headAngle;
