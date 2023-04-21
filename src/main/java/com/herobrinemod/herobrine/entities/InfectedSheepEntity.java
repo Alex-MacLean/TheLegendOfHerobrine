@@ -119,7 +119,7 @@ public class InfectedSheepEntity extends InfectedEntity implements Shearable {
     }
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
-        return HerobrineEntity.createHostileAttributes()
+        return createHostileAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 8.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0)

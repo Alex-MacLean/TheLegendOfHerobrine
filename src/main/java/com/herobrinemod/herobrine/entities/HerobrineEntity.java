@@ -13,6 +13,7 @@ import net.minecraft.entity.projectile.thrown.PotionEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -24,7 +25,7 @@ public abstract class HerobrineEntity extends HostileEntity {
         super(entityType, world);
     }
 
-    public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, net.minecraft.util.math.random.Random random) {
+    public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
         if(world.toServerWorld().getDimensionKey() != DimensionTypes.OVERWORLD && random.nextBetween(0, 15) > 1 || world.toServerWorld().getDimensionKey() == DimensionTypes.THE_END && pos.getX() < 1000 && pos.getZ() < 1000) {
             return false;
         }

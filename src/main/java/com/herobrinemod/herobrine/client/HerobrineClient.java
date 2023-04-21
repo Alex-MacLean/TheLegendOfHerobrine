@@ -21,6 +21,7 @@ public class HerobrineClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_VILLAGER_MODEL_LAYER, InfectedVillagerEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_CHICKEN_MODEL_LAYER, InfectedChickenEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_SHEEP_MODEL_LAYER, InfectedSheepEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_BAT_MODEL_LAYER, InfectedBatEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_WARRIOR, HerobrineEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_SPY, HerobrineEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_MAGE, HerobrineMageEntityRenderer::new);
@@ -34,5 +35,6 @@ public class HerobrineClient implements ClientModInitializer {
         EntityRendererRegistry.register(EntityTypeList.INFECTED_VILLAGER, InfectedVillagerEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_CHICKEN, InfectedChickenEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_SHEEP, InfectedSheepEntityRenderer::new);
+        EntityRendererRegistry.register(EntityTypeList.INFECTED_BAT, InfectedBatEntityRenderer::new);
     }
 }

@@ -68,7 +68,7 @@ public class InfectedVillagerEntity extends InfectedEntity implements VillagerDa
     }
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
-        return HerobrineEntity.createHostileAttributes()
+        return createHostileAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0)

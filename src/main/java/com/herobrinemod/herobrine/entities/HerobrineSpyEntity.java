@@ -38,7 +38,7 @@ public class HerobrineSpyEntity extends HerobrineEntity {
     }
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
-        return HerobrineEntity.createHostileAttributes()
+        return createHostileAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0.0)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0)

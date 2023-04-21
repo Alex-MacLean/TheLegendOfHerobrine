@@ -52,7 +52,7 @@ public class InfectedChickenEntity extends InfectedEntity {
     }
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
-        return HerobrineEntity.createHostileAttributes()
+        return createHostileAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 4.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0)

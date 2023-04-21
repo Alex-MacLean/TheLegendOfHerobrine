@@ -45,7 +45,7 @@ public class InfectedCowEntity extends InfectedEntity {
     }
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
-        return HerobrineEntity.createHostileAttributes()
+        return createHostileAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0)
