@@ -34,10 +34,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class InfectedBatEntity extends InfectedEntity{
-    public static final float field_30268 = 74.48451f;
-    public static final int field_28637 = MathHelper.ceil(2.4166098f);
+    public static final int wingFlap = MathHelper.ceil(2.4166098f);
     private static final TrackedData<Byte> BAT_FLAGS = DataTracker.registerData(InfectedBatEntity.class, TrackedDataHandlerRegistry.BYTE);
-    private static final int ROOSTING_FLAG = 1;
     private static final TargetPredicate CLOSE_PLAYER_PREDICATE = TargetPredicate.createNonAttackable().setBaseMaxDistance(4.0);
     @Nullable
     private BlockPos hangingPosition;
@@ -74,7 +72,7 @@ public class InfectedBatEntity extends InfectedEntity{
 
     @Override
     public boolean isFlappingWings() {
-        return !this.isRoosting() && this.age % field_28637 == 0;
+        return !this.isRoosting() && this.age % wingFlap == 0;
     }
 
     @Override
