@@ -27,14 +27,14 @@ public abstract class HerobrineEntity extends HostileEntity {
     }
 
     public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        if(world.toServerWorld().getDimensionKey() != DimensionTypes.OVERWORLD && random.nextInt(15) > 1 || world.toServerWorld().getDimensionKey() == DimensionTypes.THE_END && pos.getX() < 1000 && pos.getZ() < 1000 || world.getBiome(pos).matchesId(BiomeKeys.MUSHROOM_FIELDS.getValue()) && random.nextInt(100) > 1) {
+        if(world.toServerWorld().getDimensionKey() != DimensionTypes.OVERWORLD && random.nextInt(15) > 1 || world.toServerWorld().getDimensionKey() == DimensionTypes.THE_END && pos.getX() < 1000 && pos.getZ() < 1000 || world.getBiome(pos).matchesId(BiomeKeys.MUSHROOM_FIELDS.getValue()) && random.nextInt(100) > 1  || world.getBiome(pos).matchesId(BiomeKeys.DEEP_DARK.getValue()) && random.nextInt(100) > 1) {
             return false;
         }
         return world.getDifficulty() != Difficulty.PEACEFUL && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && HerobrineSpawnHelper.canHerobrineSpawn();
     }
 
     public static boolean canSpawnPeacefulMode(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, net.minecraft.util.math.random.Random random) {
-        if(world.toServerWorld().getDimensionKey() != DimensionTypes.OVERWORLD && random.nextInt(15) > 1 || world.toServerWorld().getDimensionKey() == DimensionTypes.THE_END && pos.getX() < 1000 && pos.getZ() < 1000 || world.getBiome(pos).matchesId(BiomeKeys.MUSHROOM_FIELDS.getValue()) && random.nextInt(100) > 1) {
+        if(world.toServerWorld().getDimensionKey() != DimensionTypes.OVERWORLD && random.nextInt(15) > 1 || world.toServerWorld().getDimensionKey() == DimensionTypes.THE_END && pos.getX() < 1000 && pos.getZ() < 1000 || world.getBiome(pos).matchesId(BiomeKeys.MUSHROOM_FIELDS.getValue()) && random.nextInt(100) > 1 || world.getBiome(pos).matchesId(BiomeKeys.DEEP_DARK.getValue()) && random.nextInt(100) > 1) {
             return false;
         }
         return isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && HerobrineSpawnHelper.canHerobrineSpawn();
