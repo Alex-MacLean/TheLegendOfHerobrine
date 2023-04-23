@@ -4,18 +4,22 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.client.MinecraftClient;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Config {
     private JsonObject json; // Allows loading the json data file to memory
+    private final String directory;
     private final String path;
     public Config(String fileName) {
         // Store the path of the Json file
-        this.path = MinecraftClient.getInstance().runDirectory.getAbsolutePath() + "/config/" + fileName;
+        this.directory = MinecraftClient.getInstance().runDirectory.getAbsolutePath() + "/config/";
+        this.path = directory + fileName;
         try {
             this.json = (JsonObject) JsonParser.parseReader(new FileReader(path));
         } catch (FileNotFoundException e) {
@@ -25,7 +29,7 @@ public class Config {
 
     // Read integer from json file
     public int readInt(String dataName) {
-        if(json.get(dataName) == null) {
+        if(json.get(dataName) == null || this.json == null) {
             System.out.println("[The Legend of Herobrine/Config/ERROR]: Integer \" " + dataName + "\" Could not be found!");
             return 0;
         }
@@ -34,7 +38,7 @@ public class Config {
 
     // Read double from json file
     public double readDouble(String dataName) {
-        if(json.get(dataName) == null) {
+        if(json.get(dataName) == null || this.json == null) {
             System.out.println("[The Legend of Herobrine/Config/ERROR]: Double \" " + dataName + "\" Could not be found!");
             return 0.0;
         }
@@ -43,7 +47,7 @@ public class Config {
 
     // Read boolean from json file
     public boolean readBoolean(String dataName) {
-        if(json.get(dataName) == null) {
+        if(json.get(dataName) == null || this.json == null) {
             System.out.println("[The Legend of Herobrine/Config/ERROR]: Boolean \" " + dataName + "\" Could not be found!");
             return false;
         }
@@ -57,8 +61,11 @@ public class Config {
 
     public void setFile(byte[] newJson) {
         try {
+            json = JsonParser.parseString(new String(newJson)).getAsJsonObject();
+            if(!new File(directory).exists()) {
+                Files.createDirectory(Path.of(MinecraftClient.getInstance().runDirectory.getAbsolutePath() + "/config/"));
+            }
             Files.write(Paths.get(path), newJson);
-            json = (JsonObject) JsonParser.parseReader(new FileReader(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
