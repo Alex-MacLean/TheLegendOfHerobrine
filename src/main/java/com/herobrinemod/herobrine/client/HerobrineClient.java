@@ -38,5 +38,6 @@ public class HerobrineClient implements ClientModInitializer {
         EntityRendererRegistry.register(EntityTypeList.INFECTED_SHEEP, InfectedSheepEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_BAT, InfectedBatEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_WOLF, InfectedWolfEntityRenderer::new);
+        EntityRendererRegistry.register(EntityTypeList.INFECTED_MOOSHROOM, InfectedMooshroomEntityRenderer::new);
     }
 }

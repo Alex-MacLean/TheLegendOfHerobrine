@@ -7,7 +7,7 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CowEntityModel;
 
 @Environment(EnvType.CLIENT)
-public class InfectedCowEntityModel extends CowEntityModel<InfectedCowEntity> {
+public class InfectedCowEntityModel<T extends InfectedCowEntity> extends CowEntityModel<T> {
     public InfectedCowEntityModel(ModelPart root) {
         super(root);
     }

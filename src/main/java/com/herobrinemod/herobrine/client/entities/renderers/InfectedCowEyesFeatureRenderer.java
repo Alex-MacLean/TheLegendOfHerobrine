@@ -11,8 +11,8 @@ import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class InfectedCowEyesFeatureRenderer extends EyesFeatureRenderer<InfectedCowEntity, InfectedCowEntityModel> {
-    public InfectedCowEyesFeatureRenderer(FeatureRendererContext<InfectedCowEntity, InfectedCowEntityModel> featureRendererContext) {
+public class InfectedCowEyesFeatureRenderer extends EyesFeatureRenderer<InfectedCowEntity, InfectedCowEntityModel<InfectedCowEntity>> {
+    public InfectedCowEyesFeatureRenderer(FeatureRendererContext<InfectedCowEntity, InfectedCowEntityModel<InfectedCowEntity>> featureRendererContext) {
         super(featureRendererContext);
     }
 

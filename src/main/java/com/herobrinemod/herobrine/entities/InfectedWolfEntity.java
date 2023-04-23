@@ -75,25 +75,29 @@ public class InfectedWolfEntity extends InfectedEntity {
         if (!this.isAlive()) {
             return;
         }
+
         if (this.isWet()) {
             this.furWet = true;
             if (this.canShakeWaterOff && !this.world.isClient) {
                 this.world.sendEntityStatus(this, EntityStatuses.RESET_WOLF_SHAKE);
                 this.resetShake();
             }
-        } else if ((this.furWet || this.canShakeWaterOff) && this.canShakeWaterOff) {
+        } else if ((this.furWet) && this.canShakeWaterOff) {
             if (this.shakeProgress == 0.0f) {
                 this.playSound(SoundEvents.ENTITY_WOLF_SHAKE, this.getSoundVolume(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f);
                 this.emitGameEvent(GameEvent.ENTITY_SHAKE);
             }
+
             this.lastShakeProgress = this.shakeProgress;
             this.shakeProgress += 0.05f;
+
             if (this.lastShakeProgress >= 2.0f) {
                 this.furWet = false;
                 this.canShakeWaterOff = false;
                 this.lastShakeProgress = 0.0f;
                 this.shakeProgress = 0.0f;
             }
+
             if (this.shakeProgress > 0.4f) {
                 float f = (float)this.getY();
                 int i = (int)(MathHelper.sin((this.shakeProgress - 0.4f) * (float)Math.PI) * 7.0f);
@@ -137,6 +141,7 @@ public class InfectedWolfEntity extends InfectedEntity {
         } else if (g > 1.0f) {
             g = 1.0f;
         }
+
         return MathHelper.sin(g * (float)Math.PI) * MathHelper.sin(g * (float)Math.PI * 11.0f) * 0.15f * (float)Math.PI;
     }
 
