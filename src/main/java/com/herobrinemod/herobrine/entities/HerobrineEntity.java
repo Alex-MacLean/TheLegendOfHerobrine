@@ -17,6 +17,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,14 +27,14 @@ public abstract class HerobrineEntity extends HostileEntity {
     }
 
     public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        if(world.toServerWorld().getDimensionKey() != DimensionTypes.OVERWORLD && random.nextBetween(0, 15) > 1 || world.toServerWorld().getDimensionKey() == DimensionTypes.THE_END && pos.getX() < 1000 && pos.getZ() < 1000) {
+        if(world.toServerWorld().getDimensionKey() != DimensionTypes.OVERWORLD && random.nextInt(15) > 1 || world.toServerWorld().getDimensionKey() == DimensionTypes.THE_END && pos.getX() < 1000 && pos.getZ() < 1000 || world.getBiome(pos).matchesId(BiomeKeys.MUSHROOM_FIELDS.getValue()) && random.nextInt(100) > 1) {
             return false;
         }
         return world.getDifficulty() != Difficulty.PEACEFUL && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && HerobrineSpawnHelper.canHerobrineSpawn();
     }
 
     public static boolean canSpawnPeacefulMode(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, net.minecraft.util.math.random.Random random) {
-        if(world.toServerWorld().getDimensionKey() != DimensionTypes.OVERWORLD && random.nextBetween(0, 15) > 1 || world.toServerWorld().getDimensionKey() == DimensionTypes.THE_END && pos.getX() < 1000 && pos.getZ() < 1000) {
+        if(world.toServerWorld().getDimensionKey() != DimensionTypes.OVERWORLD && random.nextInt(15) > 1 || world.toServerWorld().getDimensionKey() == DimensionTypes.THE_END && pos.getX() < 1000 && pos.getZ() < 1000 || world.getBiome(pos).matchesId(BiomeKeys.MUSHROOM_FIELDS.getValue()) && random.nextInt(100) > 1) {
             return false;
         }
         return isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && HerobrineSpawnHelper.canHerobrineSpawn();

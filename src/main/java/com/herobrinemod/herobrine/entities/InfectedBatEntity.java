@@ -30,6 +30,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
+import net.minecraft.world.biome.BiomeKeys;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -137,6 +138,9 @@ public class InfectedBatEntity extends InfectedEntity{
     }
 
     public static boolean canBatSpawn(EntityType<? extends InfectedBatEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, @NotNull BlockPos pos, Random random) {
+        if(world.getBiome(pos).matchesId(BiomeKeys.MUSHROOM_FIELDS.getValue()) && random.nextInt(20) > 1) {
+            return false;
+        }
         return pos.getY() < world.getSeaLevel() && world.getDifficulty() != Difficulty.PEACEFUL && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && HerobrineSpawnHelper.canHerobrineSpawn();
     }
 
