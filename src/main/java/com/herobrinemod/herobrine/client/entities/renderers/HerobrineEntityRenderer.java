@@ -27,7 +27,7 @@ public class HerobrineEntityRenderer extends MobEntityRenderer<HerobrineEntity, 
     }
 
     @Override
-    protected void scale(HerobrineEntity herobrineEntity, @NotNull MatrixStack matrixStack, float f) {
+    protected void scale(HerobrineEntity entity, @NotNull MatrixStack matrixStack, float f) {
         matrixStack.scale(0.9375f, 0.9375f, 0.9375f);
     }
 }

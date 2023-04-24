@@ -10,6 +10,7 @@ import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.IllagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
@@ -31,10 +32,12 @@ public class HerobrineSpyEntity extends HerobrineEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 1024.0f));
-        //this.goalSelector.add(2, new LookAtEntityGoal(this, SurvivorEntity.class, 1024.0f));
-        this.goalSelector.add(3, new FleeEntityGoal<>(this, PlayerEntity.class, ConfigHandler.getHerobrineConfig().readInt("HerobrineSpyObservationDistance"), 0.7, 1.0));
-        //this.goalSelector.add(4, new FleeEntityGoal<>(this, SurvivorEntity.class, 32.0f, 0.7, 1.0));
+        this.goalSelector.add(1, new LookAtEntityGoal(this, IllagerEntity.class, 1024.0f));
+        this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 1024.0f));
+        //this.goalSelector.add(3, new LookAtEntityGoal(this, SurvivorEntity.class, 1024.0f));
+        this.goalSelector.add(3, new FleeEntityGoal<>(this, IllagerEntity.class, ConfigHandler.getHerobrineConfig().readInt("HerobrineSpyObservationDistance"), 0.7, 1.0));
+        this.goalSelector.add(4, new FleeEntityGoal<>(this, PlayerEntity.class, ConfigHandler.getHerobrineConfig().readInt("HerobrineSpyObservationDistance"), 0.7, 1.0));
+        //this.goalSelector.add(5, new FleeEntityGoal<>(this, SurvivorEntity.class, 32.0f, 0.7, 1.0));
     }
 
     public static DefaultAttributeContainer.Builder registerAttributes() {

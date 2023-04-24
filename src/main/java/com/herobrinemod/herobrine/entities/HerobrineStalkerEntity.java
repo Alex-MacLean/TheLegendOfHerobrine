@@ -10,6 +10,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.IllagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
@@ -43,9 +44,10 @@ public class HerobrineStalkerEntity extends HerobrineEntity {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 0.4));
-        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 64.0f));
-        //this.goalSelector.add(5, new LookAtEntityGoal(this, SurvivorEntity.class, 64.0f));
-        this.goalSelector.add(6, new LookAroundGoal(this));
+        this.goalSelector.add(4, new LookAtEntityGoal(this, IllagerEntity.class, 64.0f));
+        this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 64.0f));
+        //this.goalSelector.add(6, new LookAtEntityGoal(this, SurvivorEntity.class, 64.0f));
+        this.goalSelector.add(7, new LookAroundGoal(this));
     }
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
@@ -117,8 +119,9 @@ public class HerobrineStalkerEntity extends HerobrineEntity {
         if (!list.isEmpty()) {
             for (LivingEntity entity : list) {
                 if (entity instanceof PlayerEntity && this.getTarget() == entity && this.isRunningAtTarget) {
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 300, 0));
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 600, 0));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 300, 0, false, false));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 600, 0, false, false));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 400, 0, false, false));
                     this.world.sendEntityStatus(this, (byte) 5);
                     this.remove(RemovalReason.DISCARDED);
                 }
