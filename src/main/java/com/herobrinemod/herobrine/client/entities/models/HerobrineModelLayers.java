@@ -18,4 +18,5 @@ public class HerobrineModelLayers {
     public static final EntityModelLayer INFECTED_BAT_MODEL_LAYER = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "infected_bat"), "main");
     public static final EntityModelLayer INFECTED_WOLF_MODEL_LAYER = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "infected_wolf"), "main");
     public static final EntityModelLayer INFECTED_DONKEY_MODEL_LAYER = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "infected_donkey"), "main");
+    public static final EntityModelLayer INFECTED_HORSE_MODEL_LAYER = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "infected_horse"), "main");
 }

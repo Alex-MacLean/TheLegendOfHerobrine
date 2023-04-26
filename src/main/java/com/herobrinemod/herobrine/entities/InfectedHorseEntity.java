@@ -1,12 +1,10 @@
 package com.herobrinemod.herobrine.entities;
 
-import com.herobrinemod.herobrine.entities.goals.InfectedDonkeyAmbientStandGoal;
+import com.herobrinemod.herobrine.entities.goals.InfectedHorseAmbientStandGoal;
+import com.herobrinemod.herobrine.items.ItemList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -14,23 +12,35 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.IllagerEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.passive.HorseColor;
+import net.minecraft.entity.passive.HorseEntity;
+import net.minecraft.entity.passive.HorseMarking;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class InfectedDonkeyEntity extends InfectedEntity {
+public class InfectedHorseEntity extends InfectedEntity {
+    private static final TrackedData<Integer> VARIANT = DataTracker.registerData(InfectedHorseEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final int ANGRY_FLAG = 32;
     private static final int EATING_GRASS_FLAG = 16;
-    private static final TrackedData<Byte> FLAGS = DataTracker.registerData(InfectedDonkeyEntity.class, TrackedDataHandlerRegistry.BYTE);
+    private static final TrackedData<Byte> FLAGS = DataTracker.registerData(InfectedHorseEntity.class, TrackedDataHandlerRegistry.BYTE);
     private int tailWagTicks;
     private int eatingGrassTicks;
     private float eatingGrassAnimationProgress;
@@ -39,11 +49,11 @@ public class InfectedDonkeyEntity extends InfectedEntity {
     private float lastAngryAnimationProgress;
     private int angryTicks;
 
-    public InfectedDonkeyEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public InfectedHorseEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
         this.experiencePoints = 3;
         this.setStepHeight(1.0f);
-        this.setConversionEntity(EntityType.DONKEY);
+        this.setConversionEntity(EntityType.HORSE);
     }
 
     @Override
@@ -60,15 +70,26 @@ public class InfectedDonkeyEntity extends InfectedEntity {
         //this.goalSelector.add(9, new LookAtEntityGoal(this, SurvivorEntity.class, 8.0f));
         this.goalSelector.add(10, new LookAtEntityGoal(this, GolemEntity.class, 8.0f));
         this.goalSelector.add(11, new LookAroundGoal(this));
-        this.goalSelector.add(12, new InfectedDonkeyAmbientStandGoal(this));
+        this.goalSelector.add(12, new InfectedHorseAmbientStandGoal(this));
     }
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
         return createHostileAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 25.0)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 30.0)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3);
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.4);
+    }
+
+    public void convert() {
+        this.world.sendEntityStatus(this, (byte) 16);
+        this.dropItem(ItemList.CURSED_DUST);
+        MobEntity entity = this.convertTo(this.getConversionEntity(), false);
+        assert entity != null;
+        entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
+        entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
+        entity.initialize((ServerWorldAccess) world, world.getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
+        ((HorseEntity) entity).setHorseVariant(this.getVariant(), this.getMarking());
     }
 
     @Override
@@ -79,6 +100,7 @@ public class InfectedDonkeyEntity extends InfectedEntity {
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
+        this.dataTracker.startTracking(VARIANT, 0);
         this.dataTracker.startTracking(FLAGS, (byte)0);
     }
 
@@ -222,6 +244,53 @@ public class InfectedDonkeyEntity extends InfectedEntity {
     }
 
     @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putInt("Variant", this.getHorseVariant());
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.setHorseVariant(nbt.getInt("Variant"));
+    }
+
+    private void setHorseVariant(int variant) {
+        this.dataTracker.set(VARIANT, variant);
+    }
+
+    private int getHorseVariant() {
+        return this.dataTracker.get(VARIANT);
+    }
+
+    public HorseColor getVariant() {
+        return HorseColor.byId(this.getHorseVariant() & 255);
+    }
+
+    private void setHorseVariant(@NotNull HorseColor color, @NotNull HorseMarking marking) {
+        this.setHorseVariant(color.getId() & 0xFF | marking.getId() << 8 & 0xFF00);
+    }
+
+    public HorseMarking getMarking() {
+        return HorseMarking.byIndex((this.getHorseVariant() & 0xFF00) >> 8);
+    }
+
+    @Override
+    @Nullable
+    public EntityData initialize(@NotNull ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+        HorseColor horseColor;
+        Random random = world.getRandom();
+        if (entityData instanceof HorseEntity.HorseData) {
+            horseColor = ((HorseEntity.HorseData)entityData).color;
+        } else {
+            horseColor = Util.getRandom(HorseColor.values(), random);
+            entityData = new HorseEntity.HorseData(horseColor);
+        }
+        this.setHorseVariant(horseColor, Util.getRandom(HorseMarking.values(), random));
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+    }
+
+    @Override
     public int getMinAmbientSoundDelay() {
         return 400;
     }
@@ -237,22 +306,22 @@ public class InfectedDonkeyEntity extends InfectedEntity {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_DONKEY_AMBIENT;
+        return SoundEvents.ENTITY_HORSE_AMBIENT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_DONKEY_DEATH;
+        return SoundEvents.ENTITY_HORSE_DEATH;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_DONKEY_HURT;
+        return SoundEvents.ENTITY_HORSE_HURT;
     }
 
     @Nullable
     public SoundEvent getAmbientStandSound() {
-        return SoundEvents.ENTITY_DONKEY_AMBIENT;
+        return SoundEvents.ENTITY_HORSE_AMBIENT;
     }
 
     @Override

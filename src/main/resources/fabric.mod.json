@@ -4,6 +4,7 @@
   "version": "0.6.5-preview-build-3",
   "name": "The Legend of Herobrine",
   "description": "Adds Herobrine to Minecraft, and other herobrine related things.",
+  "accessWidener" : "herobrine.accesswidener",
   "authors": [
     "AlexMacLean"
   ],

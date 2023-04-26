@@ -1,0 +1,3 @@
+accessWidener	v1	named
+
+accessible method net/minecraft/entity/passive/HorseEntity setHorseVariant (Lnet/minecraft/entity/passive/HorseColor;Lnet/minecraft/entity/passive/HorseMarking;)V
