@@ -1,9 +1,7 @@
 package com.herobrinemod.herobrine.entities;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
@@ -69,6 +67,11 @@ public class InfectedBatEntity extends InfectedEntity{
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 6.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, @NotNull EntityDimensions dimensions) {
+        return dimensions.height / 2.0f;
     }
 
     @Override

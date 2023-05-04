@@ -2,6 +2,7 @@ package com.herobrinemod.herobrine.savedata;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.minecraft.client.MinecraftClient;
 
 import java.io.File;
@@ -18,7 +19,7 @@ public class Config {
     private final String path;
     public Config(String fileName) {
         // Store the path of the Json file
-        this.directory = MinecraftClient.getInstance().runDirectory.getAbsolutePath() + "/config/";
+        this.directory = FabricLoaderImpl.INSTANCE.getConfigDir().toString() + "/";
         this.path = directory + fileName;
         try {
             this.json = (JsonObject) JsonParser.parseReader(new FileReader(path));

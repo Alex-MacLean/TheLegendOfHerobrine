@@ -1,6 +1,8 @@
 package com.herobrinemod.herobrine.entities;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -62,6 +64,11 @@ public class InfectedCowEntity extends InfectedEntity {
             return ActionResult.success(this.world.isClient);
         }
         return super.interactMob(player, hand);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 1.3f;
     }
 
     @Override

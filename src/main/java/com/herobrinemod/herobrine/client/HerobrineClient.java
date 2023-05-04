@@ -3,12 +3,14 @@ package com.herobrinemod.herobrine.client;
 import com.herobrinemod.herobrine.client.entities.models.*;
 import com.herobrinemod.herobrine.client.entities.renderers.*;
 import com.herobrinemod.herobrine.entities.EntityTypeList;
+import com.herobrinemod.herobrine.entities.InfectedLlamaSpitEntity;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.entity.EntityType;
 
 @Environment(EnvType.CLIENT)
 public class HerobrineClient implements ClientModInitializer {
@@ -25,6 +27,8 @@ public class HerobrineClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_WOLF_MODEL_LAYER, InfectedWolfEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_DONKEY_MODEL_LAYER, InfectedDonkeyEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_HORSE_MODEL_LAYER, InfectedHorseEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_LLAMA_MODEL_LAYER, InfectedLlamaEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_LLAMA_SPIT_MODEL_LAYER, InfectedLlamaSpitEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_WARRIOR, HerobrineEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_SPY, HerobrineEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_MAGE, HerobrineMageEntityRenderer::new);
@@ -43,5 +47,7 @@ public class HerobrineClient implements ClientModInitializer {
         EntityRendererRegistry.register(EntityTypeList.INFECTED_MOOSHROOM, InfectedMooshroomEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_DONKEY, InfectedDonkeyEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_HORSE, InfectedHorseEntityRenderer::new);
+        EntityRendererRegistry.register(EntityTypeList.INFECTED_LLAMA, InfectedLlamaEntityRenderer::new);
+        EntityRendererRegistry.register((EntityType<? extends InfectedLlamaSpitEntity>) EntityTypeList.INFECTED_LLAMA_SPIT, InfectedLlamaSpitEntityRenderer::new);
     }
 }

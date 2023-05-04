@@ -1,6 +1,8 @@
 package com.herobrinemod.herobrine.entities;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -19,6 +21,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class InfectedChickenEntity extends InfectedEntity {
     public float flapProgress;
@@ -57,6 +60,11 @@ public class InfectedChickenEntity extends InfectedEntity {
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, @NotNull EntityDimensions dimensions) {
+        return dimensions.height * 0.85f;
     }
 
     @Override

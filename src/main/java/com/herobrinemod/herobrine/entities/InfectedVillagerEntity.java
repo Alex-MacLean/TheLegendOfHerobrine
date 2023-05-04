@@ -4,9 +4,7 @@ import com.herobrinemod.herobrine.items.ItemList;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -111,6 +109,11 @@ public class InfectedVillagerEntity extends InfectedEntity implements VillagerDa
         entity.setVillagerData(this.getVillagerData());
         entity.initialize((ServerWorldAccess) world, world.getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
         entity.reinitializeBrain((ServerWorld) world);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 1.62f;
     }
 
     @Override
