@@ -5,6 +5,8 @@ import com.herobrinemod.herobrine.HerobrineMod;
 import com.herobrinemod.herobrine.client.entities.models.HerobrineModelLayers;
 import com.herobrinemod.herobrine.client.entities.models.InfectedCowEntityModel;
 import com.herobrinemod.herobrine.entities.InfectedMooshroomEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
@@ -13,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class InfectedMooshroomEntityRenderer extends MobEntityRenderer<InfectedMooshroomEntity, InfectedCowEntityModel<InfectedMooshroomEntity>> {
     private static final Map<InfectedMooshroomEntity.Type, Identifier> TEXTURES = Util.make(Maps.newHashMap(), map -> {
         map.put(InfectedMooshroomEntity.Type.BROWN, new Identifier(HerobrineMod.MODID, "textures/entity/infected_brown_mooshroom.png"));

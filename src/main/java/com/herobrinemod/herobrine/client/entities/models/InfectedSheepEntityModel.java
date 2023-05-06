@@ -1,11 +1,14 @@
 package com.herobrinemod.herobrine.client.entities.models;
 
 import com.herobrinemod.herobrine.entities.InfectedSheepEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.render.entity.model.QuadrupedEntityModel;
 import org.jetbrains.annotations.NotNull;
 
+@Environment(EnvType.CLIENT)
 public class InfectedSheepEntityModel extends QuadrupedEntityModel<InfectedSheepEntity> {
     private float headPitchModifier;
     public InfectedSheepEntityModel(ModelPart root) {

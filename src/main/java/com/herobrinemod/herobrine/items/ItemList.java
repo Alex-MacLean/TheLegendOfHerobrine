@@ -47,4 +47,5 @@ public class ItemList {
     public static final SpawnEggItem INFECTED_DONKEY_SPAWN_EGG = new SpawnEggItem(EntityTypeList.INFECTED_DONKEY, 0x534539, 0xFFFFFF, new Item.Settings());
     public static final SpawnEggItem INFECTED_HORSE_SPAWN_EGG = new SpawnEggItem(EntityTypeList.INFECTED_HORSE, 0xC09E7D, 0xFFFFFF, new Item.Settings());
     public static final SpawnEggItem INFECTED_LLAMA_SPAWN_EGG = new SpawnEggItem(EntityTypeList.INFECTED_LLAMA, 0xC09E7D, 0xFFFFFF, new Item.Settings());
+    public static final SpawnEggItem INFECTED_RABBIT_SPAWN_EGG = new SpawnEggItem(EntityTypeList.INFECTED_RABBIT, 0x995F40, 0xFFFFFF, new Item.Settings());
 }

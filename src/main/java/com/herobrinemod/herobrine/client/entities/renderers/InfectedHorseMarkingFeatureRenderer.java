@@ -3,6 +3,8 @@ package com.herobrinemod.herobrine.client.entities.renderers;
 import com.google.common.collect.Maps;
 import com.herobrinemod.herobrine.client.entities.models.InfectedHorseEntityModel;
 import com.herobrinemod.herobrine.entities.InfectedHorseEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -16,6 +18,7 @@ import net.minecraft.util.Util;
 
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class InfectedHorseMarkingFeatureRenderer extends FeatureRenderer<InfectedHorseEntity, InfectedHorseEntityModel> {
     private static final Map<HorseMarking, Identifier> TEXTURES = Util.make(Maps.newEnumMap(HorseMarking.class), textures -> {
         textures.put(HorseMarking.NONE, null);

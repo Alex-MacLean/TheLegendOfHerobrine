@@ -2,12 +2,15 @@ package com.herobrinemod.herobrine.client.entities.models;
 
 import com.google.common.collect.ImmutableList;
 import com.herobrinemod.herobrine.entities.InfectedHorseEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.AnimalModel;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
+@Environment(EnvType.CLIENT)
 public class InfectedHorseEntityModel extends AnimalModel<InfectedHorseEntity> {
     protected static final String HEAD_PARTS = "head_parts";
     protected final ModelPart body;

@@ -2,6 +2,8 @@ package com.herobrinemod.herobrine.client.entities.renderers;
 
 import com.herobrinemod.herobrine.client.entities.models.InfectedCowEntityModel;
 import com.herobrinemod.herobrine.entities.InfectedMooshroomEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
@@ -15,6 +17,7 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
+@Environment(EnvType.CLIENT)
 public class InfectedMooshroomMushroomFeatureRenderer extends FeatureRenderer<InfectedMooshroomEntity, InfectedCowEntityModel<InfectedMooshroomEntity>> {
     private final BlockRenderManager blockRenderManager;
     public InfectedMooshroomMushroomFeatureRenderer(FeatureRendererContext<InfectedMooshroomEntity, InfectedCowEntityModel<InfectedMooshroomEntity>> context, BlockRenderManager blockRenderManager) {

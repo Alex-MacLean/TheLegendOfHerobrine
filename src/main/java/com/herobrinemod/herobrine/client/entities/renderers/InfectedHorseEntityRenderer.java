@@ -5,6 +5,8 @@ import com.herobrinemod.herobrine.HerobrineMod;
 import com.herobrinemod.herobrine.client.entities.models.HerobrineModelLayers;
 import com.herobrinemod.herobrine.client.entities.models.InfectedHorseEntityModel;
 import com.herobrinemod.herobrine.entities.InfectedHorseEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -15,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class InfectedHorseEntityRenderer extends MobEntityRenderer<InfectedHorseEntity, InfectedHorseEntityModel> {
     private static final Map<HorseColor, Identifier> TEXTURES = Util.make(Maps.newEnumMap(HorseColor.class), map -> {
         map.put(HorseColor.WHITE, new Identifier(HerobrineMod.MODID, "textures/entity/infected_horse/horse_white.png"));

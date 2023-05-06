@@ -29,6 +29,7 @@ public class HerobrineClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_HORSE_MODEL_LAYER, InfectedHorseEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_LLAMA_MODEL_LAYER, InfectedLlamaEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_LLAMA_SPIT_MODEL_LAYER, InfectedLlamaSpitEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_RABBIT_MODEL_LAYER, InfectedRabbitEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_WARRIOR, HerobrineEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_SPY, HerobrineEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_MAGE, HerobrineMageEntityRenderer::new);
@@ -49,5 +50,6 @@ public class HerobrineClient implements ClientModInitializer {
         EntityRendererRegistry.register(EntityTypeList.INFECTED_HORSE, InfectedHorseEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_LLAMA, InfectedLlamaEntityRenderer::new);
         EntityRendererRegistry.register((EntityType<? extends InfectedLlamaSpitEntity>) EntityTypeList.INFECTED_LLAMA_SPIT, InfectedLlamaSpitEntityRenderer::new);
+        EntityRendererRegistry.register(EntityTypeList.INFECTED_RABBIT, InfectedRabbitEntityRenderer::new);
     }
 }

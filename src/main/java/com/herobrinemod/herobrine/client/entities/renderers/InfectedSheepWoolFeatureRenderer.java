@@ -3,6 +3,8 @@ package com.herobrinemod.herobrine.client.entities.renderers;
 import com.herobrinemod.herobrine.client.entities.models.InfectedSheepEntityModel;
 import com.herobrinemod.herobrine.client.entities.models.InfectedSheepWoolEntityModel;
 import com.herobrinemod.herobrine.entities.InfectedSheepEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -18,6 +20,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
+@Environment(EnvType.CLIENT)
 public class InfectedSheepWoolFeatureRenderer extends FeatureRenderer<InfectedSheepEntity, InfectedSheepEntityModel> {
     private static final Identifier SKIN = new Identifier("textures/entity/sheep/sheep_fur.png");
     private final InfectedSheepWoolEntityModel model;
@@ -49,7 +52,6 @@ public class InfectedSheepWoolFeatureRenderer extends FeatureRenderer<InfectedSh
         }
 
         if (entity.hasCustomName() && "jeb_".equals(entity.getName().getString())) {
-            int m = 25;
             int n = entity.age / 25 + entity.getId();
             int o = DyeColor.values().length;
             int p = n % o;

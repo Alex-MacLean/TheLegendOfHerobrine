@@ -3,11 +3,14 @@ package com.herobrinemod.herobrine.client.entities.renderers;
 import com.herobrinemod.herobrine.HerobrineMod;
 import com.herobrinemod.herobrine.client.entities.models.InfectedSheepEntityModel;
 import com.herobrinemod.herobrine.entities.InfectedSheepEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.feature.EyesFeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public class InfectedSheepEyesFeatureRenderer extends EyesFeatureRenderer<InfectedSheepEntity, InfectedSheepEntityModel> {
     public InfectedSheepEyesFeatureRenderer(FeatureRendererContext<InfectedSheepEntity, InfectedSheepEntityModel> featureRendererContext) {
         super(featureRendererContext);
