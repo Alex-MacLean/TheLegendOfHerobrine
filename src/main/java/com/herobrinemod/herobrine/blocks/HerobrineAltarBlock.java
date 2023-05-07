@@ -118,6 +118,9 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
             if (world instanceof ServerWorld) {
                 if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
+                    if(!player.isCreative()) {
+                        itemStack.decrement(1);
+                    }
                     if(!SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
                         if(ConfigHandler.getHerobrineConfig().readBoolean("GlobalHerobrineMessages")) {
                             for(PlayerEntity p: world.getPlayers()) {
@@ -130,6 +133,9 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                     }
                 } else {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
+                    if(!player.isCreative()) {
+                        itemStack.decrement(1);
+                    }
                     if(SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
                         if(ConfigHandler.getHerobrineConfig().readBoolean("GlobalHerobrineMessages")) {
                             for(PlayerEntity p: world.getPlayers()) {
