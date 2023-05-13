@@ -3,6 +3,7 @@ package com.herobrinemod.herobrine.entities;
 import com.herobrinemod.herobrine.HerobrineMod;
 import com.herobrinemod.herobrine.items.ItemList;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.mob.HostileEntity;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class HerobrineEntity extends HostileEntity {
     public HerobrineEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
+        ((MobNavigation)this.getNavigation()).setCanPathThroughDoors(true);
     }
 
     @Override

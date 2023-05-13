@@ -52,12 +52,12 @@ public class InfectedLlamaEntity extends InfectedEntity implements RangedAttackM
         this.goalSelector.add(1, new ProjectileAttackGoal(this, 1.25, 40, 20.0f));
         this.goalSelector.add(2, new ActiveTargetGoal<>(this, IllagerEntity.class, false));
         this.goalSelector.add(3, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
-        //this.goalSelector.add(4, new ActiveTargetGoal<>(this, SurvivorEntity.class, false));
+        this.goalSelector.add(4, new ActiveTargetGoal<>(this, SurvivorEntity.class, false));
         this.goalSelector.add(5, new ActiveTargetGoal<>(this, GolemEntity.class, false));
         this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.45));
         this.goalSelector.add(7, new LookAtEntityGoal(this, IllagerEntity.class, 8.0f));
         this.goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
-        //this.goalSelector.add(9, new LookAtEntityGoal(this, SurvivorEntity.class, 8.0f));
+        this.goalSelector.add(9, new LookAtEntityGoal(this, SurvivorEntity.class, 8.0f));
         this.goalSelector.add(10, new LookAtEntityGoal(this, GolemEntity.class, 8.0f));
         this.goalSelector.add(11, new LookAroundGoal(this));
     }

@@ -38,6 +38,7 @@ public class HerobrineMod implements ModInitializer {
         registerEntityAttributes();
         registerItemGroups();
         registerEntitySpawns();
+        registerSurvivorSkins();
     }
 
     // Register sounds
@@ -92,6 +93,7 @@ public class HerobrineMod implements ModInitializer {
         Registry.register(ITEM, new Identifier(MODID, "infected_horse_spawn_egg"), ItemList.INFECTED_HORSE_SPAWN_EGG);
         Registry.register(ITEM, new Identifier(MODID, "infected_llama_spawn_egg"), ItemList.INFECTED_LLAMA_SPAWN_EGG);
         Registry.register(ITEM, new Identifier(MODID, "infected_rabbit_spawn_egg"), ItemList.INFECTED_RABBIT_SPAWN_EGG);
+        Registry.register(ITEM, new Identifier(MODID, "survivor_spawn_egg"), ItemList.SURVIVOR_SPAWN_EGG);
     }
 
     // Register entity attributes
@@ -114,6 +116,7 @@ public class HerobrineMod implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypeList.INFECTED_HORSE, InfectedHorseEntity.registerAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypeList.INFECTED_LLAMA, InfectedLlamaEntity.registerAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypeList.INFECTED_RABBIT, InfectedRabbitEntity.registerAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypeList.SURVIVOR, SurvivorEntity.registerAttributes());
     }
 
     // Register creative tabs and add items to them
@@ -156,6 +159,7 @@ public class HerobrineMod implements ModInitializer {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_DONKEY_SPAWN_EGG, ItemList.INFECTED_HORSE_SPAWN_EGG));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_HORSE_SPAWN_EGG, ItemList.INFECTED_LLAMA_SPAWN_EGG));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_LLAMA_SPAWN_EGG, ItemList.INFECTED_RABBIT_SPAWN_EGG));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_RABBIT_SPAWN_EGG, ItemList.SURVIVOR_SPAWN_EGG));
     }
 
     // Register entity spawning
@@ -203,6 +207,19 @@ public class HerobrineMod implements ModInitializer {
         SpawnRestriction.register(EntityTypeList.INFECTED_HORSE, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
         SpawnRestriction.register(EntityTypeList.INFECTED_LLAMA, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
         SpawnRestriction.register(EntityTypeList.INFECTED_RABBIT, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+    }
+
+    private void registerSurvivorSkins() {
+        SurvivorSkinRegistry.addSkin(new Identifier("textures/entity/player/wide/alex.png"));
+        SurvivorSkinRegistry.addSkin(new Identifier("textures/entity/player/wide/ari.png"));
+        SurvivorSkinRegistry.addSkin(new Identifier("textures/entity/player/wide/efe.png"));
+        SurvivorSkinRegistry.addSkin(new Identifier("textures/entity/player/wide/kai.png"));
+        SurvivorSkinRegistry.addSkin(new Identifier("textures/entity/player/wide/makena.png"));
+        SurvivorSkinRegistry.addSkin(new Identifier("textures/entity/player/wide/noor.png"));
+        SurvivorSkinRegistry.addSkin(new Identifier("textures/entity/player/wide/steve.png"));
+        SurvivorSkinRegistry.addSkin(new Identifier("textures/entity/player/wide/sunny.png"));
+        SurvivorSkinRegistry.addSkin(new Identifier("textures/entity/player/wide/zuri.png"));
+        SurvivorSkinRegistry.addSkin(new Identifier(HerobrineMod.MODID, "textures/entity/survivor/amaclean04.png"));
     }
 
     // Register callbacks. Used to properly load and unload each instance of WorldSaveData

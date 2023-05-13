@@ -9,6 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.model.Dilation;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.entity.EntityType;
 
@@ -30,6 +31,9 @@ public class HerobrineClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_LLAMA_MODEL_LAYER, InfectedLlamaEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_LLAMA_SPIT_MODEL_LAYER, InfectedLlamaSpitEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_RABBIT_MODEL_LAYER, InfectedRabbitEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.SURVIVOR_MODEL_LAYER, SurvivorEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.SURVIVOR_INNER_ARMOR, () -> SurvivorEntityModel.getTexturedArmorModelData(new Dilation(0.5f))); // Why do these require a lambda reference for getTexturedModelData methods to return TexturedModelDataProvider? Nothing is passed to it. Vanilla ModelLayer registries don't need a lambda reference. tl;dr: Java is dumb
+        EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.SURVIVOR_OUTER_ARMOR, () -> SurvivorEntityModel.getTexturedArmorModelData(new Dilation(1.0f)));
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_WARRIOR, HerobrineEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_SPY, HerobrineEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_MAGE, HerobrineMageEntityRenderer::new);
@@ -51,5 +55,6 @@ public class HerobrineClient implements ClientModInitializer {
         EntityRendererRegistry.register(EntityTypeList.INFECTED_LLAMA, InfectedLlamaEntityRenderer::new);
         EntityRendererRegistry.register((EntityType<? extends InfectedLlamaSpitEntity>) EntityTypeList.INFECTED_LLAMA_SPIT, InfectedLlamaSpitEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_RABBIT, InfectedRabbitEntityRenderer::new);
+        EntityRendererRegistry.register(EntityTypeList.SURVIVOR, SurvivorEntityRenderer::new);
     }
 }

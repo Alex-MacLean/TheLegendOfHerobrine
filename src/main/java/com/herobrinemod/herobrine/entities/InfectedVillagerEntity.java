@@ -55,12 +55,12 @@ public class InfectedVillagerEntity extends InfectedEntity implements VillagerDa
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0, false));
         this.goalSelector.add(2, new ActiveTargetGoal<>(this, IllagerEntity.class, false));
         this.goalSelector.add(3, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
-        //this.goalSelector.add(4, new ActiveTargetGoal<>(this, SurvivorEntity.class, false));
+        this.goalSelector.add(4, new ActiveTargetGoal<>(this, SurvivorEntity.class, false));
         this.goalSelector.add(5, new ActiveTargetGoal<>(this, GolemEntity.class, false));
         this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.5));
         this.goalSelector.add(7, new LookAtEntityGoal(this, IllagerEntity.class, 16.0f));
         this.goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 16.0f));
-        //this.goalSelector.add(9, new LookAtEntityGoal(this, SurvivorEntity.class, 16.0f));
+        this.goalSelector.add(9, new LookAtEntityGoal(this, SurvivorEntity.class, 16.0f));
         this.goalSelector.add(10, new LookAtEntityGoal(this, GolemEntity.class, 16.0f));
         this.goalSelector.add(11, new LookAroundGoal(this));
     }

@@ -46,7 +46,7 @@ public class HerobrineStalkerEntity extends HerobrineEntity {
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 0.4));
         this.goalSelector.add(4, new LookAtEntityGoal(this, IllagerEntity.class, 64.0f));
         this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 64.0f));
-        //this.goalSelector.add(6, new LookAtEntityGoal(this, SurvivorEntity.class, 64.0f));
+        this.goalSelector.add(6, new LookAtEntityGoal(this, SurvivorEntity.class, 64.0f));
         this.goalSelector.add(7, new LookAroundGoal(this));
     }
 

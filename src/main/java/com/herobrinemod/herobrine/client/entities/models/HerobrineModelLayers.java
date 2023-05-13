@@ -22,4 +22,7 @@ public class HerobrineModelLayers {
     public static final EntityModelLayer INFECTED_LLAMA_MODEL_LAYER = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "infected_llama"), "main");
     public static final EntityModelLayer INFECTED_LLAMA_SPIT_MODEL_LAYER = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "infected_llama_spit"), "main");
     public static final EntityModelLayer INFECTED_RABBIT_MODEL_LAYER = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "infected_rabbit"), "main");
+    public static final EntityModelLayer SURVIVOR_MODEL_LAYER = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "survivor"), "main");
+    public static final EntityModelLayer SURVIVOR_INNER_ARMOR = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "survivor"), "inner_armor");
+    public static final EntityModelLayer SURVIVOR_OUTER_ARMOR = new EntityModelLayer(new Identifier(HerobrineMod.MODID, "survivor"), "outer_armor");
 }
