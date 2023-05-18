@@ -219,7 +219,7 @@ public class HerobrineMod implements ModInitializer {
         SurvivorSkinRegistry.addSkin(new Identifier("textures/entity/player/wide/steve.png"));
         SurvivorSkinRegistry.addSkin(new Identifier("textures/entity/player/wide/sunny.png"));
         SurvivorSkinRegistry.addSkin(new Identifier("textures/entity/player/wide/zuri.png"));
-        SurvivorSkinRegistry.addSkin(new Identifier(HerobrineMod.MODID, "textures/entity/survivor/amaclean04.png"));
+        SurvivorSkinRegistry.addSkin(new Identifier(MODID, "textures/entity/survivor/amaclean04.png"));
     }
 
     // Register callbacks. Used to properly load and unload each instance of WorldSaveData

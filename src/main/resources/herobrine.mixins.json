@@ -4,6 +4,7 @@
   "package": "com.herobrinemod.herobrine.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "VanillaBiomeParametersMixin"
   ],
   "client": [
     "HerobrineMixin"
