@@ -3,7 +3,6 @@ package com.herobrinemod.herobrine.entities;
 import com.herobrinemod.herobrine.items.ItemList;
 import com.herobrinemod.herobrine.savedata.ConfigHandler;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -79,21 +78,21 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
     }
 
     public boolean canDestroy(@NotNull BlockState state) {
-        return state.getMaterial() != Material.FIRE && !state.isAir() && !state.isIn(BlockTags.WITHER_IMMUNE) && !state.isIn(BlockTags.DRAGON_IMMUNE) && !state.isIn(BlockTags.BEDS) && !state.isIn(BlockTags.CROPS) && !state.isIn(BlockTags.WOOL_CARPETS) && !state.isIn(BlockTags.BUTTONS) && !state.isIn(BlockTags.WOODEN_BUTTONS) && !state.isIn(BlockTags.FLOWER_POTS) && !state.isIn(BlockTags.PORTALS) && !state.isIn(BlockTags.RAILS) && !state.isIn(BlockTags.SAPLINGS) && !state.isIn(BlockTags.SMALL_FLOWERS) && !state.isIn(BlockTags.FLOWERS) && !state.isIn(BlockTags.SIGNS) && !state.isIn(BlockTags.STANDING_SIGNS) && !state.isIn(BlockTags.UNDERWATER_BONEMEALS) && !state.isIn(BlockTags.WALL_CORALS) && !state.isIn(BlockTags.CORAL_PLANTS) && !state.isIn(BlockTags.WALL_SIGNS) && !state.isIn(BlockTags.TALL_FLOWERS) && !state.isIn(BlockTags.WOODEN_PRESSURE_PLATES) && !state.isIn(BlockTags.PRESSURE_PLATES);
+        return !state.isIn(BlockTags.FIRE)  && !state.isAir() && !state.isIn(BlockTags.WITHER_IMMUNE) && !state.isIn(BlockTags.DRAGON_IMMUNE) && !state.isIn(BlockTags.BEDS) && !state.isIn(BlockTags.CROPS) && !state.isIn(BlockTags.WOOL_CARPETS) && !state.isIn(BlockTags.BUTTONS) && !state.isIn(BlockTags.WOODEN_BUTTONS) && !state.isIn(BlockTags.FLOWER_POTS) && !state.isIn(BlockTags.PORTALS) && !state.isIn(BlockTags.RAILS) && !state.isIn(BlockTags.SAPLINGS) && !state.isIn(BlockTags.SMALL_FLOWERS) && !state.isIn(BlockTags.FLOWERS) && !state.isIn(BlockTags.SIGNS) && !state.isIn(BlockTags.STANDING_SIGNS) && !state.isIn(BlockTags.UNDERWATER_BONEMEALS) && !state.isIn(BlockTags.WALL_CORALS) && !state.isIn(BlockTags.CORAL_PLANTS) && !state.isIn(BlockTags.WALL_SIGNS) && !state.isIn(BlockTags.TALL_FLOWERS) && !state.isIn(BlockTags.WOODEN_PRESSURE_PLATES) && !state.isIn(BlockTags.PRESSURE_PLATES);
     }
 
     @Override
     public void mobTick() {
         super.mobTick();
-            if(this.destroyCooldown < 1 && ConfigHandler.getHerobrineConfig().readBoolean("WarriorBreaksBlocks") && this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
+            if(this.destroyCooldown < 1 && ConfigHandler.getHerobrineConfig().readBoolean("WarriorBreaksBlocks") && this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
                 this.destroyCooldown = random.nextBetween(400, 600);
                 for (int x = -1; x <= 1; x ++) {
                     for (int z = -1; z <= 1; z ++) {
                         for (int y = 0; y <= 3; y ++) {
                             BlockPos blockPos = new BlockPos(MathHelper.floor(this.getX()) + x, MathHelper.floor(this.getY()) + y, MathHelper.floor(this.getZ()) + z);
-                            BlockState blockState = this.world.getBlockState(blockPos);
+                            BlockState blockState = this.getWorld().getBlockState(blockPos);
                             if (this.canDestroy(blockState)) {
-                                this.world.breakBlock(blockPos, true, this);
+                                this.getWorld().breakBlock(blockPos, true, this);
                                 this.swingHand(Hand.MAIN_HAND);
                             }
                         }

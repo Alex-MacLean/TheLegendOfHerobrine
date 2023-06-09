@@ -55,7 +55,7 @@ public abstract class HerobrineEntity extends HostileEntity {
     @Override
     public void tick() {
         this.clearStatusEffects();
-        if(world instanceof ServerWorld) {
+        if(getWorld() instanceof ServerWorld) {
             if(!HerobrineSpawnHelper.canHerobrineSpawn()) {
                 this.remove(RemovalReason.DISCARDED);
             }
@@ -67,7 +67,7 @@ public abstract class HerobrineEntity extends HostileEntity {
     public boolean tryAttack(Entity target) {
         boolean bl = super.tryAttack(target);
         if (bl) {
-            float f = this.world.getLocalDifficulty(this.getBlockPos()).getLocalDifficulty();
+            float f = this.getWorld().getLocalDifficulty(this.getBlockPos()).getLocalDifficulty();
             if (this.isOnFire() && this.random.nextFloat() < f * 0.3f) {
                 target.setOnFireFor(2 * (int)f);
             }

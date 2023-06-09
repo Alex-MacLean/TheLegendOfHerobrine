@@ -42,7 +42,7 @@ public class HolyWaterEntity extends ThrownItemEntity {
     public void handleStatus(byte status) {
         if (status == 3) {
             for (int i = 0; i < 8; ++i) {
-                this.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, new ItemStack(getDefaultItem())), this.getX(), this.getY() + 0.1, this.getZ(), 0.0, 0.01, 0.0);
+                this.getWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, new ItemStack(getDefaultItem())), this.getX(), this.getY() + 0.1, this.getZ(), 0.0, 0.01, 0.0);
             }
         }
     }
@@ -50,9 +50,9 @@ public class HolyWaterEntity extends ThrownItemEntity {
     @Override
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
-        if (!this.world.isClient) {
+        if (!this.getWorld().isClient) {
             Box effectBox = getBoundingBox().expand(1.0, 1.0, 1.0);
-            List<LivingEntity> affectedEntities = world.getEntitiesByClass(LivingEntity.class, effectBox, EntityPredicates.VALID_LIVING_ENTITY);
+            List<LivingEntity> affectedEntities = this.getWorld().getEntitiesByClass(LivingEntity.class, effectBox, EntityPredicates.VALID_LIVING_ENTITY);
             if(!affectedEntities.isEmpty()) {
                 for(LivingEntity entity : affectedEntities) {
                     entity.setOnFire(false);
@@ -76,7 +76,7 @@ public class HolyWaterEntity extends ThrownItemEntity {
                 }
             }
             this.playSound(SoundEvents.BLOCK_GLASS_BREAK, 0.8f, 0.9f / (random.nextFloat() * 0.4f + 0.8f));
-            this.world.sendEntityStatus(this, (byte) 3);
+            this.getWorld().sendEntityStatus(this, (byte) 3);
             this.remove(RemovalReason.DISCARDED);
         }
     }

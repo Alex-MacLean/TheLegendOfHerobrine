@@ -74,7 +74,7 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
     @Override
     public boolean damage(@NotNull DamageSource source, float amount) {
         if(source.getSource() instanceof HolyWaterEntity) {
-            this.world.sendEntityStatus(this, (byte) 4);
+            this.getWorld().sendEntityStatus(this, (byte) 4);
             this.remove(RemovalReason.DISCARDED);
         }
         return super.damage(source, amount);
@@ -83,7 +83,7 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
     @Override
     public void mobTick() {
         if(this.lifeTimer < 1) {
-            this.world.sendEntityStatus(this, (byte) 4);
+            this.getWorld().sendEntityStatus(this, (byte) 4);
             this.remove(RemovalReason.DISCARDED);
         }
         this.lifeTimer --;
@@ -94,13 +94,13 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
     public void handleStatus(byte status) {
         super.handleStatus(status);
         if(status == 4) {
-            if(this.world.isClient) {
+            if(this.getWorld().isClient) {
                 if (!this.isSilent()) {
-                    this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
+                    this.getWorld().playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
                 }
 
                 for (int i = 0; i < 20; i ++) {
-                    this.world.addParticle(ParticleTypes.POOF, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
+                    this.getWorld().addParticle(ParticleTypes.POOF, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
                 }
             }
         }

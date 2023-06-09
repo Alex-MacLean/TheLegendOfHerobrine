@@ -100,15 +100,15 @@ public class InfectedVillagerEntity extends InfectedEntity implements VillagerDa
 
     @Override
     public void convert() {
-        this.world.sendEntityStatus(this, (byte) 16);
+        this.getWorld().sendEntityStatus(this, (byte) 16);
         this.dropItem(ItemList.CURSED_DUST);
         VillagerEntity entity = (VillagerEntity) this.convertTo(getConversionEntity(), false);
         assert entity != null;
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
         entity.setVillagerData(this.getVillagerData());
-        entity.initialize((ServerWorldAccess) world, world.getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
-        entity.reinitializeBrain((ServerWorld) world);
+        entity.initialize((ServerWorldAccess) this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
+        entity.reinitializeBrain((ServerWorld) this.getWorld());
     }
 
     @Override

@@ -22,7 +22,7 @@ public class VanillaBiomeParametersMixin {
     private RegistryKey<Biome>[][] specialNearMountainBiomes;
 
     @Inject(method = "<init>*", at = @At("TAIL"))
-    private void injectForest(CallbackInfo ci) {
+    private void injectCursedForest(CallbackInfo ci) {
         if(uncommonBiomes[2][1] == null) {
             uncommonBiomes[2][1] = BiomeKeyList.CURSED_FOREST;
         }

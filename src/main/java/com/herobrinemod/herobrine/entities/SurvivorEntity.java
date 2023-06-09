@@ -120,7 +120,7 @@ public class SurvivorEntity extends MerchantEntity {
         // If you set RequiresInitialization to true in the game the entity will be reinitialized. IDK the consequences of this. I hate this implementation because it runs every tick.
         if(this.dataTracker.get(REQUIRES_INITIALIZATION)) {
             this.dataTracker.set(REQUIRES_INITIALIZATION, false);
-            this.initialize((ServerWorldAccess) world, world.getLocalDifficulty(getBlockPos()), SpawnReason.NATURAL, null, null);
+            this.initialize((ServerWorldAccess) this.getWorld(), this.getWorld().getLocalDifficulty(getBlockPos()), SpawnReason.NATURAL, null, null);
         }
 
         if(!this.hasCustomer()) {
@@ -143,7 +143,7 @@ public class SurvivorEntity extends MerchantEntity {
 
         // Makes every hostile mob that can see the Survivor and doesn't already have a target and isn't a Herobrine Stalker target the Survivor. Runs every tick. Very bloated implementation, but I've seen worse in the Vanilla code
         Box effectBox = getBoundingBox().expand(32.0, 32.0, 32.0);
-        List<LivingEntity> affectedEntities = world.getEntitiesByClass(LivingEntity.class, effectBox, EntityPredicates.VALID_LIVING_ENTITY);
+        List<LivingEntity> affectedEntities = this.getWorld().getEntitiesByClass(LivingEntity.class, effectBox, EntityPredicates.VALID_LIVING_ENTITY);
         if(!affectedEntities.isEmpty()) {
             for(LivingEntity entity : affectedEntities) {
                 if((entity instanceof Monster) && ((HostileEntity) entity).getTarget() != null && !(entity instanceof Angerable) && !(entity instanceof HerobrineStalkerEntity) && entity.canSee(this) && entity.isAlive()) {
@@ -168,11 +168,11 @@ public class SurvivorEntity extends MerchantEntity {
                 tradeOffer.resetUses();
             }
             if (this.getOffers().isEmpty()) {
-                return ActionResult.success(this.world.isClient);
-            } else if (!world.isClient) {
+                return ActionResult.success(this.getWorld().isClient);
+            } else if (!this.getWorld().isClient) {
                 this.beginTradeWith(player);
             }
-            return ActionResult.success(this.world.isClient);
+            return ActionResult.success(this.getWorld().isClient);
         }
         return super.interactMob(player, hand);
     }
@@ -205,7 +205,7 @@ public class SurvivorEntity extends MerchantEntity {
     protected void afterUsing(@NotNull TradeOffer offer) {
         if (offer.shouldRewardPlayerExperience()) {
             int i = 3 + this.random.nextInt(4);
-            this.world.spawnEntity(new ExperienceOrbEntity(this.world, this.getX(), this.getY() + 0.5, this.getZ(), i));
+            this.getWorld().spawnEntity(new ExperienceOrbEntity(this.getWorld(), this.getX(), this.getY() + 0.5, this.getZ(), i));
         }
     }
 
@@ -215,7 +215,7 @@ public class SurvivorEntity extends MerchantEntity {
     public boolean tryAttack(Entity target) {
         boolean bl = super.tryAttack(target);
         if (bl) {
-            float f = this.world.getLocalDifficulty(this.getBlockPos()).getLocalDifficulty();
+            float f = this.getWorld().getLocalDifficulty(this.getBlockPos()).getLocalDifficulty();
             if (this.isOnFire() && this.random.nextFloat() < f * 0.3f) {
                 target.setOnFireFor(2 * (int)f);
             }

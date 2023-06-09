@@ -61,11 +61,11 @@ public class InfectedWolfEntity extends InfectedEntity {
     @Override
     public void tickMovement() {
         super.tickMovement();
-        if (!this.world.isClient && this.furWet && !this.canShakeWaterOff && !this.isNavigating() && this.onGround) {
+        if (!this.getWorld().isClient && this.furWet && !this.canShakeWaterOff && !this.isNavigating() && this.isOnGround()) {
             this.canShakeWaterOff = true;
             this.shakeProgress = 0.0f;
             this.lastShakeProgress = 0.0f;
-            this.world.sendEntityStatus(this, EntityStatuses.SHAKE_OFF_WATER);
+            this.getWorld().sendEntityStatus(this, EntityStatuses.SHAKE_OFF_WATER);
         }
     }
 
@@ -78,8 +78,8 @@ public class InfectedWolfEntity extends InfectedEntity {
 
         if (this.isWet()) {
             this.furWet = true;
-            if (this.canShakeWaterOff && !this.world.isClient) {
-                this.world.sendEntityStatus(this, EntityStatuses.RESET_WOLF_SHAKE);
+            if (this.canShakeWaterOff && !this.getWorld().isClient) {
+                this.getWorld().sendEntityStatus(this, EntityStatuses.RESET_WOLF_SHAKE);
                 this.resetShake();
             }
         } else if ((this.furWet) && this.canShakeWaterOff) {
@@ -105,7 +105,7 @@ public class InfectedWolfEntity extends InfectedEntity {
                 for (int j = 0; j < i; ++j) {
                     float g = (this.random.nextFloat() * 2.0f - 1.0f) * this.getWidth() * 0.5f;
                     float h = (this.random.nextFloat() * 2.0f - 1.0f) * this.getWidth() * 0.5f;
-                    this.world.addParticle(ParticleTypes.SPLASH, this.getX() + (double)g, f + 0.8f, this.getZ() + (double)h, vec3d.x, vec3d.y, vec3d.z);
+                    this.getWorld().addParticle(ParticleTypes.SPLASH, this.getX() + (double)g, f + 0.8f, this.getZ() + (double)h, vec3d.x, vec3d.y, vec3d.z);
                 }
             }
         }

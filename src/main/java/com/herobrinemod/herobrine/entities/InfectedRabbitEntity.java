@@ -80,13 +80,13 @@ public class InfectedRabbitEntity extends InfectedEntity implements VariantHolde
     }
 
     public void convert() {
-        this.world.sendEntityStatus(this, (byte) 16);
+        this.getWorld().sendEntityStatus(this, (byte) 16);
         this.dropItem(ItemList.CURSED_DUST);
         MobEntity entity = this.convertTo(this.getConversionEntity(), false);
         assert entity != null;
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
-        entity.initialize((ServerWorldAccess) world, world.getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
+        entity.initialize((ServerWorldAccess) this.getWorld(), getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
         ((RabbitEntity) entity).setVariant(this.getVariant());
     }
 
@@ -115,8 +115,8 @@ public class InfectedRabbitEntity extends InfectedEntity implements VariantHolde
         if (d > 0.0 && this.getVelocity().horizontalLengthSquared() < 0.01) {
             this.updateVelocity(0.1f, new Vec3d(0.0, 0.0, 1.0));
         }
-        if (!this.world.isClient) {
-            this.world.sendEntityStatus(this, EntityStatuses.ADD_SPRINTING_PARTICLES_OR_RESET_SPAWNER_MINECART_SPAWN_DELAY);
+        if (!this.getWorld().isClient) {
+            this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_SPRINTING_PARTICLES_OR_RESET_SPAWNER_MINECART_SPAWN_DELAY);
         }
     }
 
@@ -158,7 +158,7 @@ public class InfectedRabbitEntity extends InfectedEntity implements VariantHolde
             --this.ticksUntilJump;
         }
 
-        if (this.onGround) {
+        if (this.isOnGround()) {
             InfectedRabbitEntity.RabbitJumpControl rabbitJumpControl;
             LivingEntity livingEntity;
             if (!this.lastOnGround) {
@@ -188,7 +188,7 @@ public class InfectedRabbitEntity extends InfectedEntity implements VariantHolde
             }
         }
 
-        this.lastOnGround = this.onGround;
+        this.lastOnGround = this.isOnGround();
     }
 
     @Override
@@ -359,7 +359,7 @@ public class InfectedRabbitEntity extends InfectedEntity implements VariantHolde
 
         @Override
         public void tick() {
-            if (this.entity.onGround && !this.entity.jumping && ((RabbitJumpControl) this.entity.jumpControl).isNotActive()) {
+            if (this.entity.isOnGround() && !this.entity.jumping && ((RabbitJumpControl) this.entity.jumpControl).isNotActive()) {
                 this.entity.setSpeed(0.0);
             } else if (this.isMoving()) {
                 this.entity.setSpeed(this.speed);

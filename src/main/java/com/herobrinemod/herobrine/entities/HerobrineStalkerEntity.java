@@ -87,7 +87,7 @@ public class HerobrineStalkerEntity extends HerobrineEntity {
     @Override
     public void mobTick() {
         if(this.lifeTimer < 1) {
-            this.world.sendEntityStatus(this, (byte) 4);
+            this.getWorld().sendEntityStatus(this, (byte) 4);
             this.remove(RemovalReason.DISCARDED);
         }
         this.lifeTimer --;
@@ -115,14 +115,14 @@ public class HerobrineStalkerEntity extends HerobrineEntity {
         }
 
         Box nearBox = this.getBoundingBox().expand(1.0);
-        List<LivingEntity> list = this.world.getEntitiesByClass(LivingEntity.class, nearBox, LivingEntity::isAlive);
+        List<LivingEntity> list = this.getWorld().getEntitiesByClass(LivingEntity.class, nearBox, LivingEntity::isAlive);
         if (!list.isEmpty()) {
             for (LivingEntity entity : list) {
                 if (entity instanceof PlayerEntity && this.getTarget() == entity && this.isRunningAtTarget) {
                     entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 300, 0, false, false));
                     entity.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 600, 0, false, false));
                     entity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 400, 0, false, false));
-                    this.world.sendEntityStatus(this, (byte) 5);
+                    this.getWorld().sendEntityStatus(this, (byte) 5);
                     this.remove(RemovalReason.DISCARDED);
                 }
             }
@@ -134,24 +134,24 @@ public class HerobrineStalkerEntity extends HerobrineEntity {
         super.handleStatus(status);
         switch (status) {
             case 4 -> {
-                if (this.world.isClient) {
+                if (this.getWorld().isClient) {
                     if (!this.isSilent()) {
-                        this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
+                        this.getWorld().playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
                     }
 
                     for (int i = 0; i < 20; i++) {
-                        this.world.addParticle(ParticleTypes.POOF, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
+                        this.getWorld().addParticle(ParticleTypes.POOF, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
                     }
                 }
             }
             case 5 -> {
-                if (this.world.isClient) {
+                if (this.getWorld().isClient) {
                     if (!this.isSilent()) {
-                        this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.AMBIENT_CAVE.value(), this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
+                        this.getWorld().playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.AMBIENT_CAVE.value(), this.getSoundCategory(), 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f, false);
                     }
 
                     for (int i = 0; i < 20; i++) {
-                        this.world.addParticle(ParticleTypes.POOF, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
+                        this.getWorld().addParticle(ParticleTypes.POOF, this.getParticleX(1.0), this.getRandomBodyY(), this.getParticleZ(1.0), random.nextGaussian() * 0.02, random.nextGaussian() * 0.02, random.nextGaussian() * 0.02);
                     }
                 }
             }

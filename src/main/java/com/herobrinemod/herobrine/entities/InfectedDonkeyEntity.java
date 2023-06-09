@@ -109,10 +109,10 @@ public class InfectedDonkeyEntity extends InfectedEntity {
             this.wagTail();
         }
         super.tickMovement();
-        if (this.world.isClient || !this.isAlive()) {
+        if (this.getWorld().isClient || !this.isAlive()) {
             return;
         }
-        if (!this.isEatingGrass() && this.random.nextInt(300) == 0 && this.world.getBlockState(this.getBlockPos().down()).isOf(Blocks.GRASS_BLOCK) && this.getTarget() == null) {
+        if (!this.isEatingGrass() && this.random.nextInt(300) == 0 && this.getWorld().getBlockState(this.getBlockPos().down()).isOf(Blocks.GRASS_BLOCK) && this.getTarget() == null) {
             this.setEatingGrass(true);
         }
         if (this.isEatingGrass() && ++this.eatingGrassTicks > 50) {
@@ -257,7 +257,7 @@ public class InfectedDonkeyEntity extends InfectedEntity {
 
     @Override
     protected void playStepSound(BlockPos pos, @NotNull BlockState state) {
-        if (state.getMaterial().isLiquid()) {
+        if (state.isLiquid()) {
             return;
         }
         BlockSoundGroup blockSoundGroup = state.getSoundGroup();

@@ -89,14 +89,14 @@ public class InfectedSheepEntity extends InfectedEntity implements Shearable {
 
     @Override
     public void convert() {
-        this.world.sendEntityStatus(this, (byte) 16);
+        this.getWorld().sendEntityStatus(this, (byte) 16);
         this.dropItem(ItemList.CURSED_DUST);
         SheepEntity entity = (SheepEntity) this.convertTo(getConversionEntity(), false);
         assert entity != null;
         entity.setSheared(this.isSheared());
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
-        entity.initialize((ServerWorldAccess) world, world.getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
+        entity.initialize((ServerWorldAccess) this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
         entity.setColor(this.getColor());
     }
 
@@ -134,7 +134,7 @@ public class InfectedSheepEntity extends InfectedEntity implements Shearable {
 
     @Override
     public void tickMovement() {
-        if (this.world.isClient) {
+        if (this.getWorld().isClient) {
             this.eatGrassTimer = Math.max(0, this.eatGrassTimer - 1);
         }
         super.tickMovement();
@@ -207,7 +207,7 @@ public class InfectedSheepEntity extends InfectedEntity implements Shearable {
     public ActionResult interactMob(PlayerEntity player2, Hand hand) {
         ItemStack itemStack = player2.getStackInHand(hand);
         if (itemStack.isOf(Items.SHEARS)) {
-            if (!this.world.isClient && this.isShearable()) {
+            if (!this.getWorld().isClient && this.isShearable()) {
                 this.sheared(SoundCategory.PLAYERS);
                 this.emitGameEvent(GameEvent.SHEAR, player2);
                 itemStack.damage(1, player2, player -> player.sendToolBreakStatus(hand));
@@ -319,7 +319,7 @@ public class InfectedSheepEntity extends InfectedEntity implements Shearable {
 
     @Override
     public void sheared(SoundCategory shearedSoundCategory) {
-        this.world.playSoundFromEntity(null, this, SoundEvents.ENTITY_SHEEP_SHEAR, shearedSoundCategory, 1.0f, 1.0f);
+        this.getWorld().playSoundFromEntity(null, this, SoundEvents.ENTITY_SHEEP_SHEAR, shearedSoundCategory, 1.0f, 1.0f);
         this.setSheared(true);
         int i = 1 + this.random.nextInt(3);
         for (int j = 0; j < i; ++j) {

@@ -82,13 +82,13 @@ public class InfectedHorseEntity extends InfectedEntity {
     }
 
     public void convert() {
-        this.world.sendEntityStatus(this, (byte) 16);
+        this.getWorld().sendEntityStatus(this, (byte) 16);
         this.dropItem(ItemList.CURSED_DUST);
         MobEntity entity = this.convertTo(this.getConversionEntity(), false);
         assert entity != null;
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
-        entity.initialize((ServerWorldAccess) world, world.getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
+        entity.initialize((ServerWorldAccess) this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
         ((HorseEntity) entity).setHorseVariant(this.getVariant(), this.getMarking());
     }
 
@@ -133,10 +133,10 @@ public class InfectedHorseEntity extends InfectedEntity {
             this.wagTail();
         }
         super.tickMovement();
-        if (this.world.isClient || !this.isAlive()) {
+        if (this.getWorld().isClient || !this.isAlive()) {
             return;
         }
-        if (!this.isEatingGrass() && this.random.nextInt(300) == 0 && this.world.getBlockState(this.getBlockPos().down()).isOf(Blocks.GRASS_BLOCK) && this.getTarget() == null) {
+        if (!this.isEatingGrass() && this.random.nextInt(300) == 0 && this.getWorld().getBlockState(this.getBlockPos().down()).isOf(Blocks.GRASS_BLOCK) && this.getTarget() == null) {
             this.setEatingGrass(true);
         }
         if (this.isEatingGrass() && ++this.eatingGrassTicks > 50) {
@@ -328,7 +328,7 @@ public class InfectedHorseEntity extends InfectedEntity {
 
     @Override
     protected void playStepSound(BlockPos pos, @NotNull BlockState state) {
-        if (state.getMaterial().isLiquid()) {
+        if (state.isLiquid()) {
             return;
         }
         BlockSoundGroup blockSoundGroup = state.getSoundGroup();

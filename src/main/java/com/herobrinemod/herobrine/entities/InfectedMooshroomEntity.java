@@ -62,14 +62,14 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements Sheara
 
     @Override
     public void convert() {
-        this.world.sendEntityStatus(this, (byte) 16);
+        this.getWorld().sendEntityStatus(this, (byte) 16);
         this.dropItem(ItemList.CURSED_DUST);
         MobEntity entity = this.convertTo(this.getConversionEntity(), false);
         assert entity != null;
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
         ((MooshroomEntity) entity).setVariant(MooshroomEntity.Type.valueOf(this.getVariant().toString()));
-        entity.initialize((ServerWorldAccess) world, world.getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
+        entity.initialize((ServerWorldAccess) this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
     }
 
     @Override
@@ -184,22 +184,22 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements Sheara
             player2.setStackInHand(hand, itemStack3);
             SoundEvent soundEvent = bl ? SoundEvents.ENTITY_MOOSHROOM_SUSPICIOUS_MILK : SoundEvents.ENTITY_MOOSHROOM_MILK;
             this.playSound(soundEvent, 1.0f, 1.0f);
-            return ActionResult.success(this.world.isClient);
+            return ActionResult.success(this.getWorld().isClient);
         }
 
         if (itemStack.isOf(Items.SHEARS) && this.isShearable()) {
             this.sheared(SoundCategory.PLAYERS);
             this.emitGameEvent(GameEvent.SHEAR, player2);
-            if (!this.world.isClient) {
+            if (!this.getWorld().isClient) {
                 itemStack.damage(1, player2, player -> player.sendToolBreakStatus(hand));
             }
-            return ActionResult.success(this.world.isClient);
+            return ActionResult.success(this.getWorld().isClient);
         }
 
         if (this.getVariant() == InfectedMooshroomEntity.Type.BROWN && itemStack.isIn(ItemTags.SMALL_FLOWERS)) {
             if (this.stewEffect != null) {
                 for (int i = 0; i < 2; ++i) {
-                    this.world.addParticle(ParticleTypes.SMOKE, this.getX() + this.random.nextDouble() / 2.0, this.getBodyY(0.5), this.getZ() + this.random.nextDouble() / 2.0, 0.0, this.random.nextDouble() / 5.0, 0.0);
+                    this.getWorld().addParticle(ParticleTypes.SMOKE, this.getX() + this.random.nextDouble() / 2.0, this.getBodyY(0.5), this.getZ() + this.random.nextDouble() / 2.0, 0.0, this.random.nextDouble() / 5.0, 0.0);
                 }
             } else {
                 Optional<Pair<StatusEffect, Integer>> optional = this.getStewEffectFrom(itemStack);
@@ -211,13 +211,13 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements Sheara
                     itemStack.decrement(1);
                 }
                 for (int j = 0; j < 4; ++j) {
-                    this.world.addParticle(ParticleTypes.EFFECT, this.getX() + this.random.nextDouble() / 2.0, this.getBodyY(0.5), this.getZ() + this.random.nextDouble() / 2.0, 0.0, this.random.nextDouble() / 5.0, 0.0);
+                    this.getWorld().addParticle(ParticleTypes.EFFECT, this.getX() + this.random.nextDouble() / 2.0, this.getBodyY(0.5), this.getZ() + this.random.nextDouble() / 2.0, 0.0, this.random.nextDouble() / 5.0, 0.0);
                 }
                 this.stewEffect = pair.getLeft();
                 this.stewEffectDuration = pair.getRight();
                 this.playSound(SoundEvents.ENTITY_MOOSHROOM_EAT, 2.0f, 1.0f);
             }
-            return ActionResult.success(this.world.isClient);
+            return ActionResult.success(this.getWorld().isClient);
         }
         return super.interactMob(player2, hand);
     }
@@ -233,9 +233,9 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements Sheara
     @Override
     public void sheared(SoundCategory shearedSoundCategory) {
         InfectedCowEntity entity;
-        this.world.playSoundFromEntity(null, this, SoundEvents.ENTITY_MOOSHROOM_SHEAR, shearedSoundCategory, 1.0f, 1.0f);
-        if (!this.world.isClient() && (entity = EntityTypeList.INFECTED_COW.create(this.world)) != null) {
-            ((ServerWorld)this.world).spawnParticles(ParticleTypes.EXPLOSION, this.getX(), this.getBodyY(0.5), this.getZ(), 1, 0.0, 0.0, 0.0, 0.0);
+        this.getWorld().playSoundFromEntity(null, this, SoundEvents.ENTITY_MOOSHROOM_SHEAR, shearedSoundCategory, 1.0f, 1.0f);
+        if (!this.getWorld().isClient() && (entity = EntityTypeList.INFECTED_COW.create(this.getWorld())) != null) {
+            ((ServerWorld) this.getWorld()).spawnParticles(ParticleTypes.EXPLOSION, this.getX(), this.getBodyY(0.5), this.getZ(), 1, 0.0, 0.0, 0.0, 0.0);
             this.discard();
             entity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
             entity.setHealth(this.getHealth());
@@ -251,9 +251,9 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements Sheara
             }
 
             entity.setInvulnerable(this.isInvulnerable());
-            this.world.spawnEntity(entity);
+            this.getWorld().spawnEntity(entity);
             for (int i = 0; i < 5; ++i) {
-                this.world.spawnEntity(new ItemEntity(this.world, this.getX(), this.getBodyY(1.0), this.getZ(), new ItemStack(this.getVariant().mushroom.getBlock())));
+                this.getWorld().spawnEntity(new ItemEntity(this.getWorld(), this.getX(), this.getBodyY(1.0), this.getZ(), new ItemStack(this.getVariant().mushroom.getBlock())));
             }
         }
     }

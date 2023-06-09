@@ -30,7 +30,7 @@ public abstract class InfectedEntity extends HostileEntity {
         super.handleStatus(status);
         if (status == 16) {
             if (!this.isSilent()) {
-                this.world.playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED, this.getSoundCategory(), 1.0f + this.random.nextFloat(), this.random.nextFloat() * 0.7f + 0.3f, false);
+                this.getWorld().playSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED, this.getSoundCategory(), 1.0f + this.random.nextFloat(), this.random.nextFloat() * 0.7f + 0.3f, false);
             }
         }
 
@@ -41,18 +41,18 @@ public abstract class InfectedEntity extends HostileEntity {
     }
 
     public void convert() {
-        this.world.sendEntityStatus(this, (byte) 16);
+        this.getWorld().sendEntityStatus(this, (byte) 16);
         this.dropItem(ItemList.CURSED_DUST);
         MobEntity entity = this.convertTo(conversionEntity, false);
         assert entity != null;
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
-        entity.initialize((ServerWorldAccess) world, world.getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
+        entity.initialize((ServerWorldAccess) getWorld(), getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
     }
 
     @Override
     public void tick() {
-        if(world instanceof ServerWorld) {
+        if(this.getWorld() instanceof ServerWorld) {
             if(!HerobrineSpawnHelper.canHerobrineSpawn()) {
                 this.remove(RemovalReason.DISCARDED);
             }
@@ -64,7 +64,7 @@ public abstract class InfectedEntity extends HostileEntity {
     public boolean tryAttack(Entity target) {
         boolean bl = super.tryAttack(target);
         if (bl) {
-            float f = this.world.getLocalDifficulty(this.getBlockPos()).getLocalDifficulty();
+            float f = this.getWorld().getLocalDifficulty(this.getBlockPos()).getLocalDifficulty();
             if (this.isOnFire() && this.random.nextFloat() < f * 0.3f) {
                 target.setOnFireFor(2 * (int)f);
             }

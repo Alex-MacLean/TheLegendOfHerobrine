@@ -71,13 +71,13 @@ public class InfectedLlamaEntity extends InfectedEntity implements RangedAttackM
 
     @Override
     public void convert() {
-        this.world.sendEntityStatus(this, (byte) 16);
+        this.getWorld().sendEntityStatus(this, (byte) 16);
         this.dropItem(ItemList.CURSED_DUST);
         MobEntity entity = this.convertTo(this.getConversionEntity(), false);
         assert entity != null;
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
-        entity.initialize((ServerWorldAccess) world, world.getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
+        entity.initialize((ServerWorldAccess) this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
         ((LlamaEntity) entity).setVariant(LlamaEntity.Variant.byId(this.getVariant().id));
     }
 
@@ -134,16 +134,16 @@ public class InfectedLlamaEntity extends InfectedEntity implements RangedAttackM
     }
 
     private void spitAt(@NotNull LivingEntity target) {
-        InfectedLlamaSpitEntity llamaSpitEntity = new InfectedLlamaSpitEntity(this.world, this);
+        InfectedLlamaSpitEntity llamaSpitEntity = new InfectedLlamaSpitEntity(this.getWorld(), this);
         double d = target.getX() - this.getX();
         double e = target.getBodyY(0.3333333333333333) - llamaSpitEntity.getY();
         double f = target.getZ() - this.getZ();
         double g = Math.sqrt(d * d + f * f) * (double)0.2f;
         llamaSpitEntity.setVelocity(d, e + g, f, 1.5f, 10.0f);
         if (!this.isSilent()) {
-            this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_LLAMA_SPIT, this.getSoundCategory(), 1.0f, 1.0f + (this.random.nextFloat() - this.random.nextFloat()) * 0.2f);
+            this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_LLAMA_SPIT, this.getSoundCategory(), 1.0f, 1.0f + (this.random.nextFloat() - this.random.nextFloat()) * 0.2f);
         }
-        this.world.spawnEntity(llamaSpitEntity);
+        this.getWorld().spawnEntity(llamaSpitEntity);
         this.spit = true;
     }
 
