@@ -1,18 +1,14 @@
 package com.herobrinemod.herobrine.savedata;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.herobrinemod.herobrine.HerobrineMod;
-import org.apache.logging.log4j.core.config.json.JsonConfiguration;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Iterator;
 import java.util.Objects;
 
 public class ConfigHandler {
