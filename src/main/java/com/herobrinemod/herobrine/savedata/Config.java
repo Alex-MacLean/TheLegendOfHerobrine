@@ -31,7 +31,7 @@ public class Config {
     // Read integer from json file
     public int readInt(String dataName) {
         if(json.get(dataName) == null || this.json == null) {
-            System.out.println("[The Legend of Herobrine/Config/ERROR]: Integer \" " + dataName + "\" Could not be found!");
+            System.out.println("[The Legend of Herobrine/Config/ERROR]: Integer \"" + dataName + "\" Could not be found!");
             return 0;
         }
         return json.get(dataName).getAsInt();
@@ -40,16 +40,25 @@ public class Config {
     // Read double from json file
     public double readDouble(String dataName) {
         if(json.get(dataName) == null || this.json == null) {
-            System.out.println("[The Legend of Herobrine/Config/ERROR]: Double \" " + dataName + "\" Could not be found!");
+            System.out.println("[The Legend of Herobrine/Config/ERROR]: Double \"" + dataName + "\" Could not be found!");
             return 0.0;
         }
         return json.get(dataName).getAsDouble();
     }
 
+    // Read float from json file
+    public float readFloat(String dataName) {
+        if(json.get(dataName) == null || this.json == null) {
+            System.out.println("[The Legend of Herobrine/Config/ERROR]: Float \"" + dataName + "\" Could not be found!");
+            return 0.0f;
+        }
+        return json.get(dataName).getAsFloat();
+    }
+
     // Read boolean from json file
     public boolean readBoolean(String dataName) {
         if(json.get(dataName) == null || this.json == null) {
-            System.out.println("[The Legend of Herobrine/Config/ERROR]: Boolean \" " + dataName + "\" Could not be found!");
+            System.out.println("[The Legend of Herobrine/Config/ERROR]: Boolean \"" + dataName + "\" Could not be found!");
             return false;
         }
         return json.get(dataName).getAsBoolean();
@@ -58,6 +67,10 @@ public class Config {
     // Get Json file in memory
     public JsonObject getJson() {
         return json;
+    }
+
+    public String getPath() {
+        return path;
     }
 
     public void setFile(byte[] newJson) {
@@ -71,5 +84,4 @@ public class Config {
             e.printStackTrace();
         }
     }
-
 }

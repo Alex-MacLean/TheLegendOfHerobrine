@@ -1,13 +1,17 @@
 package com.herobrinemod.herobrine.savedata;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.herobrinemod.herobrine.HerobrineMod;
+import org.apache.logging.log4j.core.config.json.JsonConfiguration;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Objects;
 
@@ -27,13 +31,17 @@ public class ConfigHandler {
             return;
         }
 
-        JsonObject json = JsonParser.parseString(new String(defaultJson)).getAsJsonObject();
-        Iterator<String> keys = json.keySet().iterator();
-        while (keys.hasNext()) {
-            if(!herobrineConfig.getJson().has(keys.toString())) {
-                herobrineConfig.getJson().add(keys.toString(), json.get(keys.toString()));
+        JsonObject defaultJsonObject = JsonParser.parseString(new String(defaultJson)).getAsJsonObject();
+        for (String key : defaultJsonObject.keySet()) {
+            if(!herobrineConfig.getJson().has(key)) {
+                herobrineConfig.getJson().add(key, defaultJsonObject.get(key));
+                try {
+                    Files.write(Paths.get(herobrineConfig.getPath()), herobrineConfig.getJson().toString().getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
-            keys.next();
         }
     }
 

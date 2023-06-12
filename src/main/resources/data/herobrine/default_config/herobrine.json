@@ -17,6 +17,8 @@
     "HerobrineSpyObservationDistance": 32,
     "GlowstonePillarWeight": 500,
     "SandPyramidWeight": 6000,
+    "CursedForestWeirdnessMin": 0.65,
+    "CursedForestWeirdnessMax": 1.0,
     "HerobrineEndSpawnType": 2,
     "GlobalHerobrineMessages": true
 }
