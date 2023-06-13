@@ -28,7 +28,7 @@
     "herobrine.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.0",
+    "fabricloader": ">=0.14.21",
     "fabric": ">=0.83.0",
     "fabric-api": ">=0.83.0",
     "minecraft": ">=1.20"

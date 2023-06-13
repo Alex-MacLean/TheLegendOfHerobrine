@@ -14,6 +14,7 @@ import java.util.Objects;
 public class ConfigHandler {
     private static Config herobrineConfig;
     public static void registerHerobrineConfig(String fileName) {
+        boolean fixedConfig = false;
         herobrineConfig = new Config(fileName);
         byte[] defaultJson = new byte[0];
         try {
@@ -30,13 +31,16 @@ public class ConfigHandler {
         JsonObject defaultJsonObject = JsonParser.parseString(new String(defaultJson)).getAsJsonObject();
         for (String key : defaultJsonObject.keySet()) {
             if(!herobrineConfig.getJson().has(key)) {
-                herobrineConfig.getJson().add(key, defaultJsonObject.get(key));
-                try {
-                    Files.write(Paths.get(herobrineConfig.getPath()), herobrineConfig.getJson().toString().getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                herobrineConfig.getJson().addProperty(key, String.valueOf(defaultJsonObject.get(key)));
+                fixedConfig = true;
+            }
+        }
 
+        if(fixedConfig) {
+            try {
+                Files.write(Paths.get(herobrineConfig.getPath()), herobrineConfig.getJson().toString().getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

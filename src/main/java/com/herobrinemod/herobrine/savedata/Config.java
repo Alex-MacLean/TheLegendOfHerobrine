@@ -6,7 +6,6 @@ import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.minecraft.client.MinecraftClient;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,7 +22,7 @@ public class Config {
         this.path = directory + fileName;
         try {
             this.json = (JsonObject) JsonParser.parseReader(new FileReader(path));
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             this.json = null;
         }
     }
