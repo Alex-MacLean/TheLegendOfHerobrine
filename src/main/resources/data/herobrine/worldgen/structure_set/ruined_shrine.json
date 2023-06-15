@@ -1,14 +1,14 @@
 {
   "structures": [
     {
-      "structure": "herobrine:survivor_base",
+      "structure": "herobrine:ruined_shrine",
       "weight": 1
     }
   ],
   "placement": {
     "type": "minecraft:random_spread",
-    "spacing": 64,
-    "separation": 32,
-    "salt": 1449455864
+    "spacing": 8,
+    "separation": 4,
+    "salt": 714062189
   }
 }

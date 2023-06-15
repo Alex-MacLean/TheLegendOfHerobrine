@@ -101,71 +101,59 @@ public class HerobrineBuilderEntity extends HerobrineEntity {
         if(this.buildTimer < 1 && ConfigHandler.getHerobrineConfig().readBoolean("BuilderBuilds")) {
             this.buildTimer = random.nextBetween(800, 1200);
             if (getWorld().getServer() != null) {
-                BlockState state = getWorld().getBlockState(new BlockPos((int) this.getX(), (int) this.getY() - 1, (int) this.getZ()));
+                BlockState state = getWorld().getBlockState(new BlockPos(this.getBlockX(), this.getBlockY() - 1, this.getBlockZ()));
                 ServerWorldAccess serverWorldAccess = (ServerWorld) getWorld();
-                if(random.nextInt(10) > 0) {
+                if(random.nextInt(5) > 0) {
                     if(this.getY() < getWorld().getSeaLevel()) {
                         if (getWorld().getRegistryKey().getValue().equals(DimensionTypes.OVERWORLD_ID) && state.isIn(BlockTags.BASE_STONE_OVERWORLD) && random.nextInt(5) == 0) {
                             Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "ominous_mineshaft")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
-                            this.swingHand(Hand.MAIN_HAND);
-                            this.getWorld().sendEntityStatus(this, (byte) 5);
                         }
                     } else if(state == Blocks.SAND.getDefaultState()) {
-                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "sand_structure")).place(serverWorldAccess, this.getBlockPos(),  this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
-                        this.swingHand(Hand.MAIN_HAND);
-                        this.getWorld().sendEntityStatus(this, (byte) 5);
+                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "sand_structure")).place(serverWorldAccess, new BlockPos(this.getBlockX() + 1, this.getBlockY(), this.getBlockZ() + 1), this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
                     } else if(state == Blocks.RED_SAND.getDefaultState()) {
-                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "red_sand_structure")).place(serverWorldAccess, this.getBlockPos(),  this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
-                        this.swingHand(Hand.MAIN_HAND);
-                        this.getWorld().sendEntityStatus(this, (byte) 5);
+                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "red_sand_structure")).place(serverWorldAccess, new BlockPos(this.getBlockX() + 1, this.getBlockY(), this.getBlockZ() + 1), this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
                     } else if(state == Blocks.NETHERRACK.getDefaultState() || state == Blocks.NETHER_BRICKS.getDefaultState() || state == Blocks.NETHER_BRICK_FENCE.getDefaultState() || state == Blocks.NETHER_BRICK_SLAB.getDefaultState() || state == Blocks.NETHER_BRICK_STAIRS.getDefaultState() || state == Blocks.NETHER_BRICK_WALL.getDefaultState() || state == Blocks.WARPED_NYLIUM.getDefaultState() || state == Blocks.CRIMSON_NYLIUM.getDefaultState() || state == Blocks.NETHER_WART_BLOCK.getDefaultState() || state == Blocks.WARPED_WART_BLOCK.getDefaultState() || state == Blocks.NETHER_WART.getDefaultState() || state == Blocks.WARPED_ROOTS.getDefaultState() || state == Blocks.CRIMSON_ROOTS.getDefaultState() || state == Blocks.TWISTING_VINES.getDefaultState() || state == Blocks.WEEPING_VINES.getDefaultState() || state == Blocks.CRIMSON_FUNGUS.getDefaultState() || state == Blocks.WARPED_FUNGUS.getDefaultState() || state == Blocks.WARPED_HYPHAE.getDefaultState() || state == Blocks.CRIMSON_HYPHAE.getDefaultState() || state == Blocks.SOUL_SAND.getDefaultState() || state == Blocks.SOUL_SOIL.getDefaultState()) {
-                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "netherrack_structure")).place(serverWorldAccess, this.getBlockPos(),  this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
-                        this.swingHand(Hand.MAIN_HAND);
-                        this.getWorld().sendEntityStatus(this, (byte) 5);
+                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "netherrack_structure")).place(serverWorldAccess, new BlockPos(this.getBlockX() + 1, this.getBlockY(), this.getBlockZ() + 1), this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
                     } else if(state == Blocks.END_STONE.getDefaultState() || state == Blocks.END_STONE_BRICKS.getDefaultState() || state == Blocks.END_STONE_BRICK_SLAB.getDefaultState() || state == Blocks.END_STONE_BRICK_STAIRS.getDefaultState() || state == Blocks.END_STONE_BRICK_WALL.getDefaultState() || state == Blocks.PURPUR_BLOCK.getDefaultState() || state == Blocks.PURPUR_PILLAR.getDefaultState() || state == Blocks.PURPUR_SLAB.getDefaultState() || state == Blocks.PURPUR_STAIRS.getDefaultState() || state == Blocks.CHORUS_PLANT.getDefaultState() || state == Blocks.CHORUS_FLOWER.getDefaultState() || state == Blocks.END_ROD.getDefaultState()) {
-                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "end_stone_structure")).place(serverWorldAccess, this.getBlockPos(),  this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
-                        this.swingHand(Hand.MAIN_HAND);
-                        this.getWorld().sendEntityStatus(this, (byte) 5);
+                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "end_stone_structure")).place(serverWorldAccess, new BlockPos(this.getBlockX() + 1, this.getBlockY(), this.getBlockZ() + 1), this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
                     } else if(state == Blocks.TERRACOTTA.getDefaultState()) {
-                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "terracotta_structure")).place(serverWorldAccess, this.getBlockPos(),  this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
-                        this.swingHand(Hand.MAIN_HAND);
-                        this.getWorld().sendEntityStatus(this, (byte) 5);
+                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "terracotta_structure")).place(serverWorldAccess, new BlockPos(this.getBlockX() + 1, this.getBlockY(), this.getBlockZ() + 1), this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
                     } else if(state.isIn(BlockTags.DIRT)) {
-                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "dirt_structure")).place(serverWorldAccess, this.getBlockPos(),  this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
-                        this.swingHand(Hand.MAIN_HAND);
-                        this.getWorld().sendEntityStatus(this, (byte) 5);
+                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "dirt_structure")).place(serverWorldAccess, new BlockPos(this.getBlockX() + 1, this.getBlockY(), this.getBlockZ() + 1), this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
                     } else if(state.isIn(BlockTags.BASE_STONE_OVERWORLD)) {
-                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "stone_structure")).place(serverWorldAccess, this.getBlockPos(),  this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
-                        this.swingHand(Hand.MAIN_HAND);
-                        this.getWorld().sendEntityStatus(this, (byte) 5);
+                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "stone_structure")).place(serverWorldAccess, new BlockPos(this.getBlockX() + 1, this.getBlockY(), this.getBlockZ() + 1), this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
                     } else {
-                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "dirt_structure")).place(serverWorldAccess, this.getBlockPos(),  this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
+                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "dirt_structure")).place(serverWorldAccess, new BlockPos(this.getBlockX() + 1, this.getBlockY(), this.getBlockZ() + 1), this.getBlockPos(), new StructurePlacementData(), random, Block.NOTIFY_ALL);
                     }
                 } else {
-                    int type = random.nextInt(8);
-                    switch (type) {
-                        case 0 ->
-                                Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/normal1")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
-                        case 1 ->
-                                Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/normal2")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
-                        case 2 ->
-                                Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/normal3")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
-                        case 3 ->
-                                Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/lore1")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
-                        case 4 ->
-                                Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/lore2")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
-                        case 5 ->
-                                Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/lore3")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
-                        case 6 ->
-                                Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/lore4")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
-                        case 7 ->
-                                Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/lore5")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
-                        case 8 ->
-                                Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/lore6")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
+                    if(random.nextBoolean()) {
+                        Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "glowstone_pillar")).place(serverWorldAccess, new BlockPos(this.getBlockX() + 1, this.getBlockY(), this.getBlockZ() + 1), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
+                    } else {
+                        int type = random.nextInt(8);
+                        switch (type) {
+                            case 0 ->
+                                    Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/normal1")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
+                            case 1 ->
+                                    Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/normal2")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
+                            case 2 ->
+                                    Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/normal3")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
+                            case 3 ->
+                                    Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/lore1")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
+                            case 4 ->
+                                    Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/lore2")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
+                            case 5 ->
+                                    Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/lore3")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
+                            case 6 ->
+                                    Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/lore4")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
+                            case 7 ->
+                                    Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/lore5")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
+                            case 8 ->
+                                    Objects.requireNonNull(getWorld().getServer()).getStructureTemplateManager().getTemplateOrBlank(new Identifier(HerobrineMod.MODID, "signs/lore6")).place(serverWorldAccess, this.getBlockPos(), this.getBlockPos(), new StructurePlacementData().setRotation(BlockRotation.random(random)), random, Block.NOTIFY_ALL);
+                        }
                     }
-                    this.swingHand(Hand.MAIN_HAND);
-                    this.getWorld().sendEntityStatus(this, (byte) 5);
                 }
+                this.swingHand(Hand.MAIN_HAND);
+                this.getWorld().sendEntityStatus(this, (byte) 5);
             }
         }
         this.buildTimer --;

@@ -1,0 +1,22 @@
+{
+  "values": [
+    "#minecraft:is_beach",
+    "#minecraft:is_river",
+    "#minecraft:is_taiga",
+    "#minecraft:is_forest",
+    "minecraft:mushroom_fields",
+    "minecraft:ice_spikes",
+    "#minecraft:is_savanna",
+    "minecraft:snowy_plains",
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:swamp",
+    "minecraft:mangrove_swamp",
+    "#minecraft:is_badlands",
+    "#minecraft:is_hill",
+    "minecraft:stony_shore",
+    "#minecraft:is_mountain",
+    "#minecraft:is_jungle",
+    "minecraft:desert"
+  ]
+}

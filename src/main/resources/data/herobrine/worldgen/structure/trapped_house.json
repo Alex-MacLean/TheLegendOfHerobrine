@@ -1,10 +1,10 @@
 {
   "type": "minecraft:jigsaw",
-  "biomes": "#herobrine:has_structure/survivor_base",
+  "biomes": "#herobrine:has_structure/trapped_house",
   "step": "surface_structures",
   "spawn_overrides": {},
   "terrain_adaptation": "beard_thin",
-  "start_pool": "herobrine:survivor_base",
+  "start_pool": "herobrine:trapped_house",
   "size": 1,
   "start_height": {
     "absolute": 0
