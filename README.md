@@ -46,4 +46,4 @@ You are allowed to modify this code and use it for personal use, but not redistr
 You are allowed to use this code as a reference for implementing similar, but not identical features in another mod.
 You are not allowed to redistribute recompiled bianaries from this source code, no matter how much modifications are made.
 If you want to contribute to this project feel free to contact me with whatever modifications you have made, if your code makes it into the mod I will add you to the credits section of the mcmod.info and mods.toml files.
-If you have any questions about this mod or permissions feel free to DM me on curseforge GitHub.
+If you have any questions about this mod or permissions feel free to email or DM me on Modrinth or GitHub.
