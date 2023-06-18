@@ -55,4 +55,4 @@ If you want to contribute to this project feel free to contact me with whatever 
 
 For questions about any other restrictions or permissions not stated here, please refer to the license (LGPLv3).
 
-If you have any questions about this mod or your permissions feel free to send me an email or DM me on CurseForge, Modrinth, or GitHub.
+If you have any questions about this mod or your permissions feel free to send me an email or DM me on Modrinth or GitHub.
