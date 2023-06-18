@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "herobrine",
-  "version": "0.6.5-rc1",
+  "version": "0.6.5",
   "name": "The Legend of Herobrine",
   "description": "Adds Herobrine to Minecraft, and other herobrine related things.",
   "accessWidener" : "herobrine.accesswidener",
