@@ -92,5 +92,6 @@
         }
       ]
     }
-  ]
+  ],
+  "random_sequence": "herobrine:entities/herobrine"
 }

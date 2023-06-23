@@ -1,9 +1,7 @@
 package com.herobrinemod.herobrine.blocks;
 
-import com.herobrinemod.herobrine.items.ItemList;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,7 +19,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.*;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -132,16 +133,9 @@ public class HerobrineStatueBlock extends Block implements Waterloggable{
     }
 
     @Override
-    public void onBreak(@NotNull World world, BlockPos pos, @NotNull BlockState state, PlayerEntity player) {
-        if (!world.isClient && state.get(HALF) == DoubleBlockHalf.UPPER && (state = world.getBlockState(pos = pos.down())).isOf(state.getBlock()) && state.get(HALF) == DoubleBlockHalf.LOWER) {
-            BlockState blockState2 = state.contains(Properties.WATERLOGGED) && state.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            if (player.isCreative()) {
-                world.setBlockState(pos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
-            } else {
-                world.setBlockState(pos, blockState2, Block.NOTIFY_ALL);
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ItemList.HEROBRINE_STATUE, 1)));
-            }
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, pos, Block.getRawIdFromState(state));
+    public void onBreak(@NotNull World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (!world.isClient && player.isCreative() || !player.getMainHandStack().isSuitableFor(state)) {
+            TallPlantBlock.onBreakInCreative(world, pos, state, player);
         }
         super.onBreak(world, pos, state, player);
     }
