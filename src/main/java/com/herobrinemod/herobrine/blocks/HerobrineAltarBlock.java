@@ -14,7 +14,6 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -115,49 +114,47 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
     public ActionResult onUse(@NotNull BlockState state, World world, BlockPos pos, @NotNull PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
         if (canActivate(world, pos) && state.get(TYPE) == 0 && itemStack.isOf(ItemList.CURSED_DIAMOND) || canActivate(world, pos) && state.get(TYPE) == 0 &&  itemStack.isOf(ItemList.PURIFIED_DIAMOND)) {
-            if (world instanceof ServerWorld) {
-                if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
-                    world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
-                    if(!player.isCreative()) {
-                        itemStack.decrement(1);
-                    }
-                    if(!SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
-                        if(ConfigHandler.getHerobrineConfig().readBoolean("GlobalHerobrineMessages")) {
-                            for(PlayerEntity p: world.getPlayers()) {
-                                p.sendMessage(Text.translatable("herobrine.summon"), false);
-                            }
-                        } else {
-                            player.sendMessage(Text.translatable("herobrine.summon"), false);
-                        }
-                        SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", true);
-                    }
-                } else {
-                    world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
-                    if(!player.isCreative()) {
-                        itemStack.decrement(1);
-                    }
-                    if(SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
-                        if(ConfigHandler.getHerobrineConfig().readBoolean("GlobalHerobrineMessages")) {
-                            for(PlayerEntity p: world.getPlayers()) {
-                                p.sendMessage(Text.translatable("herobrine.unsummon"), false);
-                            }
-                        } else {
-                            player.sendMessage(Text.translatable("herobrine.unsummon"), false);
-                        }
-                        SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", false);
-                    }
+            if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
+                world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
+                if(!player.isCreative()) {
+                    itemStack.decrement(1);
                 }
 
-                if (state.get(WATERLOGGED)) {
-                    world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+                if(!SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
+                    if(ConfigHandler.getHerobrineConfig().readBoolean("GlobalHerobrineMessages")) {
+                        for(PlayerEntity p: world.getPlayers()) {
+                            p.sendMessage(Text.translatable("herobrine.summon"), false);
+                        }
+                    } else {
+                        player.sendMessage(Text.translatable("herobrine.summon"), false);
+                    }
+                    SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", true);
                 }
-
-                LightningEntity lightningentity = EntityType.LIGHTNING_BOLT.create(world);
-                assert lightningentity != null;
-                lightningentity.setPos(pos.getX(), pos.getY(), pos.getZ());
-                world.spawnEntity(lightningentity);
+            } else {
+                world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
+                if(!player.isCreative()) {
+                    itemStack.decrement(1);
+                }
+                if(SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
+                    if(ConfigHandler.getHerobrineConfig().readBoolean("GlobalHerobrineMessages")) {
+                        for(PlayerEntity p: world.getPlayers()) {
+                            p.sendMessage(Text.translatable("herobrine.unsummon"), false);
+                        }
+                    } else {
+                        player.sendMessage(Text.translatable("herobrine.unsummon"), false);
+                    }
+                    SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", false);
+                }
             }
 
+            if (state.get(WATERLOGGED)) {
+                world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            }
+
+            LightningEntity lightningentity = EntityType.LIGHTNING_BOLT.create(world);
+            assert lightningentity != null;
+            lightningentity.setPos(pos.getX(), pos.getY(), pos.getZ());
+            world.spawnEntity(lightningentity);
             return ActionResult.success(world.isClient);
         }
         return super.onUse(state, world, pos, player, hand, hit);

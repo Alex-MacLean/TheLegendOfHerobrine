@@ -6,12 +6,16 @@
   "description": "Adds Herobrine to Minecraft, and other herobrine related things.",
   "accessWidener" : "herobrine.accesswidener",
   "authors": [
-    "AlexMacLean"
+    "Alex MacLean"
+  ],
+  "contributors": [
+    "\nThe track C418 - Dog is property of Daniel Rosenfeld (C418) please do not redistribute this song. If you like it please buy it on bandcamp https://c418.bandcamp.com"
   ],
     "contact": {
-    "homepage": "https://herobrinemod.com",
-    "sources": "https://github.com/Alex-MacLean/TheLegendOfHerobrine",
-    "issues": "https://github.com/Alex-MacLean/TheLegendOfHerobrine/issues"
+      "email": "macleanalex78@gmail.com",
+      "homepage": "https://herobrinemod.com",
+      "sources": "https://github.com/Alex-MacLean/TheLegendOfHerobrine",
+      "issues": "https://github.com/Alex-MacLean/TheLegendOfHerobrine/issues"
   },
   "license": "LGPL-3.0-or-later",
   "icon": "assets/herobrine/logo.png",

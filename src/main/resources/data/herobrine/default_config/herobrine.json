@@ -3,6 +3,7 @@
     "HerobrineAlwaysSpawns": false,
     "BuilderBuilds": true,
     "BedrockSwordDrops": false,
+    "CursedDiamondSwordMagicCooldown": 100,
     "AltarRequiresShrine": true,
     "HerobrineWarriorWeight": 5,
     "HerobrineSpyWeight": 8,
