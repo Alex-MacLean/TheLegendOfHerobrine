@@ -23,7 +23,7 @@ public class ItemList {
     public static final Item CURSED_DIAMOND_AXE = new AxeItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, 5, -3.0f, new Item.Settings());
     public static final Item CURSED_DIAMOND_PICKAXE = new PickaxeItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, 1, -2.8f, new Item.Settings());
     public static final Item CURSED_DIAMOND_SHOVEL = new ShovelItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, 1.5f, -3.0f, new Item.Settings());
-    public static final Item CURSED_DIAMOND_HOE = new HoeItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, -4, 0.0f, new Item.Settings());
+    public static final Item CURSED_DIAMOND_HOE = new CursedDiamondHoeItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, -4, 0.0f, new Item.Settings());
     public static final Item MUSIC_DISC_DOG = new MusicDiscItem(15, SoundList.MUSIC_DISC_DOG, new Item.Settings().rarity(Rarity.RARE).maxCount(1), 145);
     public static final Item HOLY_WATER = new HolyWaterItem(new Item.Settings());
     public static final Item UNHOLY_WATER = new UnholyWaterItem(new Item.Settings());

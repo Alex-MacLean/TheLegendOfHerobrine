@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cursed_diamond": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "herobrine:cursed_diamond"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_holy_water": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "herobrine:holy_water"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "herobrine:purified_diamond"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_cursed_diamond",
+      "has_holy_water",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "herobrine:purified_diamond"
+    ]
+  },
+  "sends_telemetry_event": false
+}

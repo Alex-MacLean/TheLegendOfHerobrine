@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "equipment",
   "pattern": [
     "A",
     "B",
@@ -15,5 +16,6 @@
   },
   "result": {
     "item": "herobrine:cursed_diamond_shovel"
-  }
+  },
+  "show_notification": true
 }

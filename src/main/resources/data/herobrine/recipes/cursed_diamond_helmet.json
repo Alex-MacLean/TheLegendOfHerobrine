@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "equipment",
   "pattern": [
     "AAA",
     "A A"
@@ -11,5 +12,6 @@
   },
   "result": {
     "item": "herobrine:cursed_diamond_helmet"
-  }
+  },
+  "show_notification": true
 }

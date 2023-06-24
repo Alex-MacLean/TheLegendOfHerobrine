@@ -4,6 +4,8 @@
     "BuilderBuilds": true,
     "BedrockSwordDrops": false,
     "CursedDiamondSwordMagicCooldown": 100,
+    "CursedDiamondHoeMagicCooldown": 500,
+    "CursedDiamondMagicItemDamage": 20,
     "AltarRequiresShrine": true,
     "HerobrineWarriorWeight": 5,
     "HerobrineSpyWeight": 8,

@@ -1,5 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "cursed_diamond",
   "pattern": [
     "AAA",
     "ABA",
@@ -15,5 +17,6 @@
   },
   "result": {
     "item": "herobrine:cursed_diamond"
-  }
+  },
+  "show_notification": true
 }

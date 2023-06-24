@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cursed_diamond": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "herobrine:cursed_diamond"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "herobrine:cursed_diamond_sword"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_cursed_diamond",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "herobrine:cursed_diamond_sword"
+    ]
+  },
+  "sends_telemetry_event": false
+}

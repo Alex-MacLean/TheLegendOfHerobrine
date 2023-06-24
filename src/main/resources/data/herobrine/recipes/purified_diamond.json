@@ -1,5 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "purified_diamond",
   "ingredients": [
     {
       "item": "herobrine:cursed_diamond"
@@ -10,5 +12,6 @@
   ],
   "result": {
     "item": "herobrine:purified_diamond"
-  }
+  },
+  "show_notification": true
 }

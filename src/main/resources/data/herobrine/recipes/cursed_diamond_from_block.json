@@ -1,5 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "cursed_diamond",
   "ingredients": [
     {
       "item": "herobrine:cursed_diamond_block"
@@ -8,5 +10,6 @@
   "result": {
     "item": "herobrine:cursed_diamond",
     "count": 9
-  }
+  },
+  "show_notification": true
 }

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "minecraft:gold_ingot"
@@ -32,5 +33,6 @@
   "result": {
     "item": "herobrine:cursed_dust",
     "count": 4
-  }
+  },
+  "show_notification": true
 }

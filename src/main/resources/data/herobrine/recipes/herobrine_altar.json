@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "pattern": [
     "A A",
     "ABA",
@@ -18,5 +19,6 @@
   },
   "result": {
     "item": "herobrine:herobrine_altar"
-  }
+  },
+  "show_notification": true
 }

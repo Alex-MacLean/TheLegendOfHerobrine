@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "pattern": [
     " B ",
     "BAB",
@@ -15,5 +16,6 @@
   },
   "result": {
     "item": "herobrine:herobrine_statue"
-  }
+  },
+  "show_notification": true
 }

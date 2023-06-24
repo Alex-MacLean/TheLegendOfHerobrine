@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "minecraft:iron_nugget"
@@ -32,5 +33,6 @@
   "result": {
     "item": "herobrine:holy_water",
     "count": 1
-  }
+  },
+  "show_notification": true
 }

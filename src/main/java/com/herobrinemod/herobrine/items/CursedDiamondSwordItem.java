@@ -39,7 +39,7 @@ public class CursedDiamondSwordItem extends SwordItem {
             user.incrementStat(Stats.USED.getOrCreateStat(this));
             if (!user.getAbilities().creativeMode) {
                 user.getItemCooldownManager().set(this, ConfigHandler.getHerobrineConfig().readInt("CursedDiamondSwordMagicCooldown"));
-                itemStack.damage(1, user, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+                itemStack.damage(ConfigHandler.getHerobrineConfig().readInt("CursedDiamondMagicItemDamage"), user, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             }
             return TypedActionResult.success(itemStack, world.isClient());
         }
