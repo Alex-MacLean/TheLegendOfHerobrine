@@ -100,13 +100,18 @@ public class SurvivorEntity extends MerchantEntity {
         this.setTextureNamespace(nbt.getString("TextureNamespace"));
     }
 
+    // Returning null for getYesSound() and getTradingSound() causes a NullPointerException
+    // which for some reason leads to a duplication exploit where a player can get items for free
+    // by quickly closing the trading window after completing the trade,
+    // so I supply it with a SoundEvent with an empty string as the identifier and the bug seems to be fixed
+    // Don't ask me why this happens. Probably something to do with spamming the console causing the trading code to stop for a short time
     @Override
     public SoundEvent getYesSound() {
-        return null;
+        return SoundEvent.of(new Identifier(""));
     }
 
     protected SoundEvent getTradingSound(boolean sold) {
-        return null;
+        return SoundEvent.of(new Identifier(""));
     }
 
     @Override
