@@ -60,5 +60,8 @@
   "item.herobrine.herobrine_stalker_spawn_egg": "Jajo Przyzywające Herobrine Stalker",
   "entity.herobrine.herobrine_stalker": "Herobrine",
   "item.herobrine.music_disc_dog": "Płyta muzyczna",
-  "item.herobrine.music_disc_dog.desc": "C418 - dog"
+  "item.herobrine.music_disc_dog.desc": "C418 - dog",
+  "herobrine.summon": "<Herobrine> Nie masz pojęcia co zrobiłaś!",
+  "herobrine.unsummon": "<Herobrine> Ja wrócę!",
+  "item.herobrine.cursed_diamond_sword.kills": "Zabija:"
 }

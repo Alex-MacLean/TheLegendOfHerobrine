@@ -60,5 +60,8 @@
   "item.herobrine.herobrine_stalker_spawn_egg": "Herobrine潜行者刷怪蛋",
   "entity.herobrine.herobrine_stalker": "Herobrine",
   "item.herobrine.music_disc_dog": "音乐唱片",
-  "item.herobrine.music_disc_dog.desc": "C418 - dog"
+  "item.herobrine.music_disc_dog.desc": "C418 - dog",
+  "herobrine.summon": "<Herobrine> 你根本不知道自己做了什么！",
+  "herobrine.unsummon": "<Herobrine> 我会回来的！",
+  "item.herobrine.cursed_diamond_sword.kills": "击杀:"
 }

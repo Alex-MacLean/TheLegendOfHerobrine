@@ -62,5 +62,6 @@
   "item.herobrine.music_disc_dog": "Music Disc",
   "item.herobrine.music_disc_dog.desc": "C418 - dog",
   "herobrine.summon": "<Herobrine> You have no idea what you have done!",
-  "herobrine.unsummon": "<Herobrine> I shall return!"
+  "herobrine.unsummon": "<Herobrine> I shall return!",
+  "item.herobrine.cursed_diamond_sword.kills": "Kills:"
 }

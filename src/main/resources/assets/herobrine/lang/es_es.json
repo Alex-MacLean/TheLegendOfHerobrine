@@ -60,5 +60,8 @@
   "item.herobrine.herobrine_stalker_spawn_egg": "Generar Herobrine Acosador",
   "entity.herobrine.herobrine_stalker": "Herobrine",
   "item.herobrine.music_disc_dog": "Disco de música",
-  "item.herobrine.music_disc_dog.desc": "C418 - dog"
+  "item.herobrine.music_disc_dog.desc": "C418 - dog",
+  "herobrine.summon": "<Herobrine> ¡No tienes idea de lo que has hecho!",
+  "herobrine.unsummon": "<Herobrine> ¡Voy a volver!",
+  "item.herobrine.cursed_diamond_sword.kills": "Matar:"
 }
