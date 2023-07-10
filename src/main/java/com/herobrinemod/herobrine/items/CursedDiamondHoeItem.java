@@ -33,8 +33,9 @@ public class CursedDiamondHoeItem extends HoeItem {
         Fertilizable fertilizable;
         BlockState blockState = world.getBlockState(blockPos);
         PlayerEntity player = context.getPlayer();
+        assert player != null;
         Pair<Predicate<ItemUsageContext>, Consumer<ItemUsageContext>> pair = TILLING_ACTIONS.get(world.getBlockState(blockPos = context.getBlockPos()).getBlock());
-        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable) blockState.getBlock()).isFertilizable(world, blockPos, blockState, world.isClient) && pair == null) {
+        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable) blockState.getBlock()).isFertilizable(world, blockPos, blockState, world.isClient) && pair == null && !player.isSneaking()) {
             boolean fertilized = false;
             if (fertilizable.canGrow(world, world.random, blockPos, blockState)) {
                 if (world instanceof ServerWorld) {
@@ -44,7 +45,6 @@ public class CursedDiamondHoeItem extends HoeItem {
                 fertilized = true;
             }
 
-            assert player != null;
             if(!player.isCreative()) {
                 player.getItemCooldownManager().set(this, ConfigHandler.getHerobrineConfig().readInt("CursedDiamondHoeMagicCooldownTicks"));
                 context.getStack().damage(ConfigHandler.getHerobrineConfig().readInt("CursedDiamondMagicItemDamage"), player, p -> p.sendToolBreakStatus(context.getHand()));

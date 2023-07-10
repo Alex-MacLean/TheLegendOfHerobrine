@@ -1,5 +1,6 @@
 package com.herobrinemod.herobrine.items;
 
+import com.herobrinemod.herobrine.entities.FakeHerobrineMageEntity;
 import com.herobrinemod.herobrine.savedata.ConfigHandler;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityType;
@@ -35,7 +36,7 @@ public class CursedDiamondSwordItem extends SwordItem {
 
     @Override
     public boolean postHit(ItemStack stack, @NotNull LivingEntity target, LivingEntity attacker) {
-        if(!target.isAlive()) {
+        if(!target.isAlive() && !(target instanceof FakeHerobrineMageEntity)) {
             this.setKills(stack, getKills(stack) + 1);
         }
         return super.postHit(stack, target, attacker);

@@ -84,21 +84,27 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
     @Override
     public void mobTick() {
         super.mobTick();
-            if(this.destroyCooldown < 1 && ConfigHandler.getHerobrineConfig().readBoolean("WarriorBreaksBlocks") && this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
-                this.destroyCooldown = random.nextBetween(400, 600);
-                for (int x = -1; x <= 1; x ++) {
-                    for (int z = -1; z <= 1; z ++) {
-                        for (int y = 0; y <= 3; y ++) {
-                            BlockPos blockPos = new BlockPos(MathHelper.floor(this.getX()) + x, MathHelper.floor(this.getY()) + y, MathHelper.floor(this.getZ()) + z);
-                            BlockState blockState = this.getWorld().getBlockState(blockPos);
-                            if (this.canDestroy(blockState)) {
-                                this.getWorld().breakBlock(blockPos, true, this);
-                                this.swingHand(Hand.MAIN_HAND);
-                            }
-                        }
-                    }
+        if(this.destroyCooldown < 1 && ConfigHandler.getHerobrineConfig().readBoolean("WarriorBreaksBlocks") && this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
+            this.destroyCooldown = random.nextBetween(400, 600);
+            for (int y = 0; y <= 1; y ++) {
+                int x = 0;
+                int z = 0;
+
+                switch (this.getHorizontalFacing()) {
+                    case NORTH -> z --;
+                    case EAST -> x ++;
+                    case SOUTH -> z ++;
+                    case WEST ->  x --;
+                }
+
+                BlockPos blockPos = new BlockPos(this.getBlockX() + x, MathHelper.floor(this.getY()) + y, this.getBlockZ() + z);
+                BlockState blockState = this.getWorld().getBlockState(blockPos);
+                if (this.canDestroy(blockState)) {
+                    this.getWorld().breakBlock(blockPos, true, this);
+                    this.swingHand(Hand.MAIN_HAND);
                 }
             }
+        }
         this.destroyCooldown --;
     }
 

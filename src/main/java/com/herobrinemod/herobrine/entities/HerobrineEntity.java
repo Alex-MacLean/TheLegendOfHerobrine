@@ -89,9 +89,6 @@ public abstract class HerobrineEntity extends HostileEntity {
     }
 
     public boolean unableToAttackTarget() {
-        if (this.getTarget() != null) {
-            return this.getNavigation().isIdle() && this.distanceTo(this.getTarget()) > 1.5f;
-        }
-        return false;
+        return this.getTarget() != null && this.getNavigation().isIdle() && this.distanceTo(this.getTarget()) > 1.5f;
     }
 }
