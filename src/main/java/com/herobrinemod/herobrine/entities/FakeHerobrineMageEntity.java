@@ -81,6 +81,12 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
     }
 
     @Override
+    public void onDeath(DamageSource damageSource) {
+        super.onDeath(damageSource);
+        this.getWorld().sendEntityStatus(this, (byte) 4);
+    }
+
+    @Override
     public void mobTick() {
         if(this.lifeTimer < 1) {
             this.getWorld().sendEntityStatus(this, (byte) 4);

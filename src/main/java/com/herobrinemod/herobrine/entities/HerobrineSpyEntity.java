@@ -3,6 +3,7 @@ package com.herobrinemod.herobrine.entities;
 import com.herobrinemod.herobrine.savedata.ConfigHandler;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.FleeEntityGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -14,11 +15,15 @@ import net.minecraft.entity.mob.IllagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class HerobrineSpyEntity extends HerobrineEntity {
     private int lifeTimer;
@@ -75,6 +80,17 @@ public class HerobrineSpyEntity extends HerobrineEntity {
             this.remove(RemovalReason.DISCARDED);
         }
         this.lifeTimer --;
+
+        Box effectBox = getBoundingBox().expand(8.0, 0.0, 8.0);
+        List<LivingEntity> affectedEntities = this.getWorld().getEntitiesByClass(LivingEntity.class, effectBox, EntityPredicates.VALID_LIVING_ENTITY);
+        if(!affectedEntities.isEmpty()) {
+            for(LivingEntity entity : affectedEntities) {
+                if((entity instanceof PlayerEntity && !((PlayerEntity) entity).isCreative()) || entity instanceof SurvivorEntity) {
+                    this.getWorld().sendEntityStatus(this, (byte) 4);
+                    this.remove(RemovalReason.DISCARDED);
+                }
+            }
+        }
         super.mobTick();
     }
 

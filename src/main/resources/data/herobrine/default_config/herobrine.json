@@ -6,7 +6,7 @@
     "CursedDiamondSwordMagicCooldown": 50,
     "CursedDiamondSwordChargeCost": 5,
     "CursedDiamondHoeMagicCooldown": 500,
-    "CursedDiamondMagicItemDamage": 20,
+    "CursedDiamondMagicItemDamage": 10,
     "AltarRequiresShrine": true,
     "HerobrineWarriorWeight": 5,
     "HerobrineSpyWeight": 8,
