@@ -25,7 +25,7 @@ import java.util.Optional;
 @Mixin(Block.class)
 public abstract class BlockMixin {
     @Inject(method = "getDroppedStacks(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/BlockEntity;Lnet/minecraft/entity/Entity;Lnet/minecraft/item/ItemStack;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
-    private static void cursedDiamondPickaxeAutoSmelt(BlockState state, ServerWorld world, BlockPos pos, @Nullable BlockEntity blockEntity, @Nullable Entity entity, @NotNull ItemStack stack, @NotNull CallbackInfoReturnable<List<ItemStack>> cir) {
+    private static void cursedDiamondToolLootTableFunctions(BlockState state, ServerWorld world, BlockPos pos, @Nullable BlockEntity blockEntity, @Nullable Entity entity, @NotNull ItemStack stack, @NotNull CallbackInfoReturnable<List<ItemStack>> cir) {
         if (stack.getItem() == ItemList.CURSED_DIAMOND_PICKAXE && stack.getItem().isSuitableFor(state)) {
             List<ItemStack> returnValue = cir.getReturnValue();
             for (ItemStack itemStack : returnValue) {
@@ -38,6 +38,12 @@ public abstract class BlockMixin {
                     cir.setReturnValue(drops);
                 }
             }
+        }
+        if (stack.getItem() == ItemList.CURSED_DIAMOND_SHOVEL && stack.getItem().isSuitableFor(state)) {
+            List<ItemStack> drops = new ArrayList<>();
+            ItemStack newStack = state.getBlock().asItem().getDefaultStack();
+            drops.add(newStack);
+            cir.setReturnValue(drops);
         }
     }
 }

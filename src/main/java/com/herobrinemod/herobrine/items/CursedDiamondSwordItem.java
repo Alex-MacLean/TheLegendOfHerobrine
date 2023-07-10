@@ -65,7 +65,9 @@ public class CursedDiamondSwordItem extends SwordItem {
     public TypedActionResult<ItemStack> use(@NotNull World world, @NotNull PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         if((user.isCreative() || this.getKills(itemStack) >= ConfigHandler.getHerobrineConfig().readInt("CursedDiamondSwordChargeCost")) && !user.isSneaking()) {
-            world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, SoundCategory.PLAYERS, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
+            if(!user.isSilent()) {
+                world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, SoundCategory.PLAYERS, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
+            }
             for (int i = 0; i < 16; i ++) {
                 world.addParticle(ParticleTypes.PORTAL, user.getParticleX(1.0), user.getRandomBodyY() - 1, user.getParticleZ(1.0), user.getRandom().nextGaussian() * 0.02, user.getRandom().nextGaussian() * 0.02, user.getRandom().nextGaussian() * 0.02);
             }
@@ -76,7 +78,7 @@ public class CursedDiamondSwordItem extends SwordItem {
             world.spawnEntity(lightningentity);
             user.incrementStat(Stats.USED.getOrCreateStat(this));
             if (!user.isCreative()) {
-                user.getItemCooldownManager().set(this, ConfigHandler.getHerobrineConfig().readInt("CursedDiamondSwordMagicCooldown"));
+                user.getItemCooldownManager().set(this, ConfigHandler.getHerobrineConfig().readInt("CursedDiamondSwordMagicCooldownTicks"));
                 if(hand.equals(Hand.MAIN_HAND)) {
                     itemStack.damage(ConfigHandler.getHerobrineConfig().readInt("CursedDiamondMagicItemDamage"), user, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
                 } else {

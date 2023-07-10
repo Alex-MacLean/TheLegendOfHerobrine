@@ -20,7 +20,7 @@ public class ItemList {
     public static final Item CURSED_DIAMOND_LEGGINGS = new ArmorItem(ArmorMaterialList.CURSED_DIAMOND_ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS, new Item.Settings());
     public static final Item CURSED_DIAMOND_BOOTS = new ArmorItem(ArmorMaterialList.CURSED_DIAMOND_ARMOR_MATERIAL, ArmorItem.Type.BOOTS, new Item.Settings());
     public static final Item CURSED_DIAMOND_SWORD = new CursedDiamondSwordItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, 3, -2.4f, new Item.Settings());
-    public static final Item CURSED_DIAMOND_AXE = new AxeItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, 5, -3.0f, new Item.Settings());
+    public static final Item CURSED_DIAMOND_AXE = new CursedDiamondAxeItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, 5, -3.0f, new Item.Settings());
     public static final Item CURSED_DIAMOND_PICKAXE = new PickaxeItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, 1, -2.8f, new Item.Settings());
     public static final Item CURSED_DIAMOND_SHOVEL = new ShovelItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, 1.5f, -3.0f, new Item.Settings());
     public static final Item CURSED_DIAMOND_HOE = new CursedDiamondHoeItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, -4, 0.0f, new Item.Settings());

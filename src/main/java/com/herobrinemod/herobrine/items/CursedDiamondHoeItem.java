@@ -12,6 +12,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -45,12 +46,15 @@ public class CursedDiamondHoeItem extends HoeItem {
 
             assert player != null;
             if(!player.isCreative()) {
-                player.getItemCooldownManager().set(this, ConfigHandler.getHerobrineConfig().readInt("CursedDiamondHoeMagicCooldown"));
+                player.getItemCooldownManager().set(this, ConfigHandler.getHerobrineConfig().readInt("CursedDiamondHoeMagicCooldownTicks"));
                 context.getStack().damage(ConfigHandler.getHerobrineConfig().readInt("CursedDiamondMagicItemDamage"), player, p -> p.sendToolBreakStatus(context.getHand()));
             }
 
             if(fertilized) {
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, SoundCategory.PLAYERS, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
+                player.incrementStat(Stats.USED.getOrCreateStat(this));
+                if(!player.isSilent()) {
+                    world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, SoundCategory.PLAYERS, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
+                }
                 for (int i = 0; i < 16; i ++) {
                     world.addParticle(ParticleTypes.PORTAL, player.getParticleX(1.0), player.getRandomBodyY() - 1, player.getParticleZ(1.0), player.getRandom().nextGaussian() * 0.02, player.getRandom().nextGaussian() * 0.02, player.getRandom().nextGaussian() * 0.02);
                 }
