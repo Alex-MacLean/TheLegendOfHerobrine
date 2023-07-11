@@ -32,7 +32,7 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
 
     public HerobrineWarriorEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
-        this.destroyCooldown = this.getRandom().nextBetween(400, 600);
+        this.destroyCooldown = this.getRandom().nextBetween(200, 600);
         this.experiencePoints = 5;
 
     }
@@ -85,16 +85,23 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
     public void mobTick() {
         super.mobTick();
         if(this.destroyCooldown < 1 && ConfigHandler.getHerobrineConfig().readBoolean("WarriorBreaksBlocks") && this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
-            this.destroyCooldown = random.nextBetween(400, 600);
+            this.destroyCooldown = random.nextBetween(200, 600);
             for (int y = 0; y <= 1; y ++) {
                 int x = 0;
                 int z = 0;
 
-                switch (this.getHorizontalFacing()) {
-                    case NORTH -> z --;
-                    case EAST -> x ++;
-                    case SOUTH -> z ++;
-                    case WEST ->  x --;
+                if(MathHelper.abs(this.getBlockX() - getTarget().getBlockX()) > MathHelper.abs(this.getBlockZ() - getTarget().getBlockZ())) {
+                    if(this.getBlockX() > this.getTarget().getBlockX()) {
+                        x --;
+                    } else {
+                        x ++;
+                    }
+                } else {
+                    if(this.getBlockZ() > this.getTarget().getBlockZ()) {
+                        z --;
+                    } else {
+                        z ++;
+                    }
                 }
 
                 BlockPos blockPos = new BlockPos(this.getBlockX() + x, MathHelper.floor(this.getY()) + y, this.getBlockZ() + z);

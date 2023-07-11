@@ -126,30 +126,36 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                     itemStack.decrement(1);
                 }
 
-                if(!SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
-                    if(ConfigHandler.getHerobrineConfig().readBoolean("GlobalHerobrineMessages")) {
-                        for(PlayerEntity p: world.getPlayers()) {
-                            p.sendMessage(Text.translatable("herobrine.summon"), false);
+                if(!world.isClient) {
+                    if(!SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
+                        if(ConfigHandler.getHerobrineConfig().readBoolean("GlobalHerobrineMessages")) {
+                            for(PlayerEntity p: world.getPlayers()) {
+                                p.sendMessage(Text.translatable("herobrine.summon"), false);
+                            }
+                        } else {
+                            player.sendMessage(Text.translatable("herobrine.summon"), false);
                         }
-                    } else {
-                        player.sendMessage(Text.translatable("herobrine.summon"), false);
+                        SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", true);
                     }
-                    SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", true);
                 }
+
             } else {
                 world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
                 if(!player.isCreative()) {
                     itemStack.decrement(1);
                 }
-                if(SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
-                    if(ConfigHandler.getHerobrineConfig().readBoolean("GlobalHerobrineMessages")) {
-                        for(PlayerEntity p: world.getPlayers()) {
-                            p.sendMessage(Text.translatable("herobrine.unsummon"), false);
+
+                if(!world.isClient) {
+                    if(SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
+                        if(ConfigHandler.getHerobrineConfig().readBoolean("GlobalHerobrineMessages")) {
+                            for(PlayerEntity p: world.getPlayers()) {
+                                p.sendMessage(Text.translatable("herobrine.unsummon"), false);
+                            }
+                        } else {
+                            player.sendMessage(Text.translatable("herobrine.unsummon"), false);
                         }
-                    } else {
-                        player.sendMessage(Text.translatable("herobrine.unsummon"), false);
+                        SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", false);
                     }
-                    SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", false);
                 }
             }
 
