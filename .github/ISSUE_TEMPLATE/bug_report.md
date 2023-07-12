@@ -23,8 +23,8 @@ If applicable, add screenshots to help explain your problem.
  - OS: [e.g. Windows 11 64 bit] (If you are using GNU/Linux state the distro and kernel branch and version e.g. Arch Linux - 6.4.2-zen1-1-zen. Can easily be found in neofetch)
  - Java Version: [e.g. JRE 17.0.1 64 bit]
  - Minecraft Version: [e.g. 1.20.1]
- - Fabric Version: [e.g. 0.14.21] (If you're using a development environment please state that you are)
- - Fabric API Version: [e.g. 0.83.0]
+ - Fabric/Quilt Version: [e.g. 0.14.21] (If you're using a development environment please state that you are)
+ - Fabric API/QFAPI+QSL Version: [e.g. 0.83.0]
  - Mod Version: [e.g. 1.0]
 
 **Additional context**
