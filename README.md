@@ -5,7 +5,9 @@
 
 The Legend of Herobrine is a mod designed for modern versions of Minecraft that aims to add Herobrine to the game with many new gameplay features while also fitting in with vanilla gameplay and keeping the scary theme surrounding Herobrine while remaining relevant and fun in larger modpacks. Currently in beta. Major bugs may arise!
 
-For a full description and access to preview builds visit: https://www.herobrinemod.com/about
+For a full description visit: https://www.herobrinemod.com/about
+
+Preview Builds are hosted here: https://github.com/Alex-MacLean/TheLegendOfHerobrine-Preview/releases
 
 Screenshots: https://www.herobrinemod.com/screenshots
 
@@ -15,31 +17,33 @@ Programmer Art Style Resource Pack: https://github.com/Alex-MacLean/TheLegendOf
 
 **How to build this mod from the source code:**
 
-(Warning: advanced users only!)
-
 **Prerequisites:**
 
-JDK 17.0.1 or newer: (Oracle JDK) https://www.oracle.com/java/technologies/downloads/ (OpenJDK) https://openjdk.java.net/
+JDK 17 (17.0.1 or newer): (Oracle JDK) https://www.oracle.com/java/technologies/downloads/#jdk17 (OpenJDK) https://jdk.java.net/archive/
 
-JavaFX 17 or newer: https://gluonhq.com/products/javafx/
+JavaFX 17: https://gluonhq.com/products/javafx/
+
+If you use GNU/Linux install the latest versions of JDK 17 and OpenJFX 17 from your distros package repositories.
 
 (Windows Only) Add Java to path environment variable: https://www.javatpoint.com/how-to-set-path-in-java (Use second, permanent method)
 
-IDE with Java support. I use Intellij Idea: https://www.jetbrains.com/idea/download/
+IDE with Java support. I use Intellij Idea: https://www.jetbrains.com/idea/download/ (If you are using GNU/Linux your preferred IDE should be in your distros package repositories, if not see if they have an appimage or build and install it from source or choose an IDE available in your distros package repositories)
 
-**Step 1:** Download the source code of the desired branch as a zip file.
+**Step 1:** (Required) Download the source code of the desired branch as a zip file.
 
-**Step 2:** Extract the zip file.
+**Step 2:** (Required) Extract the zip file.
 
-**Step 3:** Open build.gradle in your IDE. This file is located in the base directory of the source code. In Intellij Idea press open and browse to where you extracted the code locate build.gradle and open it
+**Step 3:** (Required) Open build.gradle as a project in your IDE. This file is located in the base directory of the source code. In Intellij Idea press open and browse to where you extracted the code locate build.gradle and open it
 
-**Setp 4:** In the gradle processes window sync/reload the project if your IDE doesn't do it automatically. In Intellij Idea it is the arrow circle button in the top left corner.
+**Setp 4:** (Required) In the gradle processes window sync/reload the project if your IDE doesn't do it automatically. In Intellij Idea it is the arrow circle button in the top left corner.
 
-**Setp 5:** The gradle processes window should now be populated with directories and processes. Go to Tasks -> forgegradle runs and run gen*name of your ide*Runs (For intellij idea run genIntellijRuns). This should download the rest of the required files to begin building the mod.
+**Setp 5:** (Optional, Recommended) The gradle processes window should now be populated with directories and processes. Go to Tasks -> fabric and run genSources to generate the sources for Vanilla Minecraft. You may have to choose the sources file to use in your IDE. Choose the file with "-sources" appended to the end. Your IDE should be able to locate the directory automatically
 
-**Setp 6:** In the gradle window go to Tasks -> build and run build. If everything is set up properly it should build the mod file.
+**Step 6:** (Optional, Intellij Idea, Source Code Testing) If run configurations do not appear and you are using Intellij Idea go to Tasks -> fabric and run ideaSyncTask
 
-**Step 7:** The jar file is located in build/libs/LegendOfHerobrine-*VERSION*.jar. You can install this file like any other mod.
+**Setp 7:** (Required) In the gradle window go to Tasks -> build and run build. If everything is set up properly it should build the mod file.
+
+**Step 8:** (Info) The jar file is located in .../build/libs/LegendOfHerobrine-*VERSION*.jar. You can install this file like any other mod.
 
 **Permissions:**
 
