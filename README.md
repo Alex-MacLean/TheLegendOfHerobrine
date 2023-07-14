@@ -15,7 +15,7 @@ FAQ: https://www.herobrinemod.com/faq
 
 Programmer Art Style Resource Pack: https://github.com/Alex-MacLean/TheLegendOfHerobrine/releases/download/0.6.0/Herobrine-Programmer-Art.zip
 
-**How to build this mod from the source code:**
+**How to build this mod from source:**
 
 **Prerequisites:**
 
