@@ -29,6 +29,8 @@ If you use GNU/Linux install the latest versions of JDK 17 and OpenJFX 17 from y
 
 IDE with Java support. I use Intellij Idea: https://www.jetbrains.com/idea/download/ (If you are using GNU/Linux your preferred IDE should be in your distros package repositories, if not see if they have an appimage or build and install it from source or choose an IDE available in your distros package repositories)
 
+**Building**
+
 **Step 1:** (Required) Download the source code of the desired branch as a zip file.
 
 **Step 2:** (Required) Extract the zip file.
