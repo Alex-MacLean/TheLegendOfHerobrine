@@ -93,6 +93,7 @@ public class HerobrineMageEntity extends HerobrineEntity {
                     FakeHerobrineMageEntity entity = new FakeHerobrineMageEntity(EntityTypeList.FAKE_HEROBRINE_MAGE, this.getWorld());
                     entity.setLifeTimer(duration);
                     entity.updatePositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
+                    entity.setOriginal(this);
                     this.getWorld().spawnEntity(entity);
                     this.getWorld().sendEntityStatus(entity, (byte) 4);
                 }

@@ -5,6 +5,7 @@ import com.herobrinemod.herobrine.savedata.ConfigHandler;
 import com.herobrinemod.herobrine.savedata.SaveDataHandler;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -135,6 +136,10 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                         } else {
                             player.sendMessage(Text.translatable("herobrine.summon"), false);
                         }
+                        LightningEntity lightningentity = EntityType.LIGHTNING_BOLT.create(world);
+                        assert lightningentity != null;
+                        lightningentity.setPos(pos.getX(), pos.getY(), pos.getZ());
+                        world.spawnEntity(lightningentity);
                         SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", true);
                     }
                 }
@@ -154,6 +159,10 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                         } else {
                             player.sendMessage(Text.translatable("herobrine.unsummon"), false);
                         }
+                        LightningEntity lightningentity = EntityType.LIGHTNING_BOLT.create(world);
+                        assert lightningentity != null;
+                        lightningentity.setPos(pos.getX(), pos.getY(), pos.getZ());
+                        world.spawnEntity(lightningentity);
                         SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", false);
                     }
                 }
@@ -162,12 +171,32 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
             if (state.get(WATERLOGGED)) {
                 world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
             }
-
-            LightningEntity lightningentity = EntityType.LIGHTNING_BOLT.create(world);
-            assert lightningentity != null;
-            lightningentity.setPos(pos.getX(), pos.getY(), pos.getZ());
-            world.spawnEntity(lightningentity);
             return ActionResult.success(world.isClient);
+        } else {
+            switch (state.get(TYPE)) {
+                case 1 -> {
+                    world.setBlockState(pos, this.getDefaultState().with(TYPE, 0));
+                    ItemStack stack = new ItemStack(ItemList.CURSED_DIAMOND);
+                    if (!player.getInventory().insertStack(stack) || !stack.isEmpty()) {
+                        ItemEntity itemEntity = player.dropItem(stack, false);
+                        assert itemEntity != null;
+                        itemEntity.resetPickupDelay();
+                        itemEntity.setOwner(player.getUuid());
+                    }
+                    return ActionResult.success(world.isClient);
+                }
+                case 2 -> {
+                    world.setBlockState(pos, this.getDefaultState().with(TYPE, 0));
+                    ItemStack stack = new ItemStack(ItemList.PURIFIED_DIAMOND);
+                    if (!player.getInventory().insertStack(stack) || !stack.isEmpty()) {
+                        ItemEntity itemEntity = player.dropItem(stack, false);
+                        assert itemEntity != null;
+                        itemEntity.resetPickupDelay();
+                        itemEntity.setOwner(player.getUuid());
+                    }
+                    return ActionResult.success(world.isClient);
+                }
+            }
         }
         return super.onUse(state, world, pos, player, hand, hit);
     }

@@ -13,6 +13,7 @@ import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.LocalDifficulty;
@@ -21,8 +22,12 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+import java.util.UUID;
+
 public class FakeHerobrineMageEntity extends HerobrineEntity {
     private int lifeTimer;
+    private UUID originalUUID;
 
     public FakeHerobrineMageEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -55,6 +60,10 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.6);
     }
 
+    public void setOriginal(@NotNull HerobrineMageEntity entity) {
+        this.originalUUID = entity.getUuid();
+    }
+
     public void setLifeTimer(int time) {
         this.lifeTimer = time;
     }
@@ -63,12 +72,14 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putInt("LifeTimer", this.lifeTimer);
+        nbt.putUuid("OriginalUUID", this.originalUUID);
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         this.lifeTimer = nbt.getInt("LifeTimer");
+        this.originalUUID = nbt.getUuid("OriginalUUID");
     }
 
     @Override
@@ -82,12 +93,23 @@ public class FakeHerobrineMageEntity extends HerobrineEntity {
 
     @Override
     public void onDeath(DamageSource damageSource) {
-        super.onDeath(damageSource);
         this.getWorld().sendEntityStatus(this, (byte) 4);
+        this.remove(RemovalReason.KILLED);
     }
 
     @Override
     public void mobTick() {
+        if(this.getWorld() instanceof ServerWorld) {
+            try {
+                if(!Objects.requireNonNull(((ServerWorld) this.getWorld()).getEntity(originalUUID)).isAlive()) {
+                    this.getWorld().sendEntityStatus(this, (byte) 4);
+                    this.remove(RemovalReason.DISCARDED);
+                }
+            } catch (NullPointerException e) {
+                this.getWorld().sendEntityStatus(this, (byte) 4);
+                this.remove(RemovalReason.DISCARDED);
+            }
+        }
         if(this.lifeTimer < 1) {
             this.getWorld().sendEntityStatus(this, (byte) 4);
             this.remove(RemovalReason.DISCARDED);
