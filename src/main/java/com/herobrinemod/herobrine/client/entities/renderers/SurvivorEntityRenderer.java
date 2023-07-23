@@ -28,6 +28,6 @@ public class SurvivorEntityRenderer extends MobEntityRenderer<SurvivorEntity, Su
 
     @Override
     public Identifier getTexture(@NotNull SurvivorEntity entity) {
-        return entity.getSkin();
+        return entity.getTexture();
     }
 }

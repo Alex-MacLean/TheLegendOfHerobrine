@@ -61,6 +61,7 @@ public class WorldSaveData {
         try {
             Files.write(Paths.get(jsonPath), json.toString().getBytes());
         } catch (IOException e) {
+            System.out.println("[The Legend of Herobrine/Save Data/ERROR]: Integer \"" + dataName + "\" Could not be written!");
             e.printStackTrace();
         }
     }
@@ -74,6 +75,7 @@ public class WorldSaveData {
         try {
             Files.write(Paths.get(jsonPath), json.toString().getBytes());
         } catch (IOException e) {
+            System.out.println("[The Legend of Herobrine/Save Data/ERROR]: Double \"" + dataName + "\" Could not be written!");
             e.printStackTrace();
         }
     }
@@ -87,6 +89,7 @@ public class WorldSaveData {
         try {
             Files.write(Paths.get(jsonPath), json.toString().getBytes());
         } catch (IOException e) {
+            System.out.println("[The Legend of Herobrine/Save Data/ERROR]: Boolean \"" + dataName + "\" Could not be written!");
             e.printStackTrace();
         }
     }

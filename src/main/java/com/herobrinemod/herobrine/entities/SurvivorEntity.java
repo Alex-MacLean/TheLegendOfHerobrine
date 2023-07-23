@@ -86,8 +86,8 @@ public class SurvivorEntity extends MerchantEntity {
         nbt.putInt("RegenTimer", this.healTimer);
         nbt.putBoolean("SmallArms", this.getSmallArms());
         nbt.putBoolean("RequiresInitialization", this.dataTracker.get(REQUIRES_INITIALIZATION));
-        nbt.putString("TexturePath", this.getTexturePath());
-        nbt.putString("TextureNamespace", this.getTextureNamespace());
+        nbt.putString("TexturePath", this.dataTracker.get(TEXTURE_PATH));
+        nbt.putString("TextureNamespace", this.dataTracker.get(TEXTURE_NAMESPACE));
     }
 
     @Override
@@ -96,8 +96,8 @@ public class SurvivorEntity extends MerchantEntity {
         this.healTimer = nbt.getInt("RegenTimer");
         this.setSmallArms(nbt.getBoolean("SmallArms"));
         this.dataTracker.set(REQUIRES_INITIALIZATION, nbt.getBoolean("RequiresInitialization"));
-        this.setTexturePath(nbt.getString("TexturePath"));
-        this.setTextureNamespace(nbt.getString("TextureNamespace"));
+        this.dataTracker.set(TEXTURE_PATH, nbt.getString("TexturePath"));
+        this.dataTracker.set(TEXTURE_NAMESPACE, nbt.getString("TextureNamespace"));
     }
 
     // Returning null for getYesSound() and getTradingSound() causes a NullPointerException
@@ -214,8 +214,6 @@ public class SurvivorEntity extends MerchantEntity {
         }
     }
 
-
-
     @Override
     public boolean tryAttack(Entity target) {
         boolean bl = super.tryAttack(target);
@@ -243,31 +241,13 @@ public class SurvivorEntity extends MerchantEntity {
         return null;
     }
 
-    // Way too many data methods, but I fear that if I touch anything it will break. This took way too long and is held together by hopes and prayers and somehow works
-    public void setData(@NotNull Identifier skinLocation, boolean smallArms) {
-        this.setSmallArms(smallArms);
-        this.setTextureNamespace(skinLocation.getNamespace());
-        this.setTexturePath(skinLocation.getPath());
+    public void setTexture(@NotNull Identifier texture) {
+        this.dataTracker.set(TEXTURE_NAMESPACE, texture.getNamespace());
+        this.dataTracker.set(TEXTURE_PATH, texture.getPath());
     }
 
-    public void setTexturePath(String skinPath) {
-        this.dataTracker.set(TEXTURE_PATH, skinPath);
-    }
-
-    public void setTextureNamespace(String skinNamespace) {
-        this.dataTracker.set(TEXTURE_NAMESPACE, skinNamespace);
-    }
-
-    public String getTextureNamespace() {
-        return this.dataTracker.get(TEXTURE_NAMESPACE);
-    }
-
-    public String getTexturePath() {
-        return this.dataTracker.get(TEXTURE_PATH);
-    }
-
-    public Identifier getSkin() {
-        return new Identifier(this.getTextureNamespace(), this.getTexturePath());
+    public Identifier getTexture() {
+        return new Identifier(this.dataTracker.get(TEXTURE_NAMESPACE), this.dataTracker.get(TEXTURE_PATH));
     }
 
     public void setSmallArms(boolean smallArms) {
@@ -280,7 +260,8 @@ public class SurvivorEntity extends MerchantEntity {
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        this.setData(SurvivorSkinRegistry.getSkinList().get(random.nextInt(SurvivorSkinRegistry.getSkinList().size())), random.nextBoolean()); // Set skin/small arms data for Survivor
+        this.setTexture(SurvivorSkinRegistry.getSkinList().get(random.nextInt(SurvivorSkinRegistry.getSkinList().size())));
+        this.setSmallArms(random.nextBoolean());
         this.healTimer = 80;
         this.setPersistent();
         this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
