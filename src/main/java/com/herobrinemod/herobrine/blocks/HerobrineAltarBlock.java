@@ -1,6 +1,7 @@
 package com.herobrinemod.herobrine.blocks;
 
 import com.herobrinemod.herobrine.items.ItemList;
+import com.herobrinemod.herobrine.items.ItemTagList;
 import com.herobrinemod.herobrine.savedata.ConfigHandler;
 import com.herobrinemod.herobrine.savedata.SaveDataHandler;
 import net.minecraft.block.*;
@@ -97,8 +98,8 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    private boolean canActivate(@NotNull World world, @NotNull BlockPos pos) {
-        return !ConfigHandler.getHerobrineConfig().readBoolean("AltarRequiresShrine") || world.getBlockState(new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ())) == Blocks.NETHERRACK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() - 1, pos.getY() - 1, pos.getZ())) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() + 1, pos.getY() - 1, pos.getZ())) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ() - 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ() + 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() - 1, pos.getY(), pos.getZ())) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() + 1, pos.getY(), pos.getZ())) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(pos.getX(), pos.getY(), pos.getZ() + 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(pos.getX(), pos.getY(), pos.getZ() - 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() - 1, pos.getY() - 1, pos.getZ() - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() + 1, pos.getY() - 1, pos.getZ() - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() - 1, pos.getY() - 1, pos.getZ() + 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() + 1, pos.getY() - 1, pos.getZ() + 1)) == Blocks.LAVA.getDefaultState();
+    private boolean canActivate(@NotNull World world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        return state.get(TYPE) == 0 && (!ConfigHandler.getHerobrineConfig().readBoolean("AltarRequiresShrine") || world.getBlockState(new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ())) == Blocks.NETHERRACK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() - 1, pos.getY() - 1, pos.getZ())) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() + 1, pos.getY() - 1, pos.getZ())) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ() - 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ() + 1)) == Blocks.GOLD_BLOCK.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() - 1, pos.getY(), pos.getZ())) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() + 1, pos.getY(), pos.getZ())) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(pos.getX(), pos.getY(), pos.getZ() + 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(pos.getX(), pos.getY(), pos.getZ() - 1)) == Blocks.REDSTONE_TORCH.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() - 1, pos.getY() - 1, pos.getZ() - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() + 1, pos.getY() - 1, pos.getZ() - 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() - 1, pos.getY() - 1, pos.getZ() + 1)) == Blocks.LAVA.getDefaultState() && world.getBlockState(new BlockPos(pos.getX() + 1, pos.getY() - 1, pos.getZ() + 1)) == Blocks.LAVA.getDefaultState());
     }
 
     @Nullable
@@ -120,13 +121,9 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
     @Override
     public ActionResult onUse(@NotNull BlockState state, World world, BlockPos pos, @NotNull PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
-        if (canActivate(world, pos) && state.get(TYPE) == 0 && itemStack.isOf(ItemList.CURSED_DIAMOND) || canActivate(world, pos) && state.get(TYPE) == 0 &&  itemStack.isOf(ItemList.PURIFIED_DIAMOND)) {
+        if (itemStack.isIn(ItemTagList.ACTIVATES_HEROBRINE_ALTAR) && canActivate(world, pos, state)) {
             if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
                 world.setBlockState(pos, this.getDefaultState().with(TYPE, 1));
-                if(!player.isCreative()) {
-                    itemStack.decrement(1);
-                }
-
                 if(!world.isClient) {
                     if(!SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
                         if(ConfigHandler.getHerobrineConfig().readBoolean("GlobalHerobrineMessages")) {
@@ -146,10 +143,6 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
 
             } else {
                 world.setBlockState(pos, this.getDefaultState().with(TYPE, 2));
-                if(!player.isCreative()) {
-                    itemStack.decrement(1);
-                }
-
                 if(!world.isClient) {
                     if(SaveDataHandler.getHerobrineSaveData().readBoolean("herobrineSummoned")) {
                         if(ConfigHandler.getHerobrineConfig().readBoolean("GlobalHerobrineMessages")) {
@@ -166,6 +159,11 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                         SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", false);
                     }
                 }
+            }
+
+            world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_END_PORTAL_FRAME_FILL, SoundCategory.BLOCKS, 1.0f, world.random.nextFloat() * 0.4f + 0.5f, false);
+            if(!player.isCreative()) {
+                itemStack.decrement(1);
             }
 
             if (state.get(WATERLOGGED)) {
