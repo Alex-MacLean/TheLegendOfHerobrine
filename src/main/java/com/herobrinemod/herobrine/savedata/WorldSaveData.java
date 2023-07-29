@@ -30,7 +30,7 @@ public class WorldSaveData {
 
     // Read integer from json file
     public int readInt(String dataName) {
-        if(json == null) {
+        if(json == null || json.get(dataName) == null) {
             return 0;
         }
         return json.get(dataName).getAsInt();
@@ -38,7 +38,7 @@ public class WorldSaveData {
 
     // Read double from json file
     public double readDouble(String dataName) {
-        if(json == null) {
+        if(json == null || json.get(dataName) == null) {
             return 0.0;
         }
         return json.get(dataName).getAsDouble();
@@ -46,7 +46,7 @@ public class WorldSaveData {
 
     // Read boolean from json file
     public boolean readBoolean(String dataName) {
-        if(json == null) {
+        if(json == null || json.get(dataName) == null) {
             return false;
         }
         return json.get(dataName).getAsBoolean();

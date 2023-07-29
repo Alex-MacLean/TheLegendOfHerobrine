@@ -157,6 +157,8 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                         lightningentity.setPos(pos.getX(), pos.getY(), pos.getZ());
                         world.spawnEntity(lightningentity);
                         SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", false);
+                        SaveDataHandler.getHerobrineSaveData().writeInt("stage", 0);
+                        SaveDataHandler.getHerobrineSaveData().writeInt("stageTime", 0);
                     }
                 }
             }

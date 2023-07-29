@@ -144,7 +144,7 @@ public class InfectedBatEntity extends InfectedEntity{
         if(world.getBiome(pos).matchesId(BiomeKeys.MUSHROOM_FIELDS.getValue()) && random.nextInt(20) > 1) {
             return false;
         }
-        return pos.getY() < world.getSeaLevel() && world.getDifficulty() != Difficulty.PEACEFUL && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && HerobrineSpawnHelper.canHerobrineSpawn();
+        return pos.getY() < world.getSeaLevel() && world.getDifficulty() != Difficulty.PEACEFUL && isSpawnDark(world, pos, random) && canMobSpawn(type, world, spawnReason, pos, random) && HerobrineSpawnHelper.canHerobrineSpawn() && HerobrineSpawnHelper.getStage() > 1;
     }
 
     @Override
