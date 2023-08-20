@@ -22,6 +22,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.Heightmap;
+import net.minecraft.world.biome.BiomeKeys;
 
 import static net.minecraft.registry.Registries.*;
 
@@ -165,15 +166,15 @@ public class HerobrineMod implements ModInitializer {
 
     // Register entity spawning
     private void registerEntitySpawns() {
-        BiomeModifications.addSpawn(BiomeSelectors.all(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_WARRIOR, ConfigHandler.getHerobrineConfig().readInt("HerobrineWarriorWeight"), 1, 1);
+        BiomeModifications.addSpawn(BiomeSelectors.excludeByKey(BiomeKeys.THE_VOID), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_WARRIOR, ConfigHandler.getHerobrineConfig().readInt("HerobrineWarriorWeight"), 1, 1);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeyList.CURSED_FOREST), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_WARRIOR, ConfigHandler.getHerobrineConfig().readInt("HerobrineWarriorWeight") * 2, 1, 1);
-        BiomeModifications.addSpawn(BiomeSelectors.all(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_BUILDER, ConfigHandler.getHerobrineConfig().readInt("HerobrineBuilderWeight"), 1, 1);
+        BiomeModifications.addSpawn(BiomeSelectors.excludeByKey(BiomeKeys.THE_VOID), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_BUILDER, ConfigHandler.getHerobrineConfig().readInt("HerobrineBuilderWeight"), 1, 1);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeyList.CURSED_FOREST), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_BUILDER, ConfigHandler.getHerobrineConfig().readInt("HerobrineBuilderWeight") * 2, 1, 1);
-        BiomeModifications.addSpawn(BiomeSelectors.all(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_MAGE, ConfigHandler.getHerobrineConfig().readInt("HerobrineMageWeight"), 1, 1);
+        BiomeModifications.addSpawn(BiomeSelectors.excludeByKey(BiomeKeys.THE_VOID), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_MAGE, ConfigHandler.getHerobrineConfig().readInt("HerobrineMageWeight"), 1, 1);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeyList.CURSED_FOREST), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_MAGE, ConfigHandler.getHerobrineConfig().readInt("HerobrineMageWeight") * 2, 1, 1);
-        BiomeModifications.addSpawn(BiomeSelectors.all(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_SPY, ConfigHandler.getHerobrineConfig().readInt("HerobrineSpyWeight"), 1, 1);
+        BiomeModifications.addSpawn(BiomeSelectors.excludeByKey(BiomeKeys.THE_VOID), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_SPY, ConfigHandler.getHerobrineConfig().readInt("HerobrineSpyWeight"), 1, 1);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeyList.CURSED_FOREST), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_SPY, ConfigHandler.getHerobrineConfig().readInt("HerobrineSpyWeight") * 2, 1, 1);
-        BiomeModifications.addSpawn(BiomeSelectors.all(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_STALKER, ConfigHandler.getHerobrineConfig().readInt("HerobrineStalkerWeight"), 1, 1);
+        BiomeModifications.addSpawn(BiomeSelectors.excludeByKey(BiomeKeys.THE_VOID), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_STALKER, ConfigHandler.getHerobrineConfig().readInt("HerobrineStalkerWeight"), 1, 1);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeyList.CURSED_FOREST), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_STALKER, ConfigHandler.getHerobrineConfig().readInt("HerobrineStalkerWeight") * 2, 1, 1);
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.PIG), SpawnGroup.MONSTER, EntityTypeList.INFECTED_PIG, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 3, 6);
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.COW), SpawnGroup.MONSTER, EntityTypeList.INFECTED_COW, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 2, 4);
