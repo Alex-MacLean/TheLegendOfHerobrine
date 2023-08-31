@@ -15,6 +15,8 @@ FAQ: https://www.herobrinemod.com/faq
 
 Programmer Art Style Resource Pack: https://github.com/Alex-MacLean/TheLegendOfHerobrine/releases/download/0.6.0/Herobrine-Programmer-Art.zip
 
+This GitHub repository, the offical preview builds repository, the official Modrinth page, the official legacy (outdated) CurseForge page are the ONLY safe places to download this mod, any other sources should be considered packaged with viruses. Furthermore, If any newer version of this mod (Fabric 1.19 previews or newer) makes it anywhere other than my GitHub repositories, the official website, or modrinth, it should also be considered a virus, even if the newer version is on CurseForge. Viruses being spread through infected Minecraft mods have been on the rise, especially on shady websites, and CurseForge so please try to stay safe and download only from official sources.
+
 **How to build this mod from source:**
 
 **Prerequisites:**
