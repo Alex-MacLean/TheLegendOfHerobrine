@@ -7,6 +7,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SmeltingRecipe;
 import net.minecraft.server.world.ServerWorld;
@@ -29,10 +30,10 @@ public abstract class BlockMixin {
         if (stack.getItem() == ItemList.CURSED_DIAMOND_PICKAXE && stack.getItem().isSuitableFor(state)) {
             List<ItemStack> returnValue = cir.getReturnValue();
             for (ItemStack itemStack : returnValue) {
-                Optional<SmeltingRecipe> recipe = world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, new SimpleInventory(itemStack), world);
+                Optional<RecipeEntry<SmeltingRecipe>> recipe = world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, new SimpleInventory(itemStack), world);
                 if (recipe.isPresent()) {
                     List<ItemStack> drops = new ArrayList<>();
-                    ItemStack smeltedStack = recipe.get().getOutput(world.getRegistryManager()).copy();
+                    ItemStack smeltedStack = recipe.get().value().getResult(world.getRegistryManager());
                     smeltedStack.setCount(itemStack.getCount());
                     drops.add(smeltedStack);
                     cir.setReturnValue(drops);

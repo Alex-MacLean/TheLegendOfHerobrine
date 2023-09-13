@@ -79,33 +79,33 @@ public class InfectedWolfEntity extends InfectedEntity {
         if (this.isWet()) {
             this.furWet = true;
             if (this.canShakeWaterOff && !this.getWorld().isClient) {
-                this.getWorld().sendEntityStatus(this, EntityStatuses.RESET_WOLF_SHAKE);
+                this.getWorld().sendEntityStatus(this, (byte)56);
                 this.resetShake();
             }
-        } else if ((this.furWet) && this.canShakeWaterOff) {
-            if (this.shakeProgress == 0.0f) {
-                this.playSound(SoundEvents.ENTITY_WOLF_SHAKE, this.getSoundVolume(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f);
-                this.emitGameEvent(GameEvent.ENTITY_SHAKE);
+        } else if ((this.furWet || this.canShakeWaterOff) && this.canShakeWaterOff) {
+            if (this.shakeProgress == 0.0F) {
+                this.playSound(SoundEvents.ENTITY_WOLF_SHAKE, this.getSoundVolume(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                this.emitGameEvent(GameEvent.ENTITY_ACTION);
             }
 
             this.lastShakeProgress = this.shakeProgress;
-            this.shakeProgress += 0.05f;
-
-            if (this.lastShakeProgress >= 2.0f) {
+            this.shakeProgress += 0.05F;
+            if (this.lastShakeProgress >= 2.0F) {
                 this.furWet = false;
                 this.canShakeWaterOff = false;
-                this.lastShakeProgress = 0.0f;
-                this.shakeProgress = 0.0f;
+                this.lastShakeProgress = 0.0F;
+                this.shakeProgress = 0.0F;
             }
 
-            if (this.shakeProgress > 0.4f) {
+            if (this.shakeProgress > 0.4F) {
                 float f = (float)this.getY();
-                int i = (int)(MathHelper.sin((this.shakeProgress - 0.4f) * (float)Math.PI) * 7.0f);
+                int i = (int)(MathHelper.sin((this.shakeProgress - 0.4F) * 3.1415927F) * 7.0F);
                 Vec3d vec3d = this.getVelocity();
-                for (int j = 0; j < i; ++j) {
-                    float g = (this.random.nextFloat() * 2.0f - 1.0f) * this.getWidth() * 0.5f;
-                    float h = (this.random.nextFloat() * 2.0f - 1.0f) * this.getWidth() * 0.5f;
-                    this.getWorld().addParticle(ParticleTypes.SPLASH, this.getX() + (double)g, f + 0.8f, this.getZ() + (double)h, vec3d.x, vec3d.y, vec3d.z);
+
+                for(int j = 0; j < i; ++j) {
+                    float g = (this.random.nextFloat() * 2.0F - 1.0F) * this.getWidth() * 0.5F;
+                    float h = (this.random.nextFloat() * 2.0F - 1.0F) * this.getWidth() * 0.5F;
+                    this.getWorld().addParticle(ParticleTypes.SPLASH, this.getX() + (double)g, f + 0.8F, this.getZ() + (double)h, vec3d.x, vec3d.y, vec3d.z);
                 }
             }
         }

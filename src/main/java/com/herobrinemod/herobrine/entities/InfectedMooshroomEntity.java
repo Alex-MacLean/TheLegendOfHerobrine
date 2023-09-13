@@ -8,7 +8,6 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
@@ -20,7 +19,7 @@ import net.minecraft.item.ItemUsage;
 import net.minecraft.item.Items;
 import net.minecraft.item.SuspiciousStewItem;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
@@ -37,18 +36,17 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class InfectedMooshroomEntity extends InfectedCowEntity implements Shearable {
     private static final TrackedData<String> TYPE = DataTracker.registerData(InfectedMooshroomEntity.class, TrackedDataHandlerRegistry.STRING);
     @Nullable
-    private StatusEffect stewEffect;
-    private int stewEffectDuration;
+    private List<SuspiciousStewIngredient.StewEffect> stewEffects;
     @Nullable
     private UUID lightningId;
     public InfectedMooshroomEntity(EntityType<? extends HostileEntity> entityType, World world) {
@@ -87,22 +85,20 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements Sheara
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putString("Type", this.getVariant().asString());
-        if (this.stewEffect != null) {
-            nbt.putInt("EffectId", StatusEffect.getRawId(this.stewEffect));
-            nbt.putInt("EffectDuration", this.stewEffectDuration);
+        if (this.stewEffects != null) {
+            SuspiciousStewIngredient.StewEffect.LIST_CODEC.encodeStart(NbtOps.INSTANCE, this.stewEffects).result().ifPresent((nbtElement) -> nbt.put("stew_effects", nbtElement));
         }
+
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.setVariant(InfectedMooshroomEntity.Type.fromName(nbt.getString("Type")));
-        if (nbt.contains("EffectId", NbtElement.BYTE_TYPE)) {
-            this.stewEffect = StatusEffect.byRawId(nbt.getInt("EffectId"));
+        this.setVariant(Type.fromName(nbt.getString("Type")));
+        if (nbt.contains("stew_effects", 9)) {
+            SuspiciousStewIngredient.StewEffect.LIST_CODEC.parse(NbtOps.INSTANCE, nbt.get("stew_effects")).result().ifPresent((stewEffects) -> this.stewEffects = stewEffects);
         }
-        if (nbt.contains("EffectDuration", NbtElement.INT_TYPE)) {
-            this.stewEffectDuration = nbt.getInt("EffectDuration");
-        }
+
     }
 
     public void setVariant(InfectedMooshroomEntity.@NotNull Type type) {
@@ -113,20 +109,16 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements Sheara
         return InfectedMooshroomEntity.Type.fromName(this.dataTracker.get(TYPE));
     }
 
-    private Optional<Pair<StatusEffect, Integer>> getStewEffectFrom(@NotNull ItemStack flower) {
+    private Optional<List<SuspiciousStewIngredient.StewEffect>> getStewEffectFrom(@NotNull ItemStack flower) {
         SuspiciousStewIngredient suspiciousStewIngredient = SuspiciousStewIngredient.of(flower.getItem());
-        if (suspiciousStewIngredient != null) {
-            return Optional.of(Pair.of(suspiciousStewIngredient.getEffectInStew(), suspiciousStewIngredient.getEffectInStewDuration()));
-        }
-        return Optional.empty();
+        return suspiciousStewIngredient != null ? Optional.of(suspiciousStewIngredient.getStewEffects()) : Optional.empty();
     }
 
-    public enum Type implements StringIdentifiable
-    {
+    public enum Type implements StringIdentifiable {
         RED("red", Blocks.RED_MUSHROOM.getDefaultState()),
         BROWN("brown", Blocks.BROWN_MUSHROOM.getDefaultState());
 
-        public static final StringIdentifiable.Codec<InfectedMooshroomEntity.Type> CODEC;
+        public static final StringIdentifiable.EnumCodec<Type> CODEC = StringIdentifiable.createCodec(Type::values);
         final String name;
         final BlockState mushroom;
 
@@ -139,17 +131,12 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements Sheara
             return this.mushroom;
         }
 
-        @Override
         public String asString() {
             return this.name;
         }
 
-        static InfectedMooshroomEntity.Type fromName(String name) {
+        static Type fromName(String name) {
             return CODEC.byId(name, RED);
-        }
-
-        static {
-            CODEC = StringIdentifiable.createCodec(InfectedMooshroomEntity.Type::values);
         }
     }
 
@@ -164,62 +151,66 @@ public class InfectedMooshroomEntity extends InfectedCowEntity implements Sheara
     }
 
     @Override
-    public ActionResult interactMob(@NotNull PlayerEntity player2, Hand hand) {
-        ItemStack itemStack = player2.getStackInHand(hand);
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        ItemStack itemStack = player.getStackInHand(hand);
         if (itemStack.isOf(Items.BOWL) && !this.isBaby()) {
-            ItemStack itemStack2;
             boolean bl = false;
-
-            if (this.stewEffect != null) {
+            ItemStack itemStack2;
+            if (this.stewEffects != null) {
                 bl = true;
                 itemStack2 = new ItemStack(Items.SUSPICIOUS_STEW);
-                SuspiciousStewItem.addEffectToStew(itemStack2, this.stewEffect, this.stewEffectDuration);
-                this.stewEffect = null;
-                this.stewEffectDuration = 0;
+                SuspiciousStewItem.writeEffectsToStew(itemStack2, this.stewEffects);
+                this.stewEffects = null;
             } else {
                 itemStack2 = new ItemStack(Items.MUSHROOM_STEW);
             }
 
-            ItemStack itemStack3 = ItemUsage.exchangeStack(itemStack, player2, itemStack2, false);
-            player2.setStackInHand(hand, itemStack3);
-            SoundEvent soundEvent = bl ? SoundEvents.ENTITY_MOOSHROOM_SUSPICIOUS_MILK : SoundEvents.ENTITY_MOOSHROOM_MILK;
-            this.playSound(soundEvent, 1.0f, 1.0f);
-            return ActionResult.success(this.getWorld().isClient);
-        }
-
-        if (itemStack.isOf(Items.SHEARS) && this.isShearable()) {
-            this.sheared(SoundCategory.PLAYERS);
-            this.emitGameEvent(GameEvent.SHEAR, player2);
-            if (!this.getWorld().isClient) {
-                itemStack.damage(1, player2, player -> player.sendToolBreakStatus(hand));
+            ItemStack itemStack3 = ItemUsage.exchangeStack(itemStack, player, itemStack2, false);
+            player.setStackInHand(hand, itemStack3);
+            SoundEvent soundEvent;
+            if (bl) {
+                soundEvent = SoundEvents.ENTITY_MOOSHROOM_SUSPICIOUS_MILK;
+            } else {
+                soundEvent = SoundEvents.ENTITY_MOOSHROOM_MILK;
             }
-            return ActionResult.success(this.getWorld().isClient);
-        }
 
-        if (this.getVariant() == InfectedMooshroomEntity.Type.BROWN && itemStack.isIn(ItemTags.SMALL_FLOWERS)) {
-            if (this.stewEffect != null) {
-                for (int i = 0; i < 2; ++i) {
+            this.playSound(soundEvent, 1.0F, 1.0F);
+            return ActionResult.success(this.getWorld().isClient);
+        } else if (itemStack.isOf(Items.SHEARS) && this.isShearable()) {
+            this.sheared(SoundCategory.PLAYERS);
+            this.emitGameEvent(GameEvent.SHEAR, player);
+            if (!this.getWorld().isClient) {
+                itemStack.damage(1, player, (playerx) -> playerx.sendToolBreakStatus(hand));
+            }
+
+            return ActionResult.success(this.getWorld().isClient);
+        } else if (this.getVariant() == Type.BROWN && itemStack.isIn(ItemTags.SMALL_FLOWERS)) {
+            if (this.stewEffects != null) {
+                for(int i = 0; i < 2; ++i) {
                     this.getWorld().addParticle(ParticleTypes.SMOKE, this.getX() + this.random.nextDouble() / 2.0, this.getBodyY(0.5), this.getZ() + this.random.nextDouble() / 2.0, 0.0, this.random.nextDouble() / 5.0, 0.0);
                 }
             } else {
-                Optional<Pair<StatusEffect, Integer>> optional = this.getStewEffectFrom(itemStack);
+                Optional<List<SuspiciousStewIngredient.StewEffect>> optional = this.getStewEffectFrom(itemStack);
                 if (optional.isEmpty()) {
                     return ActionResult.PASS;
                 }
-                Pair<StatusEffect, Integer> pair = optional.get();
-                if (!player2.getAbilities().creativeMode) {
+
+                if (!player.getAbilities().creativeMode) {
                     itemStack.decrement(1);
                 }
-                for (int j = 0; j < 4; ++j) {
+
+                for(int j = 0; j < 4; ++j) {
                     this.getWorld().addParticle(ParticleTypes.EFFECT, this.getX() + this.random.nextDouble() / 2.0, this.getBodyY(0.5), this.getZ() + this.random.nextDouble() / 2.0, 0.0, this.random.nextDouble() / 5.0, 0.0);
                 }
-                this.stewEffect = pair.getLeft();
-                this.stewEffectDuration = pair.getRight();
-                this.playSound(SoundEvents.ENTITY_MOOSHROOM_EAT, 2.0f, 1.0f);
+
+                this.stewEffects = optional.get();
+                this.playSound(SoundEvents.ENTITY_MOOSHROOM_EAT, 2.0F, 1.0F);
             }
+
             return ActionResult.success(this.getWorld().isClient);
+        } else {
+            return super.interactMob(player, hand);
         }
-        return super.interactMob(player2, hand);
     }
 
     @Override

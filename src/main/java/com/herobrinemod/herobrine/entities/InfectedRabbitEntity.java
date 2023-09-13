@@ -57,7 +57,7 @@ public class InfectedRabbitEntity extends InfectedEntity implements VariantHolde
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new InfectedRabbitEntity.RabbitAttackGoal(this));
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.4, true));
         this.goalSelector.add(2, new ActiveTargetGoal<>(this, IllagerEntity.class, false));
         this.goalSelector.add(3, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
         this.goalSelector.add(4, new ActiveTargetGoal<>(this, SurvivorEntity.class, false));
@@ -376,18 +376,6 @@ public class InfectedRabbitEntity extends InfectedEntity implements VariantHolde
             if (speed > 0.0) {
                 this.speed = speed;
             }
-        }
-    }
-
-    static class RabbitAttackGoal
-            extends MeleeAttackGoal {
-        public RabbitAttackGoal(InfectedRabbitEntity entity) {
-            super(entity, 1.4, true);
-        }
-
-        @Override
-        protected double getSquaredMaxAttackDistance(@NotNull LivingEntity entity) {
-            return 4.0f + entity.getWidth();
         }
     }
 }

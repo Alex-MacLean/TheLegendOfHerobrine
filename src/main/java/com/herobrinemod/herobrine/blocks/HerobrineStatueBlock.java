@@ -81,8 +81,8 @@ public class HerobrineStatueBlock extends Block implements Waterloggable{
     }
 
     @Override
-    public boolean canFillWithFluid(BlockView world, BlockPos pos, @NotNull BlockState state, Fluid fluid) {
-        return Waterloggable.super.canFillWithFluid(world, pos, state, fluid);
+    public boolean canFillWithFluid(PlayerEntity player, BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
+        return Waterloggable.super.canFillWithFluid(player, world, pos, state, fluid);
     }
 
     @Nullable

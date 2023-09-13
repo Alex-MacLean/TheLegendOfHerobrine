@@ -35,7 +35,7 @@ public class CursedDiamondHoeItem extends HoeItem {
         PlayerEntity player = context.getPlayer();
         assert player != null;
         Pair<Predicate<ItemUsageContext>, Consumer<ItemUsageContext>> pair = TILLING_ACTIONS.get(world.getBlockState(blockPos = context.getBlockPos()).getBlock());
-        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable) blockState.getBlock()).isFertilizable(world, blockPos, blockState, world.isClient) && pair == null && !player.isSneaking()) {
+        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable) blockState.getBlock()).isFertilizable(world, blockPos, blockState) && pair == null && !player.isSneaking()) {
             boolean fertilized = false;
             if (fertilizable.canGrow(world, world.random, blockPos, blockState)) {
                 if (world instanceof ServerWorld) {

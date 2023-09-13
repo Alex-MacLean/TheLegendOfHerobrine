@@ -9,10 +9,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.Angerable;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.Monster;
+import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -56,7 +53,7 @@ public class SurvivorEntity extends MerchantEntity {
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0, false));
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, MobEntity.class, 5, true, true, entity -> entity instanceof Monster));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, MobEntity.class, 5, true, true, (entity) -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
         this.goalSelector.add(3, new LookAtCustomerGoal(this));
         this.goalSelector.add(5, new LookAtEntityGoal(this, LivingEntity.class, 32.0f));
         this.goalSelector.add(6, new LookAroundGoal(this));
@@ -151,7 +148,7 @@ public class SurvivorEntity extends MerchantEntity {
         List<LivingEntity> affectedEntities = this.getWorld().getEntitiesByClass(LivingEntity.class, effectBox, EntityPredicates.VALID_LIVING_ENTITY);
         if(!affectedEntities.isEmpty()) {
             for(LivingEntity entity : affectedEntities) {
-                if((entity instanceof Monster) && ((HostileEntity) entity).getTarget() != null && !(entity instanceof Angerable) && !(entity instanceof HerobrineStalkerEntity) && entity.canSee(this) && entity.isAlive()) {
+                if((entity instanceof Monster) && !(entity instanceof CreeperEntity) && ((HostileEntity) entity).getTarget() != null && !(entity instanceof Angerable) && !(entity instanceof HerobrineStalkerEntity) && entity.canSee(this) && entity.isAlive()) {
                     ((HostileEntity) entity).setTarget(this);
                 }
             }
@@ -164,6 +161,12 @@ public class SurvivorEntity extends MerchantEntity {
     public void onDeath(@NotNull DamageSource source) {
         this.resetCustomer();
         super.onDeath(source);
+    }
+
+    @Override
+    public void tickMovement() {
+        this.tickHandSwing();
+        super.tickMovement();
     }
 
     @Override

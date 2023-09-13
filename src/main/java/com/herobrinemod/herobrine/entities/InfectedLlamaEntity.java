@@ -129,7 +129,7 @@ public class InfectedLlamaEntity extends InfectedEntity implements RangedAttackM
     }
 
     @Override
-    public void attack(LivingEntity target, float pullProgress) {
+    public void shootAt(LivingEntity target, float pullProgress) {
         this.spitAt(target);
     }
 
