@@ -96,6 +96,7 @@ public class HerobrineMod implements ModInitializer {
         Registry.register(ITEM, new Identifier(MODID, "infected_llama_spawn_egg"), ItemList.INFECTED_LLAMA_SPAWN_EGG);
         Registry.register(ITEM, new Identifier(MODID, "infected_rabbit_spawn_egg"), ItemList.INFECTED_RABBIT_SPAWN_EGG);
         Registry.register(ITEM, new Identifier(MODID, "survivor_spawn_egg"), ItemList.SURVIVOR_SPAWN_EGG);
+        Registry.register(ITEM, new Identifier(MODID, "infected_axolotl_spawn_egg"), ItemList.INFECTED_AXOLOTL_SPAWN_EGG);
     }
 
     // Register entity attributes
@@ -119,6 +120,7 @@ public class HerobrineMod implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypeList.INFECTED_LLAMA, InfectedLlamaEntity.registerAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypeList.INFECTED_RABBIT, InfectedRabbitEntity.registerAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypeList.SURVIVOR, SurvivorEntity.registerAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypeList.INFECTED_AXOLOTL, InfectedAxolotlEntity.registerAttributes());
     }
 
     // Register creative tabs and add items to them
@@ -161,7 +163,8 @@ public class HerobrineMod implements ModInitializer {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_DONKEY_SPAWN_EGG, ItemList.INFECTED_HORSE_SPAWN_EGG));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_HORSE_SPAWN_EGG, ItemList.INFECTED_LLAMA_SPAWN_EGG));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_LLAMA_SPAWN_EGG, ItemList.INFECTED_RABBIT_SPAWN_EGG));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_RABBIT_SPAWN_EGG, ItemList.SURVIVOR_SPAWN_EGG));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_RABBIT_SPAWN_EGG, ItemList.INFECTED_AXOLOTL_SPAWN_EGG));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_AXOLOTL_SPAWN_EGG, ItemList.SURVIVOR_SPAWN_EGG));
     }
 
     // Register entity spawning
@@ -188,7 +191,8 @@ public class HerobrineMod implements ModInitializer {
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.HORSE), SpawnGroup.MONSTER, EntityTypeList.INFECTED_HORSE, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 2, 6);
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.LLAMA), SpawnGroup.MONSTER, EntityTypeList.INFECTED_LLAMA, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 4, 6);
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.RABBIT), SpawnGroup.MONSTER, EntityTypeList.INFECTED_RABBIT, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 2, 3);
-        if(ConfigHandler.getHerobrineConfig().readInt("HerobrineEndSpawnType") > 0 && ConfigHandler.getHerobrineConfig().readInt("HerobrineEndSpawnType") < 3) {
+        BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.AXOLOTL), SpawnGroup.MONSTER, EntityTypeList.INFECTED_AXOLOTL, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 1, 3);
+        if(ConfigHandler.getHerobrineConfig().readInt("HerobrineEndSpawnType") > 0) {
             BiomeModifications.addSpawn(BiomeSelectors.foundInTheEnd(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_SPY, ConfigHandler.getHerobrineConfig().readInt("HerobrineSpyWeight"), 1, 1);
             BiomeModifications.addSpawn(BiomeSelectors.foundInTheEnd(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_STALKER, ConfigHandler.getHerobrineConfig().readInt("HerobrineStalkerWeight"), 1, 1);
             if(ConfigHandler.getHerobrineConfig().readInt("HerobrineEndSpawnType") == 2) {
@@ -214,6 +218,7 @@ public class HerobrineMod implements ModInitializer {
         SpawnRestriction.register(EntityTypeList.INFECTED_HORSE, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
         SpawnRestriction.register(EntityTypeList.INFECTED_LLAMA, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
         SpawnRestriction.register(EntityTypeList.INFECTED_RABBIT, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_AXOLOTL, SpawnRestriction.Location.IN_WATER, Heightmap.Type.OCEAN_FLOOR, InfectedAxolotlEntity::canSpawn);
     }
 
     private void registerSurvivorSkins() {

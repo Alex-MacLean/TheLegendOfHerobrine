@@ -56,5 +56,6 @@ public class HerobrineClient implements ClientModInitializer {
         EntityRendererRegistry.register((EntityType<? extends InfectedLlamaSpitEntity>) EntityTypeList.INFECTED_LLAMA_SPIT, InfectedLlamaSpitEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_RABBIT, InfectedRabbitEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.SURVIVOR, SurvivorEntityRenderer::new);
+        EntityRendererRegistry.register(EntityTypeList.INFECTED_AXOLOTL, InfectedAxolotlEntityRenderer::new);
     }
 }

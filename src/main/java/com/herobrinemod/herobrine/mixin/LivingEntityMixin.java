@@ -23,7 +23,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Shadow
     public abstract boolean addStatusEffect(StatusEffectInstance effect);
 
-    public LivingEntityMixin(EntityType<?> type, World world) {
+    private LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
 
