@@ -46,6 +46,8 @@ public class HerobrineMod implements ModInitializer {
     // Register sounds
     private void registerSounds() {
         Registry.register(SOUND_EVENT, SoundList.MUSIC_DISC_DOG_IDENTIFIER, SoundList.MUSIC_DISC_DOG);
+        Registry.register(SOUND_EVENT, SoundList.HEROBRINE_ALTAR_CURSED_IDENTIFIER, SoundList.HEROBRINE_ALTAR_CURSED);
+        Registry.register(SOUND_EVENT, SoundList.HEROBRINE_ALTAR_PURIFIED_IDENTIFIER, SoundList.HEROBRINE_ALTAR_PURIFIED);
     }
 
     // Register blocks

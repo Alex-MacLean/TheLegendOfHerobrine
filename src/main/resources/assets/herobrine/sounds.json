@@ -6,5 +6,19 @@
         "stream": true
       }
     ]
+  },
+  "herobrine_altar_cursed": {
+    "sounds": [
+      {
+        "name": "herobrine:blocks/herobrine_altar/herobrine_altar_cursed"
+      }
+    ]
+  },
+  "herobrine_altar_purified": {
+    "sounds": [
+      {
+        "name": "herobrine:blocks/herobrine_altar/herobrine_altar_purified"
+      }
+    ]
   }
 }

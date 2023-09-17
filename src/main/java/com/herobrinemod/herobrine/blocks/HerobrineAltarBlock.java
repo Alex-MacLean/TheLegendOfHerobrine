@@ -4,6 +4,7 @@ import com.herobrinemod.herobrine.items.ItemList;
 import com.herobrinemod.herobrine.items.ItemTagList;
 import com.herobrinemod.herobrine.savedata.ConfigHandler;
 import com.herobrinemod.herobrine.savedata.SaveDataHandler;
+import com.herobrinemod.herobrine.sounds.SoundList;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -63,9 +64,9 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
         switch (state.get(TYPE)) {
             case 1 -> {
                 world.addParticle(ParticleTypes.PORTAL, pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.2, pos.getY() + 0.25, pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.2, 0.0, 0.0, 0.0);
-                world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_BEACON_AMBIENT, SoundCategory.BLOCKS, 1.0f, random.nextFloat() * 0.4f + 0.5f, false);
+                world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundList.HEROBRINE_ALTAR_CURSED, SoundCategory.BLOCKS, 1.0f, random.nextFloat() * 0.6f + 0.6f, false);
             }
-            case 2 -> world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_BEACON_AMBIENT, SoundCategory.BLOCKS, 1.0f, 1.25f, false);
+            case 2 -> world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundList.HEROBRINE_ALTAR_PURIFIED, SoundCategory.BLOCKS, 1.0f, 1.25f, false);
         }
     }
 
