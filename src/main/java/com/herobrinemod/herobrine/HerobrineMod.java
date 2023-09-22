@@ -132,11 +132,11 @@ public class HerobrineMod implements ModInitializer {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> content.addAfter(ItemList.CURSED_DIAMOND_LEGGINGS, ItemList.CURSED_DIAMOND_BOOTS));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> content.addAfter(Items.NETHERITE_SWORD, ItemList.CURSED_DIAMOND_SWORD));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> content.addAfter(ItemList.CURSED_DIAMOND_SWORD, ItemList.BEDROCK_SWORD));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> content.addAfter(Items.NETHERITE_AXE, ItemList.CURSED_DIAMOND_AXE));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> content.addAfter(Items.NETHERITE_HOE, ItemList.CURSED_DIAMOND_SHOVEL));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> content.addAfter(Items.NETHERITE_AXE, ItemList.CURSED_DIAMOND_AXE));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> content.addAfter(Items.NETHERITE_PICKAXE, ItemList.CURSED_DIAMOND_PICKAXE));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> content.addAfter(Items.NETHERITE_SHOVEL, ItemList.CURSED_DIAMOND_SHOVEL));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> content.addAfter(Items.NETHERITE_HOE, ItemList.CURSED_DIAMOND_HOE));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> content.addAfter(ItemList.CURSED_DIAMOND_SHOVEL, ItemList.CURSED_DIAMOND_PICKAXE));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> content.addAfter(ItemList.CURSED_DIAMOND_PICKAXE, ItemList.CURSED_DIAMOND_AXE));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> content.addAfter(ItemList.CURSED_DIAMOND_AXE, ItemList.CURSED_DIAMOND_HOE));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> content.addAfter(Items.MUSIC_DISC_CAT, ItemList.MUSIC_DISC_DOG));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> content.addAfter(Items.EGG, ItemList.HOLY_WATER));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> content.addAfter(ItemList.HOLY_WATER, ItemList.UNHOLY_WATER));
