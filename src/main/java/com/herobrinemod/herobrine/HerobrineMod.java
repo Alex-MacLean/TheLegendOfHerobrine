@@ -197,7 +197,7 @@ public class HerobrineMod implements ModInitializer {
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.LLAMA), SpawnGroup.MONSTER, EntityTypeList.INFECTED_LLAMA, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 4, 6);
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.RABBIT), SpawnGroup.MONSTER, EntityTypeList.INFECTED_RABBIT, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 2, 3);
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.AXOLOTL), SpawnGroup.MONSTER, EntityTypeList.INFECTED_AXOLOTL, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 1, 3);
-        BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.CAMEL), SpawnGroup.MONSTER, EntityTypeList.INFECTED_CAMEL, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 1, 1);
+        BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.VILLAGE_DESERT_HAS_STRUCTURE), SpawnGroup.MONSTER, EntityTypeList.INFECTED_CAMEL, ConfigHandler.getHerobrineConfig().readInt("InfectedCamelWeight"), 1, 1);
         if(ConfigHandler.getHerobrineConfig().readInt("HerobrineEndSpawnType") > 0) {
             BiomeModifications.addSpawn(BiomeSelectors.foundInTheEnd(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_SPY, ConfigHandler.getHerobrineConfig().readInt("HerobrineSpyWeight"), 1, 1);
             BiomeModifications.addSpawn(BiomeSelectors.foundInTheEnd(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_STALKER, ConfigHandler.getHerobrineConfig().readInt("HerobrineStalkerWeight"), 1, 1);
@@ -225,7 +225,7 @@ public class HerobrineMod implements ModInitializer {
         SpawnRestriction.register(EntityTypeList.INFECTED_LLAMA, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
         SpawnRestriction.register(EntityTypeList.INFECTED_RABBIT, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
         SpawnRestriction.register(EntityTypeList.INFECTED_AXOLOTL, SpawnRestriction.Location.IN_WATER, Heightmap.Type.OCEAN_FLOOR, InfectedAxolotlEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_CAMEL, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_CAMEL, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedCamelEntity::canSpawn);
     }
 
     private void registerSurvivorSkins() {

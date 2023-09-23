@@ -16,6 +16,7 @@
     "HerobrineMageWeight": 5,
     "HerobrineStalkerWeight": 8,
     "InfectedMobWeight": 15,
+    "InfectedCamelWeight": 5,
     "HerobrineSpyObservationDistance": 32,
     "CursedForestWeirdnessMin": 0.65,
     "CursedForestWeirdnessMax": 1.0,
