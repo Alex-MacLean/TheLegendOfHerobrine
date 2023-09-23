@@ -2,11 +2,11 @@ package com.herobrinemod.herobrine.client.entities.renderers;
 
 import com.google.common.collect.Maps;
 import com.herobrinemod.herobrine.HerobrineMod;
+import com.herobrinemod.herobrine.client.entities.models.HerobrineModelLayers;
 import com.herobrinemod.herobrine.client.entities.models.InfectedAxolotlEntityModel;
 import com.herobrinemod.herobrine.entities.InfectedAxolotlEntity;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.entity.passive.AxolotlEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -23,7 +23,7 @@ public class InfectedAxolotlEntityRenderer extends MobEntityRenderer<InfectedAxo
     });
 
     public InfectedAxolotlEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new InfectedAxolotlEntityModel(context.getPart(EntityModelLayers.AXOLOTL)), 0.5f);
+        super(context, new InfectedAxolotlEntityModel(context.getPart(HerobrineModelLayers.INFECTED_AXOLOTL_MODEL_LAYER)), 0.5f);
         this.addFeature(new InfectedAxolotlEyesFeatureRenderer(this));
     }
 

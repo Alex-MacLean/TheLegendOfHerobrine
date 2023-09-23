@@ -65,5 +65,7 @@
   "herobrine.unsummon": "<Herobrine> I shall return!",
   "item.herobrine.cursed_diamond_sword.kills": "Kills:",
   "entity.herobrine.infected_axolotl": "Infected Axolotl",
-  "item.herobrine.infected_axolotl_spawn_egg": "Infected Axolotl Spawn Egg"
+  "item.herobrine.infected_axolotl_spawn_egg": "Infected Axolotl Spawn Egg",
+  "entity.herobrine.infected_camel": "Infected Camel",
+  "item.herobrine.infected_camel_spawn_egg": "Infected Camel Spawn Egg"
 }

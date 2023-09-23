@@ -24,7 +24,7 @@ public class ItemList {
     public static final Item CURSED_DIAMOND_PICKAXE = new PickaxeItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, 1, -2.8f, new Item.Settings());
     public static final Item CURSED_DIAMOND_SHOVEL = new ShovelItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, 1.5f, -3.0f, new Item.Settings());
     public static final Item CURSED_DIAMOND_HOE = new CursedDiamondHoeItem(ToolMaterialList.CURSED_DIAMOND_TOOL_MATERIAL, -4, 0.0f, new Item.Settings());
-    public static final Item MUSIC_DISC_DOG = new MusicDiscItem(15, SoundList.MUSIC_DISC_DOG, new Item.Settings().rarity(Rarity.RARE).maxCount(1), 145);
+    public static final Item MUSIC_DISC_DOG = new MusicDiscItem(2, SoundList.MUSIC_DISC_DOG, new Item.Settings().rarity(Rarity.RARE).maxCount(1), 145);
     public static final Item HOLY_WATER = new HolyWaterItem(new Item.Settings());
     public static final Item UNHOLY_WATER = new UnholyWaterItem(new Item.Settings());
     public static final Item CURSED_DIAMOND_BLOCK = new BlockItem(BlockList.CURSED_DIAMOND_BLOCK, new FabricItemSettings());
@@ -50,4 +50,5 @@ public class ItemList {
     public static final SpawnEggItem INFECTED_RABBIT_SPAWN_EGG = new SpawnEggItem(EntityTypeList.INFECTED_RABBIT, 0x995F40, 0xFFFFFF, new Item.Settings());
     public static final SpawnEggItem SURVIVOR_SPAWN_EGG = new SpawnEggItem(EntityTypeList.SURVIVOR, 0x46B59C, 0xCEAC90, new Item.Settings());
     public static final SpawnEggItem INFECTED_AXOLOTL_SPAWN_EGG = new SpawnEggItem(EntityTypeList.INFECTED_AXOLOTL, 0xFBC1E3, 0xFFFFFF, new Item.Settings());
+    public static final SpawnEggItem INFECTED_CAMEL_SPAWN_EGG = new SpawnEggItem(EntityTypeList.INFECTED_CAMEL, 0xFCC369, 0xFFFFFF, new Item.Settings());
 }
