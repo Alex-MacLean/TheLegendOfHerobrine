@@ -18,6 +18,7 @@ public class WorldSaveData {
     private final String fileName; // Store the name of the Json file
     private final String jsonPath;
     private boolean dirty;
+
     public WorldSaveData(@NotNull MinecraftServer server, String fileName) {
         this.fileName = fileName;
         String path = Objects.requireNonNull(server).getSavePath(WorldSavePath.ROOT).toString();
@@ -59,8 +60,9 @@ public class WorldSaveData {
             json = new JsonObject();
         }
         json.addProperty(dataName, dataValue);
-        this.dirty = true;
+        this.markDirty();
     }
+
     public void writeInt(String dataName, int dataValue, boolean saveNow) {
         if(json == null) {
             json = new JsonObject();
@@ -71,7 +73,7 @@ public class WorldSaveData {
             saveFile();
             return;
         }
-        this.dirty = true;
+        this.markDirty();
     }
 
     // Write double value to json file
@@ -80,8 +82,9 @@ public class WorldSaveData {
             json = new JsonObject();
         }
         json.addProperty(dataName, dataValue);
-        this.dirty = true;
+        this.markDirty();
     }
+
     public void writeDouble(String dataName, double dataValue, boolean saveNow) {
         if(json == null) {
             json = new JsonObject();
@@ -92,7 +95,7 @@ public class WorldSaveData {
             saveFile();
             return;
         }
-        this.dirty = true;
+        this.markDirty();
     }
 
     // Write boolean value to json file
@@ -101,8 +104,9 @@ public class WorldSaveData {
             json = new JsonObject();
         }
         json.addProperty(dataName, dataValue);
-        this.dirty = true;
+        this.markDirty();
     }
+
     public void writeBoolean(String dataName, boolean dataValue, boolean saveNow) {
         if(json == null) {
             json = new JsonObject();
@@ -113,17 +117,19 @@ public class WorldSaveData {
             saveFile();
             return;
         }
-        this.dirty = true;
+        this.markDirty();
     }
 
     public void saveFile() {
+        // This is the ONLY scenario where the dirty flag should be removed
         this.dirty = false;
         try {
             Files.write(Paths.get(jsonPath), json.toString().getBytes());
         } catch (IOException e) {
             System.out.println("[The Legend of Herobrine/Save Data/ERROR]: Failed to save data to JSON file!");
             e.printStackTrace();
-            this.dirty = true;
+            // Mark data as dirty if file write fails
+            this.markDirty();
         }
     }
 
@@ -131,6 +137,11 @@ public class WorldSaveData {
         return dirty;
     }
 
+    // Allows for marking dirty externally. A method for removing the dirty tag externally will and should never exist. Please do not change this in any forks or with any mixins
+    public void markDirty() {
+        this.dirty = true;
+    }
+    
     // Get Json file in memory
     public JsonObject getJson() {
         return json;
