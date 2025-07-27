@@ -61,7 +61,7 @@
   "item.herobrine.herobrine_stalker_spawn_egg": "Яйцо призыва Хиробрина-сталкера",
   "entity.herobrine.herobrine_stalker": "Хиробрин",
   "item.herobrine.music_disc_dog": "Пластинка",
-  "jukebox_song.herobrine.dog": "C418 — dog",
+  "item.herobrine.music_disc_dog.desc": "C418 — dog",
   "herobrine.summon": "<Herobrine> Вы даже не представляете, что наделали!",
   "herobrine.unsummon": "<Herobrine> Я ещё вернусь!",
   "item.herobrine.cursed_diamond_sword.kills": "Убийств:",

@@ -9,6 +9,7 @@ import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LightningEntity;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
@@ -23,8 +24,8 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -70,6 +71,11 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
     }
 
     @Override
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+        return false;
+    }
+
+    @Override
     public FluidState getFluidState(@NotNull BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
@@ -79,9 +85,8 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
         return Waterloggable.super.tryFillWithFluid(world, pos, state, fluidState);
     }
 
-    @Override
-    public boolean canFillWithFluid(PlayerEntity player, BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
-        return Waterloggable.super.canFillWithFluid(player, world, pos, state, fluid);
+    public boolean canFillWithFluid(BlockView world, BlockPos pos, @NotNull BlockState state, Fluid fluid) {
+        return Waterloggable.super.canFillWithFluid(world, pos, state, fluid);
     }
 
     @Override
@@ -114,7 +119,7 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, @NotNull PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(@NotNull BlockState state, World world, BlockPos pos, @NotNull PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
         if (itemStack.isIn(ItemTagList.ACTIVATES_HEROBRINE_ALTAR) && canActivate(world, pos, state)) {
             if(itemStack.isOf(ItemList.CURSED_DIAMOND)) {
@@ -132,7 +137,7 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                         assert lightningentity != null;
                         lightningentity.setPos(pos.getX(), pos.getY(), pos.getZ());
                         world.spawnEntity(lightningentity);
-                        SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", true, true);
+                        SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", true);
                     }
                 }
 
@@ -151,9 +156,9 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
                         assert lightningentity != null;
                         lightningentity.setPos(pos.getX(), pos.getY(), pos.getZ());
                         world.spawnEntity(lightningentity);
-                        SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", false, true);
-                        SaveDataHandler.getHerobrineSaveData().writeInt("stage", 0, true);
-                        SaveDataHandler.getHerobrineSaveData().writeInt("stageTime", 0, true);
+                        SaveDataHandler.getHerobrineSaveData().writeBoolean("herobrineSummoned", false);
+                        SaveDataHandler.getHerobrineSaveData().writeInt("stage", 0);
+                        SaveDataHandler.getHerobrineSaveData().writeInt("stageTime", 0);
                     }
                 }
             }
@@ -166,33 +171,33 @@ public class HerobrineAltarBlock extends Block implements Waterloggable {
             if (state.get(WATERLOGGED)) {
                 world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
             }
-            return ItemActionResult.success(world.isClient);
+            return ActionResult.success(world.isClient);
         } else {
             switch (state.get(TYPE)) {
                 case 1 -> {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 0));
-                    ItemStack itemStack1 = new ItemStack(ItemList.CURSED_DIAMOND);
-                    if (!player.getInventory().insertStack(itemStack1) || !itemStack1.isEmpty()) {
-                        ItemEntity itemEntity = player.dropItem(itemStack1, false);
+                    ItemStack stack = new ItemStack(ItemList.CURSED_DIAMOND);
+                    if (!player.getInventory().insertStack(stack) || !stack.isEmpty()) {
+                        ItemEntity itemEntity = player.dropItem(stack, false);
                         assert itemEntity != null;
                         itemEntity.resetPickupDelay();
                         itemEntity.setOwner(player.getUuid());
                     }
-                    return ItemActionResult.success(world.isClient);
+                    return ActionResult.success(world.isClient);
                 }
                 case 2 -> {
                     world.setBlockState(pos, this.getDefaultState().with(TYPE, 0));
-                    ItemStack itemStack1 = new ItemStack(ItemList.PURIFIED_DIAMOND);
-                    if (!player.getInventory().insertStack(itemStack1) || !stack.isEmpty()) {
-                        ItemEntity itemEntity = player.dropItem(itemStack1, false);
+                    ItemStack stack = new ItemStack(ItemList.PURIFIED_DIAMOND);
+                    if (!player.getInventory().insertStack(stack) || !stack.isEmpty()) {
+                        ItemEntity itemEntity = player.dropItem(stack, false);
                         assert itemEntity != null;
                         itemEntity.resetPickupDelay();
                         itemEntity.setOwner(player.getUuid());
                     }
-                    return ItemActionResult.success(world.isClient);
+                    return ActionResult.success(world.isClient);
                 }
             }
         }
-        return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+        return super.onUse(state, world, pos, player, hand, hit);
     }
 }

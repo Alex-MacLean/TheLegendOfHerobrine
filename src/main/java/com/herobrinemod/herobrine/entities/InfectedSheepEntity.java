@@ -22,35 +22,31 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InfectedSheepEntity extends InfectedEntity implements Shearable {
     private static final TrackedData<Byte> COLOR = DataTracker.registerData(InfectedSheepEntity.class, TrackedDataHandlerRegistry.BYTE);
-    private static final Map<DyeColor, ItemConvertible> DROPS = Util.make(Maps.newEnumMap(DyeColor.class), map -> {
+    private static final Map<DyeColor, ItemConvertible> DROPS = Util.make(Maps.newEnumMap(DyeColor.class), (map) -> {
         map.put(DyeColor.WHITE, Blocks.WHITE_WOOL);
         map.put(DyeColor.ORANGE, Blocks.ORANGE_WOOL);
         map.put(DyeColor.MAGENTA, Blocks.MAGENTA_WOOL);
@@ -68,27 +64,20 @@ public class InfectedSheepEntity extends InfectedEntity implements Shearable {
         map.put(DyeColor.RED, Blocks.RED_WOOL);
         map.put(DyeColor.BLACK, Blocks.BLACK_WOOL);
     });
-    private static final Map<DyeColor, Integer> COLORS = Maps.newEnumMap(
-            (Map)Arrays.stream(DyeColor.values()).collect(Collectors.toMap(color -> color, InfectedSheepEntity::getDyedColor))
-    );
+    private static final EnumMap<DyeColor, float[]> COLORS = Maps.newEnumMap((Map)Arrays.stream(DyeColor.values()).collect(Collectors.toMap((color) -> color, InfectedSheepEntity::getDyedColor)));
     private int eatGrassTimer;
     private EatGrassGoal eatGrassGoal;
 
-    private static int getDyedColor(DyeColor color) {
+    @Contract(value = "_ -> new", pure = true)
+    private static float @NotNull [] getDyedColor(DyeColor color) {
         if (color == DyeColor.WHITE) {
-            return -1644826;
-        } else {
-            int i = color.getEntityColor();
-            return ColorHelper.Argb.getArgb(
-                    255,
-                    MathHelper.floor((float)ColorHelper.Argb.getRed(i) * 0.75F),
-                    MathHelper.floor((float)ColorHelper.Argb.getGreen(i) * 0.75F),
-                    MathHelper.floor((float)ColorHelper.Argb.getBlue(i) * 0.75F)
-            );
+            return new float[]{0.9019608f, 0.9019608f, 0.9019608f};
         }
+        float[] fs = color.getColorComponents();
+        return new float[]{fs[0] * 0.75f, fs[1] * 0.75f, fs[2] * 0.75f};
     }
 
-    public static int getRgbColor(DyeColor dyeColor) {
+    public static float[] getRgbColor(DyeColor dyeColor) {
         return COLORS.get(dyeColor);
     }
 
@@ -107,7 +96,7 @@ public class InfectedSheepEntity extends InfectedEntity implements Shearable {
         entity.setSheared(this.isSheared());
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
-        entity.initialize((ServerWorldAccess) this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null);
+        entity.initialize((ServerWorldAccess) this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
         entity.setColor(this.getColor());
     }
 
@@ -148,42 +137,39 @@ public class InfectedSheepEntity extends InfectedEntity implements Shearable {
         if (this.getWorld().isClient) {
             this.eatGrassTimer = Math.max(0, this.eatGrassTimer - 1);
         }
-
         super.tickMovement();
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(COLOR, (byte)0);
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(COLOR, (byte)0);
     }
 
     @Override
-    public RegistryKey<LootTable> getLootTableId() {
+    public Identifier getLootTableId() {
         if (this.isSheared()) {
-            return this.getType().getLootTableId();
-        } else {
-            return switch(this.getColor()) {
-                case WHITE -> LootTables.WHITE_SHEEP_ENTITY;
-                case ORANGE -> LootTables.ORANGE_SHEEP_ENTITY;
-                case MAGENTA -> LootTables.MAGENTA_SHEEP_ENTITY;
-                case LIGHT_BLUE -> LootTables.LIGHT_BLUE_SHEEP_ENTITY;
-                case YELLOW -> LootTables.YELLOW_SHEEP_ENTITY;
-                case LIME -> LootTables.LIME_SHEEP_ENTITY;
-                case PINK -> LootTables.PINK_SHEEP_ENTITY;
-                case GRAY -> LootTables.GRAY_SHEEP_ENTITY;
-                case LIGHT_GRAY -> LootTables.LIGHT_GRAY_SHEEP_ENTITY;
-                case CYAN -> LootTables.CYAN_SHEEP_ENTITY;
-                case PURPLE -> LootTables.PURPLE_SHEEP_ENTITY;
-                case BLUE -> LootTables.BLUE_SHEEP_ENTITY;
-                case BROWN -> LootTables.BROWN_SHEEP_ENTITY;
-                case GREEN -> LootTables.GREEN_SHEEP_ENTITY;
-                case RED -> LootTables.RED_SHEEP_ENTITY;
-                case BLACK -> LootTables.BLACK_SHEEP_ENTITY;
-            };
+            return super.getLootTableId();
         }
+        return switch (this.getColor()) {
+            case WHITE -> LootTables.WHITE_SHEEP_ENTITY;
+            case ORANGE -> LootTables.ORANGE_SHEEP_ENTITY;
+            case MAGENTA -> LootTables.MAGENTA_SHEEP_ENTITY;
+            case LIGHT_BLUE -> LootTables.LIGHT_BLUE_SHEEP_ENTITY;
+            case YELLOW -> LootTables.YELLOW_SHEEP_ENTITY;
+            case LIME -> LootTables.LIME_SHEEP_ENTITY;
+            case PINK -> LootTables.PINK_SHEEP_ENTITY;
+            case GRAY -> LootTables.GRAY_SHEEP_ENTITY;
+            case LIGHT_GRAY -> LootTables.LIGHT_GRAY_SHEEP_ENTITY;
+            case CYAN -> LootTables.CYAN_SHEEP_ENTITY;
+            case PURPLE -> LootTables.PURPLE_SHEEP_ENTITY;
+            case BLUE -> LootTables.BLUE_SHEEP_ENTITY;
+            case BROWN -> LootTables.BROWN_SHEEP_ENTITY;
+            case GREEN -> LootTables.GREEN_SHEEP_ENTITY;
+            case RED -> LootTables.RED_SHEEP_ENTITY;
+            case BLACK -> LootTables.BLACK_SHEEP_ENTITY;
+        };
     }
-
     @Override
     public void handleStatus(byte status) {
         if (status == EntityStatuses.SET_SHEEP_EAT_GRASS_TIMER_OR_PRIME_TNT_MINECART) {
@@ -195,64 +181,46 @@ public class InfectedSheepEntity extends InfectedEntity implements Shearable {
 
     public float getNeckAngle(float delta) {
         if (this.eatGrassTimer <= 0) {
-            return 0.0F;
-        } else if (this.eatGrassTimer >= 4 && this.eatGrassTimer <= 36) {
-            return 1.0F;
-        } else {
-            return this.eatGrassTimer < 4 ? ((float)this.eatGrassTimer - delta) / 4.0F : -((float)(this.eatGrassTimer - 40) - delta) / 4.0F;
+            return 0.0f;
         }
+        if (this.eatGrassTimer >= 4 && this.eatGrassTimer <= 36) {
+            return 1.0f;
+        }
+        if (this.eatGrassTimer < 4) {
+            return ((float)this.eatGrassTimer - delta) / 4.0f;
+        }
+        return -((float)(this.eatGrassTimer - 40) - delta) / 4.0f;
     }
 
     public float getHeadAngle(float delta) {
         if (this.eatGrassTimer > 4 && this.eatGrassTimer <= 36) {
-            float f = ((float)(this.eatGrassTimer - 4) - delta) / 32.0F;
-            return (float) (Math.PI / 5) + 0.21991149F * MathHelper.sin(f * 28.7F);
-        } else {
-            return this.eatGrassTimer > 0 ? (float) (Math.PI / 5) : this.getPitch() * (float) (Math.PI / 180.0);
+            float f = ((float)(this.eatGrassTimer - 4) - delta) / 32.0f;
+            return 0.62831855f + 0.21991149f * MathHelper.sin(f * 28.7f);
         }
+        if (this.eatGrassTimer > 0) {
+            return 0.62831855f;
+        }
+        return this.getPitch() * ((float)Math.PI / 180);
     }
 
     @Override
-    public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        ItemStack itemStack = player.getStackInHand(hand);
+    public ActionResult interactMob(PlayerEntity player2, Hand hand) {
+        ItemStack itemStack = player2.getStackInHand(hand);
         if (itemStack.isOf(Items.SHEARS)) {
             if (!this.getWorld().isClient && this.isShearable()) {
                 this.sheared(SoundCategory.PLAYERS);
-                this.emitGameEvent(GameEvent.SHEAR, player);
-                itemStack.damage(1, player, getSlotForHand(hand));
+                this.emitGameEvent(GameEvent.SHEAR, player2);
+                itemStack.damage(1, player2, player -> player.sendToolBreakStatus(hand));
                 return ActionResult.SUCCESS;
-            } else {
-                return ActionResult.CONSUME;
             }
-        } else {
-            return super.interactMob(player, hand);
+            return ActionResult.CONSUME;
         }
-    }
-
-    @Override
-    public void sheared(SoundCategory shearedSoundCategory) {
-        this.getWorld().playSoundFromEntity(null, this, SoundEvents.ENTITY_SHEEP_SHEAR, shearedSoundCategory, 1.0F, 1.0F);
-        this.setSheared(true);
-        int i = 1 + this.random.nextInt(3);
-
-        for(int j = 0; j < i; ++j) {
-            ItemEntity itemEntity = this.dropItem(DROPS.get(this.getColor()), 1);
-            if (itemEntity != null) {
-                itemEntity.setVelocity(
-                        itemEntity.getVelocity()
-                                .add(
-                                        (this.random.nextFloat() - this.random.nextFloat()) * 0.1F,
-                                        this.random.nextFloat() * 0.05F,
-                                        (this.random.nextFloat() - this.random.nextFloat()) * 0.1F
-                                )
-                );
-            }
-        }
+        return super.interactMob(player2, hand);
     }
 
     @Override
     public boolean isShearable() {
-        return this.isAlive() && !this.isSheared() && !this.isBaby();
+        return this.isAlive() && !this.isSheared();
     }
 
     @Override
@@ -267,6 +235,66 @@ public class InfectedSheepEntity extends InfectedEntity implements Shearable {
         super.readCustomDataFromNbt(nbt);
         this.setSheared(nbt.getBoolean("Sheared"));
         this.setColor(DyeColor.byId(nbt.getByte("Color")));
+    }
+
+    public DyeColor getColor() {
+        return DyeColor.byId(this.dataTracker.get(COLOR) & 0xF);
+    }
+
+    public void setColor(DyeColor color) {
+        byte b = this.dataTracker.get(COLOR);
+        this.dataTracker.set(COLOR, (byte)(b & 0xF0 | color.getId() & 0xF));
+    }
+
+    public boolean isSheared() {
+        return (this.dataTracker.get(COLOR) & 0x10) != 0;
+    }
+
+    public void setSheared(boolean sheared) {
+        byte b = this.dataTracker.get(COLOR);
+        if (sheared) {
+            this.dataTracker.set(COLOR, (byte)(b | 0x10));
+        } else {
+            this.dataTracker.set(COLOR, (byte)(b & 0xFFFFFFEF));
+        }
+    }
+
+    @Override
+    public void onEatingGrass() {
+        super.onEatingGrass();
+        this.setSheared(false);
+    }
+
+    @Override
+    @Nullable
+    public EntityData initialize(@NotNull ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+        this.setColor(InfectedSheepEntity.generateDefaultColor(world.getRandom()));
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+    }
+
+    public static DyeColor generateDefaultColor(@NotNull Random random) {
+        int i = random.nextInt(100);
+        if (i < 5) {
+            return DyeColor.BLACK;
+        }
+        if (i < 10) {
+            return DyeColor.GRAY;
+        }
+        if (i < 15) {
+            return DyeColor.LIGHT_GRAY;
+        }
+        if (i < 18) {
+            return DyeColor.BROWN;
+        }
+        if (random.nextInt(500) == 0) {
+            return DyeColor.PINK;
+        }
+        return DyeColor.WHITE;
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.95f * dimensions.height;
     }
 
     @Override
@@ -286,56 +314,18 @@ public class InfectedSheepEntity extends InfectedEntity implements Shearable {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.ENTITY_SHEEP_STEP, 0.15F, 1.0F);
-    }
-
-    public DyeColor getColor() {
-        return DyeColor.byId(this.dataTracker.get(COLOR) & 15);
-    }
-
-    public void setColor(@NotNull DyeColor color) {
-        byte b = this.dataTracker.get(COLOR);
-        this.dataTracker.set(COLOR, (byte)(b & 240 | color.getId() & 15));
-    }
-
-    public boolean isSheared() {
-        return (this.dataTracker.get(COLOR) & 16) != 0;
-    }
-
-    public void setSheared(boolean sheared) {
-        byte b = this.dataTracker.get(COLOR);
-        if (sheared) {
-            this.dataTracker.set(COLOR, (byte)(b | 16));
-        } else {
-            this.dataTracker.set(COLOR, (byte)(b & -17));
-        }
-    }
-
-    public static DyeColor generateDefaultColor(@NotNull Random random) {
-        int i = random.nextInt(100);
-        if (i < 5) {
-            return DyeColor.BLACK;
-        } else if (i < 10) {
-            return DyeColor.GRAY;
-        } else if (i < 15) {
-            return DyeColor.LIGHT_GRAY;
-        } else if (i < 18) {
-            return DyeColor.BROWN;
-        } else {
-            return random.nextInt(500) == 0 ? DyeColor.PINK : DyeColor.WHITE;
-        }
+        this.playSound(SoundEvents.ENTITY_SHEEP_STEP, 0.15f, 1.0f);
     }
 
     @Override
-    public void onEatingGrass() {
-        super.onEatingGrass();
-        this.setSheared(false);
-    }
-
-    @Nullable
-    @Override
-    public EntityData initialize(@NotNull ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
-        this.setColor(generateDefaultColor(world.getRandom()));
-        return super.initialize(world, difficulty, spawnReason, entityData);
+    public void sheared(SoundCategory shearedSoundCategory) {
+        this.getWorld().playSoundFromEntity(null, this, SoundEvents.ENTITY_SHEEP_SHEAR, shearedSoundCategory, 1.0f, 1.0f);
+        this.setSheared(true);
+        int i = 1 + this.random.nextInt(3);
+        for (int j = 0; j < i; ++j) {
+            ItemEntity itemEntity = this.dropItem(DROPS.get(this.getColor()), 1);
+            if (itemEntity == null) continue;
+            itemEntity.setVelocity(itemEntity.getVelocity().add((this.random.nextFloat() - this.random.nextFloat()) * 0.1f, this.random.nextFloat() * 0.05f, (this.random.nextFloat() - this.random.nextFloat()) * 0.1f));
+        }
     }
 }

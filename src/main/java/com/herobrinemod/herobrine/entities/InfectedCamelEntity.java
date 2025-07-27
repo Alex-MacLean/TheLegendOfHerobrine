@@ -20,6 +20,7 @@ import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -46,6 +47,7 @@ public class InfectedCamelEntity extends InfectedEntity {
 
     public InfectedCamelEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
+        this.setStepHeight(1.5f);
         this.experiencePoints = 3;
         this.moveControl = new InfectedCamelMoveControl();
         MobNavigation mobNavigation = (MobNavigation)this.getNavigation();
@@ -72,7 +74,6 @@ public class InfectedCamelEntity extends InfectedEntity {
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
         return createHostileAttributes()
-                .add(EntityAttributes.GENERIC_STEP_HEIGHT, 1.5)
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 32.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0)
@@ -80,8 +81,13 @@ public class InfectedCamelEntity extends InfectedEntity {
     }
 
     @Override
-    public EntityDimensions getBaseDimensions(EntityPose pose) {
-        return pose == EntityPose.SITTING ? SITTING_DIMENSIONS.scaled(this.getScaleFactor()) : super.getBaseDimensions(pose);
+    public EntityDimensions getDimensions(EntityPose pose) {
+        return pose == EntityPose.SITTING ? SITTING_DIMENSIONS.scaled(this.getScaleFactor()) : super.getDimensions(pose);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, @NotNull EntityDimensions dimensions) {
+        return dimensions.height - 0.1f * this.getScaleFactor();
     }
 
     private void updateAnimations() {
@@ -129,16 +135,16 @@ public class InfectedCamelEntity extends InfectedEntity {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(LAST_POSE_TICK, 0L);
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(LAST_POSE_TICK, 0L);
     }
 
     @Override
-    public EntityData initialize(@NotNull ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public EntityData initialize(@NotNull ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         this.initLastPoseTick(world.toServerWorld().getTime());
         this.goalSelector.add(6, wanderAroundFarGoal);
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Override
@@ -179,7 +185,7 @@ public class InfectedCamelEntity extends InfectedEntity {
     }
 
     public boolean canChangePose() {
-        return this.wouldNotSuffocateInPose(this.isSitting() ? EntityPose.STANDING : EntityPose.SITTING);
+        return this.wouldPoseNotCollide(this.isSitting() ? EntityPose.STANDING : EntityPose.SITTING);
     }
 
     @Override
@@ -189,35 +195,33 @@ public class InfectedCamelEntity extends InfectedEntity {
     }
 
     private double getPassengerAttachmentY(float tickDelta, @NotNull EntityDimensions dimensions, float scaleFactor) {
-        double d = dimensions.height() - 0.375F * scaleFactor;
-        float f = scaleFactor * 1.43F;
-        float g = f - scaleFactor * 0.2F;
+        double d = dimensions.height - 0.375f * scaleFactor;
+        float f = scaleFactor * 1.43f;
+        float g = f - scaleFactor * 0.2f;
         float h = f - g;
         boolean bl = this.isChangingPose();
         boolean bl2 = this.isSitting();
         if (bl) {
-            int i = bl2 ? 40 : 52;
-            int j;
             float k;
+            int j;
+            int i;
+            i = bl2 ? 40 : 52;
             if (bl2) {
                 j = 28;
-                k = 0.5F;
+                k = 0.5f;
             } else {
                 j = 24;
-                k = 0.6F;
+                k = 0.6f;
             }
-
-            float l = MathHelper.clamp((float)this.getLastPoseTickDelta() + tickDelta, 0.0F, (float)i);
+            float l = MathHelper.clamp((float)this.getLastPoseTickDelta() + tickDelta, 0.0f, (float)i);
             boolean bl3 = l < (float)j;
             float m = bl3 ? l / (float)j : (l - (float)j) / (float)(i - j);
-            float n = f - k * g;
-            d += bl2 ? (double)MathHelper.lerp(m, bl3 ? f : n, bl3 ? n : h) : (double)MathHelper.lerp(m, bl3 ? h - f : h - n, bl3 ? h - n : 0.0F);
+            float n2 = f - k * g;
+            d += bl2 ? (double)MathHelper.lerp(m, bl3 ? f : n2, bl3 ? n2 : h) : (double)MathHelper.lerp(m, bl3 ? h - f : h - n2, bl3 ? h - n2 : 0.0f);
         }
-
         if (bl2 && !bl) {
             d += h;
         }
-
         return d;
     }
 
@@ -225,7 +229,7 @@ public class InfectedCamelEntity extends InfectedEntity {
     public Vec3d getLeashOffset(float tickDelta) {
         EntityDimensions entityDimensions = this.getDimensions(this.getPose());
         float f = this.getScaleFactor();
-        return new Vec3d(0.0, this.getPassengerAttachmentY(tickDelta, entityDimensions, f) - (double)(0.2F * f), entityDimensions.width() * 0.56F);
+        return new Vec3d(0.0, this.getPassengerAttachmentY(tickDelta, entityDimensions, f) - (double)(0.2f * f), entityDimensions.width * 0.56f);
     }
 
     private void clampHeadYaw(@NotNull Entity entity) {
@@ -262,7 +266,6 @@ public class InfectedCamelEntity extends InfectedEntity {
         if (!this.isSitting()) {
             this.playSound(SoundEvents.ENTITY_CAMEL_SIT, 1.0F, this.getSoundPitch());
             this.setPose(EntityPose.SITTING);
-            this.emitGameEvent(GameEvent.ENTITY_ACTION);
             this.setLastPoseTick(-this.getWorld().getTime());
         }
     }
@@ -271,14 +274,12 @@ public class InfectedCamelEntity extends InfectedEntity {
         if (this.isSitting()) {
             this.playSound(SoundEvents.ENTITY_CAMEL_STAND, 1.0F, this.getSoundPitch());
             this.setPose(EntityPose.STANDING);
-            this.emitGameEvent(GameEvent.ENTITY_ACTION);
             this.setLastPoseTick(this.getWorld().getTime());
         }
     }
 
     public void setStanding() {
         this.setPose(EntityPose.STANDING);
-        this.emitGameEvent(GameEvent.ENTITY_ACTION);
         this.initLastPoseTick(this.getWorld().getTime());
     }
 
@@ -300,6 +301,13 @@ public class InfectedCamelEntity extends InfectedEntity {
         return new InfectedCamelBodyControl(this);
     }
 
+    @Override
+    protected void updateForLeashLength(float leashLength) {
+        if (leashLength > 6.0f && this.isSitting() && !this.isChangingPose() && this.canChangePose()) {
+            this.startStanding();
+        }
+    }
+
     public boolean isStationary() {
         return this.isSitting() || this.isChangingPose();
     }
@@ -312,10 +320,10 @@ public class InfectedCamelEntity extends InfectedEntity {
 
     @Override
     protected void playStepSound(BlockPos pos, @NotNull BlockState state) {
-        if (state.isIn(BlockTags.CAMEL_SAND_STEP_SOUND_BLOCKS)) {
-            this.playSound(SoundEvents.ENTITY_CAMEL_STEP_SAND, 1.0f, 1.0f);
+        if (state.getSoundGroup() == BlockSoundGroup.SAND) {
+            this.playSound(SoundEvents.ENTITY_CAMEL_STEP_SAND, 1.0F, 1.0F);
         } else {
-            this.playSound(SoundEvents.ENTITY_CAMEL_STEP, 1.0f, 1.0f);
+            this.playSound(SoundEvents.ENTITY_CAMEL_STEP, 1.0F, 1.0F);
         }
     }
 

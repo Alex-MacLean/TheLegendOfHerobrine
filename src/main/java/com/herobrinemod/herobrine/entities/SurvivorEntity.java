@@ -9,20 +9,20 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.Monster;
+import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Box;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOfferList;
 import net.minecraft.village.TradeOffers;
@@ -31,6 +31,8 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class SurvivorEntity extends MerchantEntity {
     // For some reason using normal NBT data doesn't work and TrackedData does. Why? Just ask Mojang about their spaghetti code. This just works and any better method I tried won't work.
@@ -67,12 +69,12 @@ public class SurvivorEntity extends MerchantEntity {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(SMALL_ARMS, false);
-        builder.add(REQUIRES_INITIALIZATION, false);
-        builder.add(TEXTURE_PATH, "");
-        builder.add(TEXTURE_NAMESPACE, "");
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(SMALL_ARMS, false);
+        this.dataTracker.startTracking(REQUIRES_INITIALIZATION, false);
+        this.dataTracker.startTracking(TEXTURE_PATH, "");
+        this.dataTracker.startTracking(TEXTURE_NAMESPACE, "");
     }
 
     @Override
@@ -102,11 +104,11 @@ public class SurvivorEntity extends MerchantEntity {
     // Don't ask me why this happens. Probably something to do with spamming the console causing the trading code to stop for a short time
     @Override
     public SoundEvent getYesSound() {
-        return SoundEvent.of(Identifier.of(""));
+        return SoundEvent.of(new Identifier(""));
     }
 
     protected SoundEvent getTradingSound(boolean sold) {
-        return SoundEvent.of(Identifier.of(""));
+        return SoundEvent.of(new Identifier(""));
     }
 
     @Override
@@ -120,7 +122,7 @@ public class SurvivorEntity extends MerchantEntity {
         // If you set RequiresInitialization to true in the game the entity will be reinitialized. IDK the consequences of this. I hate this implementation because it runs every tick.
         if(this.dataTracker.get(REQUIRES_INITIALIZATION)) {
             this.dataTracker.set(REQUIRES_INITIALIZATION, false);
-            this.initialize((ServerWorldAccess) this.getWorld(), this.getWorld().getLocalDifficulty(getBlockPos()), SpawnReason.NATURAL, null);
+            this.initialize((ServerWorldAccess) this.getWorld(), this.getWorld().getLocalDifficulty(getBlockPos()), SpawnReason.NATURAL, null, null);
         }
 
         if(!this.hasCustomer()) {
@@ -141,6 +143,17 @@ public class SurvivorEntity extends MerchantEntity {
             this.healTimer = 80;
         }
 
+        // Makes every hostile mob that can see the Survivor and doesn't already have a target and isn't a Herobrine Stalker target the Survivor. Runs every tick. Very bloated implementation, but I've seen worse in the Vanilla code
+        Box effectBox = getBoundingBox().expand(32.0, 32.0, 32.0);
+        List<LivingEntity> affectedEntities = this.getWorld().getEntitiesByClass(LivingEntity.class, effectBox, EntityPredicates.VALID_LIVING_ENTITY);
+        if(!affectedEntities.isEmpty()) {
+            for(LivingEntity entity : affectedEntities) {
+                if((entity instanceof Monster) && !(entity instanceof CreeperEntity) && ((HostileEntity) entity).getTarget() != null && !(entity instanceof Angerable) && !(entity instanceof HerobrineStalkerEntity) && entity.canSee(this) && entity.isAlive()) {
+                    ((HostileEntity) entity).setTarget(this);
+                }
+            }
+        }
+
         super.mobTick();
     }
 
@@ -158,12 +171,16 @@ public class SurvivorEntity extends MerchantEntity {
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (this.isAlive() && !this.hasCustomer() && !this.getWorld().isClient && !this.getOffers().isEmpty()) {
+        if (this.isAlive() && !this.hasCustomer()) {
             for (TradeOffer tradeOffer : this.getOffers()) {
                 tradeOffer.resetUses();
             }
-            this.beginTradeWith(player);
-            return ActionResult.SUCCESS;
+            if (this.getOffers().isEmpty()) {
+                return ActionResult.success(this.getWorld().isClient);
+            } else if (!this.getWorld().isClient) {
+                this.beginTradeWith(player);
+            }
+            return ActionResult.success(this.getWorld().isClient);
         }
         return super.interactMob(player, hand);
     }
@@ -233,7 +250,7 @@ public class SurvivorEntity extends MerchantEntity {
     }
 
     public Identifier getTexture() {
-        return Identifier.of(this.dataTracker.get(TEXTURE_NAMESPACE), this.dataTracker.get(TEXTURE_PATH));
+        return new Identifier(this.dataTracker.get(TEXTURE_NAMESPACE), this.dataTracker.get(TEXTURE_PATH));
     }
 
     public void setSmallArms(boolean smallArms) {
@@ -245,7 +262,7 @@ public class SurvivorEntity extends MerchantEntity {
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         this.setTexture(SurvivorSkinRegistry.getSkinList().get(random.nextInt(SurvivorSkinRegistry.getSkinList().size())));
         this.setSmallArms(random.nextBoolean());
         this.healTimer = 80;
@@ -256,6 +273,6 @@ public class SurvivorEntity extends MerchantEntity {
         this.equipStack(EquipmentSlot.CHEST, new ItemStack(Items.IRON_CHESTPLATE));
         this.equipStack(EquipmentSlot.LEGS, new ItemStack(Items.IRON_LEGGINGS));
         this.equipStack(EquipmentSlot.FEET, new ItemStack(Items.IRON_BOOTS));
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 }

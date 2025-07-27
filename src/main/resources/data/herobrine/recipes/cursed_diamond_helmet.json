@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "AAA",
+    "A A"
+  ],
+  "key": {
+    "A": {
+      "item": "herobrine:cursed_diamond"
+    }
+  },
+  "result": {
+    "item": "herobrine:cursed_diamond_helmet"
+  },
+  "show_notification": true
+}

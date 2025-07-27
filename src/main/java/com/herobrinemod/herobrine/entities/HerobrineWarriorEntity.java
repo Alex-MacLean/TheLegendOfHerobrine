@@ -27,6 +27,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class HerobrineWarriorEntity extends HerobrineEntity {
     private int destroyCooldown;
 
@@ -87,24 +89,7 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
         if(this.destroyCooldown < 1 && ConfigHandler.getHerobrineConfig().readBoolean("WarriorBreaksBlocks") && this.unableToAttackTarget() && this.getTarget() instanceof PlayerEntity && getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
             this.destroyCooldown = random.nextBetween(200, 600);
             for (int y = 0; y <= 1; y ++) {
-                int x = 0;
-                int z = 0;
-
-                if(MathHelper.abs(this.getBlockX() - getTarget().getBlockX()) > MathHelper.abs(this.getBlockZ() - getTarget().getBlockZ())) {
-                    if(this.getBlockX() > this.getTarget().getBlockX()) {
-                        x --;
-                    } else {
-                        x ++;
-                    }
-                } else {
-                    if(this.getBlockZ() > this.getTarget().getBlockZ()) {
-                        z --;
-                    } else {
-                        z ++;
-                    }
-                }
-
-                BlockPos blockPos = new BlockPos(this.getBlockX() + x, MathHelper.floor(this.getY()) + y, this.getBlockZ() + z);
+                BlockPos blockPos = getBlockPos(y);
                 BlockState blockState = this.getWorld().getBlockState(blockPos);
                 if (this.canDestroy(blockState)) {
                     this.getWorld().breakBlock(blockPos, true, this);
@@ -115,12 +100,33 @@ public class HerobrineWarriorEntity extends HerobrineEntity {
         this.destroyCooldown --;
     }
 
+    private @NotNull BlockPos getBlockPos(int y) {
+        int x = 0;
+        int z = 0;
+
+        if(MathHelper.abs(this.getBlockX() - Objects.requireNonNull(getTarget()).getBlockX()) > MathHelper.abs(this.getBlockZ() - getTarget().getBlockZ())) {
+            if(this.getBlockX() > this.getTarget().getBlockX()) {
+                x --;
+            } else {
+                x ++;
+            }
+        } else {
+            if(this.getBlockZ() > this.getTarget().getBlockZ()) {
+                z --;
+            } else {
+                z ++;
+            }
+        }
+
+        return new BlockPos(this.getBlockX() + x, MathHelper.floor(this.getY()) + y, this.getBlockZ() + z);
+    }
+
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, NbtCompound entityNbt) {
         this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(ItemList.BEDROCK_SWORD));
         if(!ConfigHandler.getHerobrineConfig().readBoolean("BedrockSwordDrops")) {
             this.handDropChances[EquipmentSlot.MAINHAND.getEntitySlotId()] = 0.0f;
         }
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 }

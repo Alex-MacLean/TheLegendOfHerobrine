@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class InfectedLlamaSpitEntityRenderer extends EntityRenderer<InfectedLlamaSpitEntity> {
-    private static final Identifier TEXTURE = Identifier.of("textures/entity/llama/spit.png");
+    private static final Identifier TEXTURE = new Identifier("textures/entity/llama/spit.png");
     private final InfectedLlamaSpitEntityModel model;
 
     public InfectedLlamaSpitEntityRenderer(EntityRendererFactory.Context context) {
@@ -34,7 +34,7 @@ public class InfectedLlamaSpitEntityRenderer extends EntityRenderer<InfectedLlam
         matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.lerp(g, entity.prevPitch, entity.getPitch())));
         this.model.setAngles(entity, g, 0.0f, -0.1f, 0.0f, 0.0f);
         VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(this.model.getLayer(TEXTURE));
-        this.model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV);
+        this.model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, 1.0f, 1.0f, 1.0f, 1.0f);
         matrixStack.pop();
         super.render(entity, f, g, matrixStack, vertexConsumerProvider, i);
     }

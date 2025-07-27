@@ -61,7 +61,7 @@
   "item.herobrine.herobrine_stalker_spawn_egg": "Herobrine Stalker Spawn Egg",
   "entity.herobrine.herobrine_stalker": "Herobrine",
   "item.herobrine.music_disc_dog": "Music Disc",
-  "jukebox_song.herobrine.dog": "C418 - dog",
+  "item.herobrine.music_disc_dog.desc": "C418 - dog",
   "herobrine.summon": "<Herobrine> You have no idea what you have done!",
   "herobrine.unsummon": "<Herobrine> I shall return!",
   "item.herobrine.cursed_diamond_sword.kills": "Kills:",

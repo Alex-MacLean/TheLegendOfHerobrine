@@ -18,7 +18,7 @@ import java.util.Map;
 public class InfectedAxolotlEntityRenderer extends MobEntityRenderer<InfectedAxolotlEntity, InfectedAxolotlEntityModel> {
     private static final Map<AxolotlEntity.Variant, Identifier> TEXTURES = Util.make(Maps.newHashMap(), variants -> {
         for (AxolotlEntity.Variant variant : AxolotlEntity.Variant.values()) {
-            variants.put(variant, Identifier.of(String.format(Locale.ROOT, HerobrineMod.MODID + ":textures/entity/infected_axolotl/axolotl_%s.png", variant.getName())));
+            variants.put(variant, new Identifier(String.format(Locale.ROOT, HerobrineMod.MODID + ":textures/entity/infected_axolotl/axolotl_%s.png", variant.getName())));
         }
     });
 

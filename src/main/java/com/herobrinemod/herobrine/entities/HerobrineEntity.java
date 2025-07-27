@@ -2,16 +2,12 @@ package com.herobrinemod.herobrine.entities;
 
 import com.herobrinemod.herobrine.HerobrineMod;
 import com.herobrinemod.herobrine.items.ItemList;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.projectile.thrown.PotionEntity;
-import net.minecraft.loot.LootTable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -27,6 +23,11 @@ public abstract class HerobrineEntity extends HostileEntity {
     public HerobrineEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
         ((MobNavigation)this.getNavigation()).setCanPathThroughDoors(true);
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 1.62f;
     }
 
     public static boolean canSpawn(EntityType<? extends HerobrineEntity> type, @NotNull ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
@@ -87,21 +88,15 @@ public abstract class HerobrineEntity extends HostileEntity {
     }
 
     @Override
-    public RegistryKey<LootTable> getLootTableId() {
-        return RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of(HerobrineMod.MODID, "entities/herobrine"));
+    public Identifier getLootTableId() {
+        return Identifier.of(HerobrineMod.MODID, "entities/herobrine");
     }
 
     @Override
-    protected void dropEquipment(ServerWorld world, DamageSource source, boolean causedByPlayer) {
-        super.dropEquipment(world, source, causedByPlayer);
-        try {
-            if (random.nextFloat() < EnchantmentHelper.getEquipmentDropChance(world, (LivingEntity) source.getAttacker(), source, 0.2f)) {
-                this.dropItem(ItemList.CURSED_DUST);
-            }
-        } catch (NullPointerException e) {
-            if(random.nextInt(4) == 0) {
-                this.dropItem(ItemList.CURSED_DUST);
-            }
+    protected void dropEquipment(DamageSource source, int lootingMultiplier, boolean allowDrops) {
+        super.dropEquipment(source, lootingMultiplier, allowDrops);
+        if (random.nextInt(100) <= 20 * (lootingMultiplier + 1) && !(this instanceof FakeHerobrineMageEntity)) {
+            this.dropItem(ItemList.CURSED_DUST);
         }
     }
 

@@ -4,10 +4,7 @@ import com.herobrinemod.herobrine.entities.goals.InfectedHorseAmbientStandGoal;
 import com.herobrinemod.herobrine.items.ItemList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -55,6 +52,7 @@ public class InfectedHorseEntity extends InfectedEntity {
     public InfectedHorseEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
         this.experiencePoints = 3;
+        this.setStepHeight(1.0f);
         this.setConversionEntity(EntityType.HORSE);
     }
 
@@ -77,7 +75,6 @@ public class InfectedHorseEntity extends InfectedEntity {
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
         return createHostileAttributes()
-                .add(EntityAttributes.GENERIC_STEP_HEIGHT, 1.0)
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 30.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0)
@@ -91,7 +88,7 @@ public class InfectedHorseEntity extends InfectedEntity {
         assert entity != null;
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
-        entity.initialize((ServerWorldAccess) this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null);
+        entity.initialize((ServerWorldAccess) this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
         ((HorseEntity) entity).setHorseVariant(this.getVariant(), this.getMarking());
     }
 
@@ -101,10 +98,10 @@ public class InfectedHorseEntity extends InfectedEntity {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(VARIANT, 0);
-        builder.add(FLAGS, (byte)0);
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(VARIANT, 0);
+        this.dataTracker.startTracking(FLAGS, (byte)0);
     }
 
     @Override
@@ -225,6 +222,11 @@ public class InfectedHorseEntity extends InfectedEntity {
     }
 
     @Override
+    protected float getActiveEyeHeight(EntityPose pose, @NotNull EntityDimensions dimensions) {
+        return dimensions.height * 0.95f;
+    }
+
+    @Override
     public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
         int i;
         if (fallDistance > 1.0f) {
@@ -277,7 +279,7 @@ public class InfectedHorseEntity extends InfectedEntity {
 
     @Override
     @Nullable
-    public EntityData initialize(@NotNull ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public EntityData initialize(@NotNull ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         HorseColor horseColor;
         Random random = world.getRandom();
         if (entityData instanceof HorseEntity.HorseData) {
@@ -287,7 +289,7 @@ public class InfectedHorseEntity extends InfectedEntity {
             entityData = new HorseEntity.HorseData(horseColor);
         }
         this.setHorseVariant(horseColor, Util.getRandom(HorseMarking.values(), random));
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Override

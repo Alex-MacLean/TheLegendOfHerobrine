@@ -76,13 +76,12 @@ public class InfectedFoxEntity extends InfectedEntity implements VariantHolder<F
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3)
-                .add(EntityAttributes.GENERIC_SAFE_FALL_DISTANCE, 5.0);
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3);
     }
 
     @Nullable
     @Override
-    public EntityData initialize(@NotNull ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public EntityData initialize(@NotNull ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, NbtCompound entityNbt) {
         RegistryEntry<Biome> registryEntry = world.getBiome(this.getBlockPos());
         FoxEntity.Type type = FoxEntity.Type.fromBiome(registryEntry);
         if (entityData instanceof FoxEntity.FoxData foxData) {
@@ -94,7 +93,7 @@ public class InfectedFoxEntity extends InfectedEntity implements VariantHolder<F
         this.setVariant(type);
 
         this.initEquipment(world.getRandom(), difficulty);
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Override
@@ -105,16 +104,16 @@ public class InfectedFoxEntity extends InfectedEntity implements VariantHolder<F
         assert entity != null;
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
-        entity.initialize((ServerWorldAccess) getWorld(), getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null);
+        entity.initialize((ServerWorldAccess) getWorld(), getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
         entity.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
         ((FoxEntity) entity).setVariant(this.getVariant());
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(TYPE, 0);
-        builder.add(FOX_FLAGS, (byte)0);
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(TYPE, 0);
+        this.dataTracker.startTracking(FOX_FLAGS, (byte)0);
     }
 
     @Override

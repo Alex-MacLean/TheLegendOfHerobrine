@@ -55,15 +55,15 @@ public class InfectedCamelEntityModel extends SinglePartEntityModel<InfectedCame
     }
 
     @Override
-    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
+    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
         if (this.child) {
             matrices.push();
             matrices.scale(0.45f, 0.45f, 0.45f);
             matrices.translate(0.0f, 1.834375f, 0.0f);
-            this.getPart().render(matrices, vertices, light, overlay, color);
+            this.getPart().render(matrices, vertices, light, overlay, red, green, blue, alpha);
             matrices.pop();
         } else {
-            this.getPart().render(matrices, vertices, light, overlay, color);
+            this.getPart().render(matrices, vertices, light, overlay, red, green, blue, alpha);
         }
     }
 

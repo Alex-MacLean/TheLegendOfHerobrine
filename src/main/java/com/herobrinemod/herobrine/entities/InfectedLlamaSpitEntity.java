@@ -4,7 +4,6 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -25,10 +24,6 @@ public class InfectedLlamaSpitEntity extends ProjectileEntity {
         this(world);
         this.setOwner(owner);
         this.setPosition(owner.getX() - (double)(owner.getWidth() + 1.0f) * 0.5 * (double) MathHelper.sin(owner.bodyYaw * ((float)Math.PI / 180)), owner.getEyeY() - (double)0.1f, owner.getZ() + (double)(owner.getWidth() + 1.0f) * 0.5 * (double)MathHelper.cos(owner.bodyYaw * ((float)Math.PI / 180)));
-    }
-
-    @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
     }
 
     @Override
@@ -71,6 +66,10 @@ public class InfectedLlamaSpitEntity extends ProjectileEntity {
         if (!this.getWorld().isClient) {
             this.discard();
         }
+    }
+
+    @Override
+    protected void initDataTracker() {
     }
 
     @Override

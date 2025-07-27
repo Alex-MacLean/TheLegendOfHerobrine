@@ -3,6 +3,7 @@ package com.herobrinemod.herobrine.blocks;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
@@ -63,6 +64,12 @@ public class HerobrineStatueBlock extends Block implements Waterloggable{
         return EAST_WEST_TOP;
     }
 
+
+    @Override
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+        return false;
+    }
+
     @Override
     public FluidState getFluidState(@NotNull BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
@@ -73,9 +80,8 @@ public class HerobrineStatueBlock extends Block implements Waterloggable{
         return Waterloggable.super.tryFillWithFluid(world, pos, state, fluidState);
     }
 
-    @Override
-    public boolean canFillWithFluid(PlayerEntity player, BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
-        return Waterloggable.super.canFillWithFluid(player, world, pos, state, fluid);
+    public boolean canFillWithFluid(BlockView world, BlockPos pos, @NotNull BlockState state, Fluid fluid) {
+        return Waterloggable.super.canFillWithFluid(world, pos, state, fluid);
     }
 
     @Nullable
@@ -126,10 +132,10 @@ public class HerobrineStatueBlock extends Block implements Waterloggable{
     }
 
     @Override
-    public BlockState onBreak(@NotNull World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void onBreak(@NotNull World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient && player.isCreative() || !player.getMainHandStack().isSuitableFor(state)) {
             TallPlantBlock.onBreakInCreative(world, pos, state, player);
         }
-        return super.onBreak(world, pos, state, player);
+        super.onBreak(world, pos, state, player);
     }
 }

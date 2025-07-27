@@ -38,7 +38,6 @@ public class HerobrineClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.SURVIVOR_OUTER_ARMOR, () -> SurvivorEntityModel.getTexturedArmorModelData(new Dilation(1.0f)));
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_AXOLOTL_MODEL_LAYER, InfectedAxolotlEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_CAMEL_MODEL_LAYER, InfectedCamelEntityModel::getTexturedModelData);
-        EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_ARMADILLO_MODEL_LAYER, InfectedArmadilloEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_OCELOT_MODEL_LAYER, () -> TexturedModelData.of(OcelotEntityModel.getModelData(Dilation.NONE), 64, 32));
         EntityModelLayerRegistry.registerModelLayer(HerobrineModelLayers.INFECTED_FOX_MODEL_LAYER, InfectedFoxEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(EntityTypeList.HEROBRINE_WARRIOR, HerobrineEntityRenderer::new);
@@ -65,7 +64,6 @@ public class HerobrineClient implements ClientModInitializer {
         EntityRendererRegistry.register(EntityTypeList.SURVIVOR, SurvivorEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_AXOLOTL, InfectedAxolotlEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_CAMEL, InfectedCamelEntityRenderer::new);
-        EntityRendererRegistry.register(EntityTypeList.INFECTED_ARMADILLO, InfectedArmadilloEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_OCELOT, InfectedOcelotEntityRenderer::new);
         EntityRendererRegistry.register(EntityTypeList.INFECTED_FOX, InfectedFoxEntityRenderer::new);
     }

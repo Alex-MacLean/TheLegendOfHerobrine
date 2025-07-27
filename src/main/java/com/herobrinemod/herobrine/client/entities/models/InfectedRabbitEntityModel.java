@@ -64,29 +64,29 @@ public class InfectedRabbitEntityModel extends EntityModel<InfectedRabbitEntity>
     }
 
     @Override
-    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
+    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
         if (this.child) {
             matrices.push();
             matrices.scale(0.56666666f, 0.56666666f, 0.56666666f);
             matrices.translate(0.0f, 1.375f, 0.125f);
-            ImmutableList.of(this.head, this.leftEar, this.rightEar, this.nose).forEach(part -> part.render(matrices, vertices, light, overlay, color));
+            ImmutableList.of(this.head, this.leftEar, this.rightEar, this.nose).forEach(part -> part.render(matrices, vertices, light, overlay, red, green, blue, alpha));
             matrices.pop();
             matrices.push();
             matrices.scale(0.4f, 0.4f, 0.4f);
             matrices.translate(0.0f, 2.25f, 0.0f);
-            ImmutableList.of(this.leftHindLeg, this.rightHindLeg, this.leftHaunch, this.rightHaunch, this.body, this.leftFrontLeg, this.rightFrontLeg, this.tail).forEach(part -> part.render(matrices, vertices, light, overlay, color));
+            ImmutableList.of(this.leftHindLeg, this.rightHindLeg, this.leftHaunch, this.rightHaunch, this.body, this.leftFrontLeg, this.rightFrontLeg, this.tail).forEach(part -> part.render(matrices, vertices, light, overlay, red, green, blue, alpha));
             matrices.pop();
         } else {
             matrices.push();
             matrices.scale(0.6f, 0.6f, 0.6f);
             matrices.translate(0.0f, 1.0f, 0.0f);
-            ImmutableList.of(this.leftHindLeg, this.rightHindLeg, this.leftHaunch, this.rightHaunch, this.body, this.leftFrontLeg, this.rightFrontLeg, this.head, this.rightEar, this.leftEar, this.tail, this.nose, new ModelPart[0]).forEach(part -> part.render(matrices, vertices, light, overlay, color));
+            ImmutableList.of(this.leftHindLeg, this.rightHindLeg, this.leftHaunch, this.rightHaunch, this.body, this.leftFrontLeg, this.rightFrontLeg, this.head, this.rightEar, this.leftEar, this.tail, this.nose, new ModelPart[0]).forEach(part -> part.render(matrices, vertices, light, overlay, red, green, blue, alpha));
             matrices.pop();
         }
     }
 
     @Override
-    public void setAngles(@NotNull InfectedRabbitEntity entity, float f, float g, float h, float i, float j) {
+    public void setAngles(InfectedRabbitEntity entity, float f, float g, float h, float i, float j) {
         float k = h - (float)entity.age;
         this.nose.pitch = j * ((float)Math.PI / 180);
         this.head.pitch = j * ((float)Math.PI / 180);

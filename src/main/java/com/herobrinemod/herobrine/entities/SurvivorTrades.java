@@ -11,7 +11,6 @@ import net.minecraft.item.Items;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
-import net.minecraft.village.TradedItem;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +49,7 @@ public class SurvivorTrades {
         @Contract("_, _ -> new")
         @Override
         public @NotNull TradeOffer create(Entity entity, Random random) {
-            return new TradeOffer(new TradedItem(Items.GOLD_INGOT, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
+            return new TradeOffer(new ItemStack(Items.GOLD_INGOT, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
         }
     }
 
@@ -82,7 +81,7 @@ public class SurvivorTrades {
         @Contract("_, _ -> new")
         @Override
         public @NotNull TradeOffer create(Entity entity, Random random) {
-            return new TradeOffer(new TradedItem(Items.IRON_INGOT, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
+            return new TradeOffer(new ItemStack(Items.IRON_INGOT, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
         }
     }
 
@@ -114,7 +113,7 @@ public class SurvivorTrades {
         @Contract("_, _ -> new")
         @Override
         public @NotNull TradeOffer create(Entity entity, Random random) {
-            return new TradeOffer(new TradedItem(ItemList.CURSED_DIAMOND, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
+            return new TradeOffer(new ItemStack(ItemList.CURSED_DIAMOND, this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
         }
     }
 }

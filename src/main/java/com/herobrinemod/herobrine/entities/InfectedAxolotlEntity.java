@@ -46,6 +46,7 @@ public class InfectedAxolotlEntity extends InfectedEntity implements AngledModel
         this.setPathfindingPenalty(PathNodeType.WATER, 0.0F);
         this.moveControl = new AquaticMoveControl(this, 85, 10, 0.1f, 0.15f, false);
         this.lookControl = new YawAdjustingLookControl(this, 20);
+        this.setStepHeight(1.0F);
         this.experiencePoints = 3;
         this.setConversionEntity(EntityType.AXOLOTL);
     }
@@ -68,7 +69,6 @@ public class InfectedAxolotlEntity extends InfectedEntity implements AngledModel
 
     public static DefaultAttributeContainer.Builder registerAttributes() {
         return createHostileAttributes()
-                .add(EntityAttributes.GENERIC_STEP_HEIGHT, 1.0)
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 14.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0)
@@ -83,23 +83,20 @@ public class InfectedAxolotlEntity extends InfectedEntity implements AngledModel
         assert entity != null;
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
-        entity.initialize((ServerWorldAccess) this.getWorld(), getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null);
+        entity.initialize((ServerWorldAccess) this.getWorld(), getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
         ((AxolotlEntity) entity).setVariant(this.getVariant());
     }
 
-    @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(VARIANT, 0);
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(VARIANT, 0);
     }
 
-    @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putInt("Variant", this.getVariant().getId());
     }
 
-    @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         this.setVariant(AxolotlEntity.Variant.byId(nbt.getInt("Variant")));
@@ -194,8 +191,18 @@ public class InfectedAxolotlEntity extends InfectedEntity implements AngledModel
     }
 
     @Override
+    public boolean canBreatheInWater() {
+        return true;
+    }
+
+    @Override
     public boolean isPushedByFluids() {
         return false;
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, @NotNull EntityDimensions dimensions) {
+        return dimensions.height * 0.655F;
     }
 
     @Override
@@ -214,11 +221,11 @@ public class InfectedAxolotlEntity extends InfectedEntity implements AngledModel
     }
 
     @Override
-    public EntityData initialize(@NotNull ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public EntityData initialize(@NotNull ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         Random random = world.getRandom();
         entityData = new AxolotlEntity.AxolotlData(AxolotlEntity.Variant.getRandomNatural(random), AxolotlEntity.Variant.getRandomNatural(random));
         this.setVariant(((AxolotlEntity.AxolotlData)entityData).getRandomVariant(random));
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Override

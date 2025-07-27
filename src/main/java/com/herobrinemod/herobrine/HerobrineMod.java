@@ -15,13 +15,11 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.entity.SpawnLocationTypes;
 import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.tag.BiomeTags;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.BiomeKeys;
@@ -47,7 +45,7 @@ public class HerobrineMod implements ModInitializer {
 
     // Register sounds
     private void registerSounds() {
-        Registry.register(SOUND_EVENT, SoundList.MUSIC_DISC_DOG, SoundEvent.of(SoundList.MUSIC_DISC_DOG));
+        Registry.register(SOUND_EVENT, SoundList.MUSIC_DISC_DOG_IDENTIFIER, SoundList.MUSIC_DISC_DOG);
         Registry.register(SOUND_EVENT, SoundList.HEROBRINE_ALTAR_CURSED_IDENTIFIER, SoundList.HEROBRINE_ALTAR_CURSED);
         Registry.register(SOUND_EVENT, SoundList.HEROBRINE_ALTAR_PURIFIED_IDENTIFIER, SoundList.HEROBRINE_ALTAR_PURIFIED);
 
@@ -103,7 +101,6 @@ public class HerobrineMod implements ModInitializer {
         Registry.register(ITEM, Identifier.of(MODID, "survivor_spawn_egg"), ItemList.SURVIVOR_SPAWN_EGG);
         Registry.register(ITEM, Identifier.of(MODID, "infected_axolotl_spawn_egg"), ItemList.INFECTED_AXOLOTL_SPAWN_EGG);
         Registry.register(ITEM, Identifier.of(MODID, "infected_camel_spawn_egg"), ItemList.INFECTED_CAMEL_SPAWN_EGG);
-        Registry.register(ITEM, Identifier.of(MODID, "infected_armadillo_spawn_egg"), ItemList.INFECTED_ARMADILLO_SPAWN_EGG);
         Registry.register(ITEM, Identifier.of(MODID, "infected_ocelot_spawn_egg"), ItemList.INFECTED_OCELOT_SPAWN_EGG);
         Registry.register(ITEM, Identifier.of(MODID, "infected_fox_spawn_egg"), ItemList.INFECTED_FOX_SPAWN_EGG);
     }
@@ -131,7 +128,6 @@ public class HerobrineMod implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypeList.SURVIVOR, SurvivorEntity.registerAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypeList.INFECTED_AXOLOTL, InfectedAxolotlEntity.registerAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypeList.INFECTED_CAMEL, InfectedCamelEntity.registerAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypeList.INFECTED_ARMADILLO, InfectedArmadilloEntity.registerAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypeList.INFECTED_OCELOT, InfectedOcelotEntity.registerAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypeList.INFECTED_FOX, InfectedFoxEntity.registerAttributes());
     }
@@ -178,8 +174,6 @@ public class HerobrineMod implements ModInitializer {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_LLAMA_SPAWN_EGG, ItemList.INFECTED_RABBIT_SPAWN_EGG));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_RABBIT_SPAWN_EGG, ItemList.INFECTED_AXOLOTL_SPAWN_EGG));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_AXOLOTL_SPAWN_EGG, ItemList.INFECTED_CAMEL_SPAWN_EGG));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_CAMEL_SPAWN_EGG, ItemList.INFECTED_ARMADILLO_SPAWN_EGG));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_ARMADILLO_SPAWN_EGG, ItemList.INFECTED_OCELOT_SPAWN_EGG));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_OCELOT_SPAWN_EGG, ItemList.INFECTED_FOX_SPAWN_EGG));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> content.addAfter(ItemList.INFECTED_FOX_SPAWN_EGG, ItemList.SURVIVOR_SPAWN_EGG));
     }
@@ -209,7 +203,6 @@ public class HerobrineMod implements ModInitializer {
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.LLAMA), SpawnGroup.MONSTER, EntityTypeList.INFECTED_LLAMA, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 4, 6);
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.RABBIT), SpawnGroup.MONSTER, EntityTypeList.INFECTED_RABBIT, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 2, 3);
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.AXOLOTL), SpawnGroup.MONSTER, EntityTypeList.INFECTED_AXOLOTL, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 1, 3);
-        BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.ARMADILLO), SpawnGroup.MONSTER, EntityTypeList.INFECTED_ARMADILLO, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 1, 3);
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.OCELOT), SpawnGroup.MONSTER, EntityTypeList.INFECTED_OCELOT, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 1, 3);
         BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.VILLAGE_DESERT_HAS_STRUCTURE), SpawnGroup.MONSTER, EntityTypeList.INFECTED_CAMEL, ConfigHandler.getHerobrineConfig().readInt("InfectedCamelWeight"), 1, 1);
         BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(EntityType.FOX), SpawnGroup.MONSTER, EntityTypeList.INFECTED_FOX, ConfigHandler.getHerobrineConfig().readInt("InfectedMobWeight"), 2, 4);
@@ -222,40 +215,39 @@ public class HerobrineMod implements ModInitializer {
                 BiomeModifications.addSpawn(BiomeSelectors.foundInTheEnd(), SpawnGroup.MONSTER, EntityTypeList.HEROBRINE_BUILDER, ConfigHandler.getHerobrineConfig().readInt("HerobrineBuilderWeight"), 1, 1);
             }
         }
-        SpawnRestriction.register(EntityTypeList.HEROBRINE_WARRIOR, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawnStage3);
-        SpawnRestriction.register(EntityTypeList.HEROBRINE_BUILDER, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawnStage2);
-        SpawnRestriction.register(EntityTypeList.HEROBRINE_MAGE, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawnStage3);
-        SpawnRestriction.register(EntityTypeList.HEROBRINE_SPY, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawnPeacefulMode);
-        SpawnRestriction.register(EntityTypeList.HEROBRINE_STALKER, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawnPeacefulModeStage1);
-        SpawnRestriction.register(EntityTypeList.INFECTED_PIG, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_COW, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_VILLAGER, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedVillagerEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_CHICKEN, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_SHEEP, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_BAT, SpawnLocationTypes.UNRESTRICTED, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedBatEntity::canBatSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_WOLF, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_MOOSHROOM, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedMooshroomEntity::canMooshroomSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_DONKEY, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_HORSE, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_LLAMA, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_RABBIT, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_AXOLOTL, SpawnLocationTypes.IN_WATER, Heightmap.Type.OCEAN_FLOOR, InfectedAxolotlEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_CAMEL, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedCamelEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_ARMADILLO, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedArmadilloEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_OCELOT, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
-        SpawnRestriction.register(EntityTypeList.INFECTED_FOX, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.HEROBRINE_WARRIOR, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawnStage3);
+        SpawnRestriction.register(EntityTypeList.HEROBRINE_BUILDER, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawnStage2);
+        SpawnRestriction.register(EntityTypeList.HEROBRINE_MAGE, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawnStage3);
+        SpawnRestriction.register(EntityTypeList.HEROBRINE_SPY, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawnPeacefulMode);
+        SpawnRestriction.register(EntityTypeList.HEROBRINE_STALKER, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HerobrineEntity::canSpawnPeacefulModeStage1);
+        SpawnRestriction.register(EntityTypeList.INFECTED_PIG, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_COW, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_VILLAGER, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedVillagerEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_CHICKEN, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_SHEEP, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_BAT, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedBatEntity::canBatSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_WOLF, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_MOOSHROOM, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedMooshroomEntity::canMooshroomSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_DONKEY, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_HORSE, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_LLAMA, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_RABBIT, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_AXOLOTL, SpawnRestriction.Location.IN_WATER, Heightmap.Type.OCEAN_FLOOR, InfectedAxolotlEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_CAMEL, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedCamelEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_OCELOT, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
+        SpawnRestriction.register(EntityTypeList.INFECTED_FOX, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, InfectedEntity::canSpawn);
     }
 
     private void registerSurvivorSkins() {
-        SurvivorSkinRegistry.addSkin(Identifier.of("textures/entity/player/wide/alex.png"));
-        SurvivorSkinRegistry.addSkin(Identifier.of("textures/entity/player/wide/ari.png"));
-        SurvivorSkinRegistry.addSkin(Identifier.of("textures/entity/player/wide/efe.png"));
-        SurvivorSkinRegistry.addSkin(Identifier.of("textures/entity/player/wide/kai.png"));
-        SurvivorSkinRegistry.addSkin(Identifier.of("textures/entity/player/wide/makena.png"));
-        SurvivorSkinRegistry.addSkin(Identifier.of("textures/entity/player/wide/noor.png"));
-        SurvivorSkinRegistry.addSkin(Identifier.of("textures/entity/player/wide/steve.png"));
-        SurvivorSkinRegistry.addSkin(Identifier.of("textures/entity/player/wide/sunny.png"));
-        SurvivorSkinRegistry.addSkin(Identifier.of("textures/entity/player/wide/zuri.png"));
+        SurvivorSkinRegistry.addSkin(Identifier.of("minecraft", "textures/entity/player/wide/alex.png"));
+        SurvivorSkinRegistry.addSkin(Identifier.of("minecraft","textures/entity/player/wide/ari.png"));
+        SurvivorSkinRegistry.addSkin(Identifier.of("minecraft","textures/entity/player/wide/efe.png"));
+        SurvivorSkinRegistry.addSkin(Identifier.of("minecraft","textures/entity/player/wide/kai.png"));
+        SurvivorSkinRegistry.addSkin(Identifier.of("minecraft","textures/entity/player/wide/makena.png"));
+        SurvivorSkinRegistry.addSkin(Identifier.of("minecraft","textures/entity/player/wide/noor.png"));
+        SurvivorSkinRegistry.addSkin(Identifier.of("minecraft","textures/entity/player/wide/steve.png"));
+        SurvivorSkinRegistry.addSkin(Identifier.of("minecraft","textures/entity/player/wide/sunny.png"));
+        SurvivorSkinRegistry.addSkin(Identifier.of("minecraft","textures/entity/player/wide/zuri.png"));
         SurvivorSkinRegistry.addSkin(Identifier.of(MODID, "textures/entity/survivor/amaclean04.png"));
     }
 

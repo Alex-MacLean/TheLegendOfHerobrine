@@ -6,6 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.render.entity.model.QuadrupedEntityModel;
+import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class InfectedSheepWoolEntityModel extends QuadrupedEntityModel<InfectedSheepEntity> {
@@ -15,7 +16,7 @@ public class InfectedSheepWoolEntityModel extends QuadrupedEntityModel<InfectedS
         super(root, false, 8.0f, 4.0f, 2.0f, 2.0f, 24);
     }
 
-    public static TexturedModelData getTexturedModelData() {
+    public static @NotNull TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
         modelPartData.addChild(EntityModelPartNames.HEAD, ModelPartBuilder.create().uv(0, 0).cuboid(-3.0f, -4.0f, -4.0f, 6.0f, 6.0f, 6.0f, new Dilation(0.6f)), ModelTransform.pivot(0.0f, 6.0f, -8.0f));

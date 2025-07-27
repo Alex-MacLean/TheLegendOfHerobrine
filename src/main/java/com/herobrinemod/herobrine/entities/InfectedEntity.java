@@ -1,20 +1,18 @@
 package com.herobrinemod.herobrine.entities;
 
 import com.herobrinemod.herobrine.items.ItemList;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Difficulty;
@@ -50,7 +48,7 @@ public abstract class InfectedEntity extends HostileEntity {
         assert entity != null;
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 1));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 300, 1));
-        entity.initialize((ServerWorldAccess) getWorld(), getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null);
+        entity.initialize((ServerWorldAccess) getWorld(), getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.CONVERSION, null, null);
     }
 
     @Override
@@ -84,21 +82,15 @@ public abstract class InfectedEntity extends HostileEntity {
     }
 
     @Override
-    public RegistryKey getLootTableId() {
+    public Identifier getLootTableId() {
         return conversionEntity.getLootTableId();
     }
 
     @Override
-    protected void dropEquipment(ServerWorld world, DamageSource source, boolean causedByPlayer) {
-        super.dropEquipment(world, source, causedByPlayer);
-        try {
-            if (random.nextFloat() < EnchantmentHelper.getEquipmentDropChance(world, (LivingEntity) source.getAttacker(), source, 0.2f)) {
-                this.dropItem(ItemList.CURSED_DUST);
-            }
-        } catch (NullPointerException e) {
-            if(random.nextInt(4) == 0) {
-                this.dropItem(ItemList.CURSED_DUST);
-            }
+    protected void dropEquipment(DamageSource source, int lootingMultiplier, boolean allowDrops) {
+        super.dropEquipment(source, lootingMultiplier, allowDrops);
+        if (random.nextInt(100) <= 20 * (lootingMultiplier + 1) && allowDrops) {
+            this.dropItem(ItemList.CURSED_DUST);
         }
     }
 }

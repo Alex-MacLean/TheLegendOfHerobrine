@@ -40,7 +40,7 @@ public class InfectedHorseEntityRenderer extends MobEntityRenderer<InfectedHorse
     }
 
     @Override
-    public Identifier getTexture(InfectedHorseEntity entity) {
+    public Identifier getTexture(@NotNull InfectedHorseEntity entity) {
         return TEXTURES.get(entity.getVariant());
     }
 }

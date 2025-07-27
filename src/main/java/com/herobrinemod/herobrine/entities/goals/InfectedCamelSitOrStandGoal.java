@@ -16,7 +16,7 @@ public class InfectedCamelSitOrStandGoal extends Goal {
     public void start() {
         if (entity.isSitting()) {
             entity.startStanding();
-        } else if (!entity.isPanicking()) {
+        } else if (entity.getTarget() != null) {
             entity.startSitting();
         }
     }

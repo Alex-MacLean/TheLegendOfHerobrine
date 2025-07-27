@@ -4,7 +4,6 @@ import com.herobrinemod.herobrine.savedata.ConfigHandler;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.HoeItem;
 import net.minecraft.item.ItemUsageContext;
@@ -23,8 +22,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class CursedDiamondHoeItem extends HoeItem {
-    public CursedDiamondHoeItem(ToolMaterial material, Settings settings) {
-        super(material, settings);
+    public CursedDiamondHoeItem(ToolMaterial material, int attackDamage, float attackSpeed, Settings settings) {
+        super(material, attackDamage, attackSpeed, settings);
     }
 
     @Override
@@ -36,7 +35,7 @@ public class CursedDiamondHoeItem extends HoeItem {
         PlayerEntity player = context.getPlayer();
         assert player != null;
         Pair<Predicate<ItemUsageContext>, Consumer<ItemUsageContext>> pair = TILLING_ACTIONS.get(world.getBlockState(blockPos = context.getBlockPos()).getBlock());
-        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable) blockState.getBlock()).isFertilizable(world, blockPos, blockState) && pair == null && !player.isSneaking()) {
+        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable) blockState.getBlock()).isFertilizable(world, blockPos, blockState, world.isClient()) && pair == null && player.isSneaking()) {
             boolean fertilized = false;
             if (fertilizable.canGrow(world, world.random, blockPos, blockState)) {
                 if (world instanceof ServerWorld) {
@@ -48,7 +47,7 @@ public class CursedDiamondHoeItem extends HoeItem {
 
             if(!player.isCreative()) {
                 player.getItemCooldownManager().set(this, ConfigHandler.getHerobrineConfig().readInt("CursedDiamondHoeMagicCooldownTicks"));
-                context.getStack().damage(ConfigHandler.getHerobrineConfig().readInt("CursedDiamondMagicItemDamage"), player, LivingEntity.getSlotForHand(context.getHand()));
+                context.getStack().damage(ConfigHandler.getHerobrineConfig().readInt("CursedDiamondMagicItemDamage"), player, p -> p.sendToolBreakStatus(context.getHand()));
             }
 
             if(fertilized) {

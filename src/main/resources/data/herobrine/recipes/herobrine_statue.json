@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    " B ",
+    "BAB",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:stone"
+    },
+    "B": {
+      "item": "minecraft:stone_slab"
+    }
+  },
+  "result": {
+    "item": "herobrine:herobrine_statue"
+  },
+  "show_notification": true
+}

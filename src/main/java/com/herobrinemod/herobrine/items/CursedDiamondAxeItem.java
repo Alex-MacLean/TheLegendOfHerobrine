@@ -18,8 +18,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class CursedDiamondAxeItem extends AxeItem {
-    public CursedDiamondAxeItem(ToolMaterial material, Settings settings) {
-        super(material, settings);
+    public CursedDiamondAxeItem(ToolMaterial material, float attackDamage, float attackSpeed, Settings settings) {
+        super(material, attackDamage, attackSpeed, settings);
     }
 
     @Override
@@ -40,9 +40,9 @@ public class CursedDiamondAxeItem extends AxeItem {
             if(!user.isCreative()) {
                 user.getItemCooldownManager().set(this, ConfigHandler.getHerobrineConfig().readInt("CursedDiamondAxeMagicCooldownTicks"));
                 if(hand.equals(Hand.MAIN_HAND)) {
-                    itemStack.damage(ConfigHandler.getHerobrineConfig().readInt("CursedDiamondMagicItemDamage"), user, EquipmentSlot.MAINHAND);
+                    itemStack.damage(ConfigHandler.getHerobrineConfig().readInt("CursedDiamondMagicItemDamage"), user, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
                 } else {
-                    itemStack.damage(ConfigHandler.getHerobrineConfig().readInt("CursedDiamondMagicItemDamage"), user, EquipmentSlot.OFFHAND);
+                    itemStack.damage(ConfigHandler.getHerobrineConfig().readInt("CursedDiamondMagicItemDamage"), user, e -> e.sendEquipmentBreakStatus(EquipmentSlot.OFFHAND));
                 }
             }
             return TypedActionResult.success(itemStack, world.isClient());

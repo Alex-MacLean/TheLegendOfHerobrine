@@ -5,12 +5,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.BlastingRecipe;
-import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
@@ -28,20 +26,21 @@ import java.util.Optional;
 public abstract class BlockMixin {
     @Inject(method = "getDroppedStacks(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/BlockEntity;Lnet/minecraft/entity/Entity;Lnet/minecraft/item/ItemStack;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
     private static void cursedDiamondToolLootTableFunctions(BlockState state, ServerWorld world, BlockPos pos, @Nullable BlockEntity blockEntity, @Nullable Entity entity, @NotNull ItemStack stack, @NotNull CallbackInfoReturnable<List<ItemStack>> cir) {
-        if (stack.getItem() == ItemList.CURSED_DIAMOND_PICKAXE && stack.getItem().canMine(state, world, pos, (PlayerEntity) entity)) {
+        if (stack.getItem() == ItemList.CURSED_DIAMOND_PICKAXE && stack.getItem().isSuitableFor(state)) {
             List<ItemStack> returnValue = cir.getReturnValue();
             for (ItemStack itemStack : returnValue) {
-                Optional<RecipeEntry<BlastingRecipe>> recipe = world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, new SingleStackRecipeInput(itemStack), world);
+                Optional<BlastingRecipe> recipe = world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, new SimpleInventory(itemStack), world);
                 if (recipe.isPresent()) {
                     List<ItemStack> drops = new ArrayList<>();
-                    ItemStack smeltedStack = recipe.get().value().getResult(world.getRegistryManager());
+                    ItemStack smeltedStack = recipe.get().getOutput(world.getRegistryManager());
                     smeltedStack.setCount(itemStack.getCount());
                     drops.add(smeltedStack);
                     cir.setReturnValue(drops);
                 }
             }
         }
-        if (stack.getItem() == ItemList.CURSED_DIAMOND_SHOVEL && stack.getItem().canMine(state, world, pos, (PlayerEntity) entity)) {
+
+        if (stack.getItem() == ItemList.CURSED_DIAMOND_SHOVEL && stack.getItem().isSuitableFor(state)) {
             List<ItemStack> drops = new ArrayList<>();
             ItemStack newStack = state.getBlock().asItem().getDefaultStack();
             drops.add(newStack);
