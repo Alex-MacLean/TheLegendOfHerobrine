@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "herobrine:ruined_shrine",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 8,
+    "separation": 4,
+    "salt": 714062189
+  }
+}

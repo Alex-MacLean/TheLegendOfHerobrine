@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "herobrine:herobrine_statue",
+      "weight": 3
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 10,
+    "separation": 4,
+    "salt": 1594947916
+  }
+}
