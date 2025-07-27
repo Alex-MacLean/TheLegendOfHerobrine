@@ -13,7 +13,7 @@ Screenshots: https://www.herobrinemod.com/screenshots
 
 FAQ: https://www.herobrinemod.com/faq
 
-Programmer Art Style Resource Pack: https://github.com/Alex-MacLean/TheLegendOfHerobrine/releases/download/0.6.0/Herobrine-Programmer-Art.zip
+Programmer Art Style Resource Pack: https://github.com/Alex-MacLean/TheLegendOfHerobrine/releases/download/0.6.5/Herobrine-Programmer-Art.zip
 
 This GitHub repository, the offical preview builds repository, the official Modrinth page, the official legacy (outdated) CurseForge page are the ONLY safe places to download this mod, any other sources should be considered packaged with viruses. Furthermore, If any newer version of this mod (Fabric 1.19 previews or newer) makes it anywhere other than my GitHub repositories, the official website, or modrinth, it should also be considered a virus, even if the newer version is on CurseForge. Viruses being spread through infected Minecraft mods have been on the rise, especially on shady websites, and CurseForge so please try to stay safe and download only from official sources.
 
@@ -21,11 +21,11 @@ This GitHub repository, the offical preview builds repository, the official Modr
 
 **Prerequisites:**
 
-JDK 17 (17.0.1 or newer): (Oracle JDK) https://www.oracle.com/java/technologies/downloads/#jdk17 (OpenJDK) https://jdk.java.net/archive/
+JDK 21 (or newer): (Oracle JDK) https://www.oracle.com/java/technologies/downloads/#java21 (OpenJDK) https://openjdk.org/projects/jdk/21/
 
-JavaFX 17: https://gluonhq.com/products/javafx/
+JavaFX 21: https://gluonhq.com/products/javafx/
 
-If you use GNU/Linux install the latest versions of JDK 17 and OpenJFX 17 from your distros package repositories.
+If you use GNU/Linux install the latest versions of JDK 21 and OpenJFX 21 from your distros package repositories.
 
 (Windows Only) Add Java to path environment variable: https://www.javatpoint.com/how-to-set-path-in-java (Use second, permanent method)
 
