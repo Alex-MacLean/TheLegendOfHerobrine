@@ -9,8 +9,6 @@ For a full description visit: https://www.herobrinemod.com/about
 
 Preview Builds are hosted here: https://github.com/Alex-MacLean/TheLegendOfHerobrine-Preview/releases
 
-Screenshots: https://www.herobrinemod.com/screenshots
-
 FAQ: https://www.herobrinemod.com/faq
 
 Programmer Art Style Resource Pack: https://github.com/Alex-MacLean/TheLegendOfHerobrine/releases/download/0.6.5/Herobrine-Programmer-Art.zip
