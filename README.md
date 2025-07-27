@@ -21,7 +21,7 @@ This GitHub repository, the offical preview builds repository, the official Modr
 
 JDK 21 (or newer) (Java 21 is required for Fabric Loom 1.11): (Oracle JDK) https://www.oracle.com/java/technologies/downloads/#java21 (OpenJDK) https://openjdk.org/projects/jdk/21/
 
-JavaFX 21: https://gluonhq.com/products/javafx/
+JavaFX 21 (Only required for OpenJDK): https://gluonhq.com/products/javafx/
 
 If you use GNU/Linux install the latest versions of JDK 21 and OpenJFX 21 from your distros package repositories.
 
